@@ -21,7 +21,7 @@
 </svg></a>
     <div class="nav-links" id="navLinks">
       <div class="has-sub">
-        <a href="index.html#leistungen">Leistungen</a>
+        <a href="#" class="sub-toggle" onclick="event.preventDefault();this.parentElement.classList.toggle('sub-open')">Leistungen</a>
         <div class="sub">
           <a href="studio.html">Training im Studio</a>
           <a href="zuhause.html">Training bei dir Zuhause</a>
@@ -117,7 +117,7 @@
 </footer>
 <script>
 (function(){var n=document.getElementById('navLinks'),b=document.querySelector('.menu-btn');
-if(n&&b){n.addEventListener('click',function(e){if(e.target.closest('a')){n.classList.remove('open');b.textContent='\u2630';}});}})();
+if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&!a.classList.contains('sub-toggle')){n.classList.remove('open');b.textContent='\u2630';}});}})();
 </script>
 </body>
 </html>
