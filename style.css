@@ -194,3 +194,19 @@ footer{border-top:1px solid var(--line);padding:44px 0;font-size:13px;color:var(
   *{transition:none!important;animation:none!important}
   html{scroll-behavior:auto}
 }
+
+/* ---------- Preise ---------- */
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:stretch}
+.price{border:1px solid var(--line);background:var(--panel);padding:38px 32px;display:flex;flex-direction:column;position:relative;transition:border-color .25s}
+.price:hover{border-color:rgba(239,185,46,.5)}
+.price.featured{border-color:var(--blitz)}
+.price .pop{position:absolute;top:-13px;left:28px;background:var(--blitz);color:#15171C;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:5px 12px}
+.price h3{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:24px;letter-spacing:.02em}
+.price .amount{margin:18px 0 6px;font-family:var(--display);font-size:46px;line-height:1;color:var(--bone)}
+.price .amount small{font-family:var(--body);font-size:14px;color:var(--muted);font-weight:500;text-transform:none;letter-spacing:0}
+.price .per{font-size:13px;color:var(--muted);margin-bottom:20px}
+.price p.desc{color:var(--muted);font-size:15px;margin-bottom:20px}
+.price ul{list-style:none;margin:0 0 26px;flex:1}
+.price ul li{padding:9px 0;border-top:1px solid var(--line);font-size:14px;color:#c9cbd0}
+.price ul li::before{content:"\26A1  ";color:var(--blitz)}
+@media(max-width:900px){.price-grid{grid-template-columns:1fr}.price.featured{order:-1}}
