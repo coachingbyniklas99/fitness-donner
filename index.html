@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fitness Donner · Personal Training Köln, Neuss & Solingen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#15171C;
+    --panel:#1C1F26;
+    --panel-2:#22262F;
+    --bone:#ECE9E2;
+    --muted:#9AA0AB;
+    --blitz:#EFB92E;
+    --line:rgba(236,233,226,.12);
+    --display:'Anton', Impact, sans-serif;
+    --body:'Archivo', Helvetica, Arial, sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--bone);font-family:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased}
+  img{display:block;max-width:100%}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+  .eyebrow{font-size:12px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--blitz);display:flex;align-items:center;gap:10px}
+  .eyebrow::before{content:"";width:26px;height:2px;background:var(--blitz)}
+  /* ---------- Nav ---------- */
+  nav{position:sticky;top:0;z-index:50;background:rgba(21,23,28,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:76px}
+  .nav-links{display:flex;gap:32px;font-size:14px;font-weight:500}
+  .nav-links a{color:var(--muted);transition:color .2s}
+  .nav-links a:hover{color:var(--bone)}
+  .btn{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:14px;letter-spacing:.06em;text-transform:uppercase;padding:14px 26px;border:1px solid transparent;transition:.2s;cursor:pointer}
+  .btn-blitz{background:var(--blitz);color:#15171C}
+  .btn-blitz:hover{background:#f7ca4f}
+  .btn-ghost{border-color:var(--line);color:var(--bone)}
+  .btn-ghost:hover{border-color:var(--bone)}
+  .btn-sm{padding:11px 20px;font-size:13px}
+  /* ---------- Hero ---------- */
+  header{position:relative;min-height:92vh;display:flex;align-items:flex-end;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;background:url('https://primary.jwwb.nl/pexels/62/6295721.jpeg') center/cover;filter:grayscale(35%) contrast(1.05)}
+  .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(21,23,28,.55) 0%,rgba(21,23,28,.35) 40%,rgba(21,23,28,.96) 100%)}
+  .hero-content{position:relative;z-index:2;padding:120px 0 72px;width:100%}
+  h1{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(56px,9.5vw,124px);line-height:.95;letter-spacing:.01em}
+  h1 .u{position:relative;display:inline-block}
+  h1 .u svg{position:absolute;left:0;right:0;bottom:-14px;width:100%;height:16px}
+  .hero-sub{margin-top:28px;max-width:560px;font-size:18px;color:#c9cbd0}
+  .hero-ctas{margin-top:36px;display:flex;gap:16px;flex-wrap:wrap}
+  .trust{margin-top:44px;padding-top:24px;border-top:1px solid var(--line);display:flex;gap:36px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+  .trust b{color:var(--bone);font-weight:600}
+  .trust .star{color:var(--blitz)}
+  /* ---------- Sections ---------- */
+  section{padding:104px 0}
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:56px;flex-wrap:wrap}
+  h2{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(34px,4.6vw,56px);line-height:1.02;margin-top:14px}
+  .sec-head p{max-width:380px;color:var(--muted);font-size:15px}
+  /* ---------- Leistungen ---------- */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .card{background:var(--panel);border:1px solid var(--line);display:flex;flex-direction:column;transition:transform .25s,border-color .25s}
+  .card:hover{transform:translateY(-6px);border-color:rgba(239,185,46,.5)}
+  .card-img{aspect-ratio:4/3;overflow:hidden;position:relative}
+  .card-img img{width:100%;height:100%;object-fit:cover;filter:grayscale(25%);transition:transform .4s}
+  .card:hover .card-img img{transform:scale(1.04)}
+  .card-tag{position:absolute;top:14px;left:14px;background:rgba(21,23,28,.85);padding:6px 12px;font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--blitz)}
+  .card-body{padding:26px 26px 30px;display:flex;flex-direction:column;gap:12px;flex:1}
+  .card-body h3{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:26px;letter-spacing:.02em}
+  .card-body p{color:var(--muted);font-size:15px;flex:1}
+  .card-link{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--bone);display:inline-flex;align-items:center;gap:8px}
+  .card-link span{color:var(--blitz);transition:transform .2s}
+  .card:hover .card-link span{transform:translateX(5px)}
+  /* ---------- Trainingsorte ---------- */
+  .orte{padding-top:0}
+  .orte-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
+  .ort{border:1px solid var(--line);background:var(--panel);padding:34px 32px;position:relative;transition:border-color .25s}
+  .ort:hover{border-color:rgba(239,185,46,.5)}
+  .ort .club{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--blitz);margin-bottom:10px}
+  .ort h3{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:30px;letter-spacing:.02em}
+  .ort .addr{color:var(--muted);font-size:14px;margin:8px 0 18px}
+  .ort ul{list-style:none;display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+  .ort ul li{border:1px solid var(--line);padding:6px 12px;font-size:12px;color:var(--muted);letter-spacing:.04em}
+  .ort .card-link{margin-top:auto}
+  .ort-note{border-left:2px solid var(--blitz);padding:14px 0 14px 18px;color:var(--muted);font-size:14px;max-width:760px}
+  .ort-note b{color:var(--bone);font-weight:600}
+  /* ---------- Hyrox ---------- */
+  .hyrox{background:var(--blitz);color:#15171C;position:relative;overflow:hidden}
+  .hyrox .watermark{position:absolute;right:-40px;bottom:-30px;font-family:var(--display);font-size:clamp(140px,20vw,280px);text-transform:uppercase;color:transparent;-webkit-text-stroke:1px rgba(21,23,28,.14);pointer-events:none;line-height:1}
+  .hyrox-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:56px;align-items:center;position:relative}
+  .hyrox .eyebrow{color:#15171C}
+  .hyrox .eyebrow::before{background:#15171C}
+  .hyrox p{color:rgba(21,23,28,.75);font-size:16px;margin:18px 0 30px;max-width:540px}
+  .hyrox .btn-dark{background:#15171C;color:var(--bone)}
+  .hyrox .btn-dark:hover{background:#22262F}
+  .hyrox-facts{display:flex;flex-direction:column;gap:14px}
+  .hyrox-facts div{border:1px solid rgba(21,23,28,.25);padding:18px 22px;font-size:15px;font-weight:500}
+  .hyrox-facts b{display:block;font-family:var(--display);font-weight:400;font-size:22px;text-transform:uppercase;margin-bottom:2px}
+  /* ---------- Über mich ---------- */
+  .about{background:var(--panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+  .about .watermark{position:absolute;right:-30px;top:26px;font-family:var(--display);font-size:clamp(120px,18vw,240px);text-transform:uppercase;color:transparent;-webkit-text-stroke:1px rgba(236,233,226,.07);pointer-events:none;line-height:1}
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;position:relative}
+  .about-text p{color:#c9cbd0;margin:18px 0 26px;font-size:16px}
+  .quali{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:30px}
+  .quali span{border:1px solid var(--line);padding:8px 14px;font-size:13px;color:var(--muted)}
+  .quali span b{color:var(--blitz);font-weight:600;margin-right:6px}
+  .video-ph{position:relative;aspect-ratio:16/10;border:1px solid var(--line);background:
+    linear-gradient(180deg,rgba(21,23,28,.25),rgba(21,23,28,.85)),
+    url('https://primary.jwwb.nl/public/p/a/h/temp-okrziewihttnknynhdsh/446234001-high-kvsbqq.jpg') center/cover;
+    display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;cursor:pointer}
+  .video-ph .play{width:76px;height:76px;border-radius:50%;background:var(--blitz);display:flex;align-items:center;justify-content:center;transition:transform .2s}
+  .video-ph:hover .play{transform:scale(1.08)}
+  .video-ph .play svg{margin-left:5px}
+  .video-ph span{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--bone);font-weight:600;background:rgba(21,23,28,.7);padding:8px 14px}
+  /* ---------- Ablauf ---------- */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .step{border:1px solid var(--line);padding:34px 28px;background:var(--bg)}
+  .step .num{font-family:var(--display);font-size:52px;color:transparent;-webkit-text-stroke:1px var(--blitz);line-height:1}
+  .step h3{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:22px;margin:18px 0 10px;letter-spacing:.03em}
+  .step p{color:var(--muted);font-size:15px}
+  /* ---------- Reviews ---------- */
+  .reviews{background:var(--panel)}
+  .rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .rev{border:1px solid var(--line);background:var(--bg);padding:30px}
+  .rev .stars{color:var(--blitz);letter-spacing:3px;font-size:15px}
+  .rev p{margin:16px 0 20px;font-size:15px;color:#c9cbd0}
+  .rev .who{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font-weight:600}
+  .placeholder-note{margin-top:26px;font-size:13px;color:var(--muted);border-left:2px solid var(--blitz);padding-left:14px}
+  /* ---------- FAQ ---------- */
+  .faq-list{max-width:800px}
+  details{border-bottom:1px solid var(--line)}
+  summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px 4px;font-family:var(--display);font-weight:400;font-size:20px;text-transform:uppercase;letter-spacing:.02em;transition:color .2s}
+  summary::-webkit-details-marker{display:none}
+  summary:hover{color:var(--blitz)}
+  summary::after{content:"+";font-family:var(--body);font-weight:400;font-size:26px;color:var(--blitz);flex-shrink:0;transition:transform .2s}
+  details[open] summary::after{transform:rotate(45deg)}
+  details p{color:var(--muted);font-size:15px;padding:0 4px 26px;max-width:640px}
+  details p b{color:var(--bone);font-weight:600}
+  /* ---------- CTA ---------- */
+  .cta{text-align:center}
+  .cta h2{font-size:clamp(40px,6.5vw,80px)}
+  .cta p{color:var(--muted);max-width:520px;margin:20px auto 36px}
+  .cta .hero-ctas{justify-content:center}
+  /* ---------- Footer ---------- */
+  footer{border-top:1px solid var(--line);padding:44px 0;font-size:13px;color:var(--muted)}
+  .foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+  .foot a:hover{color:var(--bone)}
+  .foot .legal{display:flex;gap:22px}
+  @media(max-width:900px){
+    .nav-links{display:none}
+    .cards,.steps,.rev-grid{grid-template-columns:1fr}
+    .about-grid,.hyrox-grid{grid-template-columns:1fr;gap:36px}
+    section{padding:72px 0}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none!important;animation:none!important}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-inner">
+    <a href="#" aria-label="Fitness Donner">
+      <svg width="150" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
+        <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
+        <text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text>
+        <polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"/>
+      </svg>
+    </a>
+    <div class="nav-links">
+      <a href="#leistungen">Leistungen</a>
+      <a href="#hyrox">Hyrox</a>
+      <a href="#ueber-mich">Über mich</a>
+      <a href="#stimmen">Erfahrungen</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a class="btn btn-blitz btn-sm" href="https://calendar.app.google/7Y1TBHpH2an8MW268">Erstgespräch buchen</a>
+  </div>
+</nav>
+<header>
+  <div class="hero-bg"></div>
+  <div class="wrap hero-content">
+    <div class="eyebrow">Personal Training · Köln — Neuss — Solingen</div>
+    <h1 style="margin-top:22px">
+      Dein Körper<br>
+      kann <span class="u">mehr.<svg viewBox="0 0 200 16" preserveAspectRatio="none"><polyline points="0,8 60,8 78,2 96,14 114,4 200,8" fill="none" stroke="#EFB92E" stroke-width="4"/></svg></span>
+    </h1>
+    <p class="hero-sub">Individuelles 1:1-Coaching im Studio, bei dir zu Hause oder online – wissenschaftlich fundiert, ohne Überforderung, mit einem Plan, der in dein Leben passt.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-blitz" href="https://calendar.app.google/7Y1TBHpH2an8MW268">Kostenloses Erstgespräch</a>
+      <a class="btn btn-ghost" href="https://wa.me/491776311404">WhatsApp schreiben</a>
+    </div>
+    <div class="trust">
+      <div><b>B.A. Fitnessökonomie</b><br>Sportwissenschaftliche Basis</div>
+      <div><b>8 Lizenzen &amp; Fortbildungen</b><br>u.&nbsp;a. Reha, Athletik, Ernährung</div>
+      <div><b><span class="star">★★★★★</span> auf Google</b><br>Bewertungen echter Kunden</div>
+    </div>
+  </div>
+</header>
+<section id="leistungen">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow">Leistungen</div>
+        <h2>Drei Wege.<br>Ein Ziel.</h2>
+      </div>
+      <p>Egal ob Studio, Wohnzimmer oder Videocall – du bekommst dasselbe: Training, das zu deinem Alltag passt und messbar wirkt.</p>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-img">
+          <span class="card-tag">Iron&amp;Soul · Köln &amp; Neuss</span>
+          <img src="https://primary.jwwb.nl/pexels/62/6295721.jpeg" alt="Training im Studio">
+        </div>
+        <div class="card-body">
+          <h3>Training im Studio</h3>
+          <p>1:1-Coaching bei Iron&amp;Soul in Köln und Neuss – Premium-Equipment, Hyrox-Flächen und Recovery direkt vor Ort.</p>
+          <a class="card-link" href="#">Mehr erfahren <span>→</span></a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img">
+          <span class="card-tag">Solingen &amp; Umgebung</span>
+          <img src="https://primary.jwwb.nl/public/p/a/h/temp-okrziewihttnknynhdsh/446234001-high-kvsbqq.jpg" alt="Training zuhause">
+        </div>
+        <div class="card-body">
+          <h3>Training bei dir Zuhause</h3>
+          <p>Ich komme mit Equipment zu dir – Kernbereich Solingen, direkte Umgebung nach Absprache. Keine Ausreden, maximale Privatsphäre.</p>
+          <a class="card-link" href="#">Mehr erfahren <span>→</span></a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img">
+          <span class="card-tag">Überall</span>
+          <img src="https://primary.jwwb.nl/public/p/a/h/temp-okrziewihttnknynhdsh/photo-2026-01-19-12-51-19-8-high-77xhx8.jpg" alt="Online-Coaching">
+        </div>
+        <div class="card-body">
+          <h3>Online-Coaching</h3>
+          <p>Individueller Trainingsplan, Video-Feedback und wöchentliche Check-ins – flexibel, wo immer du bist.</p>
+          <a class="card-link" href="#">Mehr erfahren <span>→</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="orte" id="orte">
+  <div class="wrap">
+    <div class="sec-head" style="margin-bottom:40px">
+      <div>
+        <div class="eyebrow">Trainingsorte</div>
+        <h2>Hier trainieren wir.</h2>
+      </div>
+      <p>Für dein Studio-Training bin ich in zwei der modernsten Clubs im Rheinland für dich vor Ort.</p>
+    </div>
+    <div class="orte-grid">
+      <div class="ort">
+        <div class="club">Premium-Club · Zollstock</div>
+        <h3>Iron&amp;Soul Köln</h3>
+        <div class="addr">Weyerstraßerweg 10a · 50969 Köln</div>
+        <ul>
+          <li>3.300 m² Trainingsfläche</li>
+          <li>Hyrox-Bereich</li>
+          <li>Recovery Suite</li>
+          <li>Kostenlose Parkplätze</li>
+        </ul>
+        <a class="card-link" href="https://www.ironandsoul.de/clubs/koln" target="_blank" rel="noopener">Zum Club <span>→</span></a>
+      </div>
+      <div class="ort">
+        <div class="club">Premium-Club · Neuss</div>
+        <h3>Iron&amp;Soul Neuss</h3>
+        <div class="addr">Römerstraße 120 · 41462 Neuss</div>
+        <ul>
+          <li>2.300 m² Trainingsfläche</li>
+          <li>500 m² Hyrox-Outdoor-Area</li>
+          <li>Sauna &amp; Recovery</li>
+          <li>200 Parkplätze</li>
+        </ul>
+        <a class="card-link" href="https://www.ironandsoul.de/clubs/iron-soul-neuss" target="_blank" rel="noopener">Zum Club <span>→</span></a>
+      </div>
+    </div>
+    <div class="ort-note"><b>Zuhause-Training:</b> Kernbereich ist Solingen. Direkte Umgebung (ca. 15–20 Minuten Fahrzeit) nach Absprache – frag einfach im Erstgespräch nach deinem Ort.</div>
+  </div>
+</section>
+<section class="hyrox" id="hyrox">
+  <div class="watermark">Hyrox</div>
+  <div class="wrap hyrox-grid">
+    <div>
+      <div class="eyebrow">Zertifizierter Hyrox-Coach</div>
+      <h2>Bereit für die<br>Race-Floor?</h2>
+      <p>Hyrox ist das am schnellsten wachsende Fitness-Race der Welt – und mit dem falschen Training verschenkst du Minuten. Als zertifizierter Hyrox-Coach bereite ich dich bei Iron&amp;Soul in Köln und Neuss gezielt auf deinen Wettkampf vor – inklusive der 500 m² Hyrox-Outdoor-Fläche in Neuss.</p>
+      <a class="btn btn-dark" href="#">Hyrox-Vorbereitung ansehen</a>
+    </div>
+    <div class="hyrox-facts">
+      <div><b>Race-Simulation</b>Alle 8 Stationen unter realen Bedingungen trainieren</div>
+      <div><b>Pacing-Strategie</b>Die richtige Renneinteilung für deine Zielzeit</div>
+      <div><b>Einsteiger willkommen</b>Vom ersten Hyrox bis zur neuen Bestzeit</div>
+    </div>
+  </div>
+</section>
+<section class="about" id="ueber-mich">
+  <div class="watermark">Donner</div>
+  <div class="wrap about-grid">
+    <div class="video-ph" title="Platzhalter für dein Vorstellungsvideo">
+      <div class="play">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="#15171C"><path d="M8 5v14l11-7z"/></svg>
+      </div>
+      <span>Platzhalter · Dein 60-Sek.-Vorstellungsvideo</span>
+    </div>
+    <div class="about-text">
+      <div class="eyebrow">Über mich</div>
+      <h2>Hi, ich bin Niklas.</h2>
+      <p>Mein Fokus: dir den Einstieg in ein gesundes, starkes Leben so sicher und effektiv wie möglich zu machen. Gemeinsam bauen wir eine Routine, die wirklich zu deinem Leben passt – für langfristigen Erfolg statt Strohfeuer.</p>
+      <div class="quali">
+        <span><b>B.A.</b>Fitnessökonomie</span>
+        <span><b>B</b>Fitnesstrainer-Lizenz</span>
+        <span><b>B</b>Ernährungstrainer-Lizenz</span>
+        <span>Trainer für Sportrehabilitation</span>
+        <span>Athletiktrainer Leistungssport</span>
+        <span>Gesundheitstrainer</span>
+        <span><b>⚡</b>Hyrox-Coach</span>
+      </div>
+      <a class="btn btn-ghost" href="#">Meine Philosophie</a>
+    </div>
+  </div>
+</section>
+<section id="ablauf">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow">So läuft's ab</div>
+        <h2>In drei Schritten<br>zum Plan.</h2>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="num">01</div>
+        <h3>Kostenloses Erstgespräch</h3>
+        <p>30 Minuten, unverbindlich. Wir klären deine Ziele, deinen Alltag und ob wir zusammenpassen.</p>
+      </div>
+      <div class="step">
+        <div class="num">02</div>
+        <h3>Analyse &amp; Plan</h3>
+        <p>Beweglichkeit, Kraft, Alltag, Ernährung – daraus entsteht dein individueller Fahrplan.</p>
+      </div>
+      <div class="step">
+        <div class="num">03</div>
+        <h3>Training &amp; Anpassung</h3>
+        <p>Wir trainieren, messen Fortschritt und passen den Plan laufend an – bis dein Ziel steht.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="reviews" id="stimmen">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow">Erfahrungen</div>
+        <h2>Das sagen Kunden.</h2>
+      </div>
+    </div>
+    <div class="rev-grid">
+      <div class="rev">
+        <div class="stars">★★★★★</div>
+        <p>„Platzhalter – hier kommt eine deiner echten Google-Bewertungen rein, am besten eine, die Ergebnis + Persönlichkeit zeigt."</p>
+        <div class="who">Vorname N. · Google</div>
+      </div>
+      <div class="rev">
+        <div class="stars">★★★★★</div>
+        <p>„Platzhalter – zweite echte Bewertung, ideal mit konkretem Ziel (z. B. Rückenschmerzen, Hyrox, Abnehmen)."</p>
+        <div class="who">Vorname N. · Google</div>
+      </div>
+      <div class="rev">
+        <div class="stars">★★★★★</div>
+        <p>„Platzhalter – dritte echte Bewertung. Verlinkt wird das Ganze direkt auf dein Google-Profil."</p>
+        <div class="who">Vorname N. · Google</div>
+      </div>
+    </div>
+    <div class="placeholder-note">Hinweis für dich, Niklas: Die Zitate sind Platzhalter – wir übernehmen hier 1:1 deine echten Google-Rezensionen und verlinken auf dein Google-Profil.</div>
+  </div>
+</section>
+<section id="faq">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow">Häufige Fragen</div>
+        <h2>Kurz beantwortet.</h2>
+      </div>
+    </div>
+    <div class="faq-list">
+      <details open>
+        <summary>Was kostet Personal Training bei dir?</summary>
+        <p><b>Pakete starten ab 80 € pro Einheit</b> – der genaue Preis hängt von Format (Studio, Zuhause, Online) und Paketgröße ab. Im kostenlosen Erstgespräch finden wir das Paket, das zu deinem Ziel und Budget passt. Keine versteckten Kosten, keine Knebelverträge.</p>
+      </details>
+      <details>
+        <summary>Brauche ich Vorerfahrung?</summary>
+        <p>Nein. Die meisten meiner Kunden starten bei null oder nach einer langen Pause. Genau dafür ist 1:1-Coaching da: Wir bauen Technik und Belastung sicher auf – in deinem Tempo.</p>
+      </details>
+      <details>
+        <summary>Wie oft sollte ich pro Woche trainieren?</summary>
+        <p>Für spürbare Ergebnisse reichen meist 1–2 gemeinsame Einheiten pro Woche, ergänzt durch einen Plan für dein eigenes Training. Wichtiger als die Häufigkeit ist, dass es dauerhaft in deinen Alltag passt.</p>
+      </details>
+      <details>
+        <summary>Ich habe Rückenprobleme / eine Verletzung – geht das trotzdem?</summary>
+        <p>In den meisten Fällen ja – als ausgebildeter Trainer für Sportrehabilitation ist genau das einer meiner Schwerpunkte. Wir klären deine Vorgeschichte im Erstgespräch und stimmen das Training darauf ab, bei Bedarf in Absprache mit deinem Arzt oder Physio.</p>
+      </details>
+      <details>
+        <summary>Wo findet das Training statt?</summary>
+        <p>Im Studio bei <b>Iron&amp;Soul in Köln oder Neuss</b>, bei dir zu Hause in Solingen, oder online per Video – auch als Kombination, je nachdem, wie deine Woche aussieht.</p>
+      </details>
+      <details>
+        <summary>Kommst du auch außerhalb von Solingen zu mir nach Hause?</summary>
+        <p>Mein Kernbereich für Hausbesuche ist Solingen. Orte in der direkten Umgebung (ca. 15–20 Minuten Fahrzeit) sind nach Absprache möglich – schreib mir einfach, wo du wohnst. Für alles darüber hinaus ist mein Online-Coaching die bessere Lösung.</p>
+      </details>
+      <details>
+        <summary>Was passiert im kostenlosen Erstgespräch?</summary>
+        <p>30 Minuten, unverbindlich: Wir sprechen über deine Ziele, deinen Alltag und deine Vorgeschichte. Danach weißt du genau, wie dein Weg aussehen würde – und entscheidest in Ruhe, ob wir zusammenarbeiten.</p>
+      </details>
+    </div>
+  </div>
+</section>
+<section class="cta">
+  <div class="wrap">
+    <div class="eyebrow" style="justify-content:center">Bereit?</div>
+    <h2 style="margin-top:16px">Mach den<br>ersten Schritt.</h2>
+    <p>30 Minuten, kostenlos, unverbindlich. Danach weißt du genau, wie dein Weg aussieht – ob mit mir oder ohne.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-blitz" href="https://calendar.app.google/7Y1TBHpH2an8MW268">Kostenloses Erstgespräch buchen</a>
+      <a class="btn btn-ghost" href="https://wa.me/491776311404">Lieber kurz per WhatsApp?</a>
+    </div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot">
+    <svg width="120" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg">
+      <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
+      <text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text>
+      <polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"/>
+    </svg>
+    <div class="legal">
+      <a href="#">Impressum</a>
+      <a href="#">Datenschutz</a>
+      <a href="#">Instagram</a>
+    </div>
+    <div>© 2026 Fitness Donner · Köln, Neuss &amp; Solingen</div>
+  </div>
+</footer>
+</body>
+</html>
