@@ -1,3 +1,26 @@
+/* ---------- Schriften: lokal ausgeliefert, keine Verbindung zu Google ---------- */
+@font-face{
+  font-family:'Anton';
+  src:url('anton-latin.woff2') format('woff2');
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+@font-face{
+  font-family:'Archivo';
+  src:url('archivo-latin-var.woff2') format('woff2-variations');
+  font-weight:400 700;
+  font-style:normal;
+  font-display:swap;
+}
+@font-face{
+  font-family:'Archivo';
+  src:url('archivo-latin-var-italic.woff2') format('woff2-variations');
+  font-weight:400 700;
+  font-style:italic;
+  font-display:swap;
+}
+
 :root{
   --bg:#15171C;
   --panel:#1C1F26;
