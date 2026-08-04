@@ -63,7 +63,7 @@ nav{position:sticky;top:0;z-index:50;background:rgba(21,23,28,.9);backdrop-filte
 
 /* ---------- Hero (Startseite) ---------- */
 header.hero{position:relative;min-height:88vh;display:flex;align-items:flex-end;overflow:hidden}
-.hero-bg{position:absolute;inset:0;background:url('https://primary.jwwb.nl/pexels/62/6295721.jpeg') center/cover;filter:grayscale(35%) contrast(1.05)}
+.hero-bg{position:absolute;inset:0;background:url('hero-studio.webp') center/cover;filter:grayscale(35%) contrast(1.05)}
 .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(21,23,28,.55) 0%,rgba(21,23,28,.35) 40%,rgba(21,23,28,.96) 100%)}
 .hero-content{position:relative;z-index:2;padding:100px 0 64px;width:100%}
 h1{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(42px,9vw,116px);line-height:.97;letter-spacing:.01em}
@@ -138,7 +138,7 @@ h2{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size
 .quali{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:30px}
 .quali span{border:1px solid var(--line);padding:8px 14px;font-size:13px;color:var(--muted)}
 .quali span b{color:var(--blitz);font-weight:600;margin-right:6px}
-.video-ph{position:relative;aspect-ratio:16/10;border:1px solid var(--line);background:linear-gradient(180deg,rgba(21,23,28,.25),rgba(21,23,28,.85)),url('https://primary.jwwb.nl/public/p/a/h/temp-okrziewihttnknynhdsh/446234001-high-kvsbqq.jpg') center/cover;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;cursor:pointer}
+.video-ph{position:relative;aspect-ratio:16/10;border:1px solid var(--line);background:linear-gradient(180deg,rgba(21,23,28,.25),rgba(21,23,28,.85)),url('training-zuhause.webp') center/cover;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;cursor:pointer}
 .video-ph .play{width:76px;height:76px;border-radius:50%;background:var(--blitz);display:flex;align-items:center;justify-content:center;transition:transform .2s}
 .video-ph:hover .play{transform:scale(1.08)}
 .video-ph .play svg{margin-left:5px}
