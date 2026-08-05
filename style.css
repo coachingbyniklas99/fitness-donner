@@ -234,3 +234,38 @@ footer{border-top:1px solid var(--line);padding:44px 0;font-size:13px;color:var(
 .price ul li{padding:9px 0;border-top:1px solid var(--line);font-size:14px;color:#c9cbd0}
 .price ul li::before{content:"\26A1  ";color:var(--blitz)}
 @media(max-width:900px){.price-grid{grid-template-columns:1fr}.price.featured{order:-1}}
+
+
+/* ---------- Bewertungs-Slider ---------- */
+.rev-score{display:flex;align-items:center;gap:14px}
+.rev-score-num{font-family:var(--display);font-size:52px;line-height:1;color:var(--bone)}
+.rev-score-sub{font-size:13px;color:var(--muted);margin-top:2px}
+.slider{position:relative}
+.slider-track{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;
+  padding:4px 2px 14px;-ms-overflow-style:none;scrollbar-width:none;outline:none}
+.slider-track::-webkit-scrollbar{display:none}
+.slider-track:focus-visible{box-shadow:0 0 0 2px var(--blitz)}
+.slider-track .rev{flex:0 0 calc((100% - 40px)/3);scroll-snap-align:start;display:flex;flex-direction:column;gap:14px}
+.rev-top{display:flex;align-items:center;gap:12px}
+.ava{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;color:#fff;letter-spacing:.04em;flex-shrink:0}
+.rev-name{font-weight:600;color:var(--bone);font-size:15px}
+.rev-meta{font-size:12px;color:var(--muted);letter-spacing:.04em}
+.slider-track .rev p{margin:0;flex:1}
+.slider-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:44px;height:44px;border-radius:50%;
+  border:1px solid var(--line);background:rgba(21,23,28,.92);color:var(--bone);font-size:24px;line-height:1;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
+.slider-nav:hover{border-color:var(--blitz);color:var(--blitz)}
+.slider-nav[disabled]{opacity:.25;cursor:default}
+.slider-nav[disabled]:hover{border-color:var(--line);color:var(--bone)}
+.slider-nav.prev{left:-22px}
+.slider-nav.next{right:-22px}
+.slider-dots{display:flex;gap:8px;justify-content:center;margin-top:6px}
+.slider-dots button{width:8px;height:8px;border-radius:50%;border:none;padding:0;cursor:pointer;
+  background:var(--line);transition:.2s}
+.slider-dots button[aria-current="true"]{background:var(--blitz);width:22px;border-radius:4px}
+@media(max-width:900px){
+  .slider-track .rev{flex:0 0 84%}
+  .slider-nav{display:none}
+  .rev-score{margin-top:18px}
+}
