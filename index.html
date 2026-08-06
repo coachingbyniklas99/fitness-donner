@@ -22,17 +22,17 @@
   "@type": "ProfessionalService",
   "@id": "https://fitnessdonner.de/#business",
   "name": "Fitness Donner",
-  "alternateName": "Fitness Donner \u2013 Personal Training Niklas Donner",
-  "description": "1:1 Personal Training im Studio bei Iron&Soul in K\u00f6ln und Neuss, zu Hause in Solingen oder online. Zertifizierter Hyrox-Coach, B.A. Fitness\u00f6konomie, Schwerpunkt Sportrehabilitation.",
+  "alternateName": "Fitness Donner – Personal Training Niklas Donner",
+  "description": "1:1 Personal Training im Studio bei Iron&Soul in Köln und Neuss, zu Hause in Solingen oder online. Zertifizierter Hyrox-Coach, B.A. Fitnessökonomie, Schwerpunkt Sportrehabilitation.",
   "url": "https://fitnessdonner.de/",
   "telephone": "+49-177-6311404",
   "email": "info@fitnessdonner.de",
   "image": "https://fitnessdonner.de/og-bild.jpg",
-  "priceRange": "\u20ac\u20ac",
+  "priceRange": "€€",
   "currenciesAccepted": "EUR",
   "sameAs": ["https://www.google.com/maps?cid=329045397772977203"],
   "areaServed": [
-    {"@type": "City", "name": "K\u00f6ln"},
+    {"@type": "City", "name": "Köln"},
     {"@type": "City", "name": "Neuss"},
     {"@type": "City", "name": "Solingen"},
     {"@type": "City", "name": "Wuppertal"}
@@ -41,7 +41,7 @@
     "@type": "Person",
     "name": "Niklas Donner",
     "jobTitle": "Personal Trainer",
-    "knowsAbout": ["Personal Training", "Hyrox", "Sportrehabilitation", "Athletiktraining", "Ern\u00e4hrungsberatung"]
+    "knowsAbout": ["Personal Training", "Hyrox", "Sportrehabilitation", "Athletiktraining", "Ernährungsberatung"]
   },
   "hasOfferCatalog": {
     "@type": "OfferCatalog",
@@ -81,7 +81,7 @@
       <a class="btn btn-blitz btn-sm mob-cta" href="https://cal.com/fitnessdonner/kennenlernen">Erstgespr&auml;ch buchen</a>
     </div>
     <a class="btn btn-blitz btn-sm nav-cta" href="https://cal.com/fitnessdonner/kennenlernen">Erstgespr&auml;ch buchen</a>
-    <button class="menu-btn" aria-label="Men&uuml; &ouml;ffnen" onclick="document.getElementById('navLinks').classList.toggle('open');this.textContent=this.textContent==='\u2630'?'\u2715':'\u2630'">&#9776;</button>
+    <button class="menu-btn" aria-label="Men&uuml; &ouml;ffnen" onclick="document.getElementById('navLinks').classList.toggle('open');this.textContent=this.textContent==='☰'?'✕':'☰'">&#9776;</button>
   </div>
 </nav>
 <header class="hero">
@@ -159,6 +159,26 @@
       <p>Gezielte Wettkampf-Vorbereitung bei Iron&amp;Soul in K&ouml;ln und Neuss &ndash; vom ersten Hyrox bis zur neuen Bestzeit.</p>
     </div>
     <a class="btn btn-dark" href="hyrox.html">Hyrox-Vorbereitung ansehen</a>
+  </div>
+</section>
+<section class="about" id="trainer">
+  <div class="watermark">Donner</div>
+  <div class="wrap about-grid">
+    <img src="trainer.webp" alt="Niklas Donner &ndash; Personal Trainer f&uuml;r K&ouml;ln, Neuss und Solingen" loading="lazy" style="width:100%;max-width:420px;justify-self:center;border:1px solid var(--line)">
+    <div class="about-text">
+      <div class="eyebrow">Dein Trainer</div>
+      <h2>Hi, ich bin Niklas.</h2>
+      <p>Personal Trainer mit B.A. in Fitness&ouml;konomie und 8 Lizenzen &amp; Fortbildungen. Mein Fokus: dir den Einstieg in ein starkes, gesundes Leben so sicher und effektiv wie m&ouml;glich zu machen &ndash; mit einer Routine, die wirklich in dein Leben passt, statt Strohfeuer.</p>
+      <div class="quali">
+        <span><b>B.A.</b>Fitness&ouml;konomie</span>
+        <span><b>&#9889;</b>Hyrox-Coach</span>
+        <span>Trainer f&uuml;r Sportrehabilitation</span>
+        <span>Athletiktrainer Leistungssport</span>
+        <span><b>B</b>Fitnesstrainer-Lizenz</span>
+        <span><b>B</b>Ern&auml;hrungstrainer-Lizenz</span>
+      </div>
+      <a class="btn btn-ghost" href="ueber-mich.html">Mehr &uuml;ber mich</a>
+    </div>
   </div>
 </section>
 <section class="reviews" id="stimmen">
@@ -259,7 +279,7 @@
 </footer>
 <script>
 (function(){var n=document.getElementById('navLinks'),b=document.querySelector('.menu-btn');
-if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&!a.classList.contains('sub-toggle')){n.classList.remove('open');b.textContent='\u2630';}});}})();
+if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&!a.classList.contains('sub-toggle')){n.classList.remove('open');b.textContent='☰';}});}})();
 </script>
 <script>
 (function(){
