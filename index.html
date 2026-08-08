@@ -55,7 +55,7 @@
   }
 }
 </script>
-<link rel="stylesheet" href="style.css?v=3">
+<link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
 <nav>
@@ -98,16 +98,6 @@
     <p class="hero-note"><a href="https://www.google.com/maps?cid=329045397772977203" target="_blank" rel="noopener"><span class="star">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 5,0 auf Google &middot; 70 Bewertungen</a> &nbsp;&middot;&nbsp; <a href="https://wa.me/491776311404">Lieber per WhatsApp?</a></p>
   </div>
 </header>
-<section class="intro" style="padding-bottom:0">
-  <div class="wrap">
-    <p>Individuelles 1:1-Coaching im Studio in K&ouml;ln und Neuss, bei dir zu Hause in Solingen und Wuppertal oder online &ndash; wissenschaftlich fundiert, ohne &Uuml;berforderung, mit einem Plan, der in dein Leben passt.</p>
-    <div class="quali">
-      <span><b>B.A.</b>Fitness&ouml;konomie</span>
-      <span>8 Lizenzen &amp; Fortbildungen</span>
-      <span><b>&#9889;</b>Hyrox-Coach</span>
-    </div>
-  </div>
-</section>
 <section id="leistungen">
   <div class="wrap">
     <div class="sec-head">
@@ -152,23 +142,13 @@
         </div>
       </a>
     </div>
-  </div>
-</section>
-<section class="hyrox hyrox-teaser">
-  <div class="watermark">Hyrox</div>
-  <div class="wrap hyrox-grid">
-    <div>
-      <div class="eyebrow">Zertifizierter Hyrox-Coach</div>
-      <h2>Bereit f&uuml;r die Race-Floor?</h2>
-      <p>Gezielte Wettkampf-Vorbereitung bei Iron&amp;Soul in K&ouml;ln und Neuss &ndash; vom ersten Hyrox bis zur neuen Bestzeit.</p>
-    </div>
-    <a class="btn btn-dark" href="hyrox.html">Hyrox-Vorbereitung ansehen</a>
+    <div class="slider-dots" id="cardDots" aria-hidden="true"></div>
   </div>
 </section>
 <section class="about" id="trainer">
   <div class="watermark">Donner</div>
   <div class="wrap about-grid">
-    <img src="trainer.webp" alt="Niklas Donner &ndash; Personal Trainer f&uuml;r K&ouml;ln, Neuss und Solingen" loading="lazy" style="width:100%;max-width:420px;justify-self:center;border:1px solid var(--line)">
+    <img src="hyrox-finish.webp" alt="Niklas Donner beim Zieleinlauf eines Hyrox-Wettkampfs" loading="lazy" style="width:100%;border:1px solid var(--line)">
     <div class="about-text">
       <div class="eyebrow">Dein Trainer</div>
       <h2>Hi, ich bin Niklas.</h2>
@@ -183,6 +163,17 @@
       </div>
       <a class="btn btn-ghost" href="ueber-mich.html">Mehr &uuml;ber mich</a>
     </div>
+  </div>
+</section>
+<section class="hyrox hyrox-teaser">
+  <div class="watermark">Hyrox</div>
+  <div class="wrap hyrox-grid">
+    <div>
+      <div class="eyebrow">Zertifizierter Hyrox-Coach</div>
+      <h2>Bereit f&uuml;r die Race-Floor?</h2>
+      <p>Gezielte Wettkampf-Vorbereitung bei Iron&amp;Soul in K&ouml;ln und Neuss &ndash; vom ersten Hyrox bis zur neuen Bestzeit.</p>
+    </div>
+    <a class="btn btn-dark" href="hyrox.html">Hyrox-Vorbereitung ansehen</a>
   </div>
 </section>
 <section class="reviews" id="stimmen">
@@ -320,6 +311,29 @@ if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a
   });
   window.addEventListener('resize', function(){ window.clearTimeout(t._r); t._r=window.setTimeout(buildDots,150); });
   buildDots();
+})();
+</script>
+<script>
+(function(){
+  var t=document.querySelector('.cards'),d=document.getElementById('cardDots');
+  if(!t||!d) return;
+  var cards=[].slice.call(t.children);
+  function build(){
+    d.innerHTML='';
+    if(t.scrollWidth<=t.clientWidth+4){return;}
+    cards.forEach(function(c,i){
+      var b=document.createElement('button'); b.type='button';
+      b.setAttribute('aria-label','Karte '+(i+1));
+      b.addEventListener('click',function(){t.scrollTo({left:c.offsetLeft-t.offsetLeft,behavior:'smooth'});});
+      d.appendChild(b);
+    });
+    sync();
+  }
+  function cur(){var x=t.scrollLeft+t.clientWidth*0.3,b=0;cards.forEach(function(c,i){if(c.offsetLeft-t.offsetLeft<=x)b=i;});return b;}
+  function sync(){var c=cur();[].slice.call(d.children).forEach(function(el,i){el.setAttribute('aria-current',i===c?'true':'false');});}
+  t.addEventListener('scroll',function(){window.clearTimeout(t._s);t._s=window.setTimeout(sync,80);});
+  window.addEventListener('resize',function(){window.clearTimeout(t._r);t._r=window.setTimeout(build,150);});
+  build();
 })();
 </script>
 </body>

@@ -64,7 +64,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="style.css?v=2">
+<link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
 <nav>
@@ -143,19 +143,106 @@
         <div class="eyebrow">Das Format</div>
         <h2>8&times; 1 km Laufen.<br>8 Stationen.</h2>
       </div>
-      <p>Bei Hyrox wechselst du acht Mal zwischen einem Kilometer Laufen und einer Workout-Station. Jede Station hat ihre eigene Technik &ndash; und genau da liegen deine Minuten.</p>
+      <p>Vor jeder Station l&auml;ufst du einen Kilometer. Wische dich einmal durchs komplette Race &ndash; mit den offiziellen Gewichten f&uuml;r Open und Pro.</p>
     </div>
-    <img src="hyrox-run.webp" alt="Niklas Donner mit Kettlebells auf der Laufstrecke eines Hyrox-Wettkampfs" loading="lazy" style="width:100%;aspect-ratio:21/9;object-fit:cover;margin-bottom:32px;filter:grayscale(15%)">
-    <div class="feat-grid" style="gap:14px">
-      <div class="feat"><img src="hyrox-skierg.webp" alt="Niklas Donner am SkiErg bei einem Hyrox-Wettkampf" loading="lazy" style="width:calc(100% + 52px);max-width:none;margin:-28px -26px 18px;aspect-ratio:16/10;object-fit:cover"><div class="ico">01</div><h3>SkiErg</h3><p>1.000 m &ndash; H&uuml;ftschwung statt Arme: Wer hier nur zieht, bezahlt es auf den n&auml;chsten Kilometern.</p></div>
-      <div class="feat"><img src="hyrox-sled-push.webp" alt="Niklas Donner beim Sled Push auf der Hyrox Race-Floor" loading="lazy" style="width:calc(100% + 52px);max-width:none;margin:-28px -26px 18px;aspect-ratio:16/10;object-fit:cover"><div class="ico">02</div><h3>Sled Push</h3><p>50 m &ndash; K&ouml;rperposition und Schrittfrequenz entscheiden, ob der Schlitten rollt oder klebt.</p></div>
-      <div class="feat"><img src="hyrox-sled-pull.webp" alt="Niklas Donner beim Sled Pull bei einem Hyrox-Wettkampf" loading="lazy" style="width:calc(100% + 52px);max-width:none;margin:-28px -26px 18px;aspect-ratio:16/10;object-fit:cover;object-position:50% 22%"><div class="ico">03</div><h3>Sled Pull</h3><p>50 m &ndash; Rhythmus und Griffkraft: eine der Stationen, an denen Rennen verloren gehen.</p></div>
-      <div class="feat"><div style="width:calc(100% + 52px);max-width:none;margin:-28px -26px 18px;aspect-ratio:16/10;background:var(--panel-2);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;letter-spacing:.16em;text-transform:uppercase">&#9889; Foto folgt</div><div class="ico">04</div><h3>Burpee Broad Jumps</h3><p>80 m &ndash; Tempo-Disziplin statt Sprint: Wer zu schnell startet, steht hier still.</p></div>
-      <div class="feat"><img src="hyrox-row.webp" alt="Niklas Donner beim 1.000-m-Rudern auf dem RowErg bei Hyrox" loading="lazy" style="width:calc(100% + 52px);max-width:none;margin:-28px -26px 18px;aspect-ratio:16/10;object-fit:cover;object-position:50% 30%"><div class="ico">05</div><h3>Rowing</h3><p>1.000 m &ndash; Schlagzahl und Zugl&auml;nge so w&auml;hlen, dass die Beine f&uuml;rs Laufen frisch bleiben.</p></div>
-      <div class="feat"><img src="hyrox-farmers-carry.webp" alt="Niklas Donner beim Farmers Carry mit Kettlebells bei Hyrox" loading="lazy" style="width:calc(100% + 52px);max-width:none;margin:-28px -26px 18px;aspect-ratio:16/10;object-fit:cover"><div class="ico">06</div><h3>Farmers Carry</h3><p>200 m &ndash; Griffkraft und aufrechte Haltung: hier kannst du atmen und Zeit gutmachen.</p></div>
-      <div class="feat"><img src="Hyrox-Lunges.webp" alt="Niklas Donner bei Sandbag Lunges mit 20-kg-Sandsack bei Hyrox" loading="lazy" style="width:calc(100% + 52px);max-width:none;margin:-28px -26px 18px;aspect-ratio:16/10;object-fit:cover;object-position:50% 25%"><div class="ico">07</div><h3>Sandbag Lunges</h3><p>100 m &ndash; Schrittl&auml;nge und Beinkraft: die Station, die volle Oberschenkel gnadenlos bestraft.</p></div>
-      <div class="feat"><img src="hyrox-wallballs.webp" alt="Niklas Donner bei Wall Balls in der tiefen Kniebeuge bei Hyrox" loading="lazy" style="width:calc(100% + 52px);max-width:none;margin:-28px -26px 18px;aspect-ratio:16/10;object-fit:cover;object-position:50% 35%"><div class="ico">08</div><h3>Wall Balls</h3><p>75/100 Wdh. &ndash; das Finale: Technik und Wurfrhythmus entscheiden, ob No-Reps dich Minuten kosten.</p></div>
+    <div class="race-track" id="raceTrack" tabindex="0" role="group" aria-roledescription="Karussell" aria-label="Die 8 Hyrox-Stationen mit Laufstrecke">
+      <div class="race-card rc-startend"><div><div class="big">START</div><p>8 Stationen und 8 km Laufen<br>liegen vor dir.</p></div></div>
+      <div class="race-gap"><span>1 km Lauf &#10132;</span></div>
+      <div class="race-card">
+        <img class="rc-img" src="hyrox-skierg.webp" alt="Niklas Donner am SkiErg bei einem Hyrox-Wettkampf" loading="lazy">
+        <div class="rc-body"><div class="rc-num">01</div>
+          <div class="rc-name"><span style="color:var(--blitz)">01 &middot;</span> SkiErg</div>
+          <div class="rc-dist">1.000 m</div>
+          <div class="rc-w"><span><b>Alle Divisionen</b> eigenes K&ouml;rpergewicht</span></div>
+          <p class="rc-tip">H&uuml;ftschwung statt Arme: Wer hier nur zieht, bezahlt es auf den n&auml;chsten Kilometern.</p>
+        </div>
+      </div>
+      <div class="race-gap"><span>1 km Lauf &#10132;</span></div>
+      <div class="race-card">
+        <img class="rc-img" src="hyrox-sled-push.webp" alt="Niklas Donner beim Sled Push auf der Hyrox Race-Floor" loading="lazy">
+        <div class="rc-body"><div class="rc-num">02</div>
+          <div class="rc-name"><span style="color:var(--blitz)">02 &middot;</span> Sled Push</div>
+          <div class="rc-dist">50 m <small>&middot; inkl. Schlitten</small></div>
+          <div class="rc-w"><span><b>Open</b> Damen 102 kg &middot; Herren 152 kg</span><span><b>Pro</b> Damen 152 kg &middot; Herren 202 kg</span></div>
+          <p class="rc-tip">K&ouml;rperposition und Schrittfrequenz entscheiden, ob der Schlitten rollt oder klebt.</p>
+        </div>
+      </div>
+      <div class="race-gap"><span>1 km Lauf &#10132;</span></div>
+      <div class="race-card">
+        <img class="rc-img" src="hyrox-sled-pull.webp" alt="Niklas Donner beim Sled Pull bei einem Hyrox-Wettkampf" loading="lazy" style="object-position:50% 22%">
+        <div class="rc-body"><div class="rc-num">03</div>
+          <div class="rc-name"><span style="color:var(--blitz)">03 &middot;</span> Sled Pull</div>
+          <div class="rc-dist">50 m <small>&middot; inkl. Schlitten</small></div>
+          <div class="rc-w"><span><b>Open</b> Damen 78 kg &middot; Herren 103 kg</span><span><b>Pro</b> Damen 103 kg &middot; Herren 153 kg</span></div>
+          <p class="rc-tip">Rhythmus und Griffkraft: eine der Stationen, an denen Rennen verloren gehen.</p>
+        </div>
+      </div>
+      <div class="race-gap"><span>1 km Lauf &#10132;</span></div>
+      <div class="race-card">
+        <div class="rc-ph">&#9889; Foto folgt</div>
+        <div class="rc-body"><div class="rc-num">04</div>
+          <div class="rc-name"><span style="color:var(--blitz)">04 &middot;</span> Burpee Broad Jumps</div>
+          <div class="rc-dist">80 m</div>
+          <div class="rc-w"><span><b>Alle Divisionen</b> eigenes K&ouml;rpergewicht</span></div>
+          <p class="rc-tip">Tempo-Disziplin statt Sprint: Wer zu schnell startet, steht hier still.</p>
+        </div>
+      </div>
+      <div class="race-gap"><span>1 km Lauf &#10132;</span></div>
+      <div class="race-card">
+        <img class="rc-img" src="hyrox-row.webp" alt="Niklas Donner beim 1.000-m-Rudern auf dem RowErg bei Hyrox" loading="lazy" style="object-position:50% 30%">
+        <div class="rc-body"><div class="rc-num">05</div>
+          <div class="rc-name"><span style="color:var(--blitz)">05 &middot;</span> Rowing</div>
+          <div class="rc-dist">1.000 m</div>
+          <div class="rc-w"><span><b>Alle Divisionen</b> eigenes Tempo, freier Widerstand</span></div>
+          <p class="rc-tip">Schlagzahl und Zugl&auml;nge so w&auml;hlen, dass die Beine f&uuml;rs Laufen frisch bleiben.</p>
+        </div>
+      </div>
+      <div class="race-gap"><span>1 km Lauf &#10132;</span></div>
+      <div class="race-card">
+        <img class="rc-img" src="hyrox-farmers-carry.webp" alt="Niklas Donner beim Farmers Carry mit Kettlebells bei Hyrox" loading="lazy">
+        <div class="rc-body"><div class="rc-num">06</div>
+          <div class="rc-name"><span style="color:var(--blitz)">06 &middot;</span> Farmers Carry</div>
+          <div class="rc-dist">200 m</div>
+          <div class="rc-w"><span><b>Open</b> Damen 2&times;16 kg &middot; Herren 2&times;24 kg</span><span><b>Pro</b> Damen 2&times;24 kg &middot; Herren 2&times;32 kg</span></div>
+          <p class="rc-tip">Griffkraft und aufrechte Haltung: hier kannst du atmen und Zeit gutmachen.</p>
+        </div>
+      </div>
+      <div class="race-gap"><span>1 km Lauf &#10132;</span></div>
+      <div class="race-card">
+        <img class="rc-img" src="station-lunges.webp" alt="Niklas Donner bei Sandbag Lunges mit 20-kg-Sandsack bei Hyrox" loading="lazy" style="object-position:50% 25%">
+        <div class="rc-body"><div class="rc-num">07</div>
+          <div class="rc-name"><span style="color:var(--blitz)">07 &middot;</span> Sandbag Lunges</div>
+          <div class="rc-dist">100 m</div>
+          <div class="rc-w"><span><b>Open</b> Damen 10 kg &middot; Herren 20 kg</span><span><b>Pro</b> Damen 20 kg &middot; Herren 30 kg</span></div>
+          <p class="rc-tip">Schrittl&auml;nge und Beinkraft: die Station, die volle Oberschenkel gnadenlos bestraft.</p>
+        </div>
+      </div>
+      <div class="race-gap"><span>1 km Lauf &#10132;</span></div>
+      <div class="race-card">
+        <img class="rc-img" src="hyrox-wallballs.webp" alt="Niklas Donner bei Wall Balls in der tiefen Kniebeuge bei Hyrox" loading="lazy" style="object-position:50% 35%">
+        <div class="rc-body"><div class="rc-num">08</div>
+          <div class="rc-name"><span style="color:var(--blitz)">08 &middot;</span> Wall Balls</div>
+          <div class="rc-dist">75&ndash;100 Wdh. <small>&middot; das Finale</small></div>
+          <div class="rc-w"><span><b>Open</b> Damen 4 kg (75 Wdh.) &middot; Herren 6 kg (100 Wdh.)</span><span><b>Pro</b> Damen 6 kg &middot; Herren 9 kg (je 100 Wdh.)</span></div>
+          <p class="rc-tip">Technik und Wurfrhythmus entscheiden, ob No-Reps dich Minuten kosten.</p>
+        </div>
+      </div>
+      <div class="race-card rc-startend" style="margin-left:12px"><div><div class="big" style="color:var(--blitz)">ZIEL</div><p>Geschafft.<br>Bereit, daf&uuml;r zu trainieren?</p></div></div>
     </div>
+    <div class="race-bar" aria-hidden="true">
+      <span class="race-lbl">START</span>
+      <span class="race-seg"></span><button class="race-pin" data-i="1" type="button">1</button>
+      <span class="race-seg"></span><button class="race-pin" data-i="2" type="button">2</button>
+      <span class="race-seg"></span><button class="race-pin" data-i="3" type="button">3</button>
+      <span class="race-seg"></span><button class="race-pin" data-i="4" type="button">4</button>
+      <span class="race-seg"></span><button class="race-pin" data-i="5" type="button">5</button>
+      <span class="race-seg"></span><button class="race-pin" data-i="6" type="button">6</button>
+      <span class="race-seg"></span><button class="race-pin" data-i="7" type="button">7</button>
+      <span class="race-seg"></span><button class="race-pin" data-i="8" type="button">8</button>
+      <span class="race-seg"></span><span class="race-lbl">ZIEL</span>
+    </div>
+    <div class="slider-dots" id="raceDots" aria-hidden="true"></div>
+    <div class="placeholder-note" style="margin-top:20px">Jedes Segment der Leiste ist ein Kilometer Laufen. Doubles &amp; Relay: alle Divisionen im <a href="https://hyrox.com/rulebook/" target="_blank" rel="noopener" style="color:var(--blitz);text-decoration:underline">offiziellen Hyrox-Rulebook &rarr;</a></div>
   </div>
 </section>
 <section style="padding-top:0">
@@ -256,7 +343,6 @@
 </section>
 <section class="cta">
   <div class="wrap">
-    <img src="hyrox-finish.webp" alt="Niklas Donner beim Zieleinlauf eines Hyrox-Wettkampfs" loading="lazy" style="width:100%;max-width:900px;margin:0 auto 48px;aspect-ratio:21/9;object-fit:cover;display:block">
     <div class="eyebrow" style="justify-content:center">Bereit?</div>
     <h2 style="margin-top:16px">Mach den<br>ersten Schritt.</h2>
     <p>30 Minuten, kostenlos, unverbindlich. Danach wei&szlig;t du genau, wie dein Weg zur Race-Floor aussieht &ndash; ob mit mir oder ohne.</p>
@@ -283,6 +369,41 @@
 <script>
 (function(){var n=document.getElementById('navLinks'),b=document.querySelector('.menu-btn');
 if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&!a.classList.contains('sub-toggle')){n.classList.remove('open');b.textContent='☰';}});}})();
+</script>
+<script>
+(function(){
+  var t=document.getElementById('raceTrack'); if(!t) return;
+  var cards=[].slice.call(t.querySelectorAll('.race-card'));
+  var pins=[].slice.call(document.querySelectorAll('.race-pin'));
+  var segs=[].slice.call(document.querySelectorAll('.race-seg'));
+  var dots=document.getElementById('raceDots');
+  function goTo(i){var c=cards[i];if(c)t.scrollTo({left:c.offsetLeft-t.offsetLeft,behavior:'smooth'});}
+  pins.forEach(function(p){p.addEventListener('click',function(){goTo(parseInt(p.getAttribute('data-i'),10));});});
+  function cur(){var x=t.scrollLeft+t.clientWidth*0.35,b=0;cards.forEach(function(c,i){if(c.offsetLeft-t.offsetLeft<=x)b=i;});return b;}
+  function sync(){
+    var c=cur();
+    pins.forEach(function(p,i){var n=i+1;p.classList.toggle('act',n===c);p.classList.toggle('done',n<c);});
+    segs.forEach(function(s,i){s.classList.toggle('done',(i+1)<=c);});
+    if(dots)[].slice.call(dots.children).forEach(function(el,i){el.setAttribute('aria-current',i===c?'true':'false');});
+  }
+  function buildDots(){
+    if(!dots) return; dots.innerHTML='';
+    cards.forEach(function(c,i){
+      var b=document.createElement('button'); b.type='button';
+      b.setAttribute('aria-label','Abschnitt '+(i+1));
+      b.addEventListener('click',function(){goTo(i);});
+      dots.appendChild(b);
+    });
+    sync();
+  }
+  t.addEventListener('scroll',function(){window.clearTimeout(t._s);t._s=window.setTimeout(sync,80);});
+  t.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'){e.preventDefault();goTo(Math.min(cards.length-1,cur()+1));}
+    if(e.key==='ArrowLeft'){e.preventDefault();goTo(Math.max(0,cur()-1));}
+  });
+  window.addEventListener('resize',function(){window.clearTimeout(t._r);t._r=window.setTimeout(sync,150);});
+  buildDots();
+})();
 </script>
 </body>
 </html>
