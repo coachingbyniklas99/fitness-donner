@@ -27,41 +27,94 @@
   "worksFor": {
     "@id": "https://fitnessdonner.de/#business"
   },
+  "alumniOf": {
+    "@type": "CollegeOrUniversity",
+    "name": "Deutsche Hochschule für Prävention und Gesundheitsmanagement (DHfPG)",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Saarbrücken",
+      "addressCountry": "DE"
+    }
+  },
   "hasCredential": [
     {
       "@type": "EducationalOccupationalCredential",
+      "name": "Bachelor of Arts Fitnessökonomie",
       "credentialCategory": "Bachelor of Arts",
-      "name": "B.A. Fitnessökonomie"
+      "educationalLevel": "DQR-Stufe 6",
+      "recognizedBy": {
+        "@type": "CollegeOrUniversity",
+        "name": "Deutsche Hochschule für Prävention und Gesundheitsmanagement (DHfPG)"
+      }
     },
     {
       "@type": "EducationalOccupationalCredential",
+      "name": "Fitnesstrainer/in-B-Lizenz",
       "credentialCategory": "Lizenz",
-      "name": "Fitnesstrainer-B-Lizenz"
+      "recognizedBy": {
+        "@type": "Organization",
+        "name": "BSA-Akademie"
+      },
+      "educationalLevel": "DQR-Stufe 3"
     },
     {
       "@type": "EducationalOccupationalCredential",
+      "name": "Ernährungstrainer/in-B-Lizenz",
       "credentialCategory": "Lizenz",
-      "name": "Ernährungstrainer-B-Lizenz"
+      "recognizedBy": {
+        "@type": "Organization",
+        "name": "BSA-Akademie"
+      },
+      "educationalLevel": "DQR-Stufe 3"
     },
     {
       "@type": "EducationalOccupationalCredential",
+      "name": "Trainer/in für Sportrehabilitation",
       "credentialCategory": "Lizenz",
-      "name": "Trainer für Sportrehabilitation"
+      "recognizedBy": {
+        "@type": "Organization",
+        "name": "BSA-Akademie"
+      },
+      "educationalLevel": "DQR-Stufe 4"
     },
     {
       "@type": "EducationalOccupationalCredential",
+      "name": "Athletiktrainer/in",
       "credentialCategory": "Lizenz",
-      "name": "Athletiktrainer Leistungssport"
+      "recognizedBy": {
+        "@type": "Organization",
+        "name": "BSA-Akademie"
+      },
+      "educationalLevel": "DQR-Stufe 4"
     },
     {
       "@type": "EducationalOccupationalCredential",
+      "name": "Athletiktrainer/in Leistungssport",
       "credentialCategory": "Lizenz",
-      "name": "Gesundheitstrainer"
+      "recognizedBy": {
+        "@type": "Organization",
+        "name": "BSA-Akademie"
+      },
+      "educationalLevel": "DQR-Stufe 4"
     },
     {
       "@type": "EducationalOccupationalCredential",
+      "name": "Gesundheitstrainer/in",
+      "credentialCategory": "Lizenz",
+      "recognizedBy": {
+        "@type": "Organization",
+        "name": "BSA-Akademie"
+      },
+      "educationalLevel": "DQR-Stufe 4"
+    },
+    {
+      "@type": "EducationalOccupationalCredential",
+      "name": "Official HYROX Coach",
       "credentialCategory": "Zertifizierung",
-      "name": "Hyrox-Coach"
+      "recognizedBy": {
+        "@type": "Organization",
+        "name": "HYROX"
+      }
     }
   ],
   "knowsAbout": [
@@ -135,7 +188,7 @@
     <p style="color:#c9cbd0;margin-top:22px;font-size:16px">Ich war 15 und habe Fu&szlig;ball gespielt. Und ich hatte eine Verletzung, die immer wiederkam. Nicht einmal, sondern wieder und wieder &ndash; irgendwann war klar: So geht es nicht weiter, ich muss etwas &auml;ndern.</p>
     <p style="color:#c9cbd0;margin-top:16px;font-size:16px">Also habe ich mit Krafttraining angefangen. Am Anfang ziemlich planlos, aber ich habe schnell gemerkt, dass sich etwas tut: Je besser ich meinen K&ouml;rper trainiert und belastbar gemacht habe, <b style="color:var(--bone)">desto seltener wurde die Verletzung</b>. Das war der Moment, in dem aus einer Notl&ouml;sung ein Interesse wurde.</p>
     <p style="color:#c9cbd0;margin-top:16px;font-size:16px">Ich habe angefangen, mich richtig einzulesen &ndash; damals vor allem &uuml;ber YouTube, stundenlang, Video f&uuml;r Video. Und mit 15, 16 habe ich schon die ersten Trainingspl&auml;ne f&uuml;r meine Freunde geschrieben und mit ihnen ausgetauscht. Heute bin ich 26 und damit <b style="color:var(--bone)">seit elf Jahren im Krafttraining</b>.</p>
-    <p style="color:#c9cbd0;margin-top:16px;font-size:16px">Das Studium der Fitness&ouml;konomie kam sp&auml;ter dazu. Es hat mir viel gebracht &ndash; aber ehrlich gesagt kam ich nicht bei null an: Durch die Jahre davor war schon eine Menge da. Das Studium hat vor allem daf&uuml;r gesorgt, dass ich verstehe, <i>warum</i> etwas funktioniert, statt es nur zu wissen.</p>
+    <p style="color:#c9cbd0;margin-top:16px;font-size:16px">Das Studium der Fitness&ouml;konomie an der Deutschen Hochschule f&uuml;r Pr&auml;vention und Gesundheitsmanagement kam sp&auml;ter dazu. Es hat mir viel gebracht &ndash; aber ehrlich gesagt kam ich nicht bei null an: Durch die Jahre davor war schon eine Menge da. Das Studium hat vor allem daf&uuml;r gesorgt, dass ich verstehe, <i>warum</i> etwas funktioniert, statt es nur zu wissen.</p>
   </div>
 </section>
 
@@ -168,13 +221,14 @@
       <p>Acht Aus- und Fortbildungen klingen erst mal nach einer Liste. Hier steht, was du konkret davon hast.</p>
     </div>
     <div class="feat-grid">
-      <div class="feat"><div class="ico">&#9889;</div><h3>B.A. Fitness&ouml;konomie</h3><p>Sportwissenschaftliche Basis statt Bauchgef&uuml;hl: Ich kann einordnen, welche Studienlage hinter einer Empfehlung steht &ndash; und welche nicht.</p></div>
-      <div class="feat"><div class="ico">&#9889;</div><h3>Trainer f&uuml;r Sportrehabilitation</h3><p>Der Grund, warum du auch mit R&uuml;ckenproblemen oder nach einer Verletzung trainieren kannst. Wir arbeiten um Beschwerden herum, statt sie zu ignorieren.</p></div>
-      <div class="feat"><div class="ico">&#9889;</div><h3>Athletiktrainer Leistungssport</h3><p>Belastungssteuerung, wie sie im Leistungssport &uuml;blich ist: Wann wird gesteigert, wann erholt &ndash; damit Fortschritt planbar bleibt.</p></div>
-      <div class="feat"><div class="ico">&#9889;</div><h3>Fitnesstrainer-B-Lizenz</h3><p>Das Handwerk: Technik, &Uuml;bungsauswahl, Trainingsplanung. Die Basis, auf der alles andere aufbaut.</p></div>
+      <div class="feat"><div class="ico">&#9889;</div><h3>B.A. Fitness&ouml;konomie</h3><p>Sechs Semester an der <b style="color:var(--bone)">Deutschen Hochschule f&uuml;r Pr&auml;vention und Gesundheitsmanagement</b>, 210 ECTS. Trainingslehre, Medizin, Ern&auml;hrung: Ich kann einordnen, welche Studienlage hinter einer Empfehlung steht &ndash; und welche nicht.</p></div>
+      <div class="feat"><div class="ico">&#9889;</div><h3>Trainer f&uuml;r Sportrehabilitation</h3><p>Aufbauqualifikation der BSA-Akademie (DQR-Stufe 4). Der Grund, warum du auch mit R&uuml;ckenproblemen oder nach einer Verletzung trainieren kannst: Wir arbeiten um Beschwerden herum, statt sie zu ignorieren.</p></div>
+      <div class="feat"><div class="ico">&#9889;</div><h3>Athletiktrainer Leistungssport</h3><p>Zwei Aufbauqualifikationen (DQR-Stufe 4) zu Athletik- und Leistungssporttraining. Belastungssteuerung wie im Leistungssport: Wann wird gesteigert, wann erholt &ndash; damit Fortschritt planbar bleibt.</p></div>
+      <div class="feat"><div class="ico">&#9889;</div><h3>Fitnesstrainer-B-Lizenz</h3><p>Das Handwerk: Technik, &Uuml;bungsauswahl, Trainingsplanung. Basisqualifikation der BSA-Akademie und die Grundlage, auf der alles andere aufbaut.</p></div>
       <div class="feat"><div class="ico">&#9889;</div><h3>Ern&auml;hrungstrainer-B-Lizenz</h3><p>Ern&auml;hrung geh&ouml;rt dazu &ndash; alltagstauglich und ohne Verbotslisten. Training allein bringt dich nur einen Teil des Weges.</p></div>
-      <div class="feat"><div class="ico">&#9889;</div><h3>Gesundheitstrainer &amp; Hyrox-Coach</h3><p>Von pr&auml;ventivem Gesundheitstraining bis zur Wettkampfvorbereitung: Ich kann beide Enden bedienen &ndash; und alles dazwischen.</p></div>
+      <div class="feat"><div class="ico">&#9889;</div><h3>Gesundheitstrainer &amp; Hyrox-Coach</h3><p>Von pr&auml;ventivem Gesundheitstraining bis zur Wettkampfvorbereitung: <b style="color:var(--bone)">Offizieller Hyrox-Coach seit 2023</b>. Ich kann beide Enden bedienen &ndash; und alles dazwischen.</p></div>
     </div>
+    <div class="ort-note" style="margin-top:28px"><b>Wo ich ausgebildet wurde:</b> Mein Bachelor kommt von der <b>Deutschen Hochschule f&uuml;r Pr&auml;vention und Gesundheitsmanagement (DHfPG)</b> in Saarbr&uuml;cken, die Trainerlizenzen von der <b>BSA-Akademie</b> &ndash; staatlich gepr&uuml;fte und zugelassene Fernlehrg&auml;nge. Alle Nachweise zeige ich dir auf Anfrage gern.</div>
   </div>
 </section>
 
