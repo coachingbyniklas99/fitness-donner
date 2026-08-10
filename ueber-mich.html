@@ -3,20 +3,84 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Über mich - Niklas | Fitness Donner</title>
-<meta name="description" content="Niklas - Personal Trainer mit B.A. Fitnessökonomie und 8 Lizenzen, u. a. Reha, Athletik, Ernährung und Hyrox.">
+<title>&Uuml;ber mich - Niklas Donner, Personal Trainer | Fitness Donner</title>
+<meta name="description" content="Niklas Donner: seit 11 Jahren im Krafttraining, B.A. Fitness&ouml;konomie, 8 Lizenzen und zertifizierter Hyrox-Coach. Warum ich Personal Trainer geworden bin.">
 <link rel="canonical" href="https://fitnessdonner.de/ueber-mich.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Fitness Donner">
 <meta property="og:locale" content="de_DE">
 <meta property="og:url" content="https://fitnessdonner.de/ueber-mich.html">
-<meta property="og:title" content="Über mich - Niklas | Fitness Donner">
-<meta property="og:description" content="Niklas - Personal Trainer mit B.A. Fitnessökonomie und 8 Lizenzen, u. a. Reha, Athletik, Ernährung und Hyrox.">
+<meta property="og:title" content="&Uuml;ber mich - Niklas Donner, Personal Trainer | Fitness Donner">
+<meta property="og:description" content="Niklas Donner: seit 11 Jahren im Krafttraining, B.A. Fitness&ouml;konomie, 8 Lizenzen und zertifizierter Hyrox-Coach. Warum ich Personal Trainer geworden bin.">
 <meta property="og:image" content="https://fitnessdonner.de/og-bild.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="style.css?v=2">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Niklas Donner",
+  "jobTitle": "Personal Trainer",
+  "url": "https://fitnessdonner.de/ueber-mich.html",
+  "image": "https://fitnessdonner.de/hero-niklas.webp",
+  "worksFor": {
+    "@id": "https://fitnessdonner.de/#business"
+  },
+  "hasCredential": [
+    {
+      "@type": "EducationalOccupationalCredential",
+      "credentialCategory": "Bachelor of Arts",
+      "name": "B.A. Fitnessökonomie"
+    },
+    {
+      "@type": "EducationalOccupationalCredential",
+      "credentialCategory": "Lizenz",
+      "name": "Fitnesstrainer-B-Lizenz"
+    },
+    {
+      "@type": "EducationalOccupationalCredential",
+      "credentialCategory": "Lizenz",
+      "name": "Ernährungstrainer-B-Lizenz"
+    },
+    {
+      "@type": "EducationalOccupationalCredential",
+      "credentialCategory": "Lizenz",
+      "name": "Trainer für Sportrehabilitation"
+    },
+    {
+      "@type": "EducationalOccupationalCredential",
+      "credentialCategory": "Lizenz",
+      "name": "Athletiktrainer Leistungssport"
+    },
+    {
+      "@type": "EducationalOccupationalCredential",
+      "credentialCategory": "Lizenz",
+      "name": "Gesundheitstrainer"
+    },
+    {
+      "@type": "EducationalOccupationalCredential",
+      "credentialCategory": "Zertifizierung",
+      "name": "Hyrox-Coach"
+    }
+  ],
+  "knowsAbout": [
+    "Personal Training",
+    "Krafttraining",
+    "Hyrox",
+    "Sportrehabilitation",
+    "Athletiktraining",
+    "Ernährungsberatung"
+  ],
+  "areaServed": [
+    "Köln",
+    "Neuss",
+    "Solingen",
+    "Wuppertal"
+  ]
+}
+</script>
+<link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
 <nav>
@@ -28,7 +92,7 @@
 </svg></a>
     <div class="nav-links" id="navLinks">
       <div class="has-sub">
-        <a href="#" class="sub-toggle" onclick="event.preventDefault();this.parentElement.classList.toggle('sub-open')">Leistungen</a>
+        <a href="#" class="sub-toggle active" onclick="event.preventDefault();this.parentElement.classList.toggle('sub-open')">Leistungen</a>
         <div class="sub">
           <a href="studio.html">Training im Studio</a>
           <a href="zuhause.html">Training bei dir Zuhause</a>
@@ -37,49 +101,98 @@
       </div>
       <a href="hyrox.html">Hyrox</a>
       <a href="preise.html">Preise</a>
-      <a href="ueber-mich.html" class="active">&Uuml;ber mich</a>
+      <a href="ueber-mich.html">&Uuml;ber mich</a>
       <a href="faq.html">FAQ</a>
       <a class="btn btn-blitz btn-sm mob-cta" href="https://cal.com/fitnessdonner/kennenlernen">Erstgespr&auml;ch buchen</a>
     </div>
     <a class="btn btn-blitz btn-sm nav-cta" href="https://cal.com/fitnessdonner/kennenlernen">Erstgespr&auml;ch buchen</a>
-    <button class="menu-btn" aria-label="Men&uuml; &ouml;ffnen" onclick="document.getElementById('navLinks').classList.toggle('open');this.textContent=this.textContent==='\u2630'?'\u2715':'\u2630'">&#9776;</button>
+    <button class="menu-btn" aria-label="Men&uuml; &ouml;ffnen" onclick="document.getElementById('navLinks').classList.toggle('open');this.textContent=this.textContent==='☰'?'✕':'☰'">&#9776;</button>
   </div>
 </nav>
-<section class="about" style="padding:96px 0" id="ueber-mich">
-  <div class="watermark">Donner</div>
+<header class="page-hero">
+  <div class="wrap">
+    <div class="eyebrow">&Uuml;ber mich</div>
+    <h1>Hi, ich bin<br>Niklas.</h1>
+    <p class="hero-sub">Personal Trainer in K&ouml;ln, Neuss, Solingen und Wuppertal. Angefangen hat alles mit einer Verletzung, die einfach nicht weggehen wollte &ndash; heute ist Training mein Beruf.</p>
+  </div>
+</header>
+
+<section class="about" style="padding:56px 0;border-top:none">
   <div class="wrap" style="max-width:820px">
-    <div class="about-text">
-      <div class="eyebrow">&Uuml;ber mich</div>
-      <h1 style="font-size:clamp(38px,6vw,68px)">Hi, ich bin<br>Niklas.</h1>
-      <p>Mein Fokus: dir den Einstieg in ein gesundes, starkes Leben so sicher und effektiv wie m&ouml;glich zu machen. Gemeinsam bauen wir eine Routine, die wirklich zu deinem Leben passt &ndash; f&uuml;r langfristigen Erfolg statt Strohfeuer.</p>
-      <div class="quali">
-        <span><b>B.A.</b>Fitness&ouml;konomie</span>
-        <span><b>B</b>Fitnesstrainer-Lizenz</span>
-        <span><b>B</b>Ern&auml;hrungstrainer-Lizenz</span>
-        <span>Trainer f&uuml;r Sportrehabilitation</span>
-        <span>Athletiktrainer Leistungssport</span>
-        <span>Gesundheitstrainer</span>
-        <span><b>&#9889;</b>Hyrox-Coach</span>
+    <div class="video-ph" style="aspect-ratio:16/9;background:linear-gradient(180deg,rgba(21,23,28,.35),rgba(21,23,28,.9)),url('hyrox-run.webp') center 30%/cover" title="Vorstellungsvideo folgt">
+      <div class="play">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="#15171C"><path d="M8 5v14l11-7z"/></svg>
       </div>
+      <span>Video folgt &middot; Niklas stellt sich vor</span>
     </div>
   </div>
 </section>
-<section>
+
+<section style="padding-top:0">
+  <div class="wrap" style="max-width:820px">
+    <div class="eyebrow">Meine Geschichte</div>
+    <h2>Angefangen hat es<br>mit einer Verletzung.</h2>
+    <p style="color:#c9cbd0;margin-top:22px;font-size:16px">Ich war 15 und habe Fu&szlig;ball gespielt. Und ich hatte eine Verletzung, die immer wiederkam. Nicht einmal, sondern wieder und wieder &ndash; irgendwann war klar: So geht es nicht weiter, ich muss etwas &auml;ndern.</p>
+    <p style="color:#c9cbd0;margin-top:16px;font-size:16px">Also habe ich mit Krafttraining angefangen. Am Anfang ziemlich planlos, aber ich habe schnell gemerkt, dass sich etwas tut: Je besser ich meinen K&ouml;rper trainiert und belastbar gemacht habe, <b style="color:var(--bone)">desto seltener wurde die Verletzung</b>. Das war der Moment, in dem aus einer Notl&ouml;sung ein Interesse wurde.</p>
+    <p style="color:#c9cbd0;margin-top:16px;font-size:16px">Ich habe angefangen, mich richtig einzulesen &ndash; damals vor allem &uuml;ber YouTube, stundenlang, Video f&uuml;r Video. Und mit 15, 16 habe ich schon die ersten Trainingspl&auml;ne f&uuml;r meine Freunde geschrieben und mit ihnen ausgetauscht. Heute bin ich 26 und damit <b style="color:var(--bone)">seit elf Jahren im Krafttraining</b>.</p>
+    <p style="color:#c9cbd0;margin-top:16px;font-size:16px">Das Studium der Fitness&ouml;konomie kam sp&auml;ter dazu. Es hat mir viel gebracht &ndash; aber ehrlich gesagt kam ich nicht bei null an: Durch die Jahre davor war schon eine Menge da. Das Studium hat vor allem daf&uuml;r gesorgt, dass ich verstehe, <i>warum</i> etwas funktioniert, statt es nur zu wissen.</p>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap" style="max-width:820px">
+    <div class="eyebrow">Warum Personal Training</div>
+    <h2>Ich wollte wirklich<br>etwas bewirken.</h2>
+    <p style="color:#c9cbd0;margin-top:22px;font-size:16px">Auf der Trainingsfl&auml;che eines gro&szlig;en Studios bist du selten wirklich Trainer. Du beantwortest kurz eine Frage, stellst ein Ger&auml;t ein, gehst weiter zum N&auml;chsten. Man arbeitet mit vielen Menschen gleichzeitig &ndash; und deshalb mit niemandem richtig.</p>
+    <p style="color:#c9cbd0;margin-top:16px;font-size:16px">Genau das wollte ich nicht. Ich wollte <b style="color:var(--bone)">im 1:1 arbeiten</b>: mit einem Menschen, dessen Ziele ich kenne, dessen Alltag ich kenne, dessen Technik ich &uuml;ber Monate begleite. Nur so kann ich mein Wissen wirklich einsetzen &ndash; und nur so ver&auml;ndert sich am Ende etwas.</p>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap" style="max-width:820px">
+    <div class="eyebrow">Was mich st&ouml;rt</div>
+    <h2>Fitness ist einfacher,<br>als Instagram behauptet.</h2>
+    <p style="color:#c9cbd0;margin-top:22px;font-size:16px">In sozialen Medien wird Training st&auml;ndig verkompliziert. Jede Woche eine neue Methode, jede Woche ein neues Detail, das angeblich &uuml;ber Erfolg oder Misserfolg entscheidet. Dazu kommt eine Menge schlicht falscher Informationen. Das Ergebnis: Leute trauen sich gar nicht erst anzufangen, weil sie denken, sie machen alles falsch.</p>
+    <p style="color:#c9cbd0;margin-top:16px;font-size:16px">Nat&uuml;rlich gibt es Trainingsprinzipien, die z&auml;hlen &ndash; die geh&ouml;ren in jeden Plan. Aber im Kern geht es um zwei Dinge: <b style="color:var(--bone)">den ganzen K&ouml;rper trainieren</b> und <b style="color:var(--bone)">einen Weg finden, bei dem dir Sport Spa&szlig; macht</b>.</p>
+    <p style="color:#c9cbd0;margin-top:16px;font-size:16px">Denn ein Training, das du regelm&auml;&szlig;ig machst, schl&auml;gt jedes perfekt geplante Programm, das dir keinen Spa&szlig; macht. Immer. Deshalb baue ich dein Training um dein Leben herum &ndash; nicht umgekehrt.</p>
+  </div>
+</section>
+
+<section style="padding-top:0">
   <div class="wrap">
     <div class="sec-head">
       <div>
-        <div class="eyebrow">Meine Philosophie</div>
-        <h2>Nachhaltig<br>statt Strohfeuer.</h2>
+        <div class="eyebrow">Meine Qualifikationen</div>
+        <h2>Was die Lizenzen<br>f&uuml;r dich bedeuten.</h2>
       </div>
+      <p>Acht Aus- und Fortbildungen klingen erst mal nach einer Liste. Hier steht, was du konkret davon hast.</p>
     </div>
     <div class="feat-grid">
-      <div class="feat"><div class="ico">&#9889;</div><h3>Wissenschaftlich fundiert</h3><p>Kein Instagram-Hype: Training und Ern&auml;hrung basieren auf dem, was nachweislich funktioniert.</p></div>
-      <div class="feat"><div class="ico">&#9889;</div><h3>In deinem Tempo</h3><p>Wir bauen Technik und Belastung sicher auf &ndash; ohne &Uuml;berforderung, daf&uuml;r mit Fortschritt, den du sp&uuml;rst.</p></div>
-      <div class="feat"><div class="ico">&#9889;</div><h3>Alltagstauglich</h3><p>Der beste Plan ist der, den du durchh&auml;ltst. Deshalb bauen wir dein Training um dein Leben &ndash; nicht umgekehrt.</p></div>
+      <div class="feat"><div class="ico">&#9889;</div><h3>B.A. Fitness&ouml;konomie</h3><p>Sportwissenschaftliche Basis statt Bauchgef&uuml;hl: Ich kann einordnen, welche Studienlage hinter einer Empfehlung steht &ndash; und welche nicht.</p></div>
+      <div class="feat"><div class="ico">&#9889;</div><h3>Trainer f&uuml;r Sportrehabilitation</h3><p>Der Grund, warum du auch mit R&uuml;ckenproblemen oder nach einer Verletzung trainieren kannst. Wir arbeiten um Beschwerden herum, statt sie zu ignorieren.</p></div>
+      <div class="feat"><div class="ico">&#9889;</div><h3>Athletiktrainer Leistungssport</h3><p>Belastungssteuerung, wie sie im Leistungssport &uuml;blich ist: Wann wird gesteigert, wann erholt &ndash; damit Fortschritt planbar bleibt.</p></div>
+      <div class="feat"><div class="ico">&#9889;</div><h3>Fitnesstrainer-B-Lizenz</h3><p>Das Handwerk: Technik, &Uuml;bungsauswahl, Trainingsplanung. Die Basis, auf der alles andere aufbaut.</p></div>
+      <div class="feat"><div class="ico">&#9889;</div><h3>Ern&auml;hrungstrainer-B-Lizenz</h3><p>Ern&auml;hrung geh&ouml;rt dazu &ndash; alltagstauglich und ohne Verbotslisten. Training allein bringt dich nur einen Teil des Weges.</p></div>
+      <div class="feat"><div class="ico">&#9889;</div><h3>Gesundheitstrainer &amp; Hyrox-Coach</h3><p>Von pr&auml;ventivem Gesundheitstraining bis zur Wettkampfvorbereitung: Ich kann beide Enden bedienen &ndash; und alles dazwischen.</p></div>
     </div>
   </div>
 </section>
-<section style="padding-top:0">
+
+<section class="about" style="padding:72px 0">
+  <div class="watermark">Hyrox</div>
+  <div class="wrap about-grid">
+    <img src="hyrox-finish.webp" alt="Niklas Donner beim Zieleinlauf eines Hyrox-Wettkampfs" loading="lazy" style="width:100%;border:1px solid var(--line)">
+    <div class="about-text">
+      <div class="eyebrow">Ich trainiere selbst</div>
+      <h2>Nicht nur Trainer,<br>auch Athlet.</h2>
+      <p>Ich stehe selbst auf der Hyrox-Race-Floor. Das hei&szlig;t: Ich wei&szlig; aus eigener Erfahrung, wie sich der siebte Kilometer anf&uuml;hlt, warum der Sled Pull mehr Rennen entscheidet als der Sled Push und was ein zu schneller Start kostet.</p>
+      <p>Dieses Wissen kommt nicht aus einem Lehrbuch, sondern von der Strecke &ndash; und genau das gebe ich weiter, wenn ich dich auf deinen ersten Wettkampf oder deine n&auml;chste Bestzeit vorbereite.</p>
+      <a class="btn btn-ghost" href="hyrox.html">Hyrox-Vorbereitung ansehen</a>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:64px">
   <div class="wrap">
     <div class="sec-head">
       <div>
@@ -106,6 +219,65 @@
     </div>
   </div>
 </section>
+<section class="reviews" style="padding:64px 0">
+  <div class="wrap">
+    <div class="sec-head" style="margin-bottom:28px">
+      <div>
+        <div class="eyebrow">Erfahrungen</div>
+        <h2>Das sagen Kunden.</h2>
+      </div>
+      <div class="rev-score">
+        <div class="rev-score-num">5,0</div>
+        <div>
+          <div class="stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <div class="rev-score-sub">70 Bewertungen auf Google</div>
+        </div>
+      </div>
+    </div>
+    <div class="rev-grid" style="grid-template-columns:1fr 1fr">
+      <article class="rev">
+        <div class="rev-top"><span class="ava" style="background:#8E4E4E">CH</span>
+          <div><div class="rev-name">Chris H.</div><div class="rev-meta">Google</div></div></div>
+        <div class="stars" aria-label="5 von 5 Sternen">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p>&bdquo;Passt! Freundliche und zugewandte Beratung, die durch Vielseitigkeit und fachliche Kompetenz erg&auml;nzt wird. Auf individuelle W&uuml;nsche geht Niklas stets ein, wodurch das Training im Detail an die eigenen Bed&uuml;rfnisse angepasst wird.&ldquo;</p>
+      </article>
+      <article class="rev">
+        <div class="rev-top"><span class="ava" style="background:#3B7A7A">AK</span>
+          <div><div class="rev-name">Anna K.</div><div class="rev-meta">Google</div></div></div>
+        <div class="stars" aria-label="5 von 5 Sternen">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p>&bdquo;Ich bin sehr zufrieden mit Niklas als Trainer. Schon beim ersten Kennenlern-Gespr&auml;ch ist er auf meine Ziele, Sorgen und mein Fitnesslevel eingegangen. Besonders als Anf&auml;ngerin fand ich den Trainingsplan f&uuml;r die ersten Wochen sehr gut.&ldquo;</p>
+      </article>
+    </div>
+    <div class="placeholder-note" style="margin-top:22px"><a href="https://www.google.com/maps?cid=329045397772977203" target="_blank" rel="noopener" style="color:var(--blitz);text-decoration:underline">Alle 70 Rezensionen auf Google lesen &rarr;</a></div>
+  </div>
+</section>
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow">Wo wir trainieren</div>
+        <h2>Such dir aus,<br>was passt.</h2>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="num">01</div>
+        <h3>Im Studio</h3>
+        <p>Bei Iron&amp;Soul in <a href="personal-training-koeln.html" style="color:var(--blitz);text-decoration:underline">K&ouml;ln</a> oder <a href="personal-training-neuss.html" style="color:var(--blitz);text-decoration:underline">Neuss</a> &ndash; mit allem Equipment, das du brauchst.</p>
+      </div>
+      <div class="step">
+        <div class="num">02</div>
+        <h3>Bei dir zuhause</h3>
+        <p>Ich komme mit Equipment zu dir &ndash; Kernbereich <a href="zuhause.html" style="color:var(--blitz);text-decoration:underline">Solingen und Wuppertal</a>. Zwei mal zwei Meter gen&uuml;gen.</p>
+      </div>
+      <div class="step">
+        <div class="num">03</div>
+        <h3>Online</h3>
+        <p>Deutschlandweit per <a href="online.html" style="color:var(--blitz);text-decoration:underline">Online-Coaching</a>: Wochenplan, Video-Feedback und feste Check-ins.</p>
+      </div>
+    </div>
+  </div>
+</section>
 <section class="cta">
   <div class="wrap">
     <div class="eyebrow" style="justify-content:center">Bereit?</div>
@@ -116,8 +288,7 @@
       <a class="btn btn-ghost" href="https://wa.me/491776311404">Lieber kurz per WhatsApp?</a>
     </div>
   </div>
-</section>
-<footer>
+</section><footer>
   <div class="wrap foot">
     <svg width="120" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
   <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
@@ -133,7 +304,7 @@
 </footer>
 <script>
 (function(){var n=document.getElementById('navLinks'),b=document.querySelector('.menu-btn');
-if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&!a.classList.contains('sub-toggle')){n.classList.remove('open');b.textContent='\u2630';}});}})();
+if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&!a.classList.contains('sub-toggle')){n.classList.remove('open');b.textContent='☰';}});}})();
 </script>
 </body>
 </html>
