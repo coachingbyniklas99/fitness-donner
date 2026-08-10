@@ -311,3 +311,11 @@ footer{border-top:1px solid var(--line);padding:44px 0;font-size:13px;color:var(
   .slider-nav{display:none}
   .rev-score{margin-top:18px}
 }
+
+/* ---------- Qualifikations-Slider (mobil) ---------- */
+@media(max-width:900px){
+  .quali-grid{display:flex!important;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none;padding-bottom:6px}
+  .quali-grid::-webkit-scrollbar{display:none}
+  .quali-grid .feat{flex:0 0 84%;scroll-snap-align:start}
+}
+@media(min-width:901px){#qualiDots{display:none}}
