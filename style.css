@@ -319,3 +319,11 @@ footer{border-top:1px solid var(--line);padding:44px 0;font-size:13px;color:var(
   .quali-grid .feat{flex:0 0 84%;scroll-snap-align:start}
 }
 @media(min-width:901px){#qualiDots{display:none}}
+
+/* ---------- Untermenue-Gruppen ---------- */
+.sub-lbl{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--blitz);padding:8px 20px 4px}
+.sub-lbl+a{padding-top:6px}
+@media(max-width:900px){
+  .nav-links .sub-lbl{padding:16px 0 2px;font-size:11px;letter-spacing:.22em}
+  .nav-links .sub-lbl:first-child{padding-top:6px}
+}

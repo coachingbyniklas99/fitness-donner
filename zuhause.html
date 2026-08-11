@@ -16,7 +16,7 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="style.css?v=2">
+<link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
 <nav>
@@ -30,19 +30,22 @@
       <div class="has-sub">
         <a href="#" class="sub-toggle active" onclick="event.preventDefault();this.parentElement.classList.toggle('sub-open')">Leistungen</a>
         <div class="sub">
+          <div class="sub-lbl">Formate</div>
           <a href="studio.html">Training im Studio</a>
           <a href="zuhause.html" class="active">Training bei dir Zuhause</a>
           <a href="online.html">Online-Coaching</a>
+          <div class="sub-lbl">Schwerpunkte</div>
+          <a href="hyrox.html">Hyrox</a>
+          <a href="personal-training-rueckenschmerzen.html">Reha-Training</a>
         </div>
       </div>
-      <a href="hyrox.html">Hyrox</a>
       <a href="preise.html">Preise</a>
       <a href="ueber-mich.html">&Uuml;ber mich</a>
       <a href="faq.html">FAQ</a>
       <a class="btn btn-blitz btn-sm mob-cta" href="https://cal.com/fitnessdonner/kennenlernen">Erstgespr&auml;ch buchen</a>
     </div>
     <a class="btn btn-blitz btn-sm nav-cta" href="https://cal.com/fitnessdonner/kennenlernen">Erstgespr&auml;ch buchen</a>
-    <button class="menu-btn" aria-label="Men&uuml; &ouml;ffnen" onclick="document.getElementById('navLinks').classList.toggle('open');this.textContent=this.textContent==='\u2630'?'\u2715':'\u2630'">&#9776;</button>
+    <button class="menu-btn" aria-label="Men&uuml; &ouml;ffnen" onclick="document.getElementById('navLinks').classList.toggle('open');this.textContent=this.textContent==='☰'?'✕':'☰'">&#9776;</button>
   </div>
 </nav>
 <header class="page-hero">
@@ -91,7 +94,7 @@
 
       <details open>
         <summary>Welche Orte deckst du ab &ndash; und kostet die Anfahrt extra?</summary>
-                <p>Mein Kernbereich ist <b>Solingen</b>, hier wohne ich und hier ist die Anfahrt am g&uuml;nstigsten. Regelm&auml;&szlig;ig unterwegs bin ich au&szlig;erdem in <b>Wuppertal, Haan, Hilden und Remscheid</b>. Dar&uuml;ber hinaus bin ich grunds&auml;tzlich offen &ndash; frag einfach an.<br><br>Je nach Entfernung kommt ein Anfahrtsanteil dazu. Was f&uuml;r deinen Ort gilt, sage ich dir im kostenlosen Erstgespr&auml;ch, bevor du dich entscheidest. Keine &Uuml;berraschungen auf der Rechnung.</p>
+        <p>Mein Kernbereich ist <b>Solingen</b>, hier wohne ich und hier ist die Anfahrt am g&uuml;nstigsten. Regelm&auml;&szlig;ig unterwegs bin ich au&szlig;erdem in <b>Wuppertal, Haan, Hilden und Remscheid</b>. Dar&uuml;ber hinaus bin ich grunds&auml;tzlich offen &ndash; frag einfach an.<br><br>Je nach Entfernung kommt ein Anfahrtsanteil dazu. Was f&uuml;r deinen Ort gilt, sage ich dir im kostenlosen Erstgespr&auml;ch, bevor du dich entscheidest. Keine &Uuml;berraschungen auf der Rechnung.</p>
       </details>
 
       <details>
@@ -150,7 +153,7 @@
 </footer>
 <script>
 (function(){var n=document.getElementById('navLinks'),b=document.querySelector('.menu-btn');
-if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&!a.classList.contains('sub-toggle')){n.classList.remove('open');b.textContent='\u2630';}});}})();
+if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&!a.classList.contains('sub-toggle')){n.classList.remove('open');b.textContent='☰';}});}})();
 </script>
 </body>
 </html>
