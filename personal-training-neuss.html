@@ -105,7 +105,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="style.css?v=5">
+<link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 <nav>
@@ -117,18 +117,21 @@
 </svg></a>
     <div class="nav-links" id="navLinks">
       <div class="has-sub">
-        <a href="#" class="sub-toggle active" onclick="event.preventDefault();this.parentElement.classList.toggle('sub-open')">Leistungen</a>
+        <a href="#" class="sub-toggle" onclick="event.preventDefault();this.parentElement.classList.toggle('sub-open')">Leistungen</a>
         <div class="sub">
-          <div class="sub-lbl">Formate</div>
-          <a href="studio.html" class="active">Training im Studio</a>
+          <a href="studio.html">Training im Studio</a>
           <a href="zuhause.html">Training bei dir Zuhause</a>
           <a href="online.html">Online-Coaching</a>
-          <div class="sub-lbl">Schwerpunkte</div>
-          <a href="hyrox.html">Hyrox</a>
-          <a href="personal-training-rueckenschmerzen.html">Reha-Training</a>
         </div>
       </div>
-      <a href="preise.html">Preise</a>
+      <div class="has-sub">
+        <a href="#" class="sub-toggle" onclick="event.preventDefault();this.parentElement.classList.toggle('sub-open')">Schwerpunkte</a>
+        <div class="sub">
+          <a href="hyrox.html">Hyrox</a>
+          <a href="personal-training-rueckenschmerzen.html">Gesundheitstraining</a>
+        </div>
+      </div>
+      <a href="preise.html" class="nav-solo">Preise</a>
       <a href="ueber-mich.html">&Uuml;ber mich</a>
       <a href="faq.html">FAQ</a>
       <a class="btn btn-blitz btn-sm mob-cta" href="https://cal.com/fitnessdonner/kennenlernen">Erstgespr&auml;ch buchen</a>

@@ -320,13 +320,6 @@ footer{border-top:1px solid var(--line);padding:44px 0;font-size:13px;color:var(
 }
 @media(min-width:901px){#qualiDots{display:none}}
 
-/* ---------- Untermenue-Gruppen ---------- */
-.sub-lbl{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--blitz);padding:8px 20px 4px}
-.sub-lbl+a{padding-top:6px}
-@media(max-width:900px){
-  .nav-links .sub-lbl{padding:16px 0 2px;font-size:11px;letter-spacing:.22em}
-  .nav-links .sub-lbl:first-child{padding-top:6px}
-}
 
 /* ---------- Generische Mobil-Slider ---------- */
 @media(max-width:900px){
@@ -343,3 +336,15 @@ footer{border-top:1px solid var(--line);padding:44px 0;font-size:13px;color:var(
 .rev-slider>.rev{flex:0 0 calc((100% - 40px)/3);scroll-snap-align:start;display:flex;flex-direction:column;gap:14px}
 .rev-slider>.rev p{margin:0;flex:1}
 @media(max-width:900px){.rev-slider>.rev{flex:0 0 88%}}
+
+/* ---------- Zwei Reiter + Mobil-Trennung ---------- */
+@media(max-width:900px){
+  .nav-links .has-sub>a.sub-toggle{pointer-events:none;font-family:var(--body);font-size:11px;font-weight:600;
+    letter-spacing:.22em;color:var(--blitz);padding:18px 0 4px;border-bottom:none;text-transform:uppercase}
+  .nav-links .has-sub:first-child>a.sub-toggle{padding-top:6px}
+  .nav-links .has-sub>a.sub-toggle::after{content:""}
+  .nav-links .sub{display:flex;position:static;border:none;background:none;padding:0;min-width:0;flex-direction:column}
+  .nav-links .sub a{font-family:var(--display);font-size:24px;text-transform:uppercase;letter-spacing:.03em;
+    color:var(--bone);padding:12px 0;border-bottom:1px solid var(--line)}
+  .nav-links>a.nav-solo{margin-top:22px;border-top:2px solid var(--blitz);padding-top:16px}
+}
