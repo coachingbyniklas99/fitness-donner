@@ -3,23 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Preise - Personal Training ab 70 € | Fitness Donner</title>
+<title>Preise - Personal Training ab 70 &euro; | Fitness Donner</title>
 <meta name="description" content="Personal Training: Einzelstunden ab 100 €, im Paket ab 70 € pro Einheit, Online-Coaching auf Anfrage. Fair, transparent, ohne Knebelverträge.">
 <link rel="canonical" href="https://fitnessdonner.de/preise.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Fitness Donner">
 <meta property="og:locale" content="de_DE">
 <meta property="og:url" content="https://fitnessdonner.de/preise.html">
-<meta property="og:title" content="Preise - Personal Training ab 70 € | Fitness Donner">
+<meta property="og:title" content="Preise - Personal Training ab 70 &euro; | Fitness Donner">
 <meta property="og:description" content="Personal Training: Einzelstunden ab 100 €, im Paket ab 70 € pro Einheit, Online-Coaching auf Anfrage. Fair, transparent, ohne Knebelverträge.">
 <meta property="og:image" content="https://fitnessdonner.de/og-bild.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="style.css?v=2">
+<link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
-
 <nav>
   <div class="wrap nav-inner">
     <a href="index.html" aria-label="Fitness Donner - Startseite"><svg width="140" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
@@ -31,19 +30,22 @@
       <div class="has-sub">
         <a href="#" class="sub-toggle" onclick="event.preventDefault();this.parentElement.classList.toggle('sub-open')">Leistungen</a>
         <div class="sub">
+          <div class="sub-lbl">Formate</div>
           <a href="studio.html">Training im Studio</a>
           <a href="zuhause.html">Training bei dir Zuhause</a>
           <a href="online.html">Online-Coaching</a>
+          <div class="sub-lbl">Schwerpunkte</div>
+          <a href="hyrox.html">Hyrox</a>
+          <a href="personal-training-rueckenschmerzen.html">Reha-Training</a>
         </div>
       </div>
-      <a href="hyrox.html">Hyrox</a>
       <a href="preise.html" class="active">Preise</a>
       <a href="ueber-mich.html">&Uuml;ber mich</a>
       <a href="faq.html">FAQ</a>
       <a class="btn btn-blitz btn-sm mob-cta" href="https://cal.com/fitnessdonner/kennenlernen">Erstgespr&auml;ch buchen</a>
     </div>
     <a class="btn btn-blitz btn-sm nav-cta" href="https://cal.com/fitnessdonner/kennenlernen">Erstgespr&auml;ch buchen</a>
-    <button class="menu-btn" aria-label="Men&uuml; &ouml;ffnen" onclick="document.getElementById('navLinks').classList.toggle('open');this.textContent=this.textContent==='\u2630'?'\u2715':'\u2630'">&#9776;</button>
+    <button class="menu-btn" aria-label="Men&uuml; &ouml;ffnen" onclick="document.getElementById('navLinks').classList.toggle('open');this.textContent=this.textContent==='☰'?'✕':'☰'">&#9776;</button>
   </div>
 </nav>
 <header class="page-hero">
@@ -95,7 +97,7 @@
       </div>
     </div>
     <div class="ort-note" style="margin-top:44px"><b>Warum keine Festpreise?</b> Weil kein Training dem anderen gleicht: Ziele, H&auml;ufigkeit, Format und Vorgeschichte sind bei jedem anders. Statt Pauschaltarifen ermitteln wir im kostenlosen Erstgespr&auml;ch einen fairen Preis, der genau zu deinem Bedarf passt &ndash; ohne versteckte Kosten, ohne Knebelvertr&auml;ge.</div>
-  
+
     <p style="margin-top:36px;color:var(--muted);font-size:14px;border-left:2px solid var(--blitz);padding-left:16px;max-width:760px">Alle Preise sind Endpreise. Als Kleinunternehmer im Sinne von &sect;&nbsp;19 UStG berechne ich keine Umsatzsteuer, sie wird daher nicht ausgewiesen.</p>
 </div>
 </section>
@@ -126,7 +128,7 @@
 </footer>
 <script>
 (function(){var n=document.getElementById('navLinks'),b=document.querySelector('.menu-btn');
-if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&!a.classList.contains('sub-toggle')){n.classList.remove('open');b.textContent='\u2630';}});}})();
+if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&!a.classList.contains('sub-toggle')){n.classList.remove('open');b.textContent='☰';}});}})();
 </script>
 </body>
 </html>

@@ -327,3 +327,19 @@ footer{border-top:1px solid var(--line);padding:44px 0;font-size:13px;color:var(
   .nav-links .sub-lbl{padding:16px 0 2px;font-size:11px;letter-spacing:.22em}
   .nav-links .sub-lbl:first-child{padding-top:6px}
 }
+
+/* ---------- Generische Mobil-Slider ---------- */
+@media(max-width:900px){
+  .m-slide{display:flex!important;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;
+    scrollbar-width:none;-ms-overflow-style:none;padding-bottom:4px}
+  .m-slide::-webkit-scrollbar{display:none}
+  .m-slide>*{flex:0 0 86%;scroll-snap-align:start}
+}
+/* Bewertungs-Slider auf Unterseiten */
+.rev-slider{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;
+  scrollbar-width:none;-ms-overflow-style:none;padding:4px 2px 14px;outline:none}
+.rev-slider::-webkit-scrollbar{display:none}
+.rev-slider:focus-visible{box-shadow:0 0 0 2px var(--blitz)}
+.rev-slider>.rev{flex:0 0 calc((100% - 40px)/3);scroll-snap-align:start;display:flex;flex-direction:column;gap:14px}
+.rev-slider>.rev p{margin:0;flex:1}
+@media(max-width:900px){.rev-slider>.rev{flex:0 0 88%}}

@@ -10,13 +10,13 @@
 <meta property="og:site_name" content="Fitness Donner">
 <meta property="og:locale" content="de_DE">
 <meta property="og:url" content="https://fitnessdonner.de/online.html">
-<meta property="og:title" content="Online-Coaching - Personal Training flexibel überall | Fitness Donner">
+<meta property="og:title" content="Online Personal Training deutschlandweit | Fitness Donner">
 <meta property="og:description" content="Online-Coaching mit Personal Trainer, deutschlandweit. Wochenplan, Calls, Live-Training per Video und Ernährungsbegleitung – modular kombinierbar.">
 <meta property="og:image" content="https://fitnessdonner.de/og-bild.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="style.css?v=2">
+<link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
 <nav>
@@ -30,19 +30,22 @@
       <div class="has-sub">
         <a href="#" class="sub-toggle active" onclick="event.preventDefault();this.parentElement.classList.toggle('sub-open')">Leistungen</a>
         <div class="sub">
+          <div class="sub-lbl">Formate</div>
           <a href="studio.html">Training im Studio</a>
           <a href="zuhause.html">Training bei dir Zuhause</a>
           <a href="online.html" class="active">Online-Coaching</a>
+          <div class="sub-lbl">Schwerpunkte</div>
+          <a href="hyrox.html">Hyrox</a>
+          <a href="personal-training-rueckenschmerzen.html">Reha-Training</a>
         </div>
       </div>
-      <a href="hyrox.html">Hyrox</a>
       <a href="preise.html">Preise</a>
       <a href="ueber-mich.html">&Uuml;ber mich</a>
       <a href="faq.html">FAQ</a>
       <a class="btn btn-blitz btn-sm mob-cta" href="https://cal.com/fitnessdonner/kennenlernen">Erstgespr&auml;ch buchen</a>
     </div>
     <a class="btn btn-blitz btn-sm nav-cta" href="https://cal.com/fitnessdonner/kennenlernen">Erstgespr&auml;ch buchen</a>
-    <button class="menu-btn" aria-label="Men&uuml; &ouml;ffnen" onclick="document.getElementById('navLinks').classList.toggle('open');this.textContent=this.textContent==='\u2630'?'\u2715':'\u2630'">&#9776;</button>
+    <button class="menu-btn" aria-label="Men&uuml; &ouml;ffnen" onclick="document.getElementById('navLinks').classList.toggle('open');this.textContent=this.textContent==='☰'?'✕':'☰'">&#9776;</button>
   </div>
 </nav>
 <header class="page-hero">
@@ -55,7 +58,7 @@
 
 <section style="padding-top:56px">
   <div class="wrap">
-    <div class="feat-grid">
+    <div class="feat-grid m-slide">
       <div class="feat"><div class="ico">&#9889;</div><h3>Wochenplan statt Standardprogramm</h3><p>Du bekommst deinen Plan als beschreibbare PDF &ndash; Woche f&uuml;r Woche neu, angepasst an das, was tats&auml;chlich passiert ist.</p></div>
       <div class="feat"><div class="ico">&#9889;</div><h3>Technikkontrolle per Video</h3><p>Wenn du m&ouml;chtest, filmst du dich bei einer &Uuml;bung und schickst mir die Aufnahme. Ich schaue mir die Ausf&uuml;hrung an und korrigiere.</p></div>
       <div class="feat"><div class="ico">&#9889;</div><h3>Modular aufgebaut</h3><p>Calls, Live-Training und Ern&auml;hrungsbegleitung buchst du dazu, wenn du sie brauchst &ndash; und l&auml;sst weg, was du nicht brauchst.</p></div>
@@ -67,7 +70,7 @@
   <div class="wrap" style="max-width:820px">
     <div class="eyebrow">Der Start</div>
     <h2>Erst reden,<br>dann planen.</h2>
-    <p style="color:#c9cbd0;margin-top:20px;font-size:16px">Am Anfang steht das <b style="color:var(--bone)">kostenlose Kennenlerngespr&auml;ch</b>. Dreißig Minuten, unverbindlich: Wir kl&auml;ren deine Ziele, deinen Alltag und deine Vorgeschichte. Danach wei&szlig;t du, wie eine Zusammenarbeit aussehen w&uuml;rde &ndash; und entscheidest in Ruhe.</p>
+    <p style="color:#c9cbd0;margin-top:20px;font-size:16px">Am Anfang steht das <b style="color:var(--bone)">kostenlose Kennenlerngespr&auml;ch</b>. Drei&szlig;ig Minuten, unverbindlich: Wir kl&auml;ren deine Ziele, deinen Alltag und deine Vorgeschichte. Danach wei&szlig;t du, wie eine Zusammenarbeit aussehen w&uuml;rde &ndash; und entscheidest in Ruhe.</p>
     <p style="color:#c9cbd0;margin-top:16px;font-size:16px">Wenn du dich daf&uuml;r entscheidest, folgt das <b style="color:var(--bone)">Einf&uuml;hrungsgespr&auml;ch</b>. Hier gehen wir gemeinsam durch, wie ich mir den Weg zu deinem Ziel vorstelle &ndash; auf Basis dessen, was du mir vorher erz&auml;hlt hast. Wir schauen uns deinen Status quo an, kl&auml;ren offene Fragen, und am Ende steht dein Plan f&uuml;r die erste Woche.</p>
     <p style="color:#c9cbd0;margin-top:16px;font-size:16px">Kein vorgefertigtes Programm, das du dir irgendwo herunterl&auml;dst. Der erste Plan entsteht aus dem Gespr&auml;ch.</p>
   </div>
@@ -88,7 +91,7 @@
     <div class="eyebrow">Bausteine</div>
     <h2>Du stellst dir zusammen,<br>was du brauchst.</h2>
     <p style="color:#c9cbd0;margin-top:20px;font-size:16px">Online-Coaching ist bei mir kein festes Paket, sondern ein Baukasten. Manche wollen nur einen durchdachten Wochenplan und melden sich alle paar Wochen. Andere wollen enge Begleitung mit festen Terminen. Beides geht &ndash; und alles dazwischen.</p>
-    <div class="feat-grid" style="margin-top:28px">
+    <div class="feat-grid m-slide" style="margin-top:28px">
       <div class="feat"><h3>Wochenplan</h3><p>Die Basis: dein Trainingsplan als beschreibbare PDF, jede Woche neu zugeschnitten. Mit wechselnden Workouts, damit es nicht eint&ouml;nig wird.</p></div>
       <div class="feat"><h3>Calls</h3><p>Ein fester Termin pro Woche &ndash; oder zwei, wenn du engere Begleitung willst. Wir gehen durch, was lief, was hakt und was als N&auml;chstes kommt.</p></div>
       <div class="feat"><h3>Live-Training</h3><p>Wir trainieren gemeinsam per Video. Auf Wunsch auch nur f&uuml;r bestimmte Bereiche &ndash; etwa die Technik&uuml;bungen, bei denen du dir unsicher bist.</p></div>
@@ -114,7 +117,7 @@
   <div class="wrap" style="max-width:820px">
     <div class="eyebrow">F&uuml;r wen</div>
     <h2>Wann online<br>die bessere Wahl ist.</h2>
-    <div class="feat-grid" style="margin-top:26px">
+    <div class="feat-grid m-slide" style="margin-top:26px">
       <div class="feat"><h3>Zu weit weg</h3><p>Du wohnst nicht in K&ouml;ln, Neuss, Solingen oder Wuppertal. Online funktioniert deutschlandweit &ndash; die Betreuung ist dieselbe.</p></div>
       <div class="feat"><h3>Viel unterwegs</h3><p>Gesch&auml;ftsreisen, wechselnde Orte, unregelm&auml;&szlig;ige Wochen. Der Plan passt sich an, statt an deinem Kalender zu zerbrechen.</p></div>
       <div class="feat"><h3>Schon im Studio</h3><p>Du trainierst bereits, aber ohne roten Faden. Du willst Struktur und jemanden, der auf deine Technik schaut.</p></div>
@@ -122,7 +125,6 @@
     <div class="ort-note" style="margin-top:32px"><b>Du wohnst in der N&auml;he?</b> Dann schau dir <a href="studio.html" style="color:var(--blitz);text-decoration:underline">Training im Studio</a> in K&ouml;ln und Neuss oder <a href="zuhause.html" style="color:var(--blitz);text-decoration:underline">Training bei dir zuhause</a> in Solingen und Wuppertal an. Beides l&auml;sst sich auch mit Online-Coaching kombinieren.</div>
   </div>
 </section>
-
 <section class="cta">
   <div class="wrap">
     <div class="eyebrow" style="justify-content:center">Bereit?</div>
@@ -150,7 +152,8 @@
 </footer>
 <script>
 (function(){var n=document.getElementById('navLinks'),b=document.querySelector('.menu-btn');
-if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&!a.classList.contains('sub-toggle')){n.classList.remove('open');b.textContent='\u2630';}});}})();
+if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&!a.classList.contains('sub-toggle')){n.classList.remove('open');b.textContent='☰';}});}})();
 </script>
+<script src="ui.js" defer></script>
 </body>
 </html>
