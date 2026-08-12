@@ -154,6 +154,22 @@
 }
 </script>
 <link rel="stylesheet" href="style.css?v=6">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  "name": "Niklas Donner stellt sich vor",
+  "description": "Personal Trainer Niklas Donner stellt sich vor: 11 Jahre Erfahrung im Bereich Fitness und Gesundheit, B.A. Fitnessoekonomie, Training als Routine im Alltag.",
+  "thumbnailUrl": "https://fitnessdonner.de/ueber-mich-poster.webp",
+  "uploadDate": "2026-08-12",
+  "duration": "PT46S",
+  "contentUrl": "https://fitnessdonner.de/ueber-mich.mp4"
+}
+</script>
+<style>
+video::cue{font-size:78%;line-height:1.25;background:rgba(21,23,28,.72);color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.9)}
+@media(max-width:600px){video::cue{font-size:86%}}
+</style>
 </head>
 <body>
 <nav>
@@ -198,11 +214,13 @@
 
 <section class="about" style="padding:56px 0;border-top:none">
   <div class="wrap" style="max-width:820px">
-    <div class="video-ph" style="aspect-ratio:16/9;background:linear-gradient(180deg,rgba(21,23,28,.35),rgba(21,23,28,.9)),url('hyrox-run.webp') center 30%/cover" title="Vorstellungsvideo folgt">
-      <div class="play">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="#15171C"><path d="M8 5v14l11-7z"/></svg>
-      </div>
-      <span>Video folgt &middot; Niklas stellt sich vor</span>
+    <div style="max-width:380px;margin:0 auto">
+      <video controls playsinline preload="none" poster="ueber-mich-poster.webp" style="width:100%;aspect-ratio:9/16;display:block;background:#15171C;border:1px solid var(--line)">
+        <source src="ueber-mich.mp4" type="video/mp4">
+        <track kind="captions" src="ueber-mich.vtt" srclang="de" label="Deutsch" default>
+        Dein Browser kann dieses Video leider nicht abspielen.
+      </video>
+      <p style="color:var(--muted);font-size:13px;text-align:center;margin-top:14px;letter-spacing:.04em">Niklas stellt sich vor &middot; 46 Sekunden</p>
     </div>
   </div>
 </section>
