@@ -164,6 +164,16 @@ h2{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size
 .ort ul{list-style:none;display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
 .ort ul li{border:1px solid var(--line);padding:6px 12px;font-size:12px;color:var(--muted);letter-spacing:.04em}
 .ort-note{border-left:2px solid var(--blitz);padding:14px 0 14px 18px;color:var(--muted);font-size:14px;max-width:760px}
+
+/* Standortkarten Solingen: drei Spalten, auf dem Handy Slider */
+.orte-3{grid-template-columns:repeat(auto-fit,minmax(268px,1fr))}
+@media(max-width:760px){
+  .orte-3{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;
+    scrollbar-width:none;-ms-overflow-style:none;padding-bottom:8px;margin-bottom:10px}
+  .orte-3::-webkit-scrollbar{display:none}
+  .orte-3>.ort{flex:0 0 86%;scroll-snap-align:start}
+}
+
 .ort-note b{color:var(--bone);font-weight:600}
 
 /* ---------- Hyrox-Teaser & Hyrox-Seite ---------- */
