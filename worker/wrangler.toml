@@ -1,0 +1,26 @@
+name = "fitnessdonner-gutscheine"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+# Täglicher Versand geplanter Gutscheine (07:10 UTC = 09:10 deutscher Sommerzeit)
+[triggers]
+crons = ["10 7 * * *"]
+
+# KV-Namespace für die Gutscheine.
+# id nach dem Anlegen im Cloudflare-Dashboard hier eintragen:
+#   Workers & Pages -> KV -> Create namespace -> Name: VOUCHERS
+[[kv_namespaces]]
+binding = "VOUCHERS"
+id = "bfa2286cf9984972ac533c02c1d57111"
+
+# Klartext-Variablen (keine Geheimnisse)
+[vars]
+SITE_ORIGIN = "https://fitnessdonner.de"
+OWNER_EMAIL = "info@fitnessdonner.de"
+FROM_EMAIL = "Fitness Donner <gutschein@fitnessdonner.de>"
+
+# Secrets werden NICHT hier eingetragen, sondern einzeln gesetzt:
+#   npx wrangler secret put STRIPE_SECRET_KEY
+#   npx wrangler secret put STRIPE_WEBHOOK_SECRET
+#   npx wrangler secret put RESEND_API_KEY
+# (oder im Dashboard unter Settings -> Variables and Secrets)
