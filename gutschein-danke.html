@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dein Gutschein | Fitness Donner</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="style.css?v=6">
+<link rel="stylesheet" href="gutschein.css?v=1">
+</head>
+<body>
+<nav class="no-print">
+  <div class="wrap nav-inner">
+    <a href="index.html" aria-label="Fitness Donner - Startseite"><svg width="140" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
+  <text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text>
+  <polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"/>
+</svg></a>
+    <a class="btn btn-blitz btn-sm nav-cta" href="https://cal.com/fitnessdonner/kennenlernen">Erstgespr&auml;ch buchen</a>
+  </div>
+</nav>
+
+<header class="page-hero no-print" id="head">
+  <div class="wrap">
+    <div class="eyebrow">Geschafft</div>
+    <h1 id="headline">Danke f&uuml;r<br>deinen Kauf.</h1>
+    <p class="hero-sub" id="headsub">Dein Gutschein ist fertig. Eine Kopie ist gerade per E-Mail zu dir unterwegs &ndash; du kannst ihn hier auch direkt ausdrucken.</p>
+  </div>
+</header>
+
+<section style="padding-top:40px">
+  <div class="wrap">
+
+    <div id="loading" class="gs-loading">
+      <p>Dein Gutschein wird erstellt &hellip;</p>
+    </div>
+
+    <div id="error" class="gs-error" hidden></div>
+
+    <div id="voucherBox" hidden>
+      <div class="voucher">
+        <div class="v-top">
+          <svg width="150" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
+            <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
+            <text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text>
+            <polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"/>
+          </svg>
+          <div class="v-kind">Geschenkgutschein</div>
+        </div>
+        <h3>Personal<br>Training</h3>
+        <div class="v-value" id="vValue">&nbsp;</div>
+        <div class="v-for" id="vFor"></div>
+        <div class="v-msg" id="vMsg" hidden></div>
+        <div class="v-code">
+          <div>
+            <div class="lbl">Gutschein-Code</div>
+            <div class="code" id="vCode"></div>
+          </div>
+          <div class="v-meta">
+            G&uuml;ltig bis <span id="vExpires"></span><br>
+            fitnessdonner.de &middot; 0177 6311404
+          </div>
+        </div>
+      </div>
+
+      <div class="gs-actions no-print">
+        <button class="btn btn-blitz" onclick="window.print()">Drucken / als PDF sichern</button>
+        <a class="btn btn-ghost" href="index.html">Zur&uuml;ck zur Startseite</a>
+      </div>
+
+      <p class="no-print" style="text-align:center;color:var(--muted);font-size:13px;margin-top:20px" id="hint"></p>
+    </div>
+  </div>
+</section>
+
+<section class="cta no-print">
+  <div class="wrap">
+    <div class="eyebrow" style="justify-content:center">Einl&ouml;sen</div>
+    <h2 style="margin-top:16px">Wann geht's<br>los?</h2>
+    <p>Zum Einl&ouml;sen einfach melden und den Code nennen &ndash; wir finden gemeinsam einen Termin.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-blitz" href="https://cal.com/fitnessdonner/kennenlernen">Termin aussuchen</a>
+      <a class="btn btn-ghost" href="https://wa.me/491776311404">Per WhatsApp melden</a>
+    </div>
+  </div>
+</section>
+
+<footer class="no-print">
+  <div class="wrap foot">
+    <svg width="120" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
+  <text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text>
+  <polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"/>
+</svg>
+    <div class="legal">
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
+      <a href="gutschein-bedingungen.html">Gutscheinbedingungen</a>
+    </div>
+    <div>&copy; 2026 Fitness Donner &middot; Solingen, Haan, K&ouml;ln &amp; Neuss</div>
+  </div>
+</footer>
+
+<script>
+/* Muss identisch zu gutschein.html sein */
+var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.dev';
+
+(function () {
+  var q = new URLSearchParams(location.search);
+  var sessionId = q.get('session_id');
+  var code = q.get('code');
+  var token = q.get('t');
+  var tries = 0;
+
+  var loading = document.getElementById('loading');
+  var errBox = document.getElementById('error');
+  var box = document.getElementById('voucherBox');
+
+  function fail(text) {
+    loading.hidden = true;
+    errBox.textContent = text;
+    errBox.hidden = false;
+  }
+
+  function fmtDate(iso) {
+    var p = String(iso).slice(0, 10).split('-');
+    return p[2] + '.' + p[1] + '.' + p[0];
+  }
+
+  function show(v) {
+    loading.hidden = true;
+    document.getElementById('vValue').textContent = v.amount_formatted;
+    document.getElementById('vCode').textContent = v.code;
+    document.getElementById('vExpires').textContent = fmtDate(v.expires);
+
+    var f = [];
+    if (v.recipient_name) f.push('Für <b>' + esc(v.recipient_name) + '</b>');
+    if (v.buyer_name) f.push('von ' + esc(v.buyer_name));
+    document.getElementById('vFor').innerHTML = f.join(' &middot; ');
+
+    if (v.message) {
+      var m = document.getElementById('vMsg');
+      m.textContent = '„' + v.message + '“';
+      m.hidden = false;
+    }
+
+    var hint = document.getElementById('hint');
+    if (v.delivery === 'gift') {
+      hint.textContent = v.send_date
+        ? 'Der Gutschein wird am ' + fmtDate(v.send_date) + ' automatisch an die beschenkte Person verschickt.'
+        : 'Der Gutschein wurde bereits an die beschenkte Person verschickt.';
+    } else {
+      hint.textContent = 'Eine Kopie ist per E-Mail unterwegs. Kein Mail dabei? Schau kurz im Spam-Ordner nach.';
+    }
+    box.hidden = false;
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function load() {
+    var url = sessionId
+      ? API_BASE + '/api/voucher?session_id=' + encodeURIComponent(sessionId)
+      : API_BASE + '/api/voucher?code=' + encodeURIComponent(code) + '&t=' + encodeURIComponent(token);
+
+    fetch(url)
+      .then(function (r) { return r.json().then(function (d) { return { s: r.status, d: d }; }); })
+      .then(function (res) {
+        if (res.s === 202 || res.d.status === 'pending') {
+          // Zahlung ist durch, der Gutschein wird gerade erzeugt
+          if (++tries > 15) {
+            return fail('Dein Gutschein wird noch erstellt. Er kommt in wenigen Minuten per E-Mail – melde dich gern, falls nicht.');
+          }
+          return setTimeout(load, 2000);
+        }
+        if (res.s !== 200) return fail(res.d.error || 'Der Gutschein konnte nicht geladen werden.');
+        show(res.d);
+      })
+      .catch(function () {
+        if (++tries > 5) return fail('Keine Verbindung. Bitte lade die Seite neu.');
+        setTimeout(load, 2000);
+      });
+  }
+
+  if (!sessionId && !(code && token)) {
+    fail('Dieser Link ist unvollständig. Bitte nutze den Link aus deiner E-Mail.');
+  } else {
+    if (code && !sessionId) {
+      document.getElementById('headline').innerHTML = 'Dein<br>Gutschein.';
+      document.getElementById('headsub').textContent = 'Hier ist dein Gutschein – zum Ausdrucken oder einfach auf dem Handy vorzeigen.';
+    }
+    load();
+  }
+})();
+</script>
+</body>
+</html>
