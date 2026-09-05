@@ -146,13 +146,23 @@
         <label for="agb">Ich habe die <a href="gutschein-bedingungen.html">Gutscheinbedingungen</a>, die <a href="gutschein-bedingungen.html#widerruf">Widerrufsbelehrung</a> und die <a href="datenschutz.html">Datenschutzerkl&auml;rung</a> gelesen und stimme zu, dass der Gutschein sofort nach der Zahlung per E-Mail bereitgestellt wird.</label>
       </div>
 
+      <div class="gs-order">
+        <div class="gs-order-title">Deine Bestellung</div>
+        <ul>
+          <li>Wertgutschein f&uuml;r Personal Training bei Fitness Donner</li>
+          <li>Zustellung sofort nach der Zahlung per E-Mail</li>
+          <li>G&uuml;ltig bis zum 31.12. des dritten Jahres nach dem Kauf</li>
+          <li>Keine weiteren Kosten, keine Versandkosten</li>
+        </ul>
+      </div>
+
       <div class="gs-summary">
         <div>
           <div class="gs-sum-label">Gesamtbetrag</div>
           <div class="gs-sum-value" id="total">100 &euro;</div>
         </div>
         <div class="gs-pay">
-          <button type="submit" class="btn btn-blitz" id="payBtn">Jetzt kaufen</button>
+          <button type="submit" class="btn btn-blitz" id="payBtn">Zahlungspflichtig kaufen</button>
           <div class="secure">&#128274; Sichere Zahlung &uuml;ber Stripe &middot; Kreditkarte, Apple&nbsp;Pay, PayPal, Klarna</div>
         </div>
       </div>
@@ -345,7 +355,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     errBox.hidden = false;
     errBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
     payBtn.disabled = false;
-    payBtn.textContent = 'Jetzt kaufen';
+    payBtn.textContent = 'Zahlungspflichtig kaufen';
   }
 
   form.addEventListener('submit', function (e) {
