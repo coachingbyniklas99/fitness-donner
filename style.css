@@ -70,9 +70,14 @@ nav{position:sticky;top:0;z-index:50;background:rgba(21,23,28,.9);backdrop-filte
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font-weight:700;font-size:14px;letter-spacing:.06em;text-transform:uppercase;padding:14px 26px;border:1px solid transparent;transition:.2s;cursor:pointer}
 .btn-blitz{background:var(--blitz);color:#15171C}
 .btn-blitz:hover{background:#f7ca4f}
-.btn-ghost{border-color:var(--line);color:var(--bone);background:transparent}
-.btn-ghost:hover{border-color:var(--bone)}
+.btn-ghost{border-color:rgba(236,233,226,.28);color:var(--bone);background:rgba(21,23,28,.82);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.btn-ghost:hover{border-color:var(--bone);background:rgba(21,23,28,.94)}
+/* Zweitbutton auf hellem Grund (Hyrox-Header) */
+.btn-light-ghost{border:1px solid rgba(21,23,28,.28);color:#15171C;background:rgba(255,255,255,.55)}
+.btn-light-ghost:hover{background:#fff;border-color:#15171C}
 .btn-sm{padding:11px 20px;font-size:13px}
+/* Buchen-Block und Kontaktzeile gibt es nur im mobilen Menue */
+.nav-book,.nav-kontakt{display:none}
 .menu-btn{display:none;background:none;border:1px solid var(--line);color:var(--bone);width:44px;height:44px;font-size:20px;cursor:pointer;align-items:center;justify-content:center;flex-shrink:0}
 
 /* ---------- Hero (Startseite) ---------- */
@@ -84,7 +89,9 @@ header.hero{position:relative;min-height:88vh;display:flex;align-items:flex-end;
   .hero-bg::after{background:linear-gradient(90deg,rgba(21,23,28,.97) 28%,rgba(21,23,28,.55) 58%,rgba(21,23,28,.12) 100%)}
 }
 .hero-content{position:relative;z-index:2;padding:100px 0 64px;width:100%}
-h1{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(42px,9vw,116px);line-height:.97;letter-spacing:.01em}
+h1{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(42px,9vw,116px);line-height:1.08;letter-spacing:.01em}
+/* Anton setzt Umlautpunkte hoch ueber die Zeile - darum Luft nach der Eyebrow-Zeile */
+.eyebrow + h1,.eyebrow + h2{margin-top:20px}
 h1 .u{position:relative;display:inline-block}
 h1 .u svg{position:absolute;left:0;right:0;bottom:-12px;width:100%;height:16px}
 .hero-sub{margin-top:26px;max-width:560px;font-size:17px;color:#c9cbd0}
@@ -130,13 +137,13 @@ h1 .u svg{position:absolute;left:0;right:0;bottom:-12px;width:100%;height:16px}
 
 /* ---------- Unterseiten-Hero ---------- */
 .page-hero{padding:72px 0 0}
-.page-hero h1{font-size:clamp(38px,6.5vw,72px);margin-top:14px}
+.page-hero h1{font-size:clamp(38px,6.5vw,72px);margin-top:20px}
 .page-hero .hero-sub{font-size:16px}
 
 /* ---------- Sections ---------- */
 section{padding:124px 0}
 .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:48px;flex-wrap:wrap}
-h2{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(30px,4.6vw,54px);line-height:1.02;margin-top:14px}
+h2{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(30px,4.6vw,54px);line-height:1.12;margin-top:14px}
 .sec-head p{max-width:380px;color:var(--muted);font-size:15px}
 
 /* ---------- Cards / Leistungen ---------- */
@@ -228,6 +235,14 @@ h2{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size
 .feat h3{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:21px;margin-bottom:8px;letter-spacing:.03em}
 .feat p{color:var(--muted);font-size:15px}
 .feat .ico{color:var(--blitz);font-size:22px;margin-bottom:14px}
+/* Kacheln mit gezeichneter Illustration im Kopf */
+.feat.has-art{padding:0 0 26px;display:flex;flex-direction:column}
+.feat-art{display:block;width:100%;height:132px;color:var(--blitz);
+  background:linear-gradient(180deg,rgba(239,185,46,.10),rgba(239,185,46,0));
+  border-bottom:1px solid var(--line)}
+.feat.has-art h3{margin:22px 26px 8px}
+.feat.has-art p{margin:0 26px}
+@media(max-width:900px){.feat-art{height:112px}}
 
 /* ---------- FAQ ---------- */
 .faq-list{max-width:800px}
@@ -271,11 +286,20 @@ footer{border-top:1px solid var(--line);padding:44px 0;font-size:13px;color:var(
   .nav-cta{display:none}
   .nav-links{display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg);flex-direction:column;gap:0;padding:10px 24px 28px;max-height:calc(100vh - 72px);overflow-y:auto;z-index:49;align-items:stretch;border-bottom:1px solid var(--line);box-shadow:0 24px 40px rgba(0,0,0,.45)}
   .nav-links.open{display:flex}
-  .nav-links a{font-family:var(--display);font-size:26px;text-transform:uppercase;letter-spacing:.03em;color:var(--bone);padding:14px 0;border-bottom:1px solid var(--line);width:100%}
-  .nav-links .has-sub>a.sub-toggle{pointer-events:none;font-family:var(--body);font-size:11px;font-weight:600;letter-spacing:.22em;color:var(--blitz);padding:16px 0 4px;border-bottom:none}
+  .nav-links a{font-family:var(--body);font-size:17px;font-weight:600;text-transform:none;letter-spacing:0;color:var(--bone);padding:11px 0;border-bottom:1px solid var(--line);width:100%}
+  .nav-links .has-sub>a.sub-toggle{pointer-events:none;font-family:var(--body);font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--blitz);padding:18px 0 2px;border-bottom:none}
   .nav-links .has-sub>a.sub-toggle::after{content:""}
   .nav-links .sub{display:flex;position:static;border:none;background:none;padding:0;min-width:0;flex-direction:column}
-  .nav-links .sub a{font-family:var(--display);font-size:26px;text-transform:uppercase;letter-spacing:.03em;color:var(--bone);padding:14px 0;border-bottom:1px solid var(--line)}
+  .nav-links .sub a{font-family:var(--body);font-size:17px;font-weight:600;text-transform:none;letter-spacing:0;color:var(--bone);padding:11px 0;border-bottom:1px solid var(--line)}
+  .nav-links .sub a .loc{font-weight:500}
+  /* Der Buchen-Block steht immer ganz oben, egal wo er im Quelltext haengt */
+  .nav-links .nav-book{display:flex;order:-2;flex-direction:column;gap:3px;background:var(--blitz);color:#15171C;
+    padding:14px 16px;margin:6px 0 10px;border-bottom:none;width:100%}
+  .nav-book .nb-t{font-family:var(--display);font-size:21px;text-transform:uppercase;letter-spacing:.03em;line-height:1.1}
+  .nav-book .nb-s{font-family:var(--body);font-size:12.5px;font-weight:500;line-height:1.35;color:rgba(21,23,28,.78)}
+  .nav-links .nav-kontakt{display:flex;order:-1;gap:10px;margin-bottom:2px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+  .nav-kontakt a{flex:1;text-align:center;border:1px solid var(--line);border-bottom:1px solid var(--line);
+    font-family:var(--body);font-size:14px;font-weight:600;letter-spacing:.04em;padding:11px 0;color:var(--bone)}
   .steps,.rev-grid,.feat-grid,.orte-grid{grid-template-columns:1fr}
   .cards{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none;padding-bottom:8px}
   .cards::-webkit-scrollbar{display:none}
@@ -381,12 +405,18 @@ footer{border-top:1px solid var(--line);padding:44px 0;font-size:13px;color:var(
 /* ---------- Zwei Reiter + Mobil-Trennung ---------- */
 @media(max-width:900px){
   .nav-links .has-sub>a.sub-toggle{pointer-events:none;font-family:var(--body);font-size:11px;font-weight:600;
-    letter-spacing:.22em;color:var(--blitz);padding:18px 0 4px;border-bottom:none;text-transform:uppercase}
+    letter-spacing:.22em;color:var(--blitz);padding:14px 0 2px;border-bottom:none;text-transform:uppercase}
   .nav-links .has-sub:first-child>a.sub-toggle{padding-top:6px}
   .nav-links .has-sub>a.sub-toggle::after{content:""}
   .nav-links .sub{display:flex;position:static;border:none;background:none;padding:0;min-width:0;flex-direction:column}
-  .nav-links .sub a{font-family:var(--display);font-size:24px;text-transform:uppercase;letter-spacing:.03em;
-    color:var(--bone);padding:12px 0;border-bottom:1px solid var(--line)}
-  .nav-links>a.nav-solo{margin-top:22px;border-top:2px solid var(--blitz);padding-top:16px}
+  .nav-links .sub a{font-family:var(--body);font-size:17px;font-weight:600;text-transform:none;letter-spacing:0;
+    color:var(--bone);padding:11px 0;border-bottom:1px solid var(--line)}
+  .nav-links .sub a .loc{font-weight:500;color:var(--muted)}
+  .nav-links>a.nav-solo{margin-top:14px;border-top:2px solid var(--blitz);padding-top:12px}
+  /* Der gelbe Trenner steht nur vor dem ersten Solo-Eintrag, nicht vor jedem */
+  .nav-links>a.nav-solo+a.nav-solo{margin-top:0;border-top:none;padding-top:10px}
+  .nav-links a{padding:10px 0}
+  .nav-links .sub a{padding:10px 0}
+  .nav-links{padding:10px 24px 22px}
 }
 .price .rate{font-size:12px;color:var(--blitz);margin:8px 0 4px;padding-bottom:14px;border-bottom:1px solid var(--line)}
