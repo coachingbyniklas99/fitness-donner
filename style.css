@@ -235,14 +235,6 @@ h2{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size
 .feat h3{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:21px;margin-bottom:8px;letter-spacing:.03em}
 .feat p{color:var(--muted);font-size:15px}
 .feat .ico{color:var(--blitz);font-size:22px;margin-bottom:14px}
-/* Kacheln mit gezeichneter Illustration im Kopf */
-.feat.has-art{padding:0 0 26px;display:flex;flex-direction:column}
-.feat-art{display:block;width:100%;height:132px;color:var(--blitz);
-  background:linear-gradient(180deg,rgba(239,185,46,.10),rgba(239,185,46,0));
-  border-bottom:1px solid var(--line)}
-.feat.has-art h3{margin:22px 26px 8px}
-.feat.has-art p{margin:0 26px}
-@media(max-width:900px){.feat-art{height:112px}}
 
 /* ---------- FAQ ---------- */
 .faq-list{max-width:800px}
