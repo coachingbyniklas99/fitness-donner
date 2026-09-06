@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /admin.html
+Disallow: /termin-bestaetigt.html
+Disallow: /karte-gekauft.html
+Disallow: /gutschein-danke.html
 
 Sitemap: https://fitnessdonner.de/sitemap.xml

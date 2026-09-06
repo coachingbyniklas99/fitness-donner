@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Fitness Donner &middot; Verwaltung</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="FD Verwaltung">
+<meta name="theme-color" content="#15171C">
+<link rel="stylesheet" href="style.css?v=10">
+<link rel="stylesheet" href="admin.css?v=4">
+</head>
+<body class="ad-body">
+
+<!-- Anmeldung -->
+<div class="ad-login" id="loginView">
+  <form class="ad-login-box" id="loginForm">
+    <svg width="150" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto 26px">
+      <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
+      <text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text>
+      <polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"/>
+    </svg>
+    <div class="ad-login-title">Verwaltung</div>
+    <input type="password" id="pw" placeholder="Passwort" autocomplete="current-password" required>
+    <button type="submit" class="btn btn-blitz" id="loginBtn">Anmelden</button>
+    <div class="ad-msg" id="loginMsg"></div>
+  </form>
+</div>
+
+<!-- App -->
+<div id="app" hidden>
+  <header class="ad-head">
+    <div class="ad-head-in">
+      <div class="ad-head-title">Verwaltung</div>
+      <button type="button" class="ad-logout" id="logout">Abmelden</button>
+    </div>
+  </header>
+
+  <nav class="ad-tabs" id="tabs">
+    <button type="button" class="ad-tab on" data-tab="termine">Termine</button>
+    <button type="button" class="ad-tab" data-tab="sperren">Sperren</button>
+    <button type="button" class="ad-tab" data-tab="codes">Codes</button>
+    <button type="button" class="ad-tab" data-tab="preise">Preise</button>
+  </nav>
+
+  <main class="ad-main">
+    <div class="ad-msg ad-msg-top" id="msg" hidden></div>
+
+    <!-- Termine -->
+    <section class="ad-panel" data-panel="termine">
+      <div class="ad-sec-head">
+        <h2>Kommende Termine</h2>
+        <button type="button" class="ad-refresh" id="refresh">Neu laden</button>
+      </div>
+      <div id="bookings" class="ad-list"></div>
+    </section>
+
+    <!-- Sperren -->
+    <section class="ad-panel" data-panel="sperren" hidden>
+      <h2>Einzelnen Termin sperren</h2>
+      <p class="ad-hint">Wenn jemand anruft und den Termin direkt bei dir bucht &ndash; nimm ihn hier raus, dann ist er online weg.</p>
+      <div class="ad-field">
+        <label for="blockDate">Tag</label>
+        <select id="blockDate"></select>
+      </div>
+      <div class="ad-field">
+        <label>Freie Zeiten an dem Tag</label>
+        <div id="blockSlots" class="ad-chips"></div>
+      </div>
+
+      <h2 style="margin-top:34px">Ganzen Tag sperren</h2>
+      <p class="ad-hint">F&uuml;r Urlaub, Fortbildung oder Krankheit. Der Tag verschwindet komplett aus der Buchung.</p>
+      <div class="ad-field">
+        <label for="dayDate">Datum</label>
+        <input type="date" id="dayDate">
+      </div>
+      <button type="button" class="btn btn-blitz" id="blockDayBtn">Tag sperren</button>
+
+      <h2 style="margin-top:34px">Aktuell gesperrt</h2>
+      <div id="blocked" class="ad-list"></div>
+    </section>
+
+    <!-- Codes -->
+    <section class="ad-panel" data-panel="codes" hidden>
+      <div class="ad-sec-head">
+        <h2>Gutscheine &amp; Karten</h2>
+        <button type="button" class="ad-refresh" id="issueToggle">Neu ausstellen</button>
+      </div>
+
+      <form class="ad-issue" id="issueBox" hidden>
+        <div class="ad-field">
+          <label for="issueArt">Was</label>
+          <select id="issueArt">
+            <option value="karte">Karte</option>
+            <option value="gutschein">Wertgutschein</option>
+          </select>
+        </div>
+        <div class="ad-field" id="issueCardField">
+          <label for="issueCard">Welche Karte</label>
+          <select id="issueCard"></select>
+        </div>
+        <div class="ad-field" id="issueAmountField" hidden>
+          <label for="issueAmount">Betrag in Euro</label>
+          <input type="number" id="issueAmount" min="5" step="5" value="50">
+        </div>
+        <div class="ad-field">
+          <label for="issueName">Name</label>
+          <input type="text" id="issueName" autocomplete="off">
+        </div>
+        <div class="ad-field">
+          <label for="issueMail">E-Mail</label>
+          <input type="email" id="issueMail" autocomplete="off">
+        </div>
+        <button type="submit" class="btn btn-blitz">Ausstellen und per Mail schicken</button>
+        <p class="ad-hint">Der Code geht direkt per Mail raus. Nutz das f&uuml;r Barzahlung oder Kulanz &ndash; es l&auml;uft keine Zahlung &uuml;ber Stripe.</p>
+      </form>
+
+      <input type="search" id="codeSearch" placeholder="Code, Name oder E-Mail suchen" class="ad-search">
+      <div id="codes" class="ad-list"></div>
+    </section>
+
+    <!-- Preise -->
+    <section class="ad-panel" data-panel="preise" hidden>
+      <h2>Preise</h2>
+      <p class="ad-hint">Gilt sofort f&uuml;r alle neuen Buchungen. Schon verkaufte Karten und Gutscheine bleiben, wie sie sind.</p>
+      <form id="settingsForm">
+        <div class="ad-field">
+          <label for="pTraining">Personal Training, pro Einheit</label>
+          <div class="ad-eur"><input type="number" id="pTraining" min="0" step="1"><span>&euro;</span></div>
+        </div>
+        <div class="ad-field">
+          <label for="pProbe">Probetraining</label>
+          <div class="ad-eur"><input type="number" id="pProbe" min="0" step="1"><span>&euro;</span></div>
+        </div>
+        <div class="ad-field">
+          <label for="pK4">4er-Karte, pro Einheit</label>
+          <div class="ad-eur"><input type="number" id="pK4" min="0" step="1"><span>&euro;</span></div>
+          <div class="ad-sub" id="sumK4"></div>
+        </div>
+        <div class="ad-field">
+          <label for="pK8">8er-Karte, pro Einheit</label>
+          <div class="ad-eur"><input type="number" id="pK8" min="0" step="1"><span>&euro;</span></div>
+          <div class="ad-sub" id="sumK8"></div>
+        </div>
+
+        <h2 style="margin-top:30px">Fristen</h2>
+        <div class="ad-field">
+          <label for="pLead">Mindestvorlauf vor dem Training</label>
+          <div class="ad-eur"><input type="number" id="pLead" min="0" step="1"><span>Std.</span></div>
+        </div>
+        <div class="ad-field">
+          <label for="pHorizon">Wie weit im Voraus buchbar</label>
+          <div class="ad-eur"><input type="number" id="pHorizon" min="7" max="180" step="1"><span>Tage</span></div>
+        </div>
+        <button type="submit" class="btn btn-blitz">Speichern</button>
+        <p class="ad-hint">Achtung: Die Preise auf <b>preise.html</b> stehen als Text auf der Seite und &auml;ndern sich hier nicht mit. Sag mir Bescheid, wenn ich sie anpassen soll.</p>
+      </form>
+    </section>
+  </main>
+</div>
+
+<script>
+var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.dev';
+
+(function () {
+  var TOKEN_KEY = 'fd_admin_token';
+  var state = { token: '', data: null, codes: [] };
+
+  function el(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function eur(cents) {
+    var v = (cents / 100).toFixed(2).replace('.', ',');
+    return (v.slice(-3) === ',00' ? v.slice(0, -3) : v) + ' €';
+  }
+  var WD = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+  function dshort(iso) {
+    var d = new Date(iso + 'T12:00:00Z');
+    return WD[d.getUTCDay()] + ', ' + d.getUTCDate() + '.' + (d.getUTCMonth() + 1) + '.';
+  }
+
+  function note(text, bad) {
+    var m = el('msg');
+    m.textContent = text;
+    m.className = 'ad-msg ad-msg-top' + (bad ? ' bad' : ' good');
+    m.hidden = false;
+    clearTimeout(note.t);
+    note.t = setTimeout(function () { m.hidden = true; }, 4000);
+  }
+
+  function api(path, opts) {
+    opts = opts || {};
+    return fetch(API_BASE + '/api/admin/' + path, {
+      method: opts.body ? 'POST' : 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + state.token,
+      },
+      body: opts.body ? JSON.stringify(opts.body) : undefined,
+    }).then(function (r) {
+      if (r.status === 401) { logout(); throw new Error('abgemeldet'); }
+      return r.json().then(function (d) {
+        if (!r.ok) throw new Error(d.error || 'Das hat nicht geklappt.');
+        return d;
+      });
+    });
+  }
+
+  /* ---------- Anmeldung ---------- */
+  el('loginForm').onsubmit = function (e) {
+    e.preventDefault();
+    var btn = el('loginBtn');
+    btn.disabled = true;
+    btn.textContent = 'Moment …';
+    fetch(API_BASE + '/api/admin/login', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ passwort: el('pw').value }),
+    })
+      .then(function (r) { return r.json().then(function (d) { return { s: r.status, d: d }; }); })
+      .then(function (res) {
+        btn.disabled = false;
+        btn.textContent = 'Anmelden';
+        if (res.s !== 200) { el('loginMsg').textContent = res.d.error; return; }
+        state.token = res.d.token;
+        try { localStorage.setItem(TOKEN_KEY, res.d.token); } catch (err) {}
+        el('pw').value = '';
+        el('loginMsg').textContent = '';
+        start();
+      })
+      .catch(function () {
+        btn.disabled = false;
+        btn.textContent = 'Anmelden';
+        el('loginMsg').textContent = 'Keine Verbindung.';
+      });
+  };
+
+  function logout() {
+    state.token = '';
+    try { localStorage.removeItem(TOKEN_KEY); } catch (err) {}
+    el('app').hidden = true;
+    el('loginView').hidden = false;
+  }
+  el('logout').onclick = logout;
+
+  function start() {
+    el('loginView').hidden = true;
+    el('app').hidden = false;
+    load();
+  }
+
+  /* ---------- Reiter ---------- */
+  Array.prototype.forEach.call(document.querySelectorAll('.ad-tab'), function (t) {
+    t.onclick = function () {
+      var name = t.getAttribute('data-tab');
+      Array.prototype.forEach.call(document.querySelectorAll('.ad-tab'), function (x) { x.classList.remove('on'); });
+      t.classList.add('on');
+      Array.prototype.forEach.call(document.querySelectorAll('.ad-panel'), function (p) {
+        p.hidden = p.getAttribute('data-panel') !== name;
+      });
+      if (name === 'codes' && !state.codes.length) loadCodes('');
+      window.scrollTo(0, 0);
+    };
+  });
+
+  /* ---------- Laden ---------- */
+  function load() {
+    return api('state').then(function (d) {
+      state.data = d;
+      renderBookings();
+      renderBlockDates();
+      renderBlocked();
+      renderSettings();
+    }).catch(function (e) { if (e.message !== 'abgemeldet') note(e.message, true); });
+  }
+  el('refresh').onclick = function () { load().then(function () { note('Aktualisiert.'); }); };
+
+  /* ---------- Termine ---------- */
+  function renderBookings() {
+    var box = el('bookings');
+    var list = state.data.bookings.filter(function (b) { return b.status === 'confirmed'; });
+    if (!list.length) {
+      box.innerHTML = '<div class="ad-empty">Keine kommenden Termine.</div>';
+      return;
+    }
+    box.innerHTML = list.map(function (b) {
+      return '<div class="ad-card">'
+        + '<div class="ad-card-top"><span class="ad-when">' + esc(dshort(b.date)) + ' &middot; ' + esc(b.start) + '–' + esc(b.end) + '</span>'
+        + '<span class="ad-tagline">' + esc(b.label) + '</span></div>'
+        + '<div class="ad-who">' + esc(b.name) + '</div>'
+        + '<div class="ad-meta">' + esc(b.city) + ' &middot; ' + esc(b.paid) + '</div>'
+        + (b.phone ? '<a class="ad-link" href="tel:' + esc(b.phone.replace(/\s/g, '')) + '">' + esc(b.phone) + '</a>' : '')
+        + '<a class="ad-link" href="mailto:' + esc(b.email) + '">' + esc(b.email) + '</a>'
+        + (b.note ? '<div class="ad-note">' + esc(b.note) + '</div>' : '')
+        + '<button type="button" class="ad-danger" data-cancel="' + esc(b.date + '|' + b.slot_id) + '">Absagen</button>'
+        + '</div>';
+    }).join('');
+
+    Array.prototype.forEach.call(box.querySelectorAll('[data-cancel]'), function (btn) {
+      btn.onclick = function () {
+        var parts = btn.getAttribute('data-cancel').split('|');
+        if (btn.getAttribute('data-armed') !== '1') {
+          btn.setAttribute('data-armed', '1');
+          btn.textContent = 'Wirklich absagen?';
+          setTimeout(function () {
+            btn.removeAttribute('data-armed');
+            btn.textContent = 'Absagen';
+          }, 4000);
+          return;
+        }
+        btn.disabled = true;
+        api('cancel', { body: { date: parts[0], slotId: parts[1] } })
+          .then(function (d) {
+            note('Abgesagt. ' + (d.refunded || '') + ' ' + (d.hinweis || ''));
+            return load();
+          })
+          .catch(function (e) { btn.disabled = false; note(e.message, true); });
+      };
+    });
+  }
+
+  /* ---------- Sperren ---------- */
+  function renderBlockDates() {
+    var dates = [];
+    state.data.free.forEach(function (s) { if (dates.indexOf(s.date) < 0) dates.push(s.date); });
+    el('blockDate').innerHTML = dates.map(function (d) {
+      return '<option value="' + esc(d) + '">' + esc(dshort(d)) + '</option>';
+    }).join('');
+    renderBlockSlots();
+  }
+  el('blockDate').onchange = renderBlockSlots;
+
+  function renderBlockSlots() {
+    var date = el('blockDate').value;
+    var slots = state.data.free.filter(function (s) { return s.date === date; });
+    el('blockSlots').innerHTML = slots.map(function (s) {
+      return '<button type="button" class="ad-chip" data-block="' + esc(s.date + '|' + s.slotId) + '">'
+        + esc(s.start) + '–' + esc(s.end) + '<span>' + esc(s.city) + '</span></button>';
+    }).join('') || '<div class="ad-empty">An dem Tag ist nichts mehr frei.</div>';
+
+    Array.prototype.forEach.call(el('blockSlots').querySelectorAll('[data-block]'), function (b) {
+      b.onclick = function () {
+        var parts = b.getAttribute('data-block').split('|');
+        b.disabled = true;
+        api('block', { body: { date: parts[0], slotId: parts[1] } })
+          .then(function () { note('Termin gesperrt.'); return load(); })
+          .catch(function (e) { b.disabled = false; note(e.message, true); });
+      };
+    });
+  }
+
+  el('blockDayBtn').onclick = function () {
+    var d = el('dayDate').value;
+    if (!d) return note('Bitte ein Datum wählen.', true);
+    api('block', { body: { date: d } })
+      .then(function () { note('Tag gesperrt.'); el('dayDate').value = ''; return load(); })
+      .catch(function (e) { note(e.message, true); });
+  };
+
+  function renderBlocked() {
+    var d = state.data;
+    var items = d.blocked_days.map(function (x) {
+      return '<div class="ad-card ad-card-sm"><div><b>' + esc(dshort(x)) + '</b><br><span class="ad-meta">ganzer Tag</span></div>'
+        + '<button type="button" class="ad-undo" data-unblock="' + esc(x) + '">Freigeben</button></div>';
+    }).concat(d.blocked_slots.map(function (x) {
+      return '<div class="ad-card ad-card-sm"><div><b>' + esc(dshort(x.date)) + '</b><br><span class="ad-meta">'
+        + esc(x.start) + '–' + esc(x.end) + ' · ' + esc(x.city) + '</span></div>'
+        + '<button type="button" class="ad-undo" data-unblock="' + esc(x.date + '|' + x.slotId) + '">Freigeben</button></div>';
+    }));
+    el('blocked').innerHTML = items.join('') || '<div class="ad-empty">Nichts gesperrt.</div>';
+
+    Array.prototype.forEach.call(el('blocked').querySelectorAll('[data-unblock]'), function (b) {
+      b.onclick = function () {
+        var parts = b.getAttribute('data-unblock').split('|');
+        b.disabled = true;
+        api('unblock', { body: { date: parts[0], slotId: parts[1] || '' } })
+          .then(function () { note('Wieder freigegeben.'); return load(); })
+          .catch(function (e) { b.disabled = false; note(e.message, true); });
+      };
+    });
+  }
+
+  /* ---------- Codes ---------- */
+  var searchTimer;
+  el('codeSearch').oninput = function () {
+    clearTimeout(searchTimer);
+    var v = el('codeSearch').value;
+    searchTimer = setTimeout(function () { loadCodes(v); }, 300);
+  };
+
+  function loadCodes(q) {
+    api('codes?q=' + encodeURIComponent(q || '')).then(function (d) {
+      state.codes = d.codes;
+      el('codes').innerHTML = d.codes.length ? d.codes.map(function (c) {
+        var rest = c.kind === 'karte'
+          ? c.left + ' von ' + c.total + ' Einheiten frei'
+          : 'Restwert ' + c.left + ' von ' + c.amount;
+        return '<div class="ad-card">'
+          + '<div class="ad-card-top"><span class="ad-code">' + esc(c.code) + '</span>'
+          + '<span class="ad-tagline">' + esc(c.label) + '</span></div>'
+          + '<div class="ad-who">' + esc(c.name || '–') + '</div>'
+          + '<div class="ad-meta">' + esc(rest) + ' &middot; bis ' + esc(c.expires.split('-').reverse().join('.')) + '</div>'
+          + '<div class="ad-meta">' + esc(c.email || '') + (c.status !== 'active' ? ' &middot; ' + esc(c.status) : '') + '</div>'
+          + '<div class="ad-actions">'
+          + (c.kind === 'karte'
+            ? '<button type="button" class="ad-mini" data-code="' + esc(c.code) + '" data-aktion="einheit_zurueck">+1 Einheit</button>'
+              + '<button type="button" class="ad-mini" data-code="' + esc(c.code) + '" data-aktion="einheit_abziehen">−1 Einheit</button>'
+            : '')
+          + '<button type="button" class="ad-mini" data-code="' + esc(c.code) + '" data-aktion="verlaengern">Verlängern</button>'
+          + '<button type="button" class="ad-mini" data-code="' + esc(c.code) + '" data-aktion="'
+          + (c.status === 'cancelled' ? 'aktivieren">Aktivieren' : 'stornieren">Stornieren') + '</button>'
+          + '</div></div>';
+      }).join('') : '<div class="ad-empty">Nichts gefunden.</div>';
+
+      Array.prototype.forEach.call(el('codes').querySelectorAll('[data-aktion]'), function (b) {
+        b.onclick = function () {
+          b.disabled = true;
+          api('code', { body: { code: b.getAttribute('data-code'), aktion: b.getAttribute('data-aktion') } })
+            .then(function () { note('Gespeichert.'); loadCodes(el('codeSearch').value); })
+            .catch(function (e) { b.disabled = false; note(e.message, true); });
+        };
+      });
+    }).catch(function (e) { if (e.message !== 'abgemeldet') note(e.message, true); });
+  }
+
+  el('issueToggle').onclick = function () {
+    el('issueBox').hidden = !el('issueBox').hidden;
+  };
+  el('issueArt').onchange = function () {
+    var karte = el('issueArt').value === 'karte';
+    el('issueCardField').hidden = !karte;
+    el('issueAmountField').hidden = karte;
+  };
+  el('issueBox').onsubmit = function (e) {
+    e.preventDefault();
+    api('issue', { body: {
+      art: el('issueArt').value,
+      card: el('issueCard').value,
+      betrag: Number(el('issueAmount').value),
+      name: el('issueName').value,
+      email: el('issueMail').value,
+    } })
+      .then(function (d) {
+        note('Ausgestellt: ' + d.code + ' – die Mail ist raus.');
+        el('issueName').value = '';
+        el('issueMail').value = '';
+        el('issueBox').hidden = true;
+        loadCodes('');
+      })
+      .catch(function (err) { note(err.message, true); });
+  };
+
+  /* ---------- Preise ---------- */
+  function renderSettings() {
+    var s = state.data.settings;
+    el('pTraining').value = Math.round(s.trainingCents / 100);
+    el('pProbe').value = Math.round(s.probeCents / 100);
+    el('pK4').value = Math.round(s.cards.karte4.unitCents / 100);
+    el('pK8').value = Math.round(s.cards.karte8.unitCents / 100);
+    el('pLead').value = s.bookingLeadHours;
+    el('pHorizon').value = s.bookingHorizonDays;
+    el('issueCard').innerHTML = Object.keys(s.cards).map(function (k) {
+      return '<option value="' + k + '">' + esc(s.cards[k].label) + '</option>';
+    }).join('');
+    sums();
+  }
+  function sums() {
+    var s = state.data.settings;
+    el('sumK4').textContent = 'ergibt ' + eur(Number(el('pK4').value) * 100 * s.cards.karte4.sessions) + ' gesamt';
+    el('sumK8').textContent = 'ergibt ' + eur(Number(el('pK8').value) * 100 * s.cards.karte8.sessions) + ' gesamt';
+  }
+  el('pK4').oninput = sums;
+  el('pK8').oninput = sums;
+
+  el('settingsForm').onsubmit = function (e) {
+    e.preventDefault();
+    var s = state.data.settings;
+    api('settings', { body: {
+      trainingCents: Number(el('pTraining').value) * 100,
+      probeCents: Number(el('pProbe').value) * 100,
+      bookingLeadHours: Number(el('pLead').value),
+      bookingHorizonDays: Number(el('pHorizon').value),
+      cards: {
+        karte4: { unitCents: Number(el('pK4').value) * 100,
+                  totalCents: Number(el('pK4').value) * 100 * s.cards.karte4.sessions },
+        karte8: { unitCents: Number(el('pK8').value) * 100,
+                  totalCents: Number(el('pK8').value) * 100 * s.cards.karte8.sessions },
+      },
+    } })
+      .then(function () { note('Preise gespeichert.'); return load(); })
+      .catch(function (err) { note(err.message, true); });
+  };
+
+  /* ---------- Start ---------- */
+  try { state.token = localStorage.getItem(TOKEN_KEY) || ''; } catch (err) {}
+  if (state.token) {
+    api('state').then(function (d) {
+      state.data = d;
+      start();
+    }).catch(function () { logout(); });
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Termin buchen | Fitness Donner</title>
+<meta name="description" content="Personal Training in Solingen, Köln und Neuss direkt online buchen und bezahlen. Probetraining für 29 € – wird auf dein erstes Training angerechnet.">
+<link rel="canonical" href="https://fitnessdonner.de/termin-buchen.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Fitness Donner">
+<meta property="og:locale" content="de_DE">
+<meta property="og:url" content="https://fitnessdonner.de/termin-buchen.html">
+<meta property="og:title" content="Termin buchen | Fitness Donner">
+<meta property="og:description" content="Personal Training in Solingen, Köln und Neuss direkt online buchen und bezahlen.">
+<meta property="og:image" content="https://fitnessdonner.de/og-bild.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="style.css?v=10">
+<link rel="stylesheet" href="gutschein.css?v=2">
+<link rel="stylesheet" href="termin.css?v=6">
+</head>
+<body>
+<nav>
+  <div class="wrap nav-inner">
+    <a href="index.html" aria-label="Fitness Donner - Startseite"><svg width="140" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
+  <text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text>
+  <polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"/>
+</svg></a>
+    <div class="nav-links" id="navLinks">
+      <div class="has-sub">
+        <a href="#" class="sub-toggle" onclick="event.preventDefault();this.parentElement.classList.toggle('sub-open')">Personal Training</a>
+        <div class="sub">
+          <div class="sub-group">Vor Ort</div>
+          <a href="personal-training-solingen.html">Solingen &amp; Haan<span class="loc">zuhause, drau&szlig;en oder Halle</span></a>
+          <a href="personal-training-koeln.html">K&ouml;ln<span class="loc">Iron&amp;Soul Zollstock</span></a>
+          <a href="personal-training-neuss.html">Neuss<span class="loc">Iron&amp;Soul R&ouml;merstra&szlig;e</span></a>
+          <div class="sub-group">Ortsunabh&auml;ngig</div>
+          <a href="online.html">Online-Coaching<span class="loc">von &uuml;berall</span></a>
+        </div>
+      </div>
+      <div class="has-sub">
+        <a href="#" class="sub-toggle" onclick="event.preventDefault();this.parentElement.classList.toggle('sub-open')">Schwerpunkte</a>
+        <div class="sub">
+          <a href="hyrox.html">Hyrox</a>
+          <a href="personal-training-rueckenschmerzen.html">Gesundheitstraining</a>
+        </div>
+      </div>
+      <a href="preise.html" class="nav-solo">Preise</a>
+      <a href="gutschein.html" class="nav-solo">Gutscheine</a>
+      <a href="ueber-mich.html">&Uuml;ber mich</a>
+      <a href="faq.html">FAQ</a>
+      <a class="btn btn-blitz btn-sm mob-cta" href="termin-buchen.html">Termin buchen</a>
+    </div>
+    <a class="btn btn-blitz btn-sm nav-cta" href="termin-buchen.html">Termin buchen</a>
+    <button class="menu-btn" aria-label="Men&uuml; &ouml;ffnen" onclick="document.getElementById('navLinks').classList.toggle('open');this.textContent=this.textContent==='☰'?'✕':'☰'">&#9776;</button>
+  </div>
+</nav>
+
+<header class="page-hero tk-hero">
+  <div class="wrap">
+    <div class="eyebrow">Termin buchen</div>
+    <h1>Such dir<br>deinen Slot.</h1>
+    <p class="hero-sub">Aussuchen, Termin w&auml;hlen, fertig. Gutschein- und Kartencodes werden direkt angerechnet.</p>
+  </div>
+</header>
+
+<!-- Fortschrittsleiste, bleibt beim Scrollen oben stehen -->
+<div class="tk-steps" id="stepBar">
+  <div class="wrap tk-steps-inner">
+    <button type="button" class="tk-step is-now" data-goto="1">
+      <span class="n">1</span><span class="l">Leistung</span>
+    </button>
+    <span class="tk-step-line" data-forstep="2"></span>
+    <button type="button" class="tk-step" data-goto="2">
+      <span class="n">2</span><span class="l">Termin</span>
+    </button>
+    <span class="tk-step-line"></span>
+    <button type="button" class="tk-step" data-goto="3">
+      <span class="n">3</span><span class="l">Daten</span>
+    </button>
+  </div>
+</div>
+
+<section class="tk-section">
+  <div class="wrap">
+
+    <div id="error" class="gs-error" hidden></div>
+
+    <!-- ---------- Schritt 1 ---------- -->
+    <div class="gs-form tk-panel" data-panel="1">
+      <h2>Was m&ouml;chtest du buchen?</h2>
+      <p class="gs-sub">Einzeltermine buchst du gleich mit Datum. Bei den Karten zahlst du einmal und legst die Termine sp&auml;ter einzeln fest &ndash; du musst jetzt noch nicht wissen, wann.</p>
+
+      <div class="tk-types">
+        <button type="button" class="tk-type on" data-type="training">
+          <div class="tk-type-name">Personal Training</div>
+          <div class="tk-type-price" data-price="training">99&nbsp;&euro;</div>
+          <div class="tk-type-desc">60 Minuten 1:1. F&uuml;r alle, die schon wissen, was sie wollen.</div>
+        </button>
+        <button type="button" class="tk-type" data-type="probe">
+          <div class="tk-type-name">Probetraining</div>
+          <div class="tk-type-price" data-price="probe">29&nbsp;&euro;</div>
+          <div class="tk-type-desc">Einmal komplett mittrainieren. Der Betrag wird auf dein erstes Training angerechnet.</div>
+        </button>
+        <button type="button" class="tk-type" data-type="karte4">
+          <div class="tk-type-name">4er-Karte</div>
+          <div class="tk-type-price" data-price="karte4">89&nbsp;&euro;</div>
+          <div class="tk-type-desc">Pro Einheit, 356&nbsp;&euro; gesamt. Termine buchst du danach einzeln, wann es passt.</div>
+        </button>
+        <button type="button" class="tk-type" data-type="karte8">
+          <div class="tk-type-name">8er-Karte</div>
+          <div class="tk-type-price" data-price="karte8">79&nbsp;&euro;</div>
+          <div class="tk-type-desc">Pro Einheit, 632&nbsp;&euro; gesamt. Bester Preis, 12 Monate einl&ouml;sbar.</div>
+        </button>
+        <button type="button" class="tk-type" data-type="erstgespraech">
+          <div class="tk-type-name">Erstgespr&auml;ch</div>
+          <div class="tk-type-price">kostenlos</div>
+          <div class="tk-type-desc">Kennenlernen, Ziele kl&auml;ren, Plan machen. Ohne Training, ohne Verpflichtung.</div>
+        </button>
+      </div>
+
+      <div class="tk-cardways" id="cardWays" hidden>
+        <div class="tk-cardways-title">Wann m&ouml;chtest du deine Termine festlegen?</div>
+        <div class="tk-ways">
+          <button type="button" class="tk-way on" data-way="later">
+            <span class="h">Sp&auml;ter, in Ruhe</span>
+            <span class="d">Du bekommst den Code per Mail und buchst deine Termine einzeln, wann du willst.</span>
+          </button>
+          <button type="button" class="tk-way" data-way="now">
+            <span class="h">Gleich festlegen</span>
+            <span class="d">Such dir im n&auml;chsten Schritt schon Termine aus &ndash; so viele du willst, den Rest sp&auml;ter.</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="tk-nav">
+        <div class="tk-nav-help">
+          Noch Fragen?
+          <a href="tel:+491776311404">Anrufen</a>
+          <span>&middot;</span>
+          <a href="https://wa.me/491776311404">WhatsApp</a>
+        </div>
+        <button type="button" class="btn btn-blitz" data-next="2">Weiter zum Termin</button>
+      </div>
+    </div>
+
+    <!-- ---------- Schritt 2 ---------- -->
+    <div class="gs-form tk-panel" data-panel="2" hidden>
+      <h2>Wann passt es dir?</h2>
+      <p class="gs-sub">Standard ist Solingen &ndash; in K&ouml;ln und Neuss trainiere ich nur rund um meine Kurse.</p>
+
+      <div class="tk-filter" id="cityFilter" hidden></div>
+      <div class="tk-loc" id="locationBox" hidden></div>
+
+      <div id="slotLoading" class="gs-loading">Termine werden geladen &hellip;</div>
+
+      <div class="tk-picker" id="picker" hidden>
+        <div class="tk-cal">
+          <div class="tk-cal-head">
+            <button type="button" class="tk-cal-nav" id="prevMonth" aria-label="Vorheriger Monat">&#8249;</button>
+            <div class="tk-cal-title" id="monthTitle"></div>
+            <button type="button" class="tk-cal-nav" id="nextMonth" aria-label="N&auml;chster Monat">&#8250;</button>
+          </div>
+          <div class="tk-cal-grid" id="calDow"></div>
+          <div class="tk-cal-grid" id="calGrid"></div>
+          <div class="tk-cal-legend"><span class="dot"></span> Tage mit freien Zeiten</div>
+        </div>
+
+        <div class="tk-daybox">
+          <div class="tk-daybox-title" id="dayTitle">W&auml;hl einen Tag aus</div>
+          <div class="tk-times" id="dayTimes"></div>
+          <p class="tk-daybox-empty" id="dayHint">Markierte Tage haben freie Zeiten.</p>
+          <div class="tk-picked" id="pickedBox" hidden>
+            <div class="tk-picked-title" id="pickedTitle"></div>
+            <ul id="pickedList"></ul>
+          </div>
+        </div>
+      </div>
+
+      <div id="slotEmpty" class="tk-empty" hidden>
+        Online ist hier gerade nichts frei. Melde dich gern direkt &ndash;
+        <a href="tel:+491776311404">0177 6311404</a>, oft l&auml;sst sich doch etwas einrichten.
+      </div>
+
+      <div class="tk-nav">
+        <button type="button" class="btn btn-ghost" data-back="1">Zur&uuml;ck</button>
+        <button type="button" class="btn btn-blitz" data-next="3" id="toStep3" disabled>Weiter zu deinen Daten</button>
+      </div>
+    </div>
+
+    <!-- ---------- Schritt 3 ---------- -->
+    <form class="gs-form tk-panel" data-panel="3" id="bookForm" hidden>
+      <h2>Deine Daten</h2>
+      <p class="gs-sub" id="chosenSlot"></p>
+      <div class="tk-cardnote" id="cardNote" hidden></div>
+
+      <div class="gs-row">
+        <div class="gs-field">
+          <label for="name">Name <span class="req">*</span></label>
+          <input type="text" id="name" name="name" required autocomplete="name">
+        </div>
+        <div class="gs-field">
+          <label for="email">E-Mail <span class="req">*</span></label>
+          <input type="email" id="email" name="email" required autocomplete="email">
+          <div class="small">Hierhin geht die Best&auml;tigung.</div>
+        </div>
+      </div>
+
+      <div class="gs-field">
+        <label for="phone">Telefon</label>
+        <input type="text" id="phone" name="phone" autocomplete="tel">
+        <div class="small">Freiwillig &ndash; falls kurzfristig etwas dazwischenkommt.</div>
+      </div>
+
+      <div class="gs-field">
+        <label for="note">Worum geht es dir?</label>
+        <textarea id="note" name="note" maxlength="300" placeholder="Ziele, Vorerfahrung, Beschwerden &ndash; alles, was ich vorher wissen sollte."></textarea>
+      </div>
+
+      <div class="gs-field" id="voucherField">
+        <label for="voucher">Gutschein- oder Guthabencode</label>
+        <div class="tk-voucher">
+          <input type="text" id="voucher" name="voucher" placeholder="FD-XXXX-XXXX" autocomplete="off">
+          <button type="button" class="btn btn-ghost btn-sm" id="voucherBtn">Einl&ouml;sen</button>
+        </div>
+        <div class="small" id="voucherMsg"></div>
+      </div>
+
+      <div class="gs-order">
+        <div class="gs-order-title">Deine Buchung</div>
+        <ul id="orderList"></ul>
+      </div>
+
+      <div class="tk-split" id="splitBox" hidden>
+        <div class="tk-split-head">
+          <span class="tk-split-badge">Tipp</span>
+          <span>Du musst nicht alles auf einmal zahlen</span>
+        </div>
+        <div class="tk-split-opts" id="splitOpts"></div>
+        <p class="tk-split-note">W&auml;hle beim Bezahlen einfach <b>Klarna</b> &ndash; dort suchst du dir die Variante aus. Der Preis bleibt derselbe, es kommt kein Aufschlag dazu. Bonit&auml;t vorausgesetzt; bei der Finanzierung k&ouml;nnen Zinsen anfallen.</p>
+      </div>
+
+      <div class="gs-summary">
+        <div>
+          <div class="gs-sum-label">Zu zahlen</div>
+          <div class="gs-sum-value" id="sumValue">99 &euro;</div>
+        </div>
+        <div class="gs-pay">
+          <button type="submit" class="btn btn-blitz" id="bookBtn">Zahlungspflichtig buchen</button>
+          <div class="secure">Zahlung &uuml;ber Stripe &middot; Karte, PayPal, Apple&nbsp;Pay, Klarna</div>
+        </div>
+      </div>
+
+      <div class="tk-nav">
+        <button type="button" class="btn btn-ghost" id="backFromData">Zur&uuml;ck zum Termin</button>
+        <div class="tk-nav-help">
+          Unsicher? <a href="tel:+491776311404">Kurz anrufen</a>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <svg width="120" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
+  <text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text>
+  <polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"/>
+</svg>
+    <div class="legal">
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
+      <a href="gutschein-bedingungen.html">Gutscheinbedingungen</a>
+    </div>
+    <div>&copy; 2026 Fitness Donner &middot; Solingen, Haan, K&ouml;ln &amp; Neuss</div>
+  </div>
+</footer>
+<script>
+var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.dev';
+
+(function () {
+  var state = {
+    step: 1, type: 'training', slots: [], locations: [], city: 'Solingen',
+    months: [], monthIndex: 0, day: '', chosen: null, picked: [], way: 'later',
+    prices: {}, cards: {}, voucher: null,
+  };
+
+  // Karten werden ohne Termin gekauft – der Kalender entfällt dabei
+  function isCard() { return state.type === 'karte4' || state.type === 'karte8'; }
+  function isMulti() { return isCard() && state.way === 'now'; }
+  function cardInfo() { return state.cards[state.type] || {}; }
+
+  var el = function (id) { return document.getElementById(id); };
+  var errBox = el('error');
+
+  var WEEKDAYS = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+  var DOW = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+  var MONTHS = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli',
+                'August', 'September', 'Oktober', 'November', 'Dezember'];
+
+  function fail(text) {
+    errBox.textContent = text;
+    errBox.hidden = false;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  function clearError() { errBox.hidden = true; }
+  function eur(cents) {
+    var v = (cents / 100).toFixed(2).replace('.', ',');
+    return (v.slice(-3) === ',00' ? v.slice(0, -3) : v) + ' €';
+  }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function dateObj(iso) { return new Date(iso + 'T12:00:00Z'); }
+  function longDate(iso) {
+    var d = dateObj(iso);
+    return WEEKDAYS[d.getUTCDay()] + ', ' + d.getUTCDate() + '. ' + MONTHS[d.getUTCMonth()];
+  }
+  function price() {
+    return state.type === 'training' ? state.prices.training
+      : state.type === 'probe' ? state.prices.probe : 0;
+  }
+  function visibleSlots() {
+    return state.slots.filter(function (s) { return !state.city || s.city === state.city; });
+  }
+
+  /* ---------- Schritte ---------- */
+  function goStep(n) {
+    if (isCard() && !isMulti() && n === 2) n = 3;   // Karte ohne Terminwahl überspringt den Kalender
+    if (n === 3 && !isCard() && !state.chosen) return;
+    state.step = n;
+    Array.prototype.forEach.call(document.querySelectorAll('.tk-panel'), function (p) {
+      p.hidden = Number(p.getAttribute('data-panel')) !== n;
+    });
+    var card = isCard();
+    Array.prototype.forEach.call(document.querySelectorAll('.tk-step'), function (b) {
+      var i = Number(b.getAttribute('data-goto'));
+      b.classList.toggle('is-now', i === n);
+      b.classList.toggle('is-done', i < n);
+      b.disabled = i > n && !(i === 2 && n === 1) && !(i === 3 && (card || state.chosen));
+    });
+    clearError();
+    var bar = el('stepBar');
+    var y = bar.getBoundingClientRect().top + window.scrollY - 8;
+    if (window.scrollY > y) window.scrollTo({ top: y, behavior: 'smooth' });
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-next]'), function (b) {
+    b.onclick = function () { goStep(Number(b.getAttribute('data-next'))); };
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-back]'), function (b) {
+    b.onclick = function () { goStep(Number(b.getAttribute('data-back'))); };
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('.tk-step'), function (b) {
+    b.onclick = function () { goStep(Number(b.getAttribute('data-goto'))); };
+  });
+
+  /* ---------- Termine laden ---------- */
+  fetch(API_BASE + '/api/slots')
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      state.slots = d.slots || [];
+      state.locations = d.locations || [];
+      state.prices = d.prices || { training: 9900, probe: 2900 };
+      state.cards = d.cards || {};
+      var t = document.querySelector('[data-price="training"]');
+      var p = document.querySelector('[data-price="probe"]');
+      if (t) t.textContent = eur(state.prices.training);
+      if (p) p.textContent = eur(state.prices.probe);
+      Object.keys(state.cards).forEach(function (k) {
+        var e = document.querySelector('[data-price="' + k + '"]');
+        if (e) e.textContent = eur(state.cards[k].unit_cents);
+      });
+      applyMode();
+      preselect();
+      el('slotLoading').hidden = true;
+      renderCities();
+      renderLocation();
+      rebuildMonths();
+      renderCalendar();
+    })
+    .catch(function () {
+      el('slotLoading').hidden = true;
+      fail('Die Termine konnten nicht geladen werden. Bitte lade die Seite neu oder melde dich unter 0177 6311404.');
+    });
+
+  /* ---------- Ortswahl ---------- */
+  function renderCities() {
+    var cities = state.locations
+      .map(function (l) { return l.city; })
+      .filter(function (c) { return state.slots.some(function (s) { return s.city === c; }); });
+    if (cities.length < 2) return;
+
+    var box = el('cityFilter');
+    box.innerHTML = '';
+    cities.concat(['Alle Orte']).forEach(function (c) {
+      var isAll = c === 'Alle Orte';
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'gs-chip' + (!isAll && c === state.city ? ' on' : '');
+      b.textContent = c;
+      b.onclick = function () {
+        state.city = isAll ? '' : c;
+        state.day = '';
+        state.chosen = null;
+        el('toStep3').disabled = true;
+        Array.prototype.forEach.call(box.children, function (x) { x.classList.remove('on'); });
+        b.classList.add('on');
+        renderLocation();
+        rebuildMonths();
+        renderCalendar();
+      };
+      box.appendChild(b);
+    });
+    box.hidden = false;
+  }
+
+  function renderLocation() {
+    var box = el('locationBox');
+    var loc = state.locations.filter(function (l) { return l.city === state.city; })[0];
+    if (!loc) { box.hidden = true; return; }
+    box.innerHTML =
+      '<div class="tk-loc-media' + (loc.image ? '' : ' is-placeholder') + '">'
+      + (loc.image ? '<img src="' + esc(loc.image) + '" alt="' + esc(loc.name) + '">' : '<span>Foto folgt</span>')
+      + '</div><div class="tk-loc-text">'
+      + '<div class="tk-loc-name">' + esc(loc.name) + '</div>'
+      + (loc.address ? '<div class="tk-loc-addr">' + esc(loc.address) + '</div>' : '')
+      + (loc.note ? '<p class="tk-loc-note">' + esc(loc.note) + '</p>' : '')
+      + (loc.address
+        ? '<a class="tk-loc-map" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='
+          + encodeURIComponent(loc.name + ', ' + loc.address) + '">Auf der Karte ansehen</a>' : '')
+      + '</div>';
+    box.hidden = false;
+  }
+
+  /* ---------- Kalender ---------- */
+  function rebuildMonths() {
+    var seen = {};
+    state.months = [];
+    visibleSlots().forEach(function (s) {
+      var key = s.date.slice(0, 7);
+      if (!seen[key]) { seen[key] = true; state.months.push(key); }
+    });
+    state.months.sort();
+    state.monthIndex = 0;
+    var any = state.months.length > 0;
+    el('picker').hidden = !any;
+    el('slotEmpty').hidden = any;
+  }
+
+  function renderCalendar() {
+    if (!state.months.length) return;
+    var month = state.months[state.monthIndex];
+    var year = Number(month.slice(0, 4));
+    var mon = Number(month.slice(5, 7)) - 1;
+
+    el('monthTitle').textContent = MONTHS[mon] + ' ' + year;
+    el('prevMonth').disabled = state.monthIndex === 0;
+    el('nextMonth').disabled = state.monthIndex >= state.months.length - 1;
+
+    var dowBox = el('calDow');
+    if (!dowBox.childElementCount) {
+      DOW.forEach(function (d) {
+        var s = document.createElement('div');
+        s.className = 'tk-cal-dow';
+        s.textContent = d;
+        dowBox.appendChild(s);
+      });
+    }
+
+    // welche Tage haben freie Zeiten?
+    var open = {};
+    visibleSlots().forEach(function (s) { open[s.date] = (open[s.date] || 0) + 1; });
+
+    var first = new Date(Date.UTC(year, mon, 1, 12));
+    var lead = (first.getUTCDay() + 6) % 7;           // Montag als erster Tag
+    var days = new Date(Date.UTC(year, mon + 1, 0, 12)).getUTCDate();
+
+    var grid = el('calGrid');
+    grid.innerHTML = '';
+    for (var i = 0; i < lead; i++) {
+      var pad = document.createElement('div');
+      pad.className = 'tk-cal-pad';
+      grid.appendChild(pad);
+    }
+    for (var d = 1; d <= days; d++) {
+      var iso = year + '-' + String(mon + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+      var has = Boolean(open[iso]);
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'tk-cal-day' + (has ? ' has' : '') + (state.day === iso ? ' on' : '');
+      b.innerHTML = '<span class="d">' + d + '</span>' + (has ? '<span class="dot"></span>' : '');
+      if (has) {
+        b.setAttribute('aria-label', longDate(iso) + ', ' + open[iso] + ' freie Zeiten');
+        b.onclick = (function (day) { return function () { pickDay(day); }; })(iso);
+      } else {
+        b.disabled = true;
+      }
+      grid.appendChild(b);
+    }
+    if (state.day && state.day.slice(0, 7) !== month) renderDay('');
+  }
+
+  el('prevMonth').onclick = function () {
+    if (state.monthIndex > 0) { state.monthIndex--; renderCalendar(); }
+  };
+  el('nextMonth').onclick = function () {
+    if (state.monthIndex < state.months.length - 1) { state.monthIndex++; renderCalendar(); }
+  };
+
+  function pickDay(iso) {
+    state.day = iso;
+    renderCalendar();
+    renderDay(iso);
+    if (window.innerWidth < 900) {
+      el('dayTitle').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  function renderDay(iso) {
+    var box = el('dayTimes');
+    box.innerHTML = '';
+    if (!iso) {
+      el('dayTitle').textContent = 'Wähl einen Tag aus';
+      el('dayHint').textContent = 'Markierte Tage haben freie Zeiten.';
+      el('dayHint').hidden = false;
+      return;
+    }
+    el('dayTitle').textContent = longDate(iso);
+    var list = visibleSlots().filter(function (s) { return s.date === iso; });
+    el('dayHint').hidden = list.length > 0;
+
+    list.forEach(function (s) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      var active = isMulti()
+        ? state.picked.some(function (x) { return x.slotId === s.slotId && x.date === s.date; })
+        : (state.chosen && state.chosen.slotId === s.slotId && state.chosen.date === s.date);
+      b.className = 'tk-time' + (active ? ' on' : '');
+      b.innerHTML = '<span class="t">' + esc(s.start) + '&ndash;' + esc(s.end) + '</span>'
+        + '<span class="c">' + esc(s.city) + '</span>';
+      b.onclick = function () { isMulti() ? togglePick(s) : chooseSlot(s); };
+      box.appendChild(b);
+    });
+  }
+
+  function togglePick(slot) {
+    var key = slot.date + '|' + slot.slotId;
+    var has = state.picked.some(function (x) { return x.date + '|' + x.slotId === key; });
+    if (has) {
+      state.picked = state.picked.filter(function (x) { return x.date + '|' + x.slotId !== key; });
+    } else {
+      var max = cardInfo().sessions || 0;
+      if (state.picked.length >= max) {
+        return fail('Mehr als ' + max + ' Termine gehen mit dieser Karte nicht. Entferne zuerst einen.');
+      }
+      clearError();
+      state.picked.push(slot);
+    }
+    renderDay(state.day);
+    renderPicked();
+    renderSummary();
+  }
+
+  function chooseSlot(slot) {
+    state.chosen = slot;
+    renderDay(state.day);
+    el('toStep3').disabled = false;
+    el('chosenSlot').innerHTML = '<b>' + esc(longDate(slot.date)) + '</b>, ' + esc(slot.start)
+      + '&ndash;' + esc(slot.end) + ' Uhr &middot; ' + esc(slot.place) + ', ' + esc(slot.city);
+    renderSummary();
+    Array.prototype.forEach.call(document.querySelectorAll('.tk-step'), function (b) {
+      if (Number(b.getAttribute('data-goto')) === 3) b.disabled = false;
+    });
+  }
+
+  /* ---------- Leistung umschalten ---------- */
+  Array.prototype.forEach.call(document.querySelectorAll('.tk-type'), function (card) {
+    card.onclick = function () {
+      Array.prototype.forEach.call(document.querySelectorAll('.tk-type'), function (x) { x.classList.remove('on'); });
+      card.classList.add('on');
+      state.type = card.getAttribute('data-type');
+      state.voucher = null;
+      el('voucher').value = '';
+      el('voucherMsg').textContent = '';
+      el('voucherMsg').className = 'small';
+      el('voucherField').hidden = state.type === 'erstgespraech' || isCard();
+      applyMode();
+      renderSummary();
+      goStep(state.step);
+    };
+  });
+
+  /* ---------- Gutschein ---------- */
+  el('voucherBtn').onclick = function () {
+    var code = el('voucher').value.trim();
+    var msg = el('voucherMsg');
+    if (!code) { state.voucher = null; msg.textContent = ''; renderSummary(); return; }
+    msg.className = 'small';
+    msg.textContent = 'Wird geprüft …';
+    fetch(API_BASE + '/api/redeem-check', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: code, type: state.type }),
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d.ok) {
+          state.voucher = null;
+          msg.className = 'small tk-bad';
+          msg.textContent = d.error;
+        } else {
+          state.voucher = d;
+          msg.className = 'small tk-good';
+          msg.textContent = 'Guthaben ' + eur(d.remaining_cents) + ' – davon werden '
+            + eur(d.discount_cents) + ' angerechnet.';
+        }
+        renderSummary();
+      })
+      .catch(function () {
+        msg.className = 'small tk-bad';
+        msg.textContent = 'Der Code konnte gerade nicht geprüft werden.';
+      });
+  };
+
+  /* ---------- Zusammenfassung ---------- */
+  function renderSummary() {
+    if (isCard()) {
+      var c = cardInfo();
+      var items = [
+        c.label + ': ' + c.sessions + ' Einheiten Personal Training',
+        eur(c.unit_cents) + ' pro Einheit statt ' + eur(state.prices.training),
+      ];
+      if (state.picked.length) {
+        items.push(state.picked.length + ' Termine legst du jetzt fest, '
+          + (c.sessions - state.picked.length) + ' bleiben offen');
+        state.picked.slice().sort(function (a, b) {
+          return (a.date + a.start).localeCompare(b.date + b.start);
+        }).forEach(function (s) {
+          items.push(longDate(s.date) + ', ' + s.start + '–' + s.end + ' Uhr, ' + s.city);
+        });
+      } else {
+        items.push('Termine buchst du später einzeln mit deinem Code');
+      }
+      items.push('12 Monate einlösbar');
+      items.push('Absage kostenlos bis 24 Stunden vorher');
+
+      el('orderList').innerHTML = items.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('');
+      el('sumValue').textContent = eur(c.total_cents || 0);
+      el('bookBtn').textContent = 'Zahlungspflichtig kaufen';
+      renderSplit(c.total_cents || 0);
+      return;
+    }
+    var full = price();
+    var applied = state.voucher ? Math.min(state.voucher.remaining_cents, full) : 0;
+    var open = full - applied;
+    var label = state.type === 'training' ? 'Personal Training, 60 Minuten'
+      : state.type === 'probe' ? 'Probetraining, 60 Minuten' : 'Kostenloses Erstgespräch';
+
+    var items = [label];
+    if (state.chosen) {
+      items.push(longDate(state.chosen.date) + ', ' + state.chosen.start + '–' + state.chosen.end + ' Uhr');
+      items.push(state.chosen.place + ', ' + state.chosen.city);
+    }
+    if (full > 0) items.push('Preis: ' + eur(full));
+    if (applied > 0) items.push('Gutschein ' + state.voucher.code + ': −' + eur(applied));
+    if (state.type === 'probe') items.push('Der Betrag wird auf dein erstes Training angerechnet');
+    items.push('Absage kostenlos bis 24 Stunden vorher');
+
+    el('orderList').innerHTML = items.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('');
+    el('sumValue').textContent = open > 0 ? eur(open) : 'kostenlos';
+    el('bookBtn').textContent = open > 0 ? 'Zahlungspflichtig buchen' : 'Verbindlich buchen';
+    renderSplit(open);
+  }
+
+  /**
+   * Ratenhinweis. Die Grenzen kommen von Klarna (Stand Stripe-Doku, Deutschland):
+   * 3 zinsfreie Raten von 1–5.000 €, 30 Tage später bis 10.000 €,
+   * Finanzierung ab 25 € bis 10.000 €.
+   */
+  function renderSplit(cents) {
+    var box = el('splitBox');
+    if (cents < 15000) { box.hidden = true; return; }   // erst ab 150 € relevant
+
+    var opts = [];
+    if (cents >= 100 && cents <= 500000) {
+      opts.push({ big: eur(Math.round(cents / 3)), lbl: '3 Raten', txt: 'zinsfrei, alle zwei Wochen' });
+    }
+    if (cents <= 1000000) {
+      opts.push({ big: '30', lbl: 'Tage später', txt: 'erst in 30 Tagen zahlen, zinsfrei' });
+    }
+    if (cents >= 2500 && cents <= 1000000) {
+      opts.push({ big: 'bis 36', lbl: 'Monate', txt: 'längere Finanzierung, ggf. mit Zinsen' });
+    }
+
+    el('splitOpts').innerHTML = opts.map(function (o) {
+      return '<div class="tk-split-opt"><div class="big">' + esc(o.big) + '</div>'
+        + '<div class="lbl">' + esc(o.lbl) + '</div>'
+        + '<div class="txt">' + esc(o.txt) + '</div></div>';
+    }).join('');
+    box.hidden = opts.length === 0;
+  }
+
+  /* ---------- Absenden ---------- */
+  el('bookForm').onsubmit = function (e) {
+    e.preventDefault();
+    clearError();
+    var btn = el('bookBtn');
+    var original = btn.textContent;
+
+    if (isCard()) {
+      btn.disabled = true;
+      btn.textContent = 'Einen Moment …';
+      return fetch(API_BASE + '/api/karte', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          card: state.type,
+          name: el('name').value,
+          email: el('email').value,
+          phone: el('phone').value,
+          note: el('note').value,
+          slots: state.picked.map(function (s) { return { slotId: s.slotId, date: s.date }; }),
+        }),
+      })
+        .then(function (r) { return r.json().then(function (d) { return { s: r.status, d: d }; }); })
+        .then(function (res) {
+          if (res.s !== 200) {
+            btn.disabled = false; btn.textContent = original;
+            if (res.s === 409) {
+              return fetch(API_BASE + '/api/slots').then(function (x) { return x.json(); }).then(function (d) {
+                state.slots = d.slots || [];
+                state.picked = [];
+                rebuildMonths();
+                renderCalendar();
+                renderDay(state.day);
+                renderPicked();
+                goStep(2);
+                fail(res.d.error);
+              });
+            }
+            return fail(res.d.error || 'Der Kauf hat nicht geklappt.');
+          }
+          location.href = res.d.url;
+        })
+        .catch(function () {
+          btn.disabled = false; btn.textContent = original;
+          fail('Keine Verbindung. Bitte versuche es noch einmal.');
+        });
+    }
+
+    if (!state.chosen) { goStep(2); return fail('Bitte wähle zuerst einen Termin aus.'); }
+
+    btn.disabled = true;
+    btn.textContent = 'Einen Moment …';
+
+    fetch(API_BASE + '/api/book', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        slotId: state.chosen.slotId, date: state.chosen.date, type: state.type,
+        name: el('name').value, email: el('email').value,
+        phone: el('phone').value, note: el('note').value,
+        voucherCode: state.voucher ? state.voucher.code : '',
+      }),
+    })
+      .then(function (r) { return r.json().then(function (d) { return { s: r.status, d: d }; }); })
+      .then(function (res) {
+        if (res.s !== 200) {
+          btn.disabled = false;
+          btn.textContent = original;
+          if (res.s === 409) {
+            return fetch(API_BASE + '/api/slots').then(function (r) { return r.json(); }).then(function (d) {
+              state.slots = d.slots || [];
+              state.chosen = null;
+              el('toStep3').disabled = true;
+              rebuildMonths();
+              renderCalendar();
+              renderDay(state.day);
+              goStep(2);
+              fail(res.d.error);
+            });
+          }
+          return fail(res.d.error || 'Die Buchung hat nicht geklappt.');
+        }
+        if (res.d.status === 'confirmed') location.href = 'termin-bestaetigt.html?id=' + encodeURIComponent(res.d.id);
+        else location.href = res.d.url;
+      })
+      .catch(function () {
+        btn.disabled = false;
+        btn.textContent = original;
+        fail('Keine Verbindung. Bitte versuche es noch einmal.');
+      });
+  };
+
+  /* Sichtbarkeit an Termin- oder Kartenkauf anpassen */
+  function applyMode() {
+    var card = isCard();
+    var multi = isMulti();
+
+    el('cardWays').hidden = !card;
+    document.querySelector('[data-next="2"]').textContent =
+      !card ? 'Weiter zum Termin' : multi ? 'Weiter zur Terminwahl' : 'Weiter zu deinen Daten';
+
+    var back = el('backFromData');
+    back.textContent = card ? 'Zurück zur Auswahl' : 'Zurück zum Termin';
+
+    el('chosenSlot').hidden = card;
+    el('cardNote').hidden = !card;
+    if (card) {
+      var c = state.cards[state.type] || {};
+      el('cardNote').innerHTML =
+        '<b>' + esc(c.label || '') + '</b> &middot; ' + (c.sessions || '') + ' Einheiten f&uuml;r '
+        + esc(eur(c.total_cents || 0)) + '<br>Du bekommst gleich nach der Zahlung einen Code per Mail. '
+        + 'Damit buchst du deine Termine einzeln &ndash; du musst jetzt noch nicht wissen, wann.';
+    }
+
+    // Der Termin-Schritt entfällt nur, wenn die Termine später kommen sollen
+    var skip = card && !multi;
+    document.querySelector('.tk-step[data-goto="2"]').hidden = skip;
+    var line = document.querySelector('[data-forstep="2"]');
+    if (line) line.hidden = skip;
+
+    el('toStep3').disabled = multi ? false : !state.chosen;
+    el('toStep3').textContent = multi ? 'Weiter zu deinen Daten' : 'Weiter zu deinen Daten';
+    renderPicked();
+  }
+
+  /* Auswahl "gleich festlegen" / "später" */
+  Array.prototype.forEach.call(document.querySelectorAll('.tk-way'), function (w) {
+    w.onclick = function () {
+      Array.prototype.forEach.call(document.querySelectorAll('.tk-way'), function (x) { x.classList.remove('on'); });
+      w.classList.add('on');
+      state.way = w.getAttribute('data-way');
+      state.picked = [];
+      applyMode();
+      renderDay(state.day);
+      renderSummary();
+      goStep(state.step);
+    };
+  });
+
+  /* Liste der schon gewählten Termine */
+  function renderPicked() {
+    var box = el('pickedBox');
+    if (!isMulti()) { box.hidden = true; return; }
+    var info = cardInfo();
+    el('pickedTitle').textContent = state.picked.length
+      ? state.picked.length + ' von ' + info.sessions + ' Terminen gewählt'
+      : 'Noch kein Termin gewählt – du kannst auch alle später buchen';
+    el('pickedList').innerHTML = state.picked
+      .slice()
+      .sort(function (a, b) { return (a.date + a.start).localeCompare(b.date + b.start); })
+      .map(function (s) {
+        return '<li>' + esc(longDate(s.date)) + ', ' + esc(s.start) + '&ndash;' + esc(s.end)
+          + ' Uhr <button type="button" class="tk-picked-x" data-drop="' + esc(s.date + '|' + s.slotId) + '">entfernen</button></li>';
+      }).join('');
+    Array.prototype.forEach.call(el('pickedList').querySelectorAll('[data-drop]'), function (b) {
+      b.onclick = function () {
+        var key = b.getAttribute('data-drop');
+        state.picked = state.picked.filter(function (s) { return s.date + '|' + s.slotId !== key; });
+        renderPicked();
+        renderDay(state.day);
+        renderSummary();
+      };
+    });
+    box.hidden = false;
+  }
+
+  el('backFromData').onclick = function () { goStep(isCard() ? 1 : 2); };
+
+  /* Vorauswahl über ?art= von der Preisseite */
+  function preselect() {
+    var q = new URLSearchParams(location.search);
+    var art = q.get('art');
+    var target = document.querySelector('.tk-type[data-type="' + (art || '') + '"]');
+    if (target) target.click();
+    var code = q.get('code');
+    if (code) {
+      el('voucher').value = code;
+      if (!isCard()) setTimeout(function () { el('voucherBtn').click(); }, 400);
+    }
+  }
+
+  // Die Schrittleiste soll unter der Navigation kleben, nicht dahinter
+  function measureNav() {
+    var nav = document.querySelector('nav');
+    if (nav) document.documentElement.style.setProperty('--navh', nav.offsetHeight + 'px');
+  }
+  measureNav();
+  window.addEventListener('resize', measureNav);
+
+  goStep(1);
+  if (new URLSearchParams(location.search).get('abgebrochen')) {
+    fail('Die Zahlung wurde abgebrochen. Dein Wunschtermin ist noch eine halbe Stunde für dich reserviert.');
+  }
+})();
+</script>
+</body>
+</html>

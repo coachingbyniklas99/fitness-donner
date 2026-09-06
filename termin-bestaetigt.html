@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Termin best&auml;tigt | Fitness Donner</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="style.css?v=10">
+<link rel="stylesheet" href="gutschein.css?v=2">
+<link rel="stylesheet" href="termin.css?v=6">
+</head>
+<body>
+<nav>
+  <div class="wrap nav-inner">
+    <a href="index.html" aria-label="Fitness Donner - Startseite"><svg width="140" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
+  <text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text>
+  <polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"/>
+</svg></a>
+    <div class="nav-links" id="navLinks">
+      <div class="has-sub">
+        <a href="#" class="sub-toggle" onclick="event.preventDefault();this.parentElement.classList.toggle('sub-open')">Personal Training</a>
+        <div class="sub">
+          <div class="sub-group">Vor Ort</div>
+          <a href="personal-training-solingen.html">Solingen &amp; Haan<span class="loc">zuhause, drau&szlig;en oder Halle</span></a>
+          <a href="personal-training-koeln.html">K&ouml;ln<span class="loc">Iron&amp;Soul Zollstock</span></a>
+          <a href="personal-training-neuss.html">Neuss<span class="loc">Iron&amp;Soul R&ouml;merstra&szlig;e</span></a>
+          <div class="sub-group">Ortsunabh&auml;ngig</div>
+          <a href="online.html">Online-Coaching<span class="loc">von &uuml;berall</span></a>
+        </div>
+      </div>
+      <div class="has-sub">
+        <a href="#" class="sub-toggle" onclick="event.preventDefault();this.parentElement.classList.toggle('sub-open')">Schwerpunkte</a>
+        <div class="sub">
+          <a href="hyrox.html">Hyrox</a>
+          <a href="personal-training-rueckenschmerzen.html">Gesundheitstraining</a>
+        </div>
+      </div>
+      <a href="preise.html" class="nav-solo">Preise</a>
+      <a href="gutschein.html" class="nav-solo">Gutscheine</a>
+      <a href="ueber-mich.html">&Uuml;ber mich</a>
+      <a href="faq.html">FAQ</a>
+      <a class="btn btn-blitz btn-sm mob-cta" href="termin-buchen.html">Termin buchen</a>
+    </div>
+    <a class="btn btn-blitz btn-sm nav-cta" href="termin-buchen.html">Termin buchen</a>
+    <button class="menu-btn" aria-label="Men&uuml; &ouml;ffnen" onclick="document.getElementById('navLinks').classList.toggle('open');this.textContent=this.textContent==='☰'?'✕':'☰'">&#9776;</button>
+  </div>
+</nav>
+<header class="page-hero">
+  <div class="wrap">
+    <div class="eyebrow">Geschafft</div>
+    <h1 id="headline">Termin<br>steht.</h1>
+    <p class="hero-sub" id="headsub">Die Best&auml;tigung ist gerade per E-Mail zu dir unterwegs.</p>
+  </div>
+</header>
+
+<section style="padding-top:40px">
+  <div class="wrap">
+    <div id="loading" class="gs-loading"><p>Deine Buchung wird best&auml;tigt &hellip;</p></div>
+    <div id="error" class="gs-error" hidden></div>
+
+    <div id="box" hidden>
+      <div class="tk-confirm">
+        <h3 id="cTitle">Personal Training</h3>
+        <div class="tk-line"><span class="k">Wann</span><span class="v" id="cWhen"></span></div>
+        <div class="tk-line"><span class="k">Wo</span><span class="v" id="cWhere"></span></div>
+        <div class="tk-line"><span class="k">Auf den Namen</span><span class="v" id="cName"></span></div>
+        <div class="tk-line" id="cVoucherRow" hidden><span class="k">Gutschein</span><span class="v" id="cVoucher"></span></div>
+        <div class="tk-line"><span class="k">Bezahlt</span><span class="v" id="cPaid"></span></div>
+      </div>
+
+      <p style="text-align:center;color:var(--muted);font-size:14px;margin-top:22px;max-width:640px;margin-left:auto;margin-right:auto">
+        Du kannst doch nicht? Sag mir bis 24 Stunden vorher Bescheid, dann findet sich ein neuer Termin &ndash;
+        <a href="tel:+491776311404" style="color:var(--blitz)">0177 6311404</a>.
+      </p>
+
+      <div class="gs-actions">
+        <a class="btn btn-blitz" href="index.html">Zur&uuml;ck zur Startseite</a>
+        <a class="btn btn-ghost" href="termin-buchen.html">Weiteren Termin buchen</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <svg width="120" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
+  <text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text>
+  <polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"/>
+</svg>
+    <div class="legal">
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
+      <a href="gutschein-bedingungen.html">Gutscheinbedingungen</a>
+    </div>
+    <div>&copy; 2026 Fitness Donner &middot; Solingen, Haan, K&ouml;ln &amp; Neuss</div>
+  </div>
+</footer>
+
+<script>
+var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.dev';
+
+(function () {
+  var q = new URLSearchParams(location.search);
+  var sessionId = q.get('session_id');
+  var tries = 0;
+
+  var loading = document.getElementById('loading');
+  var errBox = document.getElementById('error');
+
+  function fail(t) { loading.hidden = true; errBox.textContent = t; errBox.hidden = false; }
+  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+  var WEEKDAYS = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+  var MONTHS = ['Januar', 'Februar', 'M\u00e4rz', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+  function longDate(iso) {
+    var d = new Date(iso + 'T12:00:00Z');
+    return WEEKDAYS[d.getUTCDay()] + ', ' + d.getUTCDate() + '. ' + MONTHS[d.getUTCMonth()] + ' ' + d.getUTCFullYear();
+  }
+
+  function show(b) {
+    loading.hidden = true;
+    document.getElementById('cTitle').textContent = b.label;
+    document.getElementById('cWhen').textContent = longDate(b.date) + ', ' + b.start + '\u2013' + b.end + ' Uhr';
+    document.getElementById('cWhere').textContent = b.place + ', ' + b.city;
+    document.getElementById('cName').textContent = b.name;
+    document.getElementById('cPaid').textContent = b.paid_formatted;
+    if (b.voucher_code) {
+      document.getElementById('cVoucher').textContent = b.voucher_code + ' \u00b7 ' + b.voucher_formatted;
+      document.getElementById('cVoucherRow').hidden = false;
+    }
+    document.getElementById('box').hidden = false;
+  }
+
+  function load() {
+    fetch(API_BASE + '/api/booking?session_id=' + encodeURIComponent(sessionId))
+      .then(function (r) { return r.json().then(function (d) { return { s: r.status, d: d }; }); })
+      .then(function (res) {
+        if (res.s === 202 || res.d.status === 'pending') {
+          if (++tries > 15) {
+            return fail('Deine Buchung wird noch best\u00e4tigt. Die Best\u00e4tigung kommt gleich per E-Mail \u2013 melde dich gern, falls nicht.');
+          }
+          return setTimeout(load, 2000);
+        }
+        if (res.s !== 200) return fail(res.d.error || 'Die Buchung konnte nicht geladen werden.');
+        show(res.d);
+      })
+      .catch(function () {
+        if (++tries > 5) return fail('Keine Verbindung. Bitte lade die Seite neu.');
+        setTimeout(load, 2000);
+      });
+  }
+
+  if (!sessionId) {
+    // ohne Zahlung best\u00e4tigt (Gutschein deckt alles oder Erstgespr\u00e4ch)
+    loading.hidden = true;
+    document.getElementById('headsub').textContent =
+      'Deine Buchung ist best\u00e4tigt. Die Details stehen in der E-Mail, die gerade zu dir unterwegs ist.';
+  } else {
+    load();
+  }
+})();
+</script>
+</body>
+</html>

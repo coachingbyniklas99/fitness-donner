@@ -70,7 +70,7 @@ nav{position:sticky;top:0;z-index:50;background:rgba(21,23,28,.9);backdrop-filte
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font-weight:700;font-size:14px;letter-spacing:.06em;text-transform:uppercase;padding:14px 26px;border:1px solid transparent;transition:.2s;cursor:pointer}
 .btn-blitz{background:var(--blitz);color:#15171C}
 .btn-blitz:hover{background:#f7ca4f}
-.btn-ghost{border-color:var(--line);color:var(--bone)}
+.btn-ghost{border-color:var(--line);color:var(--bone);background:transparent}
 .btn-ghost:hover{border-color:var(--bone)}
 .btn-sm{padding:11px 20px;font-size:13px}
 .menu-btn{display:none;background:none;border:1px solid var(--line);color:var(--bone);width:44px;height:44px;font-size:20px;cursor:pointer;align-items:center;justify-content:center;flex-shrink:0}
@@ -299,6 +299,11 @@ footer{border-top:1px solid var(--line);padding:44px 0;font-size:13px;color:var(
 .price ul li{padding:9px 0;border-top:1px solid var(--line);font-size:14px;color:#c9cbd0}
 .price ul li::before{content:"\26A1  ";color:var(--blitz)}
 @media(max-width:900px){.price-grid{grid-template-columns:1fr}.price.featured{order:-1}}
+/* Preisseite mit vier Karten */
+.price-grid.four{grid-template-columns:repeat(4,1fr)}
+.price-grid.four .price{padding:32px 24px}
+@media(max-width:1150px){.price-grid.four{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.price-grid.four{grid-template-columns:1fr}}
 
 
 /* ---------- Bewertungs-Slider ---------- */
@@ -371,3 +376,4 @@ footer{border-top:1px solid var(--line);padding:44px 0;font-size:13px;color:var(
     color:var(--bone);padding:12px 0;border-bottom:1px solid var(--line)}
   .nav-links>a.nav-solo{margin-top:22px;border-top:2px solid var(--blitz);padding-top:16px}
 }
+.price .rate{font-size:12px;color:var(--blitz);margin:8px 0 4px;padding-bottom:14px;border-bottom:1px solid var(--line)}
