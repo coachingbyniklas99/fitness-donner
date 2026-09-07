@@ -16,7 +16,29 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="style.css?v=14">
+<link rel="stylesheet" href="style.css?v=16">
+<style>
+/* ---------- Preisumstellung zum 01.01.2027 ---------- */
+.deal{background:var(--blitz);color:#15171C}
+.deal-in{display:flex;align-items:center;justify-content:center;gap:12px 28px;flex-wrap:wrap;padding:15px 24px;max-width:1200px;margin:0 auto}
+.deal-txt{font-family:var(--display);font-size:clamp(16px,2.1vw,22px);text-transform:uppercase;letter-spacing:.03em;line-height:1.15;text-align:center}
+.deal-sub{font-size:13px;font-weight:500;color:rgba(21,23,28,.75);width:100%;text-align:center;margin-top:-2px}
+.cd{display:flex;gap:8px}
+.cd div{background:#15171C;color:var(--blitz);min-width:56px;padding:7px 6px 6px;text-align:center}
+.cd b{display:block;font-family:var(--display);font-size:23px;line-height:1}
+.cd span{display:block;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(236,233,226,.65);margin-top:3px}
+.was{display:flex;align-items:baseline;gap:8px;font-size:13px;color:var(--muted);margin:16px 0 -10px}
+.was s{color:#8b8f98}
+.was b{color:var(--blitz);font-weight:700;letter-spacing:.04em;text-transform:uppercase;font-size:11px;
+  border:1px solid rgba(239,185,46,.45);padding:2px 7px;white-space:nowrap}
+.price .amount{margin-bottom:2px}
+.garantie{border:1px solid var(--blitz);background:rgba(239,185,46,.07);padding:22px 24px;margin-top:28px}
+.garantie h3{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:22px;letter-spacing:.03em;margin-bottom:8px}
+.garantie p{color:#c9cbd0;font-size:15px}
+.garantie p + p{margin-top:10px}
+.garantie b{color:var(--bone)}
+@media(max-width:600px){.deal-in{gap:10px;padding:14px 18px}.cd div{min-width:48px}.cd b{font-size:20px}.was{flex-wrap:wrap;gap:6px}}
+</style>
 </head>
 <body>
 <nav>
@@ -50,7 +72,7 @@
       <a href="ueber-mich.html">&Uuml;ber mich</a>
       <a href="faq.html">FAQ</a>
       <a class="nav-book" href="termin-buchen.html?art=probe">
-        <span class="nb-t">Probetraining buchen &middot; 29&nbsp;&euro;</span>
+        <span class="nb-t">Probetraining buchen &middot; <span data-preis-probe>29&nbsp;&euro;</span></span>
         <span class="nb-s">60 Minuten in Solingen &middot; wird angerechnet</span>
       </a>
       <div class="nav-kontakt">
@@ -62,6 +84,18 @@
     <button class="menu-btn" aria-label="Men&uuml; &ouml;ffnen" onclick="document.getElementById('navLinks').classList.toggle('open');this.textContent=this.textContent==='☰'?'✕':'☰'">&#9776;</button>
   </div>
 </nav>
+<div class="deal" id="deal" hidden>
+  <div class="deal-in">
+    <div class="deal-txt" id="dealTxt">Neue Preise ab 1.&nbsp;Januar 2027</div>
+    <div class="cd" id="cd" hidden>
+      <div><b id="cdD">--</b><span>Tage</span></div>
+      <div><b id="cdH">--</b><span>Std</span></div>
+      <div><b id="cdM">--</b><span>Min</span></div>
+      <div><b id="cdS">--</b><span>Sek</span></div>
+    </div>
+    <div class="deal-sub">Bis dahin gelten die Preise unten. Was du vorher kaufst, beh&auml;lt seinen Preis &ndash; 12 Monate lang.</div>
+  </div>
+</div>
 <header class="page-hero">
   <div class="wrap">
     <div class="eyebrow">Preise</div>
@@ -78,9 +112,10 @@
     <div class="price-grid four">
       <div class="price">
         <h3>Probetraining</h3>
-        <div class="amount">29 &euro;</div>
+        <div class="was" data-ab><b>ab 01.01.2027</b> <s>49&nbsp;&euro;</s></div>
+        <div class="amount" data-jetzt="29 &euro;" data-ab="49 &euro;">29 &euro;</div>
         <div class="per">einmalig &ndash; wird auf dein erstes Training angerechnet</div>
-        <p class="desc">Einmal komplett mittrainieren, bevor du dich entscheidest. Wenn du danach weitermachst, ziehe ich die 29&nbsp;&euro; wieder ab.</p>
+        <p class="desc" data-jetzt="Einmal komplett mittrainieren, bevor du dich entscheidest. Wenn du danach weitermachst, ziehe ich die 29&nbsp;&euro; wieder ab." data-ab="Einmal komplett mittrainieren, bevor du dich entscheidest. Wenn du danach weitermachst, ziehe ich die 49&nbsp;&euro; wieder ab.">Einmal komplett mittrainieren, bevor du dich entscheidest. Wenn du danach weitermachst, ziehe ich die 29&nbsp;&euro; wieder ab.</p>
         <ul>
           <li>60 Minuten echtes Training</li>
           <li>Analyse deiner Technik und Belastbarkeit</li>
@@ -90,8 +125,9 @@
       </div>
       <div class="price">
         <h3>Einzelstunde</h3>
-        <div class="amount">99 &euro;</div>
-        <div class="per">pro Einheit</div>
+        <div class="was" data-ab><b>ab 01.01.2027</b> <s>119&nbsp;&euro;</s></div>
+        <div class="amount" data-jetzt="99 &euro;" data-ab="119 &euro;">99 &euro;</div>
+        <div class="per" data-jetzt="pro Einheit" data-ab="pro Einheit">pro Einheit</div>
         <p class="desc">F&uuml;r den flexiblen Einstieg, gezielte Technik-Checks oder als Erg&auml;nzung zu deinem eigenen Training.</p>
         <ul>
           <li>60 Minuten volles 1:1-Coaching</li>
@@ -103,9 +139,10 @@
       <div class="price featured">
         <div class="pop">Beliebteste Wahl</div>
         <h3>4er-Karte</h3>
-        <div class="amount">89 &euro;</div>
-        <div class="per">pro Einheit &middot; 356 &euro; gesamt</div>
-        <div class="rate">oder 3 &times; 118,67 &euro; zinsfrei mit Klarna</div>
+        <div class="was" data-ab><b>ab 01.01.2027</b> <s>109&nbsp;&euro; &middot; 436&nbsp;&euro;</s></div>
+        <div class="amount" data-jetzt="89 &euro;" data-ab="109 &euro;">89 &euro;</div>
+        <div class="per" data-jetzt="pro Einheit &middot; 356 &euro; gesamt" data-ab="pro Einheit &middot; 436 &euro; gesamt">pro Einheit &middot; 356 &euro; gesamt</div>
+        <div class="rate" data-jetzt="oder 3 &times; 118,67 &euro; zinsfrei mit Klarna" data-ab="oder 3 &times; 145,33 &euro; zinsfrei mit Klarna">oder 3 &times; 118,67 &euro; zinsfrei mit Klarna</div>
         <p class="desc">Vier Einheiten am St&uuml;ck. Genug Zeit, um Technik sauber aufzubauen und einen ersten echten Fortschritt zu sehen.</p>
         <ul>
           <li>Individueller Trainingsfahrplan</li>
@@ -116,9 +153,10 @@
       </div>
       <div class="price">
         <h3>8er-Karte</h3>
-        <div class="amount">79 &euro;</div>
-        <div class="per">pro Einheit &middot; 632 &euro; gesamt</div>
-        <div class="rate">oder 3 &times; 210,67 &euro; zinsfrei mit Klarna</div>
+        <div class="was" data-ab><b>ab 01.01.2027</b> <s>99&nbsp;&euro; &middot; 792&nbsp;&euro;</s></div>
+        <div class="amount" data-jetzt="79 &euro;" data-ab="99 &euro;">79 &euro;</div>
+        <div class="per" data-jetzt="pro Einheit &middot; 632 &euro; gesamt" data-ab="pro Einheit &middot; 792 &euro; gesamt">pro Einheit &middot; 632 &euro; gesamt</div>
+        <div class="rate" data-jetzt="oder 3 &times; 210,67 &euro; zinsfrei mit Klarna" data-ab="oder 3 &times; 264,00 &euro; zinsfrei mit Klarna">oder 3 &times; 210,67 &euro; zinsfrei mit Klarna</div>
         <p class="desc">Der beste Preis pro Stunde. Gedacht f&uuml;r rund zwei Monate mit einer Einheit pro Woche &ndash; einl&ouml;sbar hast du trotzdem l&auml;nger.</p>
         <ul>
           <li>Trainings- und Ern&auml;hrungsfahrplan</li>
@@ -129,7 +167,18 @@
       </div>
     </div>
 
-    <div class="ort-note" style="margin-top:28px"><b>Lieber erst kennenlernen?</b> Nimm das <a href="termin-buchen.html?art=probe" style="color:var(--blitz)">Probetraining f&uuml;r 29&nbsp;&euro;</a> &ndash; eine volle Stunde, kein Verkaufsgespr&auml;ch, und die 29&nbsp;&euro; ziehe ich dir vom ersten regul&auml;ren Training wieder ab. Wenn vorher noch etwas offen ist: <a href="tel:+491776311404" style="color:var(--blitz)">0177 6311404 anrufen</a> oder <a href="https://wa.me/491776311404" style="color:var(--blitz)">per WhatsApp schreiben</a> &ndash; kostet nichts und verpflichtet zu nichts.</div>
+    <div class="garantie" id="garantie">
+      <h3 id="garTitel">Warum die Preise steigen &ndash; und was das f&uuml;r dich hei&szlig;t</h3>
+      <div id="garVor">
+        <p>Ab Januar trainiere ich in Solingen in einem festen Studio. Das kostet mich pro Einheit Geld, und ich trage es nicht still mit, sondern sage es dir vorher: <b>ab dem 1.&nbsp;Januar 2027 kostet die Einzelstunde 119&nbsp;&euro;, die 4er-Karte 109&nbsp;&euro; und die 8er-Karte 99&nbsp;&euro; pro Einheit.</b> Das Probetraining kostet dann 49&nbsp;&euro; und wird weiterhin auf dein erstes Training angerechnet.</p>
+        <p><b>Was du bis zum 31.&nbsp;Dezember kaufst, beh&auml;ltst du zum alten Preis.</b> Eine 8er-Karte sind jetzt 632&nbsp;&euro; statt sp&auml;ter 792&nbsp;&euro;, und du hast danach 12 Monate Zeit, sie einzul&ouml;sen. Die Aktion wird nicht verl&auml;ngert: am 1.&nbsp;Januar stehen hier die neuen Preise.</p>
+      </div>
+      <div id="garNach" hidden>
+        <p>Seit dem 1.&nbsp;Januar 2027 gelten die Preise oben. Karten, die du vorher gekauft hast, behalten ihren alten Preis &ndash; du l&ouml;st sie einfach wie gewohnt bei der Terminbuchung ein.</p>
+      </div>
+    </div>
+
+    <div class="ort-note" style="margin-top:28px"><b>Lieber erst kennenlernen?</b> Nimm das <a href="termin-buchen.html?art=probe" style="color:var(--blitz)">Probetraining f&uuml;r <span data-preis-probe>29&nbsp;&euro;</span></a> &ndash; eine volle Stunde, kein Verkaufsgespr&auml;ch, und die <span data-preis-probe>29&nbsp;&euro;</span> ziehe ich dir vom ersten regul&auml;ren Training wieder ab. Wenn vorher noch etwas offen ist: <a href="tel:+491776311404" style="color:var(--blitz)">0177 6311404 anrufen</a> oder <a href="https://wa.me/491776311404" style="color:var(--blitz)">per WhatsApp schreiben</a> &ndash; kostet nichts und verpflichtet zu nichts.</div>
 
     <div class="ort-note" style="margin-top:20px"><b>In Raten zahlen?</b> W&auml;hle beim Bezahlen Klarna: drei zinsfreie Raten, erst in 30 Tagen zahlen oder eine l&auml;ngere Finanzierung. Der Preis bleibt derselbe, es kommt kein Aufschlag dazu. Bonit&auml;t vorausgesetzt; bei der Finanzierung k&ouml;nnen Zinsen anfallen.</div>
 
@@ -144,9 +193,9 @@
   <div class="wrap">
     <div class="eyebrow" style="justify-content:center">Bereit?</div>
     <h2 style="margin-top:16px">Mach den<br>ersten Schritt.</h2>
-    <p>Eine volle Stunde Training f&uuml;r 29&nbsp;&euro; &ndash; kein Verkaufsgespr&auml;ch. Danach wei&szlig;t du, wie sich das anf&uuml;hlt, und die 29&nbsp;&euro; ziehe ich dir vom ersten regul&auml;ren Training wieder ab.</p>
+    <p>Eine volle Stunde Training f&uuml;r <span data-preis-probe>29&nbsp;&euro;</span> &ndash; kein Verkaufsgespr&auml;ch. Danach wei&szlig;t du, wie sich das anf&uuml;hlt, und die <span data-preis-probe>29&nbsp;&euro;</span> ziehe ich dir vom ersten regul&auml;ren Training wieder ab.</p>
     <div class="hero-ctas">
-      <a class="btn btn-blitz" href="termin-buchen.html?art=probe">Probetraining buchen &middot; 29&nbsp;&euro;</a>
+      <a class="btn btn-blitz" href="termin-buchen.html?art=probe">Probetraining buchen &middot; <span data-preis-probe>29&nbsp;&euro;</span></a>
       <a class="btn btn-ghost" href="https://wa.me/491776311404">Fragen? WhatsApp schreiben</a>
     </div>
     <p class="cta-tel">Oder ruf einfach an: <a href="tel:+491776311404">0177&nbsp;6311404</a> &ndash; wenn ich im Training bin, rufe ich zur&uuml;ck.</p>
@@ -176,6 +225,49 @@
 <script>
 (function(){var n=document.getElementById('navLinks'),b=document.querySelector('.menu-btn');
 if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&!a.classList.contains('sub-toggle')){n.classList.remove('open');b.textContent='☰';}});}})();
+</script>
+<script>
+/* Preisumstellung: bis 14.11. nur Ankuendigung, danach Countdown,
+   ab 01.01.2027 stehen automatisch die neuen Preise da. */
+(function(){
+  var TIMER_AB = new Date('2026-11-15T00:00:00+01:00').getTime();
+  var UMSTELLUNG = new Date('2027-01-01T00:00:00+01:00').getTime();
+  var deal = document.getElementById('deal'), cd = document.getElementById('cd');
+  var d=document.getElementById('cdD'),h=document.getElementById('cdH'),
+      m=document.getElementById('cdM'),sk=document.getElementById('cdS');
+  function p(n){return n<10?'0'+n:''+n;}
+
+  function neuePreise(){
+    Array.prototype.forEach.call(document.querySelectorAll('[data-ab]'), function(el){
+      if (el.classList.contains('was')) { el.hidden = true; return; }
+      if (el.dataset.ab) el.innerHTML = el.dataset.ab;
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-preis-probe]'), function(el){
+      el.innerHTML = '49&nbsp;&euro;';
+    });
+    document.getElementById('garVor').hidden = true;
+    document.getElementById('garNach').hidden = false;
+    document.getElementById('garTitel').textContent = 'Preise seit Januar 2027';
+    deal.hidden = true;
+  }
+
+  function tick(){
+    var jetzt = Date.now(), rest = UMSTELLUNG - jetzt;
+    if (rest <= 0) { neuePreise(); return true; }
+    deal.hidden = false;
+    if (jetzt >= TIMER_AB) {
+      cd.hidden = false;
+      var sek = Math.floor(rest/1000);
+      d.textContent = Math.floor(sek/86400);
+      h.textContent = p(Math.floor(sek%86400/3600));
+      m.textContent = p(Math.floor(sek%3600/60));
+      sk.textContent = p(sek%60);
+      document.getElementById('dealTxt').innerHTML = 'Aktuelle Preise noch bis 31.&nbsp;Dezember';
+    }
+    return false;
+  }
+  if (!tick()) setInterval(tick, 1000);
+})();
 </script>
 </body>
 </html>
