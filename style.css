@@ -414,3 +414,91 @@ footer{border-top:1px solid var(--line);padding:44px 0;font-size:13px;color:var(
   .nav-links{padding:10px 24px 22px}
 }
 .price .rate{font-size:12px;color:var(--blitz);margin:8px 0 4px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+
+/* ==========================================================
+   New Forge, Solingen-Ohligs
+   Partnerschaft und Standort-Sektion. September 2026.
+   ========================================================== */
+
+/* ---------- Partner-Streifen unter dem Hero ---------- */
+.pband{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--panel)}
+.pband-in{max-width:1200px;margin:0 auto;padding:18px 24px;display:flex;align-items:center;
+  gap:16px 26px;flex-wrap:wrap}
+.pband-label{font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--blitz)}
+.pband-lock{display:flex;align-items:center;gap:16px}
+.pl-mine{font-family:var(--display);font-size:22px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--bone);white-space:nowrap}
+.pl-x{font-size:14px;color:var(--blitz)}
+/* Platz fuers New-Forge-Logo. Solange keins da ist, steht hier die Wortmarke als Text. */
+.pl-logo{display:inline-flex;align-items:center;height:26px}
+.pl-logo img{height:100%;width:auto;display:block}
+.pl-wort{font-family:var(--body);font-size:16px;font-weight:700;letter-spacing:.26em;
+  text-transform:uppercase;color:var(--bone);white-space:nowrap;line-height:1.05}
+.pl-wort small{display:block;font-size:9px;font-weight:600;letter-spacing:.3em;color:var(--muted);margin-top:3px}
+.pband-txt{color:var(--muted);font-size:14px;margin-left:auto}
+.pband-txt a{color:var(--bone);border-bottom:1px solid rgba(236,233,226,.3)}
+.pband-txt a:hover{color:var(--blitz);border-color:var(--blitz)}
+
+/* ---------- Hero etwas kompakter ---------- */
+/* Nur oben/unten anfassen - die Kurzschreibweise wuerde den seitlichen Abstand aus .wrap loeschen */
+.hero-content{padding-bottom:78px}
+.hero-ctas{margin-top:28px}
+.cta-tel{margin-top:12px}
+.hero-note{margin-top:12px}
+
+/* ---------- Ein Standort gross, der Rest als Hinweiszeile ---------- */
+.ort-haupt{display:grid;grid-template-columns:1fr 1.08fr;background:var(--panel);
+  border:1px solid var(--line);transition:border-color .25s}
+.ort-haupt:hover{border-color:rgba(239,185,46,.55)}
+/* Das Bild folgt der Hoehe der Textspalte, statt sie aufzublaehen */
+.oh-media{position:relative;min-height:380px;background:var(--panel-2);overflow:hidden}
+.oh-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  object-position:50% 18%;filter:grayscale(18%)}
+.oh-body{padding:34px 34px 32px;display:flex;flex-direction:column;gap:14px}
+.oh-tag{align-self:flex-start;background:var(--blitz);color:#15171C;padding:6px 12px;
+  font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+.oh-body h3{font-family:var(--display);font-weight:400;text-transform:uppercase;
+  font-size:clamp(26px,3vw,36px);letter-spacing:.02em;line-height:1.1}
+.oh-body p{color:var(--muted);font-size:15.5px}
+.oh-adr{font-size:14.5px;color:var(--bone)}
+.oh-adr span{color:var(--muted)}
+.oh-facts{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:9px 16px;margin-top:2px}
+.oh-facts li{font-size:14px;color:#c9cbd0;padding-left:16px;position:relative}
+.oh-facts li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;background:var(--blitz)}
+.oh-body .card-link{margin-top:auto;padding-top:6px}
+
+/* ---------- Studio-Block auf der Solingen-Seite ---------- */
+.studio{border:1px solid var(--line);background:var(--panel);display:grid;
+  grid-template-columns:1fr 1.15fr;margin-top:40px}
+.studio-media{position:relative;min-height:340px;background:var(--panel-2);overflow:hidden}
+.studio-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  object-position:50% 18%;filter:grayscale(18%)}
+.studio-body{padding:32px 34px 34px}
+.studio-partner{display:flex;align-items:center;gap:12px;padding-bottom:14px;margin-bottom:18px;
+  border-bottom:1px solid var(--line);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.studio-partner b{color:var(--blitz);font-weight:700;letter-spacing:.16em}
+.studio-body h2{font-size:clamp(26px,3.2vw,38px);margin-top:0}
+.studio-body > p{color:var(--muted);font-size:15.5px;margin-top:12px}
+.studio-adr{margin-top:16px;font-size:15px;color:var(--bone)}
+.studio-adr a{color:var(--blitz);text-decoration:underline;font-size:14px;display:inline-block;margin-top:5px}
+.studio-list{list-style:none;margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:10px 18px}
+.studio-list li{font-size:14.5px;color:#c9cbd0;padding-left:17px;position:relative}
+.studio-list li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;background:var(--blitz)}
+.studio-hint{margin-top:20px;font-size:14px;color:var(--muted);border-left:2px solid var(--blitz);padding-left:14px}
+
+@media(max-width:900px){
+  .hero-content{padding-bottom:52px}
+  .ort-haupt{grid-template-columns:1fr}
+  .oh-media{min-height:230px}
+  .oh-body{padding:24px 22px 26px}
+  .studio{grid-template-columns:1fr;margin-top:30px}
+  .studio-media{min-height:200px}
+  .studio-body{padding:24px 22px 26px}
+  .studio-list{grid-template-columns:1fr;gap:8px}
+}
+@media(max-width:700px){
+  .pband-in{padding:16px 24px;gap:10px}
+  .pl-mine{font-size:19px}
+  .pl-wort{font-size:14px;letter-spacing:.22em}
+  .pband-txt{margin-left:0;width:100%;font-size:13.5px}
+}

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Termin buchen | Fitness Donner</title>
-<meta name="description" content="Personal Training in Solingen, Köln und Neuss direkt online buchen und bezahlen. Probetraining für 29 € – wird auf dein erstes Training angerechnet.">
+<meta name="description" content="Personal Training im New Forge Solingen-Ohligs, in Köln und Neuss direkt online buchen und bezahlen. Probetraining für 29 € – wird auf dein erstes Training angerechnet.">
 <link rel="canonical" href="https://fitnessdonner.de/termin-buchen.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Fitness Donner">
@@ -16,9 +16,9 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="style.css?v=16">
+<link rel="stylesheet" href="style.css?v=17">
 <link rel="stylesheet" href="gutschein.css?v=2">
-<link rel="stylesheet" href="termin.css?v=7">
+<link rel="stylesheet" href="termin.css?v=8">
 </head>
 <body>
 <nav>
@@ -33,7 +33,7 @@
         <a href="#" class="sub-toggle" onclick="event.preventDefault();this.parentElement.classList.toggle('sub-open')">Personal Training</a>
         <div class="sub">
           <div class="sub-group">Vor Ort</div>
-          <a href="personal-training-solingen.html">Solingen &amp; Haan<span class="loc">zuhause, drau&szlig;en oder Halle</span></a>
+          <a href="personal-training-solingen.html">Solingen &amp; Haan<span class="loc">New Forge Ohligs oder drau&szlig;en</span></a>
           <a href="personal-training-koeln.html">K&ouml;ln<span class="loc">Iron&amp;Soul Zollstock</span></a>
           <a href="personal-training-neuss.html">Neuss<span class="loc">Iron&amp;Soul R&ouml;merstra&szlig;e</span></a>
           <div class="sub-group">Ortsunabh&auml;ngig</div>
@@ -151,7 +151,7 @@
     <!-- ---------- Schritt 2 ---------- -->
     <div class="gs-form tk-panel" data-panel="2" hidden>
       <h2>Wann passt es dir?</h2>
-      <p class="gs-sub">Standard ist Solingen &ndash; in K&ouml;ln und Neuss trainiere ich nur rund um meine Kurse.</p>
+      <p class="gs-sub">Standard ist das New Forge in Solingen-Ohligs &ndash; in K&ouml;ln und Neuss trainiere ich nur rund um meine Kurse.</p>
 
       <div class="tk-filter" id="cityFilter" hidden></div>
       <div class="tk-loc" id="locationBox" hidden></div>
@@ -416,8 +416,13 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
 
     var box = el('cityFilter');
     box.innerHTML = '';
-    cities.concat(['Alle Orte']).forEach(function (c) {
-      var isAll = c === 'Alle Orte';
+
+    var zeile = document.createElement('div');
+    zeile.className = 'tk-ortzeile';
+    var chips = document.createElement('div');
+    chips.className = 'tk-chips';
+
+    function bauChip(c, isAll) {
       var b = document.createElement('button');
       b.type = 'button';
       b.className = 'gs-chip' + (!isAll && c === state.city ? ' on' : '');
@@ -427,14 +432,31 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
         state.day = '';
         state.chosen = null;
         el('toStep3').disabled = true;
-        Array.prototype.forEach.call(box.children, function (x) { x.classList.remove('on'); });
+        Array.prototype.forEach.call(chips.children, function (x) { x.classList.remove('on'); });
         b.classList.add('on');
         renderLocation();
         rebuildMonths();
         renderCalendar();
       };
-      box.appendChild(b);
+      return b;
+    }
+
+    cities.concat(['Alle Orte']).forEach(function (c) {
+      chips.appendChild(bauChip(c, c === 'Alle Orte'));
     });
+
+    /* Nur der aktive Ort steht da. Die anderen kommen erst auf Klick -
+       auf dem Handy sparen die vier Chips sonst zwei Zeilen weg. */
+    var auf = document.createElement('button');
+    auf.type = 'button';
+    auf.className = 'tk-ortlink';
+    var andere = cities.filter(function (c) { return c !== state.city; });
+    auf.textContent = 'Auch in ' + andere.join(' oder ') + '?';
+    auf.onclick = function () { chips.classList.add('offen'); auf.hidden = true; };
+
+    zeile.appendChild(chips);
+    if (andere.length) zeile.appendChild(auf);
+    box.appendChild(zeile);
     box.hidden = false;
   }
 
@@ -442,10 +464,13 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     var box = el('locationBox');
     var loc = state.locations.filter(function (l) { return l.city === state.city; })[0];
     if (!loc) { box.hidden = true; return; }
+    /* Ohne Foto keine leere Platzhalter-Flaeche - die frisst auf dem Handy 360 Pixel */
+    box.className = 'tk-loc' + (loc.image ? '' : ' is-schmal');
     box.innerHTML =
-      '<div class="tk-loc-media' + (loc.image ? '' : ' is-placeholder') + '">'
-      + (loc.image ? '<img src="' + esc(loc.image) + '" alt="' + esc(loc.name) + '">' : '<span>Foto folgt</span>')
-      + '</div><div class="tk-loc-text">'
+      (loc.image
+        ? '<div class="tk-loc-media"><img src="' + esc(loc.image) + '" alt="' + esc(loc.name) + '"></div>'
+        : '')
+      + '<div class="tk-loc-text">'
       + '<div class="tk-loc-name">' + esc(loc.name) + '</div>'
       + (loc.address ? '<div class="tk-loc-addr">' + esc(loc.address) + '</div>' : '')
       + (loc.note ? '<p class="tk-loc-note">' + esc(loc.note) + '</p>' : '')

@@ -200,3 +200,15 @@
 .tk-mails li::before{content:"\2013  ";color:var(--muted)}
 .tk-mails p{font-size:13px;color:var(--muted);margin:12px 0 0;line-height:1.6}
 .tk-mails a{color:var(--blitz);text-decoration:underline}
+
+/* ---------- Ortswahl kompakt: aktiver Ort sichtbar, Rest erst auf Klick ---------- */
+.tk-ortzeile{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.tk-chips{display:flex;gap:8px;flex-wrap:wrap}
+.tk-chips > *:not(.on){display:none}
+.tk-chips.offen > *{display:inline-flex}
+.tk-ortlink{background:none;border:none;padding:0;cursor:pointer;font-family:var(--body);
+  font-size:14px;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.tk-ortlink:hover{color:var(--blitz)}
+/* Ohne Foto: eine Zeile statt einer leeren Kachel */
+.tk-loc.is-schmal{display:block;padding:16px 18px}
+.tk-loc.is-schmal .tk-loc-note{margin-top:6px}
