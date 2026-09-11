@@ -502,3 +502,30 @@ footer{border-top:1px solid var(--line);padding:44px 0;font-size:13px;color:var(
   .pl-wort{font-size:14px;letter-spacing:.22em}
   .pband-txt{margin-left:0;width:100%;font-size:13.5px}
 }
+
+/* ---------- Bildergalerie "Dein Studio" ---------- */
+.gal{margin-top:40px}
+.gal-kopf{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.gal-kopf h2{font-size:clamp(24px,3vw,34px)}
+.gal-kopf span{font-size:14px;color:var(--muted)}
+.gal-b{position:relative;aspect-ratio:16/10;max-height:620px;overflow:hidden;border:1px solid var(--line);background:var(--panel-2)}
+/* Alle Bilder liegen uebereinander und werden nur ein- und ausgeblendet - kein Springen beim Wechsel. */
+.gal-b img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .45s ease}
+.gal-b img.on{opacity:1}
+.gal-cap{position:absolute;left:0;right:0;bottom:0;padding:46px 20px 16px;font-size:14px;color:var(--bone);
+  background:linear-gradient(to top,rgba(21,23,28,.88),rgba(21,23,28,0));pointer-events:none}
+.gal-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border:1px solid rgba(236,233,226,.3);
+  background:rgba(21,23,28,.72);color:var(--bone);font-size:22px;line-height:1;cursor:pointer;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.gal-nav:hover{background:var(--blitz);color:#15171C;border-color:var(--blitz)}
+.gal-nav.prev{left:12px}.gal-nav.next{right:12px}
+.gal-th{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:8px}
+.gal-th button{padding:0;border:1px solid var(--line);background:none;cursor:pointer;aspect-ratio:16/10;overflow:hidden;display:block}
+.gal-th img{width:100%;height:100%;object-fit:cover;opacity:.45;transition:opacity .2s}
+.gal-th button.on{border-color:var(--blitz)}
+.gal-th button.on img,.gal-th button:hover img{opacity:1}
+@media(max-width:640px){
+  .gal-nav{width:38px;height:38px;font-size:19px}
+  .gal-th{gap:6px}
+  .gal-cap{padding:38px 14px 12px;font-size:13px}
+}

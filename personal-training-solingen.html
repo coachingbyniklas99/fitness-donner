@@ -135,7 +135,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="style.css?v=18">
+<link rel="stylesheet" href="style.css?v=19">
 </head>
 <body>
 <nav>
@@ -220,8 +220,67 @@
         <p class="studio-hint"><b style="color:var(--bone)">Du arbeitest im New Forge?</b> Dann liegt dein Training genau eine Treppe entfernt &ndash; direkt vor oder nach der Arbeit, duschen inklusive.</p>
       </div>
     </div>
+
+    <div class="gal" id="galStudio">
+      <div class="gal-kopf">
+        <h2>Dein Studio.</h2>
+        <span>New Forge, Prinzenstra&szlig;e 2a &middot; Solingen-Ohligs</span>
+      </div>
+      <div class="gal-b">
+        <img class="on" src="newforge-studio.webp" alt="Trainingsfl&auml;che mit Hantelbereich im New Forge, Solingen-Ohligs" data-cap="Trainingsfl&auml;che mit Hantelbereich und Racks">
+        <img src="newforge-sprint.webp" loading="lazy" alt="Sprintbahn mit Kunstrasen und Woodway-Laufband" data-cap="Sprintbahn und Cardiobereich &ndash; gut f&uuml;r Hyrox-Vorbereitung">
+        <img src="newforge-rack.webp" loading="lazy" alt="Racks und Spiegelwand im New Forge" data-cap="Freie Fl&auml;che, Racks und Spiegelwand">
+        <img src="newforge-kursraum.webp" loading="lazy" alt="Separater Kursraum mit Spiegelwand" data-cap="Separater Kursraum &ndash; hier trainieren wir ungest&ouml;rt">
+        <img src="newforge-power.webp" loading="lazy" alt="Rudergeraete vor der Wandmalerei im New Forge" data-cap="Rudergeräte und Ski-Erg">
+        <button class="gal-nav prev" type="button" aria-label="Vorheriges Bild">&#8249;</button>
+        <button class="gal-nav next" type="button" aria-label="N&auml;chstes Bild">&#8250;</button>
+        <div class="gal-cap"></div>
+      </div>
+      <div class="gal-th"></div>
+    </div>
   </div>
 </section>
+<script>
+/* Galerie: Bilder liegen schon im HTML, die Miniaturen baut das Skript daraus.
+   Ohne JavaScript bleibt das erste Bild stehen - kaputt geht also nichts. */
+(function(){
+  var g = document.getElementById('galStudio');
+  if (!g) return;
+  var bilder = g.querySelectorAll('.gal-b img'), leiste = g.querySelector('.gal-th'),
+      cap = g.querySelector('.gal-cap'), i = 0;
+  var knoepfe = [];
+  Array.prototype.forEach.call(bilder, function(bild, n){
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.setAttribute('aria-label', 'Bild ' + (n+1) + ' anzeigen');
+    var t = document.createElement('img');
+    t.src = bild.getAttribute('src'); t.alt = '';
+    b.appendChild(t);
+    b.onclick = function(){ zeige(n); };
+    leiste.appendChild(b);
+    knoepfe.push(b);
+  });
+  function zeige(n){
+    i = (n + bilder.length) % bilder.length;
+    Array.prototype.forEach.call(bilder, function(b, k){ b.classList.toggle('on', k === i); });
+    knoepfe.forEach(function(b, k){ b.classList.toggle('on', k === i); });
+    cap.innerHTML = bilder[i].dataset.cap || '';
+  }
+  g.querySelector('.prev').onclick = function(){ zeige(i - 1); };
+  g.querySelector('.next').onclick = function(){ zeige(i + 1); };
+  /* Wischen auf dem Handy. 40 Pixel Schwelle, damit Scrollen nicht aus Versehen blaettert. */
+  var x0 = null;
+  var feld = g.querySelector('.gal-b');
+  feld.addEventListener('touchstart', function(e){ x0 = e.touches[0].clientX; }, {passive:true});
+  feld.addEventListener('touchend', function(e){
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 40) zeige(i + (dx < 0 ? 1 : -1));
+    x0 = null;
+  }, {passive:true});
+  zeige(0);
+})();
+</script>
 
 <section style="padding-top:56px">
   <div class="wrap">
