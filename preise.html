@@ -16,7 +16,7 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="style.css?v=20">
+<link rel="stylesheet" href="style.css?v=21">
 <style>
 /* ---------- Preisumstellung zum 01.01.2027 ---------- */
 .deal{background:var(--blitz);color:#15171C}
@@ -47,11 +47,13 @@
 /* Ab Januar gibt es nichts mehr zu vergleichen - dann wieder die ruhige Darstellung. */
 body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
 @media(max-width:640px){.price .amount{font-size:50px}.alt{font-size:32px}}
-.garantie{border:1px solid var(--blitz);background:rgba(239,185,46,.07);padding:22px 24px;margin-top:28px}
-.garantie h3{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:22px;letter-spacing:.03em;margin-bottom:8px}
+.garantie{border-left:3px solid var(--blitz);background:rgba(239,185,46,.07);padding:16px 20px;margin-top:28px}
 .garantie p{color:#c9cbd0;font-size:15px}
-.garantie p + p{margin-top:10px}
 .garantie b{color:var(--bone)}
+#garTitel{color:var(--blitz)}
+/* Pflichtangaben und Randnotizen - bewusst ohne gelben Balken, sonst waere es wieder ein "Punkt". */
+.kleingedruckt{margin-top:22px;max-width:860px;color:#8b9099;font-size:13.5px;line-height:1.6}
+.kleingedruckt a{color:#b9bcc3;text-decoration:underline}
 @media(max-width:600px){.deal-in{gap:10px;padding:14px 18px}.cd div{min-width:48px}.cd b{font-size:20px}.was{flex-wrap:wrap;gap:6px}}
 </style>
 </head>
@@ -206,25 +208,13 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
     </div>
 
     <div class="garantie" id="garantie">
-      <h3 id="garTitel">Warum die Preise steigen &ndash; und was das f&uuml;r dich hei&szlig;t</h3>
-      <div id="garVor">
-        <p>In Solingen trainiere ich im New Forge, einem festen Studio. Die Geb&uuml;hren f&uuml;rs Studio werden sich voraussichtlich erh&ouml;hen, und das rechne ich ab Januar mit ein, statt es still mitzutragen: <b>ab dem 1.&nbsp;Januar 2027 kostet die Einzelstunde 119&nbsp;&euro;, die 4er-Karte 109&nbsp;&euro; und die 8er-Karte 99&nbsp;&euro; pro Einheit.</b> Das Probetraining kostet dann 49&nbsp;&euro; und wird weiterhin auf dein erstes Training angerechnet.</p>
-        <p><b>Was du bis zum 31.&nbsp;Dezember kaufst, beh&auml;ltst du zum alten Preis.</b> Eine 8er-Karte sind jetzt 632&nbsp;&euro; statt sp&auml;ter 792&nbsp;&euro;, und du hast danach 12 Monate Zeit, sie einzul&ouml;sen. Die Aktion wird nicht verl&auml;ngert: am 1.&nbsp;Januar stehen hier die neuen Preise.</p>
-      </div>
-      <div id="garNach" hidden>
-        <p>Seit dem 1.&nbsp;Januar 2027 gelten die Preise oben. Karten, die du vorher gekauft hast, behalten ihren alten Preis &ndash; du l&ouml;st sie einfach wie gewohnt bei der Terminbuchung ein.</p>
-      </div>
+      <p id="garVor"><b id="garTitel">Warum die Preise steigen:</b> Die Geb&uuml;hren f&uuml;rs Studio in Solingen erh&ouml;hen sich voraussichtlich &ndash; das ist ab dem 1.&nbsp;Januar 2027 einkalkuliert. <b>Was du bis zum 31.&nbsp;Dezember kaufst, beh&auml;ltst du zum alten Preis</b> und hast danach 12 Monate Zeit, es einzul&ouml;sen.</p>
+      <p id="garNach" hidden>Seit dem 1.&nbsp;Januar 2027 gelten die Preise oben. Karten, die du vorher gekauft hast, behalten ihren alten Preis &ndash; du l&ouml;st sie einfach wie gewohnt bei der Terminbuchung ein.</p>
     </div>
 
-    <div class="ort-note" style="margin-top:28px"><b>Lieber erst kennenlernen?</b> Nimm das <a href="termin-buchen.html?art=probe" style="color:var(--blitz)">Probetraining f&uuml;r <span data-preis-probe>29&nbsp;&euro;</span></a> &ndash; eine volle Stunde, kein Verkaufsgespr&auml;ch, und die <span data-preis-probe>29&nbsp;&euro;</span> ziehe ich dir vom ersten regul&auml;ren Training wieder ab. Wenn vorher noch etwas offen ist: <a href="tel:+491776311404" style="color:var(--blitz)">0177 6311404 anrufen</a> oder <a href="https://wa.me/491776311404" style="color:var(--blitz)">per WhatsApp schreiben</a> &ndash; kostet nichts und verpflichtet zu nichts.</div>
+    <div class="ort-note" style="margin-top:28px"><b>Noch unsicher?</b> Nimm das <a href="termin-buchen.html?art=probe" style="color:var(--blitz)">Probetraining f&uuml;r <span data-preis-probe>29&nbsp;&euro;</span></a> &ndash; eine volle Stunde, kein Verkaufsgespr&auml;ch, und die <span data-preis-probe>29&nbsp;&euro;</span> ziehe ich dir vom ersten regul&auml;ren Training wieder ab. Termin aussuchen und bezahlen geht direkt auf der <a href="termin-buchen.html" style="color:var(--blitz)">Terminseite</a>, einen Gutschein- oder Kartencode l&ouml;st du dabei gleich mit ein. Wenn vorher noch etwas offen ist: <a href="tel:+491776311404" style="color:var(--blitz)">0177 6311404 anrufen</a> oder <a href="https://wa.me/491776311404" style="color:var(--blitz)">per WhatsApp schreiben</a>.</div>
 
-    <div class="ort-note" style="margin-top:20px"><b>In Raten zahlen?</b> W&auml;hle beim Bezahlen Klarna: drei zinsfreie Raten, erst in 30 Tagen zahlen oder eine l&auml;ngere Finanzierung. Der Preis bleibt derselbe, es kommt kein Aufschlag dazu. Bonit&auml;t vorausgesetzt; bei der Finanzierung k&ouml;nnen Zinsen anfallen.</div>
-
-    <div class="ort-note" style="margin-top:20px"><b>Online-Coaching</b> gibt es weiterhin auf Anfrage &ndash; vom reinen Trainingsplan bis zur Vollbetreuung mit Video-Feedback. Der Umfang ist zu individuell f&uuml;r einen Festpreis. <a href="https://wa.me/491776311404" style="color:var(--blitz)">Frag einfach per WhatsApp</a>.</div>
-
-    <div class="ort-note" style="margin-top:44px"><b>Alles direkt buchbar.</b> Such dir auf der <a href="termin-buchen.html" style="color:var(--blitz)">Terminseite</a> ein freies Zeitfenster in Solingen, K&ouml;ln oder Neuss, buche Probetraining oder Personal Training und bezahle gleich online. Einen Gutscheincode oder deinen Kartencode kannst du dabei direkt einl&ouml;sen &ndash; der Rest wird automatisch verrechnet. Wenn vorher noch etwas offen ist: <a href="tel:+491776311404" style="color:var(--blitz)">ruf kurz an</a> oder schreib <a href="https://wa.me/491776311404" style="color:var(--blitz)">per WhatsApp</a> &ndash; ich antworte meist am selben Tag.</div>
-
-    <p style="margin-top:36px;color:var(--muted);font-size:14px;border-left:2px solid var(--blitz);padding-left:16px;max-width:760px">Alle Preise sind Endpreise. Als Kleinunternehmer im Sinne von &sect;&nbsp;19 UStG berechne ich keine Umsatzsteuer, sie wird daher nicht ausgewiesen.</p>
+    <p class="kleingedruckt">Ratenzahlung l&auml;uft &uuml;ber Klarna: drei zinsfreie Raten oder eine l&auml;ngere Finanzierung, ohne Aufschlag auf den Preis (Bonit&auml;t vorausgesetzt, bei der Finanzierung k&ouml;nnen Zinsen anfallen). Online-Coaching gibt es weiterhin auf Anfrage &ndash; <a href="https://wa.me/491776311404">frag einfach per WhatsApp</a>. Alle Preise sind Endpreise; als Kleinunternehmer im Sinne von &sect;&nbsp;19 UStG berechne ich keine Umsatzsteuer, sie wird daher nicht ausgewiesen.</p>
 </div>
 </section>
 <section class="cta">
@@ -287,7 +277,6 @@ if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a
     });
     document.getElementById('garVor').hidden = true;
     document.getElementById('garNach').hidden = false;
-    document.getElementById('garTitel').textContent = 'Preise seit Januar 2027';
     deal.hidden = true;
   }
 
