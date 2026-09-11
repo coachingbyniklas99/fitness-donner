@@ -529,3 +529,30 @@ footer{border-top:1px solid var(--line);padding:44px 0;font-size:13px;color:var(
   .gal-th{gap:6px}
   .gal-cap{padding:38px 14px 12px;font-size:13px}
 }
+
+/* ---------- Kursplan ---------- */
+.kplan{width:100%;border-collapse:collapse;border:1px solid var(--line);background:var(--panel)}
+.kplan th{font-family:var(--body);font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--muted);text-align:left;padding:14px 18px;border-bottom:1px solid var(--line)}
+.kplan td{padding:16px 18px;border-bottom:1px solid var(--line);font-size:15px;color:#c9cbd0;vertical-align:top}
+.kplan tr:last-child td{border-bottom:none}
+.kplan .k-tag{font-family:var(--display);font-size:19px;color:var(--bone);white-space:nowrap}
+.kplan .k-zeit{color:var(--blitz);font-weight:700;white-space:nowrap}
+.kplan .k-name{display:block;color:var(--bone);font-weight:700;font-size:16px}
+.kplan .k-sub{display:block;color:var(--muted);font-size:14px;margin-top:3px}
+.kplan td:last-child{text-align:right;white-space:nowrap}
+/* Auf dem Handy wird aus jeder Zeile eine Karte - eine vierspaltige Tabelle passt sonst nicht. */
+@media(max-width:700px){
+  .kplan,.kplan tbody,.kplan tr,.kplan td{display:block;width:100%}
+  .kplan thead{display:none}
+  .kplan tr{border-bottom:1px solid var(--line);padding:16px 18px}
+  .kplan tr:last-child{border-bottom:none}
+  .kplan td{border:none;padding:0 0 6px}
+  .kplan td:last-child{text-align:left;padding-top:12px}
+  .kplan .k-tag{font-size:17px}
+}
+/* Platzhalter, solange die Termine noch nicht feststehen. */
+.kplan-leer{border:1px dashed rgba(239,185,46,.55);background:rgba(239,185,46,.06);padding:30px 26px;text-align:center}
+.kplan-leer h3{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(21px,3vw,28px);letter-spacing:.03em}
+.kplan-leer p{color:#c9cbd0;font-size:15.5px;max-width:560px;margin:12px auto 0}
+.kplan-leer .hero-ctas{justify-content:center;margin-top:22px}
