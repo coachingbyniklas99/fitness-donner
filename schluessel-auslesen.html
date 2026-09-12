@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schlüssel auslesen</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#15171C;--panel:#1C1F26;--panel2:#22262F;--bone:#ECE9E2;--muted:#9AA0AB;--blitz:#EFB92E;--line:rgba(236,233,226,.12)}
+body{background:var(--bg);color:var(--bone);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  line-height:1.55;padding:28px 20px 60px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:clamp(24px,5vw,34px);letter-spacing:.01em;margin-bottom:8px}
+.sub{color:var(--muted);font-size:15px;margin-bottom:6px}
+.lokal{display:inline-block;margin:14px 0 26px;font-size:13px;font-weight:700;color:var(--blitz);
+  border:1px solid rgba(239,185,46,.5);background:rgba(239,185,46,.1);padding:8px 12px}
+#zone{border:2px dashed rgba(236,233,226,.3);background:var(--panel);padding:44px 20px;text-align:center;
+  cursor:pointer;transition:border-color .2s,background .2s}
+#zone:hover,#zone.drueber{border-color:var(--blitz);background:var(--panel2)}
+#zone b{display:block;font-size:18px;margin-bottom:6px}
+#zone span{color:var(--muted);font-size:14px}
+#raus{margin-top:26px}
+#raus[hidden]{display:none!important}
+label{display:block;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--muted);margin:22px 0 7px}
+textarea{width:100%;height:150px;background:var(--panel);color:var(--bone);border:1px solid var(--line);
+  padding:12px 14px;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:12px;
+  resize:vertical;word-break:break-all}
+input[type=text]{width:100%;background:var(--panel);color:var(--bone);border:1px solid var(--line);
+  padding:12px 14px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+button.kopier{margin-top:9px;background:var(--blitz);color:#15171C;border:none;padding:11px 18px;
+  font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.04em}
+button.kopier:hover{filter:brightness(1.08)}
+button.kopier.fertig{background:#4ba36a;color:#fff}
+.fehler{margin-top:22px;border-left:3px solid #e4574e;background:rgba(228,87,78,.1);padding:12px 16px;font-size:14px}
+.fehler[hidden]{display:none!important}
+.hinweis{margin-top:34px;border-left:3px solid var(--blitz);padding:12px 16px;color:#c9cbd0;font-size:14px}
+.hinweis b{color:var(--bone)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Schlüssel auslesen</h1>
+  <p class="sub">Zieh die <b>.json</b>-Datei vom Google-Dienstkonto hier rein. Dann stehen die drei
+     Werte für Cloudflare fertig zum Kopieren da.</p>
+  <div class="lokal">Läuft komplett in deinem Browser. Die Datei wird nirgendwohin geschickt.</div>
+
+  <div id="zone">
+    <b>Datei hierher ziehen</b>
+    <span>oder klicken und auswählen</span>
+    <input type="file" id="datei" accept=".json,application/json" hidden>
+  </div>
+
+  <div class="fehler" id="fehler" hidden></div>
+
+  <div id="raus" hidden>
+    <label>GOOGLE_SA_KEY</label>
+    <textarea id="key" readonly></textarea>
+    <button class="kopier" data-ziel="key">Schlüssel kopieren</button>
+
+    <label>GOOGLE_SA_EMAIL</label>
+    <input type="text" id="mail" readonly>
+    <button class="kopier" data-ziel="mail">E-Mail kopieren</button>
+
+    <label>Projekt (nur zur Kontrolle)</label>
+    <input type="text" id="projekt" readonly>
+  </div>
+
+  <div class="hinweis">
+    <b>Danach:</b> Die .json-Datei in Bitwarden ablegen und aus dem Download-Ordner löschen.
+    Wer sie hat, kann auf den freigegebenen Kalender schreiben. Verloren gegangen? Im
+    Dienstkonto unter „Schlüssel" den alten löschen und einen neuen erzeugen &ndash; dauert eine Minute.
+  </div>
+</div>
+
+<script>
+(function () {
+  var zone = document.getElementById('zone'),
+      datei = document.getElementById('datei'),
+      raus = document.getElementById('raus'),
+      fehler = document.getElementById('fehler');
+
+  function meckern(text) {
+    fehler.textContent = text;
+    fehler.hidden = false;
+    raus.hidden = true;
+  }
+
+  function lesen(f) {
+    if (!f) return;
+    var r = new FileReader();
+    r.onload = function () {
+      var d;
+      try { d = JSON.parse(r.result); }
+      catch (e) { return meckern('Das ist keine gültige JSON-Datei. Hast du die richtige erwischt?'); }
+      if (!d.private_key || !d.client_email) {
+        return meckern('In der Datei stehen kein private_key und keine client_email. Das ist wohl nicht die Schlüsseldatei vom Dienstkonto.');
+      }
+      fehler.hidden = true;
+      /* Genau so, wie es in der Datei steht - mit den \\n als zwei Zeichen.
+         Der Worker rechnet damit und setzt sie selbst wieder in Zeilenumbrüche um. */
+      document.getElementById('key').value = JSON.stringify(d.private_key).slice(1, -1);
+      document.getElementById('mail').value = d.client_email;
+      document.getElementById('projekt').value = d.project_id || '(steht nicht drin)';
+      raus.hidden = false;
+    };
+    r.onerror = function () { meckern('Die Datei liess sich nicht lesen.'); };
+    r.readAsText(f);
+  }
+
+  zone.addEventListener('click', function () { datei.click(); });
+  datei.addEventListener('change', function () { lesen(datei.files[0]); });
+  ['dragenter', 'dragover'].forEach(function (e) {
+    zone.addEventListener(e, function (ev) { ev.preventDefault(); zone.classList.add('drueber'); });
+  });
+  ['dragleave', 'drop'].forEach(function (e) {
+    zone.addEventListener(e, function (ev) { ev.preventDefault(); zone.classList.remove('drueber'); });
+  });
+  zone.addEventListener('drop', function (ev) {
+    lesen(ev.dataTransfer.files && ev.dataTransfer.files[0]);
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('.kopier'), function (b) {
+    b.addEventListener('click', function () {
+      var feld = document.getElementById(b.dataset.ziel);
+      feld.select();
+      feld.setSelectionRange(0, feld.value.length);
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) {}
+      if (navigator.clipboard && !ok) {
+        navigator.clipboard.writeText(feld.value).then(function(){ gemeldet(b); });
+        return;
+      }
+      gemeldet(b);
+    });
+  });
+  function gemeldet(b) {
+    var alt = b.textContent;
+    b.textContent = 'Kopiert';
+    b.classList.add('fertig');
+    setTimeout(function () { b.textContent = alt; b.classList.remove('fertig'); }, 1800);
+  }
+})();
+</script>
+</body>
+</html>

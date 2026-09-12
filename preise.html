@@ -16,7 +16,7 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="style.css?v=21">
+<link rel="stylesheet" href="style.css?v=22">
 <style>
 /* ---------- Preisumstellung zum 01.01.2027 ---------- */
 .deal{background:var(--blitz);color:#15171C}
@@ -42,6 +42,16 @@
 .price .per{margin:9px 0 0}
 /* Abstand am Folgeelement, nicht per Geschwister-Selektor: ausgeblendete Boxen zaehlen als Geschwister mit. */
 .price p.desc{margin-top:20px}
+/* Der Inklusiv-Block ist das Verkaufsargument der Karten - er soll sich von der
+   normalen Haekchenliste absetzen, ohne mit der gelben Sparbox zu konkurrieren. */
+.inkl{border:1px solid rgba(239,185,46,.45);background:rgba(239,185,46,.07);padding:15px 16px 14px;margin:22px 0 4px}
+.inkl-kopf{font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--blitz);margin-bottom:11px}
+.price .inkl ul{list-style:none;margin:0;flex:none}
+.price .inkl ul li{padding:0 0 0 20px;border:none;position:relative;font-size:14.5px;color:#c9cbd0;line-height:1.45}
+.price .inkl ul li + li{margin-top:10px}
+.price .inkl ul li::before{content:"";position:absolute;left:0;top:7px;width:7px;height:7px;background:var(--blitz)}
+.price .inkl ul li b{color:var(--bone)}
+.inkl-fuss{margin-top:12px;padding-top:11px;border-top:1px solid rgba(239,185,46,.3);font-size:12.5px;color:var(--muted);line-height:1.5}
 .spar{display:inline-block;align-self:flex-start;background:rgba(239,185,46,.13);border:1px solid rgba(239,185,46,.5);
   color:var(--blitz);font-size:12.5px;font-weight:700;line-height:1.35;padding:7px 11px;margin:20px 0 0}
 /* Ab Januar gibt es nichts mehr zu vergleichen - dann wieder die ruhige Darstellung. */
@@ -179,7 +189,15 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
         <div class="per" data-jetzt="pro Einheit &middot; 356 &euro; gesamt" data-ab="pro Einheit &middot; 436 &euro; gesamt">pro Einheit &middot; 356 &euro; gesamt</div>
         <div class="spar nur-vorher" data-ab>80&nbsp;&euro; gespart &ndash; 356&nbsp;&euro; statt 436&nbsp;&euro;</div>
         <div class="rate" data-jetzt="oder 3 &times; 118,67 &euro; zinsfrei mit Klarna" data-ab="oder 3 &times; 145,33 &euro; zinsfrei mit Klarna">oder 3 &times; 118,67 &euro; zinsfrei mit Klarna</div>
-        <p class="desc">Vier Einheiten am St&uuml;ck. Genug Zeit, um Technik sauber aufzubauen und einen ersten echten Fortschritt zu sehen.</p>
+        <p class="desc">Vier Einheiten am St&uuml;ck &ndash; und dazu einen Monat lang das ganze Studio, auch an den Tagen, an denen wir uns nicht sehen.</p>
+        <div class="inkl">
+          <div class="inkl-kopf">Ohne Aufpreis mit dabei</div>
+          <ul>
+            <li><b>1 Monat freies Training im New Forge</b> &ndash; du trainierst dort auch allein, wann du willst</li>
+            <li><b>4 Kurse</b> deiner Wahl</li>
+          </ul>
+          <p class="inkl-fuss">Der Monat startet, sobald du deinen ersten Termin buchst. Der Kursplan steht in K&uuml;rze fest &ndash; bis dahin verfallen deine Kurse nicht.</p>
+        </div>
         <ul>
           <li>Individueller Trainingsfahrplan</li>
           <li>Termine einzeln buchen, wann es passt</li>
@@ -197,7 +215,15 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
         <div class="per" data-jetzt="pro Einheit &middot; 632 &euro; gesamt" data-ab="pro Einheit &middot; 792 &euro; gesamt">pro Einheit &middot; 632 &euro; gesamt</div>
         <div class="spar nur-vorher" data-ab>160&nbsp;&euro; gespart &ndash; 632&nbsp;&euro; statt 792&nbsp;&euro;</div>
         <div class="rate" data-jetzt="oder 3 &times; 210,67 &euro; zinsfrei mit Klarna" data-ab="oder 3 &times; 264,00 &euro; zinsfrei mit Klarna">oder 3 &times; 210,67 &euro; zinsfrei mit Klarna</div>
-        <p class="desc">Der beste Preis pro Stunde. Gedacht f&uuml;r rund zwei Monate mit einer Einheit pro Woche &ndash; einl&ouml;sbar hast du trotzdem l&auml;nger.</p>
+        <p class="desc">Der beste Preis pro Stunde &ndash; und zwei Monate, in denen dir das Studio offensteht, mit mir und ohne mich.</p>
+        <div class="inkl">
+          <div class="inkl-kopf">Ohne Aufpreis mit dabei</div>
+          <ul>
+            <li><b>2 Monate freies Training im New Forge</b> &ndash; du trainierst dort auch allein, wann du willst</li>
+            <li><b>8 Kurse</b> deiner Wahl</li>
+          </ul>
+          <p class="inkl-fuss">Die zwei Monate starten, sobald du deinen ersten Termin buchst. Der Kursplan steht in K&uuml;rze fest &ndash; bis dahin verfallen deine Kurse nicht.</p>
+        </div>
         <ul>
           <li>Trainings- und Ern&auml;hrungsfahrplan</li>
           <li>Termine einzeln buchen, wann es passt</li>
