@@ -70,6 +70,46 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
 .kleingedruckt{margin-top:22px;max-width:860px;color:#8b9099;font-size:13.5px;line-height:1.6}
 .kleingedruckt a{color:#b9bcc3;text-decoration:underline}
 @media(max-width:600px){.deal-in{gap:10px;padding:14px 18px}.cd div{min-width:48px}.cd b{font-size:20px}.was{flex-wrap:wrap;gap:6px}}
+
+/* ---------- Umschalter Personal Training / Kurse ---------- */
+.ptabs{display:inline-flex;border:1px solid var(--line);background:var(--panel);margin-bottom:26px}
+.ptab{appearance:none;background:none;border:none;cursor:pointer;font-family:var(--body);
+  font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+  padding:13px 24px;transition:color .15s,background .15s;white-space:nowrap}
+.ptab:hover{color:var(--bone)}
+.ptab.on{background:var(--blitz);color:#15171C}
+.pblock[hidden]{display:none}
+
+/* ---------- Sprungleiste ueber den Karten ---------- */
+.sprung{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:26px}
+.sprung-kopf{font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted);margin-right:4px}
+.sprung a{border:1px solid var(--line);background:var(--panel);color:var(--bone);
+  font-size:13.5px;font-weight:600;padding:9px 15px;text-decoration:none;white-space:nowrap;
+  transition:border-color .15s,color .15s,background .15s}
+.sprung a:hover{border-color:var(--blitz);color:var(--blitz);background:var(--panel-2)}
+/* Die klebende Kopfzeile darf das Ziel nicht verdecken. */
+.price h3[id]{scroll-margin-top:96px}
+
+/* ---------- Karten enden, wo ihr Inhalt endet - keine Luecken ---------- */
+.price-grid.four{align-items:start}
+.price-grid.four .price ul{flex:none}
+
+/* ---------- Platzhalter fuer die Kurspreise ---------- */
+.kurse-leer{border:1px dashed rgba(239,185,46,.55);background:rgba(239,185,46,.06);
+  padding:40px 30px;text-align:center}
+.kl-kopf{font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--blitz)}
+.kl-gross{font-family:var(--display);font-size:42px;line-height:1;color:var(--bone);margin:14px 0 0}
+.kl-txt{max-width:460px;margin:14px auto 22px;color:var(--muted);font-size:15px}
+@media(max-width:600px){
+  .ptabs{display:flex;width:100%}
+  .ptab{flex:1;padding:13px 10px;font-size:12.5px;letter-spacing:.04em}
+  .sprung{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .sprung-kopf{grid-column:1 / -1;margin:0 0 2px}
+  .sprung a{font-size:13px;padding:10px 13px;text-align:center}
+  .kl-gross{font-size:34px}
+  .kurse-leer{padding:32px 22px}
+}
 </style>
 </head>
 <body>
@@ -149,10 +189,23 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
 </header>
 <section style="padding-top:56px">
   <div class="wrap">
-    <div class="price-grid four">
+    <div class="ptabs" role="tablist" aria-label="Preisbereich">
+      <button class="ptab on" type="button" data-ziel="pt" role="tab" aria-selected="true">Personal Training</button>
+      <button class="ptab" type="button" data-ziel="kurse" role="tab" aria-selected="false">Kurse</button>
+    </div>
+
+    <div class="pblock" id="pb-pt">
+      <nav class="sprung" aria-label="Zu einem Angebot springen">
+        <span class="sprung-kopf">Optionen</span>
+        <a href="#k-probe">Probetraining</a>
+        <a href="#k-einzel">Einzelstunde</a>
+        <a href="#k-4er">4er-Karte</a>
+        <a href="#k-8er">8er-Karte</a>
+      </nav>
+      <div class="price-grid four">
       <div class="price">
         <div class="flag nur-vorher" data-ab>Nur bis 31.12.</div>
-        <h3>Probetraining</h3>
+        <h3 id="k-probe">Probetraining</h3>
         <div class="preiszeile">
           <span class="altbox nur-vorher" data-ab><em>ab Januar 2027</em><span class="alt">49&nbsp;&euro;</span></span>
           <span class="amount" data-jetzt="29 &euro;" data-ab="49 &euro;">29 &euro;</span>
@@ -169,7 +222,7 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
       </div>
       <div class="price">
         <div class="flag nur-vorher" data-ab>Nur bis 31.12.</div>
-        <h3>Einzelstunde</h3>
+        <h3 id="k-einzel">Einzelstunde</h3>
         <div class="preiszeile">
           <span class="altbox nur-vorher" data-ab><em>ab Januar 2027</em><span class="alt">119&nbsp;&euro;</span></span>
           <span class="amount" data-jetzt="99 &euro;" data-ab="119 &euro;">99 &euro;</span>
@@ -186,7 +239,7 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
       </div>
       <div class="price featured">
         <div class="pop">Beliebteste Wahl</div>
-        <h3>4er-Karte</h3>
+        <h3 id="k-4er">4er-Karte</h3>
         <div class="preiszeile">
           <span class="altbox nur-vorher" data-ab><em>ab Januar 2027</em><span class="alt">109&nbsp;&euro;</span></span>
           <span class="amount" data-jetzt="89 &euro;" data-ab="109 &euro;">89 &euro;</span>
@@ -204,7 +257,6 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
           <p class="inkl-fuss">Der Monat startet, sobald du deinen ersten Termin buchst. Der Kursplan steht in K&uuml;rze fest &ndash; bis dahin verfallen deine Kurse nicht.</p>
         </div>
         <ul>
-          <li>Individueller Trainingsfahrplan</li>
           <li>Termine einzeln buchen, wann es passt</li>
           <li>12 Monate einl&ouml;sbar</li>
         </ul>
@@ -212,7 +264,7 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
       </div>
       <div class="price">
         <div class="flag nur-vorher" data-ab>Nur bis 31.12.</div>
-        <h3>8er-Karte</h3>
+        <h3 id="k-8er">8er-Karte</h3>
         <div class="preiszeile">
           <span class="altbox nur-vorher" data-ab><em>ab Januar 2027</em><span class="alt">99&nbsp;&euro;</span></span>
           <span class="amount" data-jetzt="79 &euro;" data-ab="99 &euro;">79 &euro;</span>
@@ -230,7 +282,6 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
           <p class="inkl-fuss">Die zwei Monate starten, sobald du deinen ersten Termin buchst. Der Kursplan steht in K&uuml;rze fest &ndash; bis dahin verfallen deine Kurse nicht.</p>
         </div>
         <ul>
-          <li>Trainings- und Ern&auml;hrungsfahrplan</li>
           <li>Termine einzeln buchen, wann es passt</li>
           <li>12 Monate einl&ouml;sbar</li>
         </ul>
@@ -246,6 +297,22 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
     <div class="ort-note" style="margin-top:28px"><b>Noch unsicher?</b> Nimm das <a href="termin-buchen.html?art=probe" style="color:var(--blitz)">Probetraining f&uuml;r <span data-preis-probe>29&nbsp;&euro;</span></a> &ndash; eine volle Stunde, kein Verkaufsgespr&auml;ch, und die <span data-preis-probe>29&nbsp;&euro;</span> ziehe ich dir vom ersten regul&auml;ren Training wieder ab. Termin aussuchen und bezahlen geht direkt auf der <a href="termin-buchen.html" style="color:var(--blitz)">Terminseite</a>, einen Gutschein- oder Kartencode l&ouml;st du dabei gleich mit ein. Wenn vorher noch etwas offen ist: <a href="tel:+491776311404" style="color:var(--blitz)">0177 6311404 anrufen</a> oder <a href="https://wa.me/491776311404" style="color:var(--blitz)">per WhatsApp schreiben</a>.</div>
 
     <p class="kleingedruckt">Ratenzahlung l&auml;uft &uuml;ber Klarna: drei zinsfreie Raten oder eine l&auml;ngere Finanzierung, ohne Aufschlag auf den Preis (Bonit&auml;t vorausgesetzt, bei der Finanzierung k&ouml;nnen Zinsen anfallen). Online-Coaching gibt es weiterhin auf Anfrage &ndash; <a href="https://wa.me/491776311404">frag einfach per WhatsApp</a>. Alle Preise sind Endpreise; als Kleinunternehmer im Sinne von &sect;&nbsp;19 UStG berechne ich keine Umsatzsteuer, sie wird daher nicht ausgewiesen.</p>
+    </div>
+
+    <div class="pblock" id="pb-kurse" hidden>
+      <div class="kurse-leer">
+        <div class="kl-kopf">Kurspreise</div>
+        <p class="kl-gross">Preise folgen</p>
+        <p class="kl-txt">Sobald der Kursplan mit den festen Terminen steht, stehen hier die Preise &ndash;
+           f&uuml;r den Einzelkurs und f&uuml;r Karten &uuml;ber mehrere Kurse.</p>
+        <a class="btn btn-ghost" href="kurse.html">Zur Kursseite</a>
+      </div>
+
+      <div class="ort-note" style="margin-top:26px"><b>Du machst sowieso Personal Training?</b> Dann brauchst du hier nichts extra: In der <a href="#" data-zu-pt style="color:var(--blitz);text-decoration:underline">4er- und 8er-Karte</a> sind Kurse schon enthalten &ndash; vier beziehungsweise acht St&uuml;ck, dazu ein oder zwei Monate freies Training im New&nbsp;Forge.</div>
+
+      <p class="kleingedruckt">Die Kurse finden im New Forge, Prinzenstra&szlig;e 2a in Solingen-Ohligs statt. Alle Preise sind Endpreise; als Kleinunternehmer im Sinne von &sect;&nbsp;19 UStG berechne ich keine Umsatzsteuer, sie wird daher nicht ausgewiesen.</p>
+    </div>
+
 </div>
 </section>
 <section class="cta">
@@ -327,6 +394,48 @@ if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a
     return false;
   }
   if (!tick()) setInterval(tick, 1000);
+})();
+</script>
+<script>
+/* Umschalter und Sprungleiste. Beides ohne Bibliothek, damit die Seite
+   auch dann funktioniert, wenn sonst nichts laedt. */
+(function(){
+  var tabs = document.querySelectorAll('.ptab');
+  var pt = document.getElementById('pb-pt'), kurse = document.getElementById('pb-kurse');
+  function zeig(ziel){
+    pt.hidden = (ziel !== 'pt');
+    kurse.hidden = (ziel !== 'kurse');
+    Array.prototype.forEach.call(tabs, function(t){
+      var an = t.dataset.ziel === ziel;
+      t.classList.toggle('on', an);
+      t.setAttribute('aria-selected', an ? 'true' : 'false');
+    });
+  }
+  Array.prototype.forEach.call(tabs, function(t){
+    t.addEventListener('click', function(){
+      zeig(t.dataset.ziel);
+      history.replaceState(null, '', t.dataset.ziel === 'kurse' ? '#kurse' : location.pathname);
+    });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-zu-pt]'), function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault(); zeig('pt');
+      document.querySelector('.ptabs').scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+  if (location.hash === '#kurse') zeig('kurse');
+
+  /* Sanft scrollen, aber nur wenn niemand "weniger Bewegung" eingestellt hat. */
+  var ruhig = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  Array.prototype.forEach.call(document.querySelectorAll('.sprung a'), function(a){
+    a.addEventListener('click', function(e){
+      var ziel = document.querySelector(a.getAttribute('href'));
+      if (!ziel) return;
+      e.preventDefault();
+      ziel.scrollIntoView({behavior: ruhig ? 'auto' : 'smooth', block:'start'});
+      history.replaceState(null, '', a.getAttribute('href'));
+    });
+  });
 })();
 </script>
 </body>
