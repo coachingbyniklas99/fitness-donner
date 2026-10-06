@@ -51,7 +51,21 @@
 .tk-type.on{border-color:var(--blitz);background:rgba(239,185,46,.09)}
 .tk-type-name{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .tk-type.on .tk-type-name{color:var(--blitz)}
+.tk-type{position:relative}
 .tk-type-price{font-family:var(--display);font-size:32px;line-height:1.1;margin:8px 0}
+/* Rabatt: alter Preis grau mit gelbem Strich, aktueller Preis gelb, Sparzeile darunter */
+.tk-prices{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.tk-prices .tk-type-price{margin:8px 0}
+.tk-type.deal .tk-type-price{font-size:46px;color:var(--blitz)}
+.tk-old{display:flex;flex-direction:column;gap:4px;margin:8px 0}
+.tk-old em{font-style:normal;font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+.tk-alt{font-family:var(--display);font-size:28px;line-height:1;color:#7c818b;position:relative;white-space:nowrap}
+.tk-alt::after{content:"";position:absolute;left:-4px;right:-4px;top:50%;height:3px;background:var(--blitz);transform:rotate(-9deg)}
+.tk-spar{display:inline-block;background:rgba(239,185,46,.13);border:1px solid rgba(239,185,46,.5);color:var(--blitz);
+  font-size:12.5px;font-weight:700;line-height:1.35;padding:6px 10px;margin:0 0 12px}
+.tk-flag{position:absolute;top:0;right:0;background:var(--blitz);color:#15171C;font-size:10.5px;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase;padding:5px 10px}
+[data-vorher][hidden]{display:none!important}
 .tk-type-desc{font-size:14px;color:var(--muted);line-height:1.55}
 
 /* ---------- Standortkarte ---------- */
