@@ -226,3 +226,13 @@
 /* Ohne Foto: eine Zeile statt einer leeren Kachel */
 .tk-loc.is-schmal{display:block;padding:16px 18px}
 .tk-loc.is-schmal .tk-loc-note{margin-top:6px}
+
+/* ---------- Karte einlösen: Code schon in Schritt 1, mehrere Termine ---------- */
+.tk-cardcode{border-top:1px solid var(--line);margin-top:24px;padding-top:18px}
+.tk-cardcode label{display:block;margin-bottom:8px}
+.tk-cardcode #cardCodeRow{margin-top:4px}
+.tk-cardcode .small:empty{display:none}
+#redeemNote1{margin:18px 0 0}
+.tk-picked-more{font-size:13px;color:var(--muted);margin:12px 0 0;line-height:1.55}
+.tk-picked-more .tk-ortlink{font-size:13px;color:var(--blitz)}
+@media(min-width:900px){.tk-picked-more .tk-ortlink{display:none}}

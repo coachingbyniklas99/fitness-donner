@@ -12,7 +12,7 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="stylesheet" href="style.css?v=23">
 <link rel="stylesheet" href="gutschein.css?v=2">
-<link rel="stylesheet" href="termin.css?v=8">
+<link rel="stylesheet" href="termin.css?v=9">
 </head>
 <body>
 <nav>
@@ -63,7 +63,7 @@
   <div class="wrap">
     <div class="eyebrow">Geschafft</div>
     <h1>Deine Karte<br>ist aktiv.</h1>
-    <p class="hero-sub">Der Code ist gerade per E-Mail zu dir unterwegs. Du kannst deine Termine ab sofort einzeln buchen &ndash; wann immer es dir passt.</p>
+    <p class="hero-sub">Der Code ist gerade per E-Mail zu dir unterwegs. Du kannst deine Termine ab sofort buchen &ndash; einzeln oder mehrere auf einmal, wann immer es dir passt.</p>
   </div>
 </header>
 
@@ -78,6 +78,7 @@
         <div class="tk-line"><span class="k">Einheiten</span><span class="v" id="cSessions"></span></div>
         <div class="tk-line"><span class="k">Pro Einheit</span><span class="v" id="cUnit"></span></div>
         <div class="tk-line"><span class="k">Bezahlt</span><span class="v" id="cPaid"></span></div>
+        <div class="tk-line"><span class="k">Noch frei</span><span class="v" id="cLeft"></span></div>
         <div class="tk-line"><span class="k">Einl&ouml;sbar bis</span><span class="v" id="cExpires"></span></div>
         <div class="tk-code">
           <div class="lbl">Dein Code</div>
@@ -134,7 +135,13 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     document.getElementById('cPaid').textContent = k.amount_formatted;
     document.getElementById('cExpires').textContent = fmtDate(k.expires);
     document.getElementById('cCode').textContent = k.code;
-    document.getElementById('bookLink').href = 'termin-buchen.html?art=training&code=' + encodeURIComponent(k.code);
+    var total = k.sessions_total, left = k.sessions_left == null ? total : k.sessions_left;
+    document.getElementById('cLeft').textContent = left + ' von ' + total + ' Einheiten';
+    var link = document.getElementById('bookLink');
+    link.href = 'termin-buchen.html?art=training&code=' + encodeURIComponent(k.code);
+    if (left <= 0) link.hidden = true;
+    else if (left < total) link.textContent = left === 1 ? 'Letzten Termin buchen' : 'Restliche ' + left + ' Termine buchen';
+    else link.textContent = 'Termine buchen';
     document.getElementById('box').hidden = false;
   }
 

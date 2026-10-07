@@ -23,7 +23,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="style.css?v=23">
 <link rel="stylesheet" href="gutschein.css?v=2">
-<link rel="stylesheet" href="termin.css?v=8">
+<link rel="stylesheet" href="termin.css?v=9">
 </head>
 <body>
 <nav>
@@ -143,6 +143,19 @@
         </div>
       </div>
 
+      <div class="tk-cardcode gs-field" id="cardCodeBox">
+        <button type="button" class="tk-ortlink" id="cardCodeToggle">Du hast schon eine 4er- oder 8er-Karte? Code eingeben</button>
+        <div id="cardCodeRow" hidden>
+          <label for="cardCodeInput">Dein Kartencode</label>
+          <div class="tk-voucher">
+            <input type="text" id="cardCodeInput" placeholder="FD-XXXX-XXXX" autocomplete="off">
+            <button type="button" class="btn btn-ghost btn-sm" id="cardCodeBtn">Karte laden</button>
+          </div>
+        </div>
+        <div class="small" id="cardCodeMsg"></div>
+      </div>
+      <div class="tk-cardnote" id="redeemNote1" hidden></div>
+
       <div class="tk-nav">
         <div class="tk-nav-help">
           Unsicher, was passt? Ruf mich an &ndash;
@@ -159,6 +172,7 @@
       <h2>Wann passt es dir?</h2>
       <p class="gs-sub">Standard ist das New Forge in Solingen-Ohligs &ndash; in K&ouml;ln und Neuss trainiere ich nur rund um meine Kurse.</p>
 
+      <div class="tk-cardnote" id="redeemNote2" hidden></div>
       <div class="tk-filter" id="cityFilter" hidden></div>
       <div class="tk-loc" id="locationBox" hidden></div>
 
@@ -183,6 +197,7 @@
           <div class="tk-picked" id="pickedBox" hidden>
             <div class="tk-picked-title" id="pickedTitle"></div>
             <ul id="pickedList"></ul>
+            <p class="tk-picked-more" id="pickedMore"></p>
           </div>
         </div>
       </div>
@@ -306,12 +321,18 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     step: 1, type: 'training', slots: [], locations: [], city: 'Solingen',
     months: [], monthIndex: 0, day: '', chosen: null, picked: [], way: 'later',
     prices: {}, cards: {}, voucher: null,
+    card: null,   // geladene 4er-/8er-Karte, mit der Termine eingelöst werden
   };
 
   // Karten werden ohne Termin gekauft – der Kalender entfällt dabei
   function isCard() { return state.type === 'karte4' || state.type === 'karte8'; }
-  function isMulti() { return isCard() && state.way === 'now'; }
+  // Termine mit einer schon gekauften Karte einlösen – auch mehrere auf einmal
+  function isRedeem() { return state.type === 'training' && !!state.card && state.multiOk; }
+  function isMulti() { return (isCard() && state.way === 'now') || isRedeem(); }
   function cardInfo() { return state.cards[state.type] || {}; }
+  function maxPick() { return isRedeem() ? state.card.sessions_left : (cardInfo().sessions || 0); }
+  function einheiten(n) { return n === 1 ? '1 Einheit' : n + ' Einheiten'; }
+  function ready3() { return isCard() || (isRedeem() ? state.picked.length > 0 : !!state.chosen); }
 
   var el = function (id) { return document.getElementById(id); };
   var errBox = el('error');
@@ -350,7 +371,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
   /* ---------- Schritte ---------- */
   function goStep(n) {
     if (isCard() && !isMulti() && n === 2) n = 3;   // Karte ohne Terminwahl überspringt den Kalender
-    if (n === 3 && !isCard() && !state.chosen) return;
+    if (n === 3 && !ready3()) return;
     state.step = n;
     Array.prototype.forEach.call(document.querySelectorAll('.tk-panel'), function (p) {
       p.hidden = Number(p.getAttribute('data-panel')) !== n;
@@ -360,7 +381,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
       var i = Number(b.getAttribute('data-goto'));
       b.classList.toggle('is-now', i === n);
       b.classList.toggle('is-done', i < n);
-      b.disabled = i > n && !(i === 2 && n === 1) && !(i === 3 && (card || state.chosen));
+      b.disabled = i > n && !(i === 2 && n === 1) && !(i === 3 && ready3());
     });
     clearError();
     var bar = el('stepBar');
@@ -386,6 +407,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
       state.locations = d.locations || [];
       state.prices = d.prices || { training: 9900, probe: 2900 };
       state.cards = d.cards || {};
+      state.multiOk = !!d.multi_book;   // ältere Worker-Fassung: Karte nur Termin für Termin
       var t = document.querySelector('[data-price="training"]');
       var p = document.querySelector('[data-price="probe"]');
       if (t) t.textContent = eur(state.prices.training);
@@ -598,9 +620,11 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     if (has) {
       state.picked = state.picked.filter(function (x) { return x.date + '|' + x.slotId !== key; });
     } else {
-      var max = cardInfo().sessions || 0;
+      var max = maxPick();
       if (state.picked.length >= max) {
-        return fail('Mehr als ' + max + ' Termine gehen mit dieser Karte nicht. Entferne zuerst einen.');
+        return fail(isRedeem()
+          ? 'Auf deiner Karte ' + (max === 1 ? 'ist nur noch 1 Einheit' : 'sind noch ' + max + ' Einheiten') + ' frei. Entferne zuerst einen Termin.'
+          : 'Mehr als ' + max + ' Termine gehen mit dieser Karte nicht. Entferne zuerst einen.');
       }
       clearError();
       state.picked.push(slot);
@@ -608,6 +632,15 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     renderDay(state.day);
     renderPicked();
     renderSummary();
+    syncNext();
+  }
+
+  /* Weiter-Knopf und Schrittleiste nach der Terminauswahl freischalten */
+  function syncNext() {
+    el('toStep3').disabled = !ready3();
+    Array.prototype.forEach.call(document.querySelectorAll('.tk-step'), function (b) {
+      if (Number(b.getAttribute('data-goto')) === 3 && state.step < 3) b.disabled = !ready3();
+    });
   }
 
   function chooseSlot(slot) {
@@ -628,12 +661,16 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
       Array.prototype.forEach.call(document.querySelectorAll('.tk-type'), function (x) { x.classList.remove('on'); });
       card.classList.add('on');
       state.type = card.getAttribute('data-type');
+      if (state.type !== 'training' && state.card) dropCard();
       state.voucher = null;
       el('voucher').value = '';
       el('voucherMsg').textContent = '';
       el('voucherMsg').className = 'small';
       el('voucherField').hidden = isCard();
+      el('cardCodeBox').hidden = isCard();
+      if (state.card) el('voucher').value = state.card.code;
       applyMode();
+      renderDay(state.day);
       renderSummary();
       goStep(state.step);
     };
@@ -643,6 +680,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
   el('voucherBtn').onclick = function () {
     var code = el('voucher').value.trim();
     var msg = el('voucherMsg');
+    if (state.card && code.toUpperCase() !== state.card.code) dropCard();
     if (!code) { state.voucher = null; msg.textContent = ''; renderSummary(); return; }
     msg.className = 'small';
     msg.textContent = 'Wird geprüft …';
@@ -656,6 +694,12 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
           state.voucher = null;
           msg.className = 'small tk-bad';
           msg.textContent = d.error;
+        } else if (d.kind === 'karte' && state.multiOk) {
+          useCard(d);
+        } else if (d.kind === 'karte') {
+          state.voucher = { code: d.code, remaining_cents: d.discount_cents };
+          msg.className = 'small tk-good';
+          msg.textContent = d.label + ' erkannt – eine Einheit wird eingelöst, noch ' + d.sessions_left + ' frei.';
         } else {
           state.voucher = d;
           msg.className = 'small tk-good';
@@ -663,6 +707,114 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
             + eur(d.discount_cents) + ' angerechnet.';
         }
         renderSummary();
+      })
+      .catch(function () {
+        msg.className = 'small tk-bad';
+        msg.textContent = 'Der Code konnte gerade nicht geprüft werden.';
+      });
+  };
+
+  /* ---------- Gekaufte Karte einlösen ---------- */
+  function useCard(d) {
+    state.card = d;
+    state.voucher = null;
+    // Personal Training auswählen, ohne den Code wieder zu löschen
+    Array.prototype.forEach.call(document.querySelectorAll('.tk-type'), function (x) {
+      x.classList.toggle('on', x.getAttribute('data-type') === 'training');
+    });
+    state.type = 'training';
+    // Ein schon gewählter Einzeltermin wird zum ersten Termin der Liste
+    if (state.chosen && !state.picked.length) state.picked = [state.chosen];
+    state.chosen = null;
+    if (state.picked.length > d.sessions_left) state.picked = state.picked.slice(0, d.sessions_left);
+
+    el('voucher').value = d.code;
+    el('cardCodeInput').value = d.code;
+    var text = d.label + ' erkannt – noch ' + d.sessions_left + ' von ' + d.sessions_total
+      + ' Einheiten frei. Du kannst ' + (d.sessions_left === 1 ? 'noch einen Termin' : 'bis zu ' + d.sessions_left + ' Termine auf einmal') + ' buchen.';
+    el('voucherMsg').className = 'small tk-good';
+    el('voucherMsg').textContent = text;
+    el('cardCodeMsg').className = 'small tk-good';
+    el('cardCodeMsg').textContent = '';
+    el('cardCodeRow').hidden = true;
+    el('cardCodeToggle').hidden = true;
+    clearError();
+    applyMode();
+    renderDay(state.day);
+    renderSummary();
+    syncNext();
+  }
+
+  function dropCard() {
+    if (!state.card) return;
+    state.chosen = state.picked.length === 1 ? state.picked[0] : null;
+    state.picked = [];
+    state.card = null;
+    el('voucherMsg').textContent = '';
+    el('cardCodeToggle').hidden = false;
+    applyMode();
+    renderDay(state.day);
+    syncNext();
+  }
+
+  function renderRedeemNote() {
+    var html = '';
+    if (isRedeem()) {
+      var c = state.card;
+      html = '<b>' + esc(c.label) + ' &middot; ' + esc(c.code) + '</b><br>Noch ' + c.sessions_left
+        + ' von ' + esc(einheiten(c.sessions_total)) + ' frei. Such dir ' + (c.sessions_left === 1 ? 'deinen Termin' : 'bis zu ' + c.sessions_left + ' Termine')
+        + ' aus &ndash; bezahlt ist schon alles. Was du jetzt nicht festlegst, buchst du sp&auml;ter mit demselben Code.';
+    }
+    ['redeemNote1', 'redeemNote2'].forEach(function (id) {
+      el(id).innerHTML = html;
+      el(id).hidden = !html;
+    });
+    // In Schritt 3: Hinweis, dass noch mehr Termine dazugenommen werden können
+    if (isRedeem()) {
+      var rest = state.card.sessions_left - state.picked.length;
+      el('cardNote').innerHTML = '<b>' + esc(state.card.label) + ' &middot; ' + esc(state.card.code) + '</b><br>'
+        + (rest > 0
+          ? 'Noch ' + esc(einheiten(rest)) + ' frei. <button type="button" class="tk-ortlink" id="addMore">Weitere Termine dazunehmen</button>'
+          : 'Alle freien Einheiten sind verplant.');
+      el('cardNote').hidden = false;
+      var add = el('addMore');
+      if (add) add.onclick = function () { goStep(2); };
+    }
+  }
+
+  el('cardCodeToggle').onclick = function () {
+    el('cardCodeRow').hidden = false;
+    el('cardCodeToggle').hidden = true;
+    el('cardCodeInput').focus();
+  };
+  el('cardCodeInput').onkeydown = function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); el('cardCodeBtn').click(); }
+  };
+  el('cardCodeBtn').onclick = function () {
+    var code = el('cardCodeInput').value.trim();
+    var msg = el('cardCodeMsg');
+    if (!code) return;
+    msg.className = 'small';
+    msg.textContent = 'Wird geprüft …';
+    fetch(API_BASE + '/api/redeem-check', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: code, type: 'training' }),
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (d.ok && d.kind === 'karte' && state.multiOk) return useCard(d);
+        msg.className = 'small tk-bad';
+        if (d.ok) {
+          // ein normaler Gutschein: der wird im letzten Schritt angerechnet
+          el('voucher').value = d.code;
+          msg.textContent = d.kind === 'karte'
+            ? 'Karte erkannt – such dir einen Termin aus, der Code wird im letzten Schritt eingelöst.'
+            : 'Das ist ein Gutschein, keine Karte – er wird dir im letzten Schritt automatisch angerechnet.';
+          msg.className = 'small';
+          setTimeout(function () { el('voucherBtn').click(); }, 50);
+        } else {
+          msg.textContent = d.error;
+        }
       })
       .catch(function () {
         msg.className = 'small tk-bad';
@@ -696,6 +848,26 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
       el('sumValue').textContent = eur(c.total_cents || 0);
       el('bookBtn').textContent = 'Zahlungspflichtig kaufen';
       renderSplit(c.total_cents || 0);
+      return;
+    }
+    if (isRedeem()) {
+      var k = state.card;
+      var n = state.picked.length;
+      var lines = ['Personal Training mit deiner ' + k.label + ' (' + k.code + ')'];
+      state.picked.slice().sort(function (a, b) {
+        return (a.date + a.start).localeCompare(b.date + b.start);
+      }).forEach(function (s) {
+        lines.push(longDate(s.date) + ', ' + s.start + '–' + s.end + ' Uhr, ' + s.city);
+      });
+      if (!n) lines.push('Noch kein Termin gewählt');
+      lines.push(einheiten(n) + (n === 1 ? ' wird' : ' werden') + ' eingelöst, ' + einheiten(k.sessions_left - n)
+        + (k.sessions_left - n === 1 ? ' bleibt' : ' bleiben') + ' frei');
+      lines.push('Absage kostenlos bis 24 Stunden vorher');
+      el('orderList').innerHTML = lines.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('');
+      el('sumValue').textContent = 'bereits bezahlt';
+      el('bookBtn').textContent = n > 1 ? n + ' Termine verbindlich buchen' : 'Verbindlich buchen';
+      renderSplit(0);
+      renderRedeemNote();
       return;
     }
     var full = price();
@@ -794,6 +966,56 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
         });
     }
 
+    if (isRedeem()) {
+      if (!state.picked.length) { goStep(2); return fail('Bitte wähle mindestens einen Termin aus.'); }
+      btn.disabled = true;
+      btn.textContent = 'Einen Moment …';
+      var karte = state.card;
+      return fetch(API_BASE + '/api/book', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'training',
+          voucherCode: karte.code,
+          name: el('name').value,
+          email: el('email').value,
+          phone: el('phone').value,
+          note: el('note').value,
+          slots: state.picked.map(function (s) { return { slotId: s.slotId, date: s.date }; }),
+        }),
+      })
+        .then(function (r) { return r.json().then(function (d) { return { s: r.status, d: d }; }); })
+        .then(function (res) {
+          if (res.s !== 200) {
+            btn.disabled = false; btn.textContent = original;
+            if (res.s === 409) {
+              return fetch(API_BASE + '/api/slots').then(function (x) { return x.json(); }).then(function (d) {
+                state.slots = d.slots || [];
+                // nur die Termine behalten, die noch frei sind
+                state.picked = state.picked.filter(function (p) {
+                  return state.slots.some(function (s) { return s.slotId === p.slotId && s.date === p.date; });
+                });
+                rebuildMonths();
+                renderCalendar();
+                renderDay(state.day);
+                renderPicked();
+                renderSummary();
+                syncNext();
+                goStep(2);
+                fail(res.d.error);
+              });
+            }
+            return fail(res.d.error || 'Die Buchung hat nicht geklappt.');
+          }
+          var d = res.d;
+          location.href = 'termin-bestaetigt.html?anzahl=' + d.count
+            + '&code=' + encodeURIComponent(d.code) + '&frei=' + d.sessions_left;
+        })
+        .catch(function () {
+          btn.disabled = false; btn.textContent = original;
+          fail('Keine Verbindung. Bitte versuche es noch einmal.');
+        });
+    }
+
     if (!state.chosen) { goStep(2); return fail('Bitte wähle zuerst einen Termin aus.'); }
 
     btn.disabled = true;
@@ -841,15 +1063,16 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
   function applyMode() {
     var card = isCard();
     var multi = isMulti();
+    var redeem = isRedeem();
 
     el('cardWays').hidden = !card;
     document.querySelector('[data-next="2"]').textContent =
-      !card ? 'Weiter zum Termin' : multi ? 'Weiter zur Terminwahl' : 'Weiter zu deinen Daten';
+      redeem ? 'Weiter zur Terminwahl' : !card ? 'Weiter zum Termin' : multi ? 'Weiter zur Terminwahl' : 'Weiter zu deinen Daten';
 
     var back = el('backFromData');
     back.textContent = card ? 'Zurück zur Auswahl' : 'Zurück zum Termin';
 
-    el('chosenSlot').hidden = card;
+    el('chosenSlot').hidden = card || redeem;
     el('cardNote').hidden = !card;
     if (card) {
       var c = state.cards[state.type] || {};
@@ -865,8 +1088,8 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     var line = document.querySelector('[data-forstep="2"]');
     if (line) line.hidden = skip;
 
-    el('toStep3').disabled = multi ? false : !state.chosen;
-    el('toStep3').textContent = multi ? 'Weiter zu deinen Daten' : 'Weiter zu deinen Daten';
+    el('toStep3').disabled = !ready3();
+    renderRedeemNote();
     renderPicked();
   }
 
@@ -888,10 +1111,33 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
   function renderPicked() {
     var box = el('pickedBox');
     if (!isMulti()) { box.hidden = true; return; }
-    var info = cardInfo();
-    el('pickedTitle').textContent = state.picked.length
-      ? state.picked.length + ' von ' + info.sessions + ' Terminen gewählt'
-      : 'Noch kein Termin gewählt – du kannst auch alle später buchen';
+    var max = maxPick();
+    var n = state.picked.length;
+    if (isRedeem()) {
+      el('pickedTitle').textContent = n
+        ? n + ' von ' + max + ' freien Einheiten gewählt'
+        : 'Wähl bis zu ' + max + ' Termine – mindestens einen';
+    } else {
+      el('pickedTitle').textContent = n
+        ? n + ' von ' + max + ' Terminen gewählt'
+        : 'Noch kein Termin gewählt – du kannst auch alle später buchen';
+    }
+    var rest = max - n;
+    var more = el('pickedMore');
+    if (rest > 0 && n > 0) {
+      more.innerHTML = 'Noch ' + esc(einheiten(rest)) + ' frei &ndash; tipp einfach einen weiteren Tag im Kalender an. '
+        + '<button type="button" class="tk-ortlink" id="toCal">Weiteren Tag w&auml;hlen</button>';
+      el('toCal').onclick = function () {
+        el('picker').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      };
+      more.hidden = false;
+    } else if (rest > 0) {
+      more.innerHTML = 'Tipp einen markierten Tag an und w&auml;hl eine Uhrzeit &ndash; danach kannst du weitere Tage dazunehmen.';
+      more.hidden = false;
+    } else {
+      more.textContent = isRedeem() ? 'Alle freien Einheiten sind verplant.' : 'Alle Einheiten sind verplant.';
+      more.hidden = false;
+    }
     el('pickedList').innerHTML = state.picked
       .slice()
       .sort(function (a, b) { return (a.date + a.start).localeCompare(b.date + b.start); })
@@ -906,6 +1152,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
         renderPicked();
         renderDay(state.day);
         renderSummary();
+        syncNext();
       };
     });
     box.hidden = false;
@@ -922,6 +1169,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     var code = q.get('code');
     if (code) {
       el('voucher').value = code;
+      el('cardCodeInput').value = code;
       if (!isCard()) setTimeout(function () { el('voucherBtn').click(); }, 400);
     }
   }
