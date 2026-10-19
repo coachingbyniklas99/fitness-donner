@@ -105,3 +105,8 @@
 .ad-search:focus{border-color:var(--blitz)}
 .ad-issue{border:1px solid var(--blitz);background:rgba(239,185,46,.06);padding:20px;margin-bottom:22px}
 .ad-issue .btn{width:100%}
+
+/* Reservierungen während der Zahlung */
+.ad-resv-hint{border:1px solid rgba(239,185,46,.4);background:rgba(239,185,46,.08);color:var(--bone);
+  font-size:14px;line-height:1.5;padding:12px 16px;margin-bottom:14px}
+.ad-linkbtn{background:none;border:0;padding:0;color:var(--blitz);font:inherit;text-decoration:underline;cursor:pointer}

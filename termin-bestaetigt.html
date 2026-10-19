@@ -120,6 +120,7 @@
 var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.dev';
 
 (function () {
+  try { sessionStorage.removeItem('fd_buchung'); } catch (e) {}   // Buchung ist durch – Entwurf weg
   var q = new URLSearchParams(location.search);
   var sessionId = q.get('session_id');
   var tries = 0;

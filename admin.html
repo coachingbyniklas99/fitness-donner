@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-title" content="FD Verwaltung">
 <meta name="theme-color" content="#15171C">
 <link rel="stylesheet" href="style.css?v=23">
-<link rel="stylesheet" href="admin.css?v=4">
+<link rel="stylesheet" href="admin.css?v=5">
 </head>
 <body class="ad-body">
 
@@ -59,6 +59,7 @@
         <h2>Kommende Termine</h2>
         <button type="button" class="ad-refresh" id="refresh">Neu laden</button>
       </div>
+      <div id="reservedHint" class="ad-resv-hint" hidden></div>
       <div id="bookings" class="ad-list"></div>
     </section>
 
@@ -85,6 +86,11 @@
 
       <h2 style="margin-top:34px">Aktuell gesperrt</h2>
       <div id="blocked" class="ad-list"></div>
+
+      <h2 style="margin-top:34px" id="reservedHead">Reservierungen w&auml;hrend der Zahlung</h2>
+      <p class="ad-hint">Termine, bei denen gerade jemand auf der Zahlseite ist. Sie werden nach sp&auml;testens 40&nbsp;Minuten von selbst frei. Bleibt einer h&auml;ngen oder blockiert etwas, gibst du ihn hier <b>sofort</b> frei &ndash; die offene Zahlseite wird dabei geschlossen. Feste Buchungen tauchen hier nicht auf, die sagst du unter &bdquo;Termine&ldquo; ab.</p>
+      <div id="reserved" class="ad-list"></div>
+      <button type="button" class="ad-danger" id="releaseAll" hidden>Alle Reservierungen freigeben</button>
     </section>
 
     <!-- Codes -->
@@ -277,6 +283,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
       renderBookings();
       renderBlockDates();
       renderBlocked();
+      renderReserved();
       renderSettings();
     }).catch(function (e) { if (e.message !== 'abgemeldet') note(e.message, true); });
   }
@@ -386,6 +393,64 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
       };
     });
   }
+
+  /* ---------- Reservierungen freigeben ---------- */
+  function hhmm(iso) {
+    var d = new Date(iso);
+    return isNaN(d) ? '' : ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2);
+  }
+  function renderReserved() {
+    var list = state.data.bookings.filter(function (b) { return b.status === 'pending'; });
+    var hint = el('reservedHint');
+    if (list.length) {
+      hint.innerHTML = (list.length === 1 ? '1 Termin ist' : list.length + ' Termine sind')
+        + ' gerade w&auml;hrend der Zahlung reserviert. <button type="button" class="ad-linkbtn" id="toReserved">Ansehen &amp; freigeben</button>';
+      hint.hidden = false;
+      el('toReserved').onclick = function () {
+        document.querySelector('.ad-tab[data-tab="sperren"]').click();
+        el('reservedHead').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      };
+    } else {
+      hint.hidden = true;
+    }
+
+    el('reserved').innerHTML = list.map(function (b) {
+      return '<div class="ad-card ad-card-sm"><div><b>' + esc(dshort(b.date)) + ' &middot; ' + esc(b.start) + '–' + esc(b.end) + '</b><br>'
+        + '<span class="ad-meta">' + esc(b.name) + ' &middot; ' + esc(b.email)
+        + (b.created ? ' &middot; seit ' + esc(hhmm(b.created)) + ' Uhr' : '') + '</span></div>'
+        + '<button type="button" class="ad-undo" data-release="' + esc(b.date + '|' + b.slot_id) + '">Freigeben</button></div>';
+    }).join('') || '<div class="ad-empty">Gerade nichts reserviert.</div>';
+    el('releaseAll').hidden = list.length < 2;
+
+    Array.prototype.forEach.call(el('reserved').querySelectorAll('[data-release]'), function (b) {
+      b.onclick = function () {
+        var parts = b.getAttribute('data-release').split('|');
+        b.disabled = true;
+        api('release', { body: { date: parts[0], slotId: parts[1] } })
+          .then(function () { note('Termin ist wieder frei.'); return load(); })
+          .catch(function (e) { b.disabled = false; note(e.message, true); });
+      };
+    });
+  }
+  el('releaseAll').onclick = function () {
+    var btn = el('releaseAll');
+    if (btn.getAttribute('data-armed') !== '1') {
+      btn.setAttribute('data-armed', '1');
+      btn.textContent = 'Wirklich alle freigeben?';
+      setTimeout(function () { btn.removeAttribute('data-armed'); btn.textContent = 'Alle Reservierungen freigeben'; }, 4000);
+      return;
+    }
+    btn.disabled = true;
+    api('release', { body: { all: true } })
+      .then(function (d) {
+        btn.disabled = false;
+        btn.removeAttribute('data-armed');
+        btn.textContent = 'Alle Reservierungen freigeben';
+        note(d.released + ' freigegeben.' + (d.paid ? ' ' + d.paid + ' davon war gerade bezahlt und bleibt.' : ''));
+        return load();
+      })
+      .catch(function (e) { btn.disabled = false; note(e.message, true); });
+  };
 
   /* ---------- Codes ---------- */
   var searchTimer;
