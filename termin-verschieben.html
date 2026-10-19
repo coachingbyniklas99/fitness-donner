@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#15171C">
+<title>Termin verschieben | Fitness Donner</title>
+<meta name="description" content="Deinen gebuchten Termin bei Fitness Donner selbst verschieben.">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="style.css?v=23">
+<link rel="stylesheet" href="gutschein.css?v=1">
+<link rel="stylesheet" href="termin.css?v=9">
+</head>
+<body>
+<nav>
+  <div class="wrap nav-inner">
+    <a href="index.html" aria-label="Fitness Donner - Startseite"><svg width="140" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
+  <text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text>
+  <polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"/>
+</svg></a>
+    <div class="nav-links" id="navLinks">
+      <a href="preise.html" class="nav-solo">Preise</a>
+      <a href="gutschein.html" class="nav-solo">Gutscheine</a>
+      <a href="ueber-mich.html">&Uuml;ber mich</a>
+      <a href="faq.html">FAQ</a>
+      <a class="nav-book" href="termin-buchen.html?art=probe">
+        <span class="nb-t">Probetraining buchen &middot; 29&nbsp;&euro;</span>
+        <span class="nb-s">60 Minuten in Solingen &middot; wird angerechnet</span>
+      </a>
+      <div class="nav-kontakt">
+        <a href="tel:+491776311404">Anrufen</a>
+        <a href="https://wa.me/491776311404">WhatsApp</a>
+      </div>
+    </div>
+    <a class="btn btn-blitz btn-sm nav-cta" href="termin-buchen.html">Termin buchen</a>
+    <button class="menu-btn" aria-label="Men&uuml; &ouml;ffnen" onclick="document.getElementById('navLinks').classList.toggle('open');this.textContent=this.textContent==='☰'?'✕':'☰'">&#9776;</button>
+  </div>
+</nav>
+<header class="page-hero">
+  <div class="wrap">
+    <div class="eyebrow">Dein Termin</div>
+    <h1>Termin<br>verschieben.</h1>
+    <p class="hero-sub">Bis 12&nbsp;Stunden vorher verschiebst du deinen Termin selbst &ndash; such dir einfach einen neuen aus.</p>
+  </div>
+</header>
+
+<section style="padding-top:40px;padding-bottom:80px">
+  <div class="wrap" style="max-width:860px">
+    <div id="loading" class="gs-loading"><p>Dein Termin wird geladen &hellip;</p></div>
+    <div id="error" class="gs-error" hidden></div>
+
+    <div id="current" hidden>
+      <div class="tk-confirm">
+        <h3 id="cLabel">Personal Training</h3>
+        <div class="tk-line"><span class="k">Bisher</span><span class="v" id="cWhen"></span></div>
+        <div class="tk-line"><span class="k">Wo</span><span class="v" id="cWhere"></span></div>
+        <div class="tk-line" id="cLimitRow"><span class="k">Verschieben bis</span><span class="v" id="cLimit"></span></div>
+      </div>
+    </div>
+
+    <div id="blocked" hidden style="margin-top:22px">
+      <p id="blockedText" style="color:var(--muted)"></p>
+      <div class="gs-actions"><a class="btn btn-blitz" href="tel:+491776311404">0177 6311404 anrufen</a>
+        <a class="btn btn-ghost" href="https://wa.me/491776311404">WhatsApp</a></div>
+    </div>
+
+    <div id="picker" hidden style="margin-top:34px">
+      <h2 style="font-family:var(--display);text-transform:uppercase;font-weight:400;font-size:28px;margin:0 0 6px">Neuer Termin</h2>
+      <p class="small" id="cityHint" style="margin:0 0 18px"></p>
+      <div id="days"></div>
+      <p id="noSlots" class="tk-empty" hidden>Bis zu diesem Datum ist online gerade nichts frei. Ruf mich gern an &ndash; <a href="tel:+491776311404">0177 6311404</a>.</p>
+      <button type="button" class="tk-ortlink" id="moreDays" hidden>Mehr Tage anzeigen</button>
+
+      <div class="gs-summary" id="confirmBox" hidden style="margin-top:28px">
+        <div>
+          <div class="gs-sum-label">Neuer Termin</div>
+          <div class="gs-sum-value" id="newWhen" style="font-size:22px"></div>
+        </div>
+        <div class="gs-pay">
+          <button type="button" class="btn btn-blitz" id="moveBtn">Termin verschieben</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="done" hidden>
+      <div class="tk-confirm">
+        <h3>Verschoben</h3>
+        <div class="tk-line"><span class="k">Neu</span><span class="v" id="dWhen"></span></div>
+        <div class="tk-line"><span class="k">Wo</span><span class="v" id="dWhere"></span></div>
+      </div>
+      <p style="text-align:center;color:var(--muted);font-size:14px;margin-top:22px">Die Best&auml;tigung mit neuer Kalenderdatei ist per E-Mail zu dir unterwegs.</p>
+      <div class="gs-actions"><a class="btn btn-ghost" href="index.html">Zur Startseite</a></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <svg width="120" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
+  <text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text>
+  <polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"/>
+</svg>
+    <div class="legal">
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
+      <a href="buchungsbedingungen.html">Buchungsbedingungen</a>
+      <a href="gutschein-bedingungen.html">Gutscheinbedingungen</a>
+      <a href="widerruf.html" class="legal-widerruf" style="color:var(--blitz);font-weight:600">Vertrag widerrufen</a>
+    </div>
+    <div>&copy; 2026 Fitness Donner &middot; Solingen, Haan, K&ouml;ln &amp; Neuss</div>
+  </div>
+</footer>
+<script>
+var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.dev';
+(function () {
+  var el = function (id) { return document.getElementById(id); };
+  var id = new URLSearchParams(location.search).get('id') || '';
+  var WD = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+  var MO = ['Januar', 'Februar', 'M\u00e4rz', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+  function longDate(iso) { var d = new Date(iso + 'T12:00:00Z'); return WD[d.getUTCDay()] + ', ' + d.getUTCDate() + '. ' + MO[d.getUTCMonth()]; }
+  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function fail(t) { el('loading').hidden = true; var e = el('error'); e.textContent = t; e.hidden = false; }
+
+  var info = null, chosen = null, allSlots = [], showAllCities = false, dayLimit = 10;
+
+  if (!id) return fail('Der Link ist unvollst\u00e4ndig. Bitte nutz den Knopf \u201eTermin verschieben\u201c aus deiner Best\u00e4tigungsmail.');
+
+  Promise.all([
+    fetch(API_BASE + '/api/termin?id=' + encodeURIComponent(id)).then(function (r) { return r.json().then(function (d) { return { s: r.status, d: d }; }); }),
+    fetch(API_BASE + '/api/slots').then(function (r) { return r.json(); }),
+  ]).then(function (res) {
+    var t = res[0];
+    if (t.s !== 200) return fail(t.d.error || 'Der Termin konnte nicht geladen werden.');
+    info = t.d;
+    el('loading').hidden = true;
+    el('cLabel').textContent = info.label;
+    el('cWhen').textContent = longDate(info.date) + ', ' + info.start + '\u2013' + info.end + ' Uhr';
+    el('cWhere').textContent = info.place + ', ' + info.city;
+    el('cLimit').textContent = longDate(info.max_date) + (info.card ? ' (Ablauf deiner Karte)' : '');
+    el('current').hidden = false;
+    if (!info.can_move) {
+      el('cLimitRow').hidden = true;
+      el('blockedText').textContent = info.reason;
+      el('blocked').hidden = false;
+      return;
+    }
+    allSlots = (res[1].slots || []).filter(function (s) {
+      return s.date <= info.max_date && !(s.date === info.date && s.slotId === info.slot_id);
+    });
+    render();
+    el('picker').hidden = false;
+  }).catch(function () { fail('Keine Verbindung. Bitte lade die Seite neu oder ruf mich an: 0177 6311404.'); });
+
+  function render() {
+    var list = allSlots.filter(function (s) { return showAllCities || s.city === info.city; });
+    var cities = {}; allSlots.forEach(function (s) { cities[s.city] = 1; });
+    var others = Object.keys(cities).filter(function (c) { return c !== info.city; });
+    el('cityHint').innerHTML = showAllCities ? 'Alle Orte.' : 'Freie Zeiten in ' + esc(info.city) + '.'
+      + (others.length ? ' <button type="button" class="tk-ortlink" id="allCities">Auch in ' + esc(others.join(' oder ')) + '?</button>' : '');
+    var ac = el('allCities'); if (ac) ac.onclick = function () { showAllCities = true; render(); };
+
+    var byDay = {}; var order = [];
+    list.forEach(function (s) { if (!byDay[s.date]) { byDay[s.date] = []; order.push(s.date); } byDay[s.date].push(s); });
+    order.sort();
+    el('noSlots').hidden = order.length > 0;
+    el('moreDays').hidden = order.length <= dayLimit;
+    el('days').innerHTML = order.slice(0, dayLimit).map(function (d) {
+      return '<div style="margin-bottom:18px"><div style="font-weight:700;margin-bottom:8px">' + esc(longDate(d)) + '</div>'
+        + '<div class="tk-times">' + byDay[d].map(function (s) {
+          var on = chosen && chosen.date === s.date && chosen.slotId === s.slotId;
+          return '<button type="button" class="tk-time' + (on ? ' on' : '') + '" data-k="' + esc(s.date + '|' + s.slotId) + '">'
+            + '<span class="t">' + esc(s.start) + '&ndash;' + esc(s.end) + '</span><span class="c">' + esc(s.city) + '</span></button>';
+        }).join('') + '</div></div>';
+    }).join('');
+    Array.prototype.forEach.call(el('days').querySelectorAll('[data-k]'), function (b) {
+      b.onclick = function () {
+        var k = b.getAttribute('data-k');
+        chosen = allSlots.filter(function (s) { return s.date + '|' + s.slotId === k; })[0];
+        render();
+        el('newWhen').textContent = longDate(chosen.date) + ', ' + chosen.start + ' Uhr \u00b7 ' + chosen.city;
+        el('confirmBox').hidden = false;
+        el('confirmBox').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      };
+    });
+  }
+  el('moreDays').onclick = function () { dayLimit += 10; render(); };
+
+  el('moveBtn').onclick = function () {
+    if (!chosen) return;
+    var btn = el('moveBtn'); btn.disabled = true; btn.textContent = 'Einen Moment \u2026';
+    el('error').hidden = true;
+    fetch(API_BASE + '/api/verschieben', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: id, date: chosen.date, slotId: chosen.slotId }),
+    }).then(function (r) { return r.json().then(function (d) { return { s: r.status, d: d }; }); })
+      .then(function (res) {
+        if (res.s !== 200) {
+          btn.disabled = false; btn.textContent = 'Termin verschieben';
+          var e = el('error'); e.textContent = res.d.error || 'Das hat nicht geklappt.'; e.hidden = false;
+          if (res.s === 409) {
+            allSlots = allSlots.filter(function (s) { return !(s.date === chosen.date && s.slotId === chosen.slotId); });
+            chosen = null; el('confirmBox').hidden = true; render();
+          }
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          return;
+        }
+        el('current').hidden = true; el('picker').hidden = true;
+        el('dWhen').textContent = longDate(res.d.date) + ', ' + res.d.start + '\u2013' + res.d.end + ' Uhr';
+        el('dWhere').textContent = res.d.place + ', ' + res.d.city;
+        el('done').hidden = false;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      })
+      .catch(function () { btn.disabled = false; btn.textContent = 'Termin verschieben'; fail('Keine Verbindung. Bitte versuch es noch einmal.'); });
+  };
+})();
+</script>
+</body>
+</html>

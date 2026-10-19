@@ -88,8 +88,8 @@
       </div>
 
       <p style="text-align:center;color:var(--muted);font-size:14px;margin-top:22px;max-width:640px;margin-left:auto;margin-right:auto">
-        Du kannst doch nicht? Sag mir bis 24 Stunden vorher Bescheid, dann findet sich ein neuer Termin &ndash;
-        <a href="tel:+491776311404" style="color:var(--blitz)">0177 6311404</a>.
+        Du kannst doch nicht? Bis 12 Stunden vorher verschiebst du den Termin selbst &ndash; <a id="moveLink" href="#" style="color:var(--blitz)" hidden>hier</a><span id="moveMail">&uuml;ber den Knopf in deiner Best&auml;tigungsmail</span>.
+        K&uuml;rzerfristig ruf mich bitte an: <a href="tel:+491776311404" style="color:var(--blitz)">0177 6311404</a>.
       </p>
 
       <div class="gs-actions">
@@ -110,7 +110,9 @@
     <div class="legal">
       <a href="impressum.html">Impressum</a>
       <a href="datenschutz.html">Datenschutz</a>
+      <a href="buchungsbedingungen.html">Buchungsbedingungen</a>
       <a href="gutschein-bedingungen.html">Gutscheinbedingungen</a>
+      <a href="widerruf.html" class="legal-widerruf" style="color:var(--blitz);font-weight:600">Vertrag widerrufen</a>
     </div>
     <div>&copy; 2026 Fitness Donner &middot; Solingen, Haan, K&ouml;ln &amp; Neuss</div>
   </div>
@@ -148,6 +150,12 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     if (b.voucher_code) {
       document.getElementById('cVoucher').textContent = b.voucher_code + ' \u00b7 ' + b.voucher_formatted;
       document.getElementById('cVoucherRow').hidden = false;
+    }
+    if (b.id) {
+      var ml = document.getElementById('moveLink');
+      ml.href = 'termin-verschieben.html?id=' + encodeURIComponent(b.id);
+      ml.hidden = false;
+      document.getElementById('moveMail').hidden = true;
     }
     document.getElementById('box').hidden = false;
   }

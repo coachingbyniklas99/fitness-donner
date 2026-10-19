@@ -232,15 +232,15 @@
       </div>
 
       <div class="gs-field">
-        <label for="phone">Telefon</label>
-        <input type="text" id="phone" name="phone" autocomplete="tel">
-        <div class="small">Freiwillig &ndash; falls kurzfristig etwas dazwischenkommt.</div>
+        <label for="phone">Telefon <span class="req">*</span></label>
+        <input type="tel" id="phone" name="phone" required autocomplete="tel">
+        <div class="small">Falls kurzfristig etwas dazwischenkommt, erreiche ich dich so am schnellsten.</div>
       </div>
 
       <div class="gs-field">
         <label for="note">Worum geht es dir?</label>
         <textarea id="note" name="note" maxlength="300" placeholder="Ziele, Vorerfahrung, Beschwerden &ndash; alles, was ich vorher wissen sollte."></textarea>
-        <div class="small">Freiwillig. Was du hier schreibst, geht nur an mich &ndash; nicht in meinen Kalender und nicht in die Kalenderdatei. Du kannst es auch einfach pers&ouml;nlich besprechen.</div>
+        <div class="small">Freiwillig. Was du hier schreibst, steht nur in meinem Buchungssystem und in der Buchungsmail an mich &ndash; nicht in meinem Kalender und nicht in der Kalenderdatei. Schreibst du hier etwas zu deiner Gesundheit, willigst du ein, dass ich das f&uuml;r deine Trainingsplanung verarbeite (Art.&nbsp;9 DSGVO); das kannst du jederzeit widerrufen. Du kannst es auch einfach pers&ouml;nlich besprechen.</div>
       </div>
 
       <div class="gs-field" id="voucherField">
@@ -266,6 +266,12 @@
         <div class="gs-order-title">Deine Buchung</div>
         <ul id="orderList"></ul>
       </div>
+
+      <div class="gs-check" id="consentBox" style="margin:22px 0 4px">
+        <input type="checkbox" id="vorzeitig">
+        <label for="vorzeitig">Ich verlange ausdr&uuml;cklich, dass das Training schon vor Ablauf der 14-t&auml;gigen Widerrufsfrist beginnt. Mir ist bekannt, dass ich bei einem Widerruf f&uuml;r bereits erbrachte Trainings Wertersatz leiste und mein Widerrufsrecht erlischt, sobald alle Trainings erbracht sind. <span class="req">*</span></label>
+      </div>
+      <p class="small" style="margin:6px 0 18px">Es gelten meine <a href="buchungsbedingungen.html" target="_blank" rel="noopener" style="color:var(--blitz)">Buchungsbedingungen</a>. Alles zu deinem Widerrufsrecht steht in der <a href="buchungsbedingungen.html#widerruf" target="_blank" rel="noopener" style="color:var(--blitz)">Widerrufsbelehrung</a>.</p>
 
       <div class="gs-summary">
         <div>
@@ -299,7 +305,9 @@
     <div class="legal">
       <a href="impressum.html">Impressum</a>
       <a href="datenschutz.html">Datenschutz</a>
+      <a href="buchungsbedingungen.html">Buchungsbedingungen</a>
       <a href="gutschein-bedingungen.html">Gutscheinbedingungen</a>
+      <a href="widerruf.html" class="legal-widerruf" style="color:var(--blitz);font-weight:600">Vertrag widerrufen</a>
     </div>
     <div>&copy; 2026 Fitness Donner &middot; Solingen, Haan, K&ouml;ln &amp; Neuss</div>
   </div>
@@ -896,7 +904,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
         items.push('Termine buchst du später einzeln mit deinem Code');
       }
       items.push('12 Monate einlösbar');
-      items.push('Absage kostenlos bis 24 Stunden vorher');
+      items.push('Verschieben kostenlos bis 12 Stunden vorher');
 
       el('orderList').innerHTML = items.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('');
       el('sumValue').textContent = eur(c.total_cents || 0);
@@ -916,7 +924,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
       if (!n) lines.push('Noch kein Termin gewählt');
       lines.push(einheiten(n) + (n === 1 ? ' wird' : ' werden') + ' eingelöst, ' + einheiten(k.sessions_left - n)
         + (k.sessions_left - n === 1 ? ' bleibt' : ' bleiben') + ' frei');
-      lines.push('Absage kostenlos bis 24 Stunden vorher');
+      lines.push('Verschieben kostenlos bis 12 Stunden vorher');
       el('orderList').innerHTML = lines.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('');
       el('sumValue').textContent = 'bereits bezahlt';
       el('bookBtn').textContent = n > 1 ? n + ' Termine verbindlich buchen' : 'Verbindlich buchen';
@@ -937,7 +945,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     if (full > 0) items.push('Preis: ' + eur(full));
     if (applied > 0) items.push('Gutschein ' + state.voucher.code + ': −' + eur(applied));
     if (state.type === 'probe') items.push('Der Betrag wird auf dein erstes Training angerechnet');
-    items.push('Absage kostenlos bis 24 Stunden vorher');
+    items.push('Verschieben kostenlos bis 12 Stunden vorher');
 
     el('orderList').innerHTML = items.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('');
     el('sumValue').textContent = open > 0 ? eur(open) : 'kostenlos';
@@ -953,6 +961,11 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     clearError();
     var btn = el('bookBtn');
     var original = btn.textContent;
+    if (!el('phone').value.trim()) { el('phone').focus(); return fail('Bitte gib deine Telefonnummer an.'); }
+    if (!isRedeem() && !el('vorzeitig').checked) {
+      el('consentBox').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return fail('Bitte bestätige, dass das Training schon vor Ablauf der Widerrufsfrist beginnen darf.');
+    }
 
     if (isCard()) {
       btn.disabled = true;
@@ -961,6 +974,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           hold: HOLD,
+          vorzeitig: el('vorzeitig').checked,
           card: state.type,
           name: el('name').value,
           email: el('email').value,
@@ -1057,6 +1071,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         hold: HOLD,
+        vorzeitig: el('vorzeitig').checked,
         slotId: state.chosen.slotId, date: state.chosen.date, type: state.type,
         name: el('name').value, email: el('email').value,
         phone: el('phone').value, note: el('note').value,
@@ -1127,6 +1142,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     if (line) line.hidden = skip;
 
     el('toStep3').disabled = !ready3();
+    el('consentBox').hidden = redeem;   // Einheit einer gekauften Karte: kein neuer Vertrag
     renderRedeemNote();
     renderPicked();
   }

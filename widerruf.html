@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#15171C">
+<title>Vertrag widerrufen | Fitness Donner</title>
+<meta name="description" content="Hier widerrufst du einen Vertrag mit Fitness Donner &ndash; Termin, Karte oder Gutschein. Du bekommst sofort eine Eingangsbest&auml;tigung per E-Mail.">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="style.css?v=23">
+<link rel="stylesheet" href="gutschein.css?v=1">
+<link rel="stylesheet" href="termin.css?v=9">
+</head>
+<body>
+<nav>
+  <div class="wrap nav-inner">
+    <a href="index.html" aria-label="Fitness Donner - Startseite"><svg width="140" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
+  <text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text>
+  <polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"/>
+</svg></a>
+    <div class="nav-links" id="navLinks">
+      <a href="preise.html" class="nav-solo">Preise</a>
+      <a href="gutschein.html" class="nav-solo">Gutscheine</a>
+      <a href="ueber-mich.html">&Uuml;ber mich</a>
+      <a href="faq.html">FAQ</a>
+      <a class="nav-book" href="termin-buchen.html?art=probe">
+        <span class="nb-t">Probetraining buchen &middot; 29&nbsp;&euro;</span>
+        <span class="nb-s">60 Minuten in Solingen &middot; wird angerechnet</span>
+      </a>
+      <div class="nav-kontakt">
+        <a href="tel:+491776311404">Anrufen</a>
+        <a href="https://wa.me/491776311404">WhatsApp</a>
+      </div>
+    </div>
+    <a class="btn btn-blitz btn-sm nav-cta" href="termin-buchen.html">Termin buchen</a>
+    <button class="menu-btn" aria-label="Men&uuml; &ouml;ffnen" onclick="document.getElementById('navLinks').classList.toggle('open');this.textContent=this.textContent==='☰'?'✕':'☰'">&#9776;</button>
+  </div>
+</nav>
+<header class="page-hero">
+  <div class="wrap">
+    <div class="eyebrow">Rechtliches</div>
+    <h1>Vertrag<br>widerrufen.</h1>
+    <p class="hero-sub">Hier widerrufst du einen Vertrag mit mir &ndash; eine Buchung, eine 4er- oder 8er-Karte oder einen Gutschein. Nach dem Absenden bekommst du sofort eine Eingangsbest&auml;tigung per E-Mail.</p>
+  </div>
+</header>
+
+<section style="padding-top:40px;padding-bottom:80px">
+  <div class="wrap" style="max-width:760px">
+    <div id="error" class="gs-error" hidden></div>
+
+    <form class="gs-form" id="wForm" novalidate>
+      <h2>Deine Widerrufserkl&auml;rung</h2>
+      <p class="gs-sub">Hiermit widerrufe ich den unten genannten Vertrag.</p>
+
+      <div class="gs-row">
+        <div class="gs-field">
+          <label for="wName">Name <span class="req">*</span></label>
+          <input type="text" id="wName" required autocomplete="name">
+        </div>
+        <div class="gs-field">
+          <label for="wEmail">E-Mail <span class="req">*</span></label>
+          <input type="email" id="wEmail" required autocomplete="email">
+          <div class="small">Hierhin geht die Eingangsbest&auml;tigung.</div>
+        </div>
+      </div>
+
+      <div class="gs-field">
+        <label for="wVertrag">Welchen Vertrag widerrufst du? <span class="req">*</span></label>
+        <input type="text" id="wVertrag" required maxlength="300" placeholder="z.&nbsp;B. 4er-Karte, Code FD-&hellip;, gekauft am 13.10.2026">
+        <div class="small">Code, Termin oder Kaufdatum &ndash; damit ich den Vertrag zuordnen kann.</div>
+      </div>
+
+      <div class="gs-field">
+        <label for="wNachricht">Nachricht</label>
+        <textarea id="wNachricht" maxlength="1000" placeholder="Freiwillig"></textarea>
+      </div>
+
+      <div style="position:absolute;left:-5000px" aria-hidden="true">
+        <input type="text" id="wWebsite" tabindex="-1" autocomplete="off">
+      </div>
+
+      <div class="gs-summary">
+        <div>
+          <div class="gs-sum-label">Widerruf</div>
+          <div class="small" style="max-width:300px">Mit dem Klick ist dein Widerruf abgeschickt. Ob er wirksam ist, pr&uuml;fe ich danach und melde mich bei dir.</div>
+        </div>
+        <div class="gs-pay">
+          <button type="submit" class="btn btn-blitz" id="wBtn">Widerruf best&auml;tigen</button>
+        </div>
+      </div>
+      <p class="small" style="margin-top:18px">Du kannst auch einfach eine E-Mail an <a href="mailto:info@fitnessdonner.de" style="color:var(--blitz)">info@fitnessdonner.de</a> schreiben. Mehr zu deinem Widerrufsrecht in den <a href="buchungsbedingungen.html#widerruf" style="color:var(--blitz)">Buchungsbedingungen</a> und den <a href="gutschein-bedingungen.html#widerruf" style="color:var(--blitz)">Gutscheinbedingungen</a>.</p>
+    </form>
+
+    <div id="done" hidden>
+      <div class="tk-confirm">
+        <h3>Widerruf eingegangen</h3>
+        <div class="tk-line"><span class="k">Eingegangen am</span><span class="v" id="dWhen"></span></div>
+        <div class="tk-line"><span class="k">Vertrag</span><span class="v" id="dVertrag"></span></div>
+        <div class="tk-line"><span class="k">Best&auml;tigung an</span><span class="v" id="dEmail"></span></div>
+      </div>
+      <p style="text-align:center;color:var(--muted);font-size:14px;margin-top:22px">Die Eingangsbest&auml;tigung ist per E-Mail zu dir unterwegs. Ich pr&uuml;fe den Widerruf und melde mich pers&ouml;nlich.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <svg width="120" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
+  <text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text>
+  <polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"/>
+</svg>
+    <div class="legal">
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
+      <a href="buchungsbedingungen.html">Buchungsbedingungen</a>
+      <a href="gutschein-bedingungen.html">Gutscheinbedingungen</a>
+      <a href="widerruf.html" class="legal-widerruf" style="color:var(--blitz);font-weight:600">Vertrag widerrufen</a>
+    </div>
+    <div>&copy; 2026 Fitness Donner &middot; Solingen, Haan, K&ouml;ln &amp; Neuss</div>
+  </div>
+</footer>
+<script>
+var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.dev';
+(function () {
+  var el = function (id) { return document.getElementById(id); };
+  function fail(t) { var e = el('error'); e.textContent = t; e.hidden = false; window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  el('wForm').onsubmit = function (e) {
+    e.preventDefault();
+    el('error').hidden = true;
+    var body = {
+      name: el('wName').value.trim(), email: el('wEmail').value.trim(),
+      vertrag: el('wVertrag').value.trim(), nachricht: el('wNachricht').value.trim(),
+      website: el('wWebsite').value,
+    };
+    if (!body.name || !body.email || !body.vertrag) return fail('Bitte Name, E-Mail und den Vertrag angeben.');
+    var btn = el('wBtn'); btn.disabled = true; btn.textContent = 'Wird gesendet …';
+    fetch(API_BASE + '/api/widerruf', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json().then(function (d) { return { s: r.status, d: d }; }); })
+      .then(function (res) {
+        if (res.s !== 200) { btn.disabled = false; btn.textContent = 'Widerruf bestätigen'; return fail(res.d.error || 'Das hat nicht geklappt. Schreib mir bitte an info@fitnessdonner.de.'); }
+        el('dWhen').textContent = res.d.received_text || '';
+        el('dVertrag').textContent = body.vertrag;
+        el('dEmail').textContent = body.email;
+        el('wForm').hidden = true; el('done').hidden = false;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      })
+      .catch(function () { btn.disabled = false; btn.textContent = 'Widerruf bestätigen'; fail('Keine Verbindung. Bitte versuch es noch einmal oder schreib mir an info@fitnessdonner.de.'); });
+  };
+})();
+</script>
+</body>
+</html>
