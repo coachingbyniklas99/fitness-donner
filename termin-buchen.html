@@ -109,7 +109,7 @@
       <div class="tk-types">
         <button type="button" class="tk-type on" data-type="training">
           <div class="tk-type-name">Personal Training</div>
-          <div class="tk-type-price" data-price="training">99&nbsp;&euro;</div>
+          <div class="tk-type-price" data-price="training">119&nbsp;&euro;</div>
           <div class="tk-type-desc">60 Minuten 1:1. F&uuml;r alle, die schon wissen, was sie wollen.</div>
         </button>
         <button type="button" class="tk-type" data-type="probe">
@@ -119,13 +119,13 @@
         </button>
         <button type="button" class="tk-type" data-type="karte4">
           <div class="tk-type-name">4er-Karte</div>
-          <div class="tk-type-price" data-price="karte4">89&nbsp;&euro;</div>
-          <div class="tk-type-desc">Pro Einheit, 356&nbsp;&euro; gesamt. <b>Inklusive 1 Monat freies Training im New Forge.</b> Termine buchst du danach einzeln.</div>
+          <div class="tk-type-price" data-price="karte4">109&nbsp;&euro;</div>
+          <div class="tk-type-desc">Pro Einheit, <span data-total="karte4">436&nbsp;&euro;</span> gesamt. <b>Inklusive 1 Monat freies Training im New Forge.</b> Termine buchst du danach einzeln.</div>
         </button>
         <button type="button" class="tk-type" data-type="karte8">
           <div class="tk-type-name">8er-Karte</div>
-          <div class="tk-type-price" data-price="karte8">79&nbsp;&euro;</div>
-          <div class="tk-type-desc">Pro Einheit, 632&nbsp;&euro; gesamt. <b>Inklusive 2 Monate freies Training im New Forge.</b> Bester Preis pro Einheit.</div>
+          <div class="tk-type-price" data-price="karte8">99&nbsp;&euro;</div>
+          <div class="tk-type-desc">Pro Einheit, <span data-total="karte8">792&nbsp;&euro;</span> gesamt. <b>Inklusive 2 Monate freies Training im New Forge.</b> Bester Preis pro Einheit.</div>
         </button>
       </div>
 
@@ -276,7 +276,7 @@
       <div class="gs-summary">
         <div>
           <div class="gs-sum-label">Zu zahlen</div>
-          <div class="gs-sum-value" id="sumValue">99 &euro;</div>
+          <div class="gs-sum-value" id="sumValue">119 &euro;</div>
         </div>
         <div class="gs-pay">
           <button type="submit" class="btn btn-blitz" id="bookBtn">Zahlungspflichtig buchen</button>
@@ -466,7 +466,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     .then(function (d) {
       state.slots = d.slots || [];
       state.locations = d.locations || [];
-      state.prices = d.prices || { training: 9900, probe: 2900 };
+      state.prices = d.prices || { training: 11900, probe: 2900 };
       state.cards = d.cards || {};
       state.multiOk = !!d.multi_book;   // ältere Worker-Fassung: Karte nur Termin für Termin
       var t = document.querySelector('[data-price="training"]');
@@ -476,6 +476,8 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
       Object.keys(state.cards).forEach(function (k) {
         var e = document.querySelector('[data-price="' + k + '"]');
         if (e) e.textContent = eur(state.cards[k].unit_cents);
+        var g = document.querySelector('[data-total="' + k + '"]');
+        if (g) g.textContent = eur(state.cards[k].total_cents);
       });
       applyMode();
       if (draft) restoreDraft(draft); else preselect();

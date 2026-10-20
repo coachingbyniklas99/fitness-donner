@@ -112,7 +112,7 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
 }
 </style>
 </head>
-<body>
+<body class="nachher">
 <nav>
   <div class="wrap nav-inner">
     <a href="index.html" aria-label="Fitness Donner - Startseite"><svg width="140" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
@@ -157,18 +157,6 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
     <button class="menu-btn" aria-label="Men&uuml; &ouml;ffnen" onclick="document.getElementById('navLinks').classList.toggle('open');this.textContent=this.textContent==='☰'?'✕':'☰'">&#9776;</button>
   </div>
 </nav>
-<div class="deal" id="deal" hidden>
-  <div class="deal-in">
-    <div class="deal-txt" id="dealTxt">Neue Preise ab 1.&nbsp;Januar 2027</div>
-    <div class="cd" id="cd" hidden>
-      <div><b id="cdD">--</b><span>Tage</span></div>
-      <div><b id="cdH">--</b><span>Std</span></div>
-      <div><b id="cdM">--</b><span>Min</span></div>
-      <div><b id="cdS">--</b><span>Sek</span></div>
-    </div>
-    <div class="deal-sub">Bis dahin gelten die Preise unten. Was du vorher kaufst, beh&auml;lt seinen Preis &ndash; 12 Monate lang.</div>
-  </div>
-</div>
 <header class="page-hero">
   <div class="wrap">
     <div class="eyebrow">Preise</div>
@@ -197,15 +185,12 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
       </nav>
       <div class="price-grid four">
       <div class="price">
-        <div class="flag nur-vorher" data-ab>Nur bis 31.12.</div>
         <h3 id="k-probe">Probetraining</h3>
         <div class="preiszeile">
-          <span class="altbox nur-vorher" data-ab><em>ab Januar 2027</em><span class="alt">49&nbsp;&euro;</span></span>
-          <span class="amount" data-jetzt="29 &euro;" data-ab="49 &euro;">29 &euro;</span>
+          <span class="amount">29 &euro;</span>
         </div>
         <div class="per">einmalig &ndash; wird auf dein erstes Training angerechnet</div>
-        <div class="spar nur-vorher" data-ab>20&nbsp;&euro; g&uuml;nstiger als ab Januar</div>
-        <p class="desc" data-jetzt="Einmal komplett mittrainieren, bevor du dich entscheidest. Wenn du danach weitermachst, ziehe ich die 29&nbsp;&euro; wieder ab." data-ab="Einmal komplett mittrainieren, bevor du dich entscheidest. Wenn du danach weitermachst, ziehe ich die 49&nbsp;&euro; wieder ab.">Einmal komplett mittrainieren, bevor du dich entscheidest. Wenn du danach weitermachst, ziehe ich die 29&nbsp;&euro; wieder ab.</p>
+        <p class="desc">Einmal komplett mittrainieren, bevor du dich entscheidest. Wenn du danach weitermachst, ziehe ich die 29&nbsp;&euro; wieder ab.</p>
         <ul>
           <li>60 Minuten echtes Training</li>
           <li>Analyse deiner Technik und Belastbarkeit</li>
@@ -214,14 +199,11 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
         <a class="btn btn-ghost" href="termin-buchen.html?art=probe">Probetraining buchen</a>
       </div>
       <div class="price">
-        <div class="flag nur-vorher" data-ab>Nur bis 31.12.</div>
         <h3 id="k-einzel">Einzelstunde</h3>
         <div class="preiszeile">
-          <span class="altbox nur-vorher" data-ab><em>ab Januar 2027</em><span class="alt">119&nbsp;&euro;</span></span>
-          <span class="amount" data-jetzt="99 &euro;" data-ab="119 &euro;">99 &euro;</span>
+          <span class="amount">119 &euro;</span>
         </div>
-        <div class="per" data-jetzt="pro Einheit" data-ab="pro Einheit">pro Einheit</div>
-        <div class="spar nur-vorher" data-ab>20&nbsp;&euro; g&uuml;nstiger als ab Januar</div>
+        <div class="per">pro Einheit</div>
         <p class="desc">F&uuml;r den flexiblen Einstieg, gezielte Technik-Checks oder als Erg&auml;nzung zu deinem eigenen Training.</p>
         <ul>
           <li>60 Minuten volles 1:1-Coaching</li>
@@ -234,11 +216,9 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
         <div class="pop">Beliebteste Wahl</div>
         <h3 id="k-4er">4er-Karte</h3>
         <div class="preiszeile">
-          <span class="altbox nur-vorher" data-ab><em>ab Januar 2027</em><span class="alt">109&nbsp;&euro;</span></span>
-          <span class="amount" data-jetzt="89 &euro;" data-ab="109 &euro;">89 &euro;</span>
+          <span class="amount">109 &euro;</span>
         </div>
-        <div class="per" data-jetzt="pro Einheit &middot; 356 &euro; gesamt" data-ab="pro Einheit &middot; 436 &euro; gesamt">pro Einheit &middot; 356 &euro; gesamt</div>
-        <div class="spar nur-vorher" data-ab>80&nbsp;&euro; gespart &ndash; 356&nbsp;&euro; statt 436&nbsp;&euro;</div>
+        <div class="per">pro Einheit &middot; 436 &euro; gesamt</div>
         <p class="desc">Vier Einheiten am St&uuml;ck &ndash; und dazu einen Monat lang das ganze Studio, auch an den Tagen, an denen wir uns nicht sehen.</p>
         <div class="inkl">
           <div class="inkl-kopf">Ohne Aufpreis mit dabei</div>
@@ -254,14 +234,11 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
         <a class="btn btn-blitz" href="termin-buchen.html?art=karte4">4er-Karte kaufen</a>
       </div>
       <div class="price">
-        <div class="flag nur-vorher" data-ab>Nur bis 31.12.</div>
         <h3 id="k-8er">8er-Karte</h3>
         <div class="preiszeile">
-          <span class="altbox nur-vorher" data-ab><em>ab Januar 2027</em><span class="alt">99&nbsp;&euro;</span></span>
-          <span class="amount" data-jetzt="79 &euro;" data-ab="99 &euro;">79 &euro;</span>
+          <span class="amount">99 &euro;</span>
         </div>
-        <div class="per" data-jetzt="pro Einheit &middot; 632 &euro; gesamt" data-ab="pro Einheit &middot; 792 &euro; gesamt">pro Einheit &middot; 632 &euro; gesamt</div>
-        <div class="spar nur-vorher" data-ab>160&nbsp;&euro; gespart &ndash; 632&nbsp;&euro; statt 792&nbsp;&euro;</div>
+        <div class="per">pro Einheit &middot; 792 &euro; gesamt</div>
         <p class="desc">Der beste Preis pro Stunde &ndash; und zwei Monate, in denen dir das Studio offensteht, mit mir und ohne mich.</p>
         <div class="inkl">
           <div class="inkl-kopf">Ohne Aufpreis mit dabei</div>
@@ -279,8 +256,7 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
     </div>
 
     <div class="garantie" id="garantie">
-      <p id="garVor"><b id="garTitel">Warum die Preise steigen:</b> Die Geb&uuml;hren f&uuml;rs Studio in Solingen erh&ouml;hen sich voraussichtlich &ndash; das ist ab dem 1.&nbsp;Januar 2027 einkalkuliert. <b>Was du bis zum 31.&nbsp;Dezember kaufst, beh&auml;ltst du zum alten Preis</b> und hast danach 12 Monate Zeit, es einzul&ouml;sen.</p>
-      <p id="garNach" hidden>Seit dem 1.&nbsp;Januar 2027 gelten die Preise oben. Karten, die du vorher gekauft hast, behalten ihren alten Preis &ndash; du l&ouml;st sie einfach wie gewohnt bei der Terminbuchung ein.</p>
+      <p>Schon gekaufte 4er- und 8er-Karten behalten ihren Preis &ndash; du l&ouml;st sie einfach wie gewohnt bei der Terminbuchung ein.</p>
     </div>
 
     <div class="ort-note" style="margin-top:28px"><b>Noch unsicher?</b> Nimm das <a href="termin-buchen.html?art=probe" style="color:var(--blitz)">Probetraining f&uuml;r <span data-preis-probe>29&nbsp;&euro;</span></a> &ndash; eine volle Stunde, kein Verkaufsgespr&auml;ch, und die <span data-preis-probe>29&nbsp;&euro;</span> ziehe ich dir vom ersten regul&auml;ren Training wieder ab. Termin aussuchen und bezahlen geht direkt auf der <a href="termin-buchen.html" style="color:var(--blitz)">Terminseite</a>, einen Gutschein- oder Kartencode l&ouml;st du dabei gleich mit ein. Wenn vorher noch etwas offen ist: <a href="tel:+491776311404" style="color:var(--blitz)">0177 6311404 anrufen</a> oder <a href="https://wa.me/491776311404" style="color:var(--blitz)">per WhatsApp schreiben</a>.</div>
@@ -335,50 +311,6 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
 <script>
 (function(){var n=document.getElementById('navLinks'),b=document.querySelector('.menu-btn');
 if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&!a.classList.contains('sub-toggle')){n.classList.remove('open');b.textContent='☰';}});}})();
-</script>
-<script>
-/* Preisumstellung: bis 14.11. nur Ankuendigung, danach Countdown,
-   ab 01.01.2027 stehen automatisch die neuen Preise da. */
-(function(){
-  var TIMER_AB = new Date('2026-11-15T00:00:00+01:00').getTime();
-  var UMSTELLUNG = new Date('2027-01-01T00:00:00+01:00').getTime();
-  var deal = document.getElementById('deal'), cd = document.getElementById('cd');
-  var d=document.getElementById('cdD'),h=document.getElementById('cdH'),
-      m=document.getElementById('cdM'),sk=document.getElementById('cdS');
-  function p(n){return n<10?'0'+n:''+n;}
-
-  function neuePreise(){
-    Array.prototype.forEach.call(document.querySelectorAll('[data-ab]'), function(el){
-      /* Alles, was nur den Vergleich zeigt, verschwindet - Eckfahne, "ab Januar", alter Preis, Sparzeile. */
-      if (el.classList.contains('nur-vorher')) { el.hidden = true; return; }
-      if (el.dataset.ab) el.innerHTML = el.dataset.ab;
-    });
-    document.body.classList.add('nachher');
-    Array.prototype.forEach.call(document.querySelectorAll('[data-preis-probe]'), function(el){
-      el.innerHTML = '49&nbsp;&euro;';
-    });
-    document.getElementById('garVor').hidden = true;
-    document.getElementById('garNach').hidden = false;
-    deal.hidden = true;
-  }
-
-  function tick(){
-    var jetzt = Date.now(), rest = UMSTELLUNG - jetzt;
-    if (rest <= 0) { neuePreise(); return true; }
-    deal.hidden = false;
-    if (jetzt >= TIMER_AB) {
-      cd.hidden = false;
-      var sek = Math.floor(rest/1000);
-      d.textContent = Math.floor(sek/86400);
-      h.textContent = p(Math.floor(sek%86400/3600));
-      m.textContent = p(Math.floor(sek%3600/60));
-      sk.textContent = p(sek%60);
-      document.getElementById('dealTxt').innerHTML = 'Aktuelle Preise noch bis 31.&nbsp;Dezember';
-    }
-    return false;
-  }
-  if (!tick()) setInterval(tick, 1000);
-})();
 </script>
 <script>
 /* Umschalter und Sprungleiste. Beides ohne Bibliothek, damit die Seite
