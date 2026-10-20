@@ -552,3 +552,27 @@ footer{border-top:1px solid var(--line);padding:44px 0;font-size:13px;color:var(
 .kplan-leer h3{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(21px,3vw,28px);letter-spacing:.03em}
 .kplan-leer p{color:#c9cbd0;font-size:15.5px;max-width:560px;margin:12px auto 0}
 .kplan-leer .hero-ctas{justify-content:center;margin-top:22px}
+
+/* ---------- Partnerleiste (Startseite, über dem Footer) ---------- */
+.partner{padding:64px 0 72px;border-top:1px solid var(--line);background:var(--panel)}
+.partner-h{font-size:clamp(20px,2.4vw,26px);text-align:center;letter-spacing:.04em;text-transform:uppercase;margin:0 0 40px}
+.partner-logos{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:36px 48px}
+.partner-logos li{display:flex;align-items:center;justify-content:center}
+.partner-logos a{display:block;line-height:0;opacity:.7;transition:opacity .2s}
+.partner-logos a:hover,.partner-logos a:focus-visible{opacity:1}
+.partner-logos img{display:block;width:auto;height:30px;filter:brightness(0) invert(1)}
+.partner-logos .pl-iron{height:58px}
+.partner-logos .pl-usc{height:36px}
+.partner-logos .pl-wellhub{height:30px}
+.partner-logos .pl-newforge{height:40px}
+@media (max-width:760px){
+  .partner{padding:48px 0 56px}
+  .partner-h{margin-bottom:28px}
+  .partner-logos{justify-content:center;gap:28px 36px}
+  .partner-logos li{flex:0 0 calc(50% - 18px)}
+  .partner-logos img{height:24px}
+  .partner-logos .pl-iron{height:48px}
+  .partner-logos .pl-usc{height:30px}
+  .partner-logos .pl-wellhub{height:24px}
+  .partner-logos .pl-newforge{height:32px}
+}
