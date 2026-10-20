@@ -9,14 +9,14 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#15171C">
 <title>Personal Trainer Solingen & Haan – Studio in Ohligs | Fitness Donner</title>
-<meta name="description" content="1:1 Personal Training in Solingen & Haan – im New Forge in Solingen-Ohligs, privater Trainingsraum. Oder draußen. Außerdem im Iron&Soul Köln & Neuss und online. 5,0 Sterne bei 74 Google-Bewertungen.">
+<meta name="description" content="1:1 Personal Training in Solingen & Haan – im New Forge in Solingen-Ohligs, privater Trainingsraum. Oder draußen. Außerdem im Iron&Soul Köln & Neuss und online. 5,0 Sterne auf Google.">
 <link rel="canonical" href="https://fitnessdonner.de/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Fitness Donner">
 <meta property="og:locale" content="de_DE">
 <meta property="og:url" content="https://fitnessdonner.de/">
 <meta property="og:title" content="Personal Trainer Solingen & Haan – Studio in Ohligs | Fitness Donner">
-<meta property="og:description" content="1:1 Personal Training in Solingen & Haan – im New Forge in Ohligs oder draußen. Außerdem im Iron&Soul Köln & Neuss und online. 5,0 Sterne bei 74 Google-Bewertungen.">
+<meta property="og:description" content="1:1 Personal Training in Solingen & Haan – im New Forge in Ohligs oder draußen. Außerdem im Iron&Soul Köln & Neuss und online. 5,0 Sterne auf Google.">
 <meta property="og:image" content="https://fitnessdonner.de/og-bild.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -129,7 +129,7 @@
       <a class="btn btn-ghost" href="https://wa.me/491776311404">Fragen? WhatsApp schreiben</a>
     </div>
     <p class="cta-tel">Oder ruf einfach an: <a href="tel:+491776311404">0177&nbsp;6311404</a></p>
-    <p class="hero-note"><a href="https://www.google.com/maps?cid=329045397772977203" target="_blank" rel="noopener"><span class="star">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 5,0 auf Google &middot; 74 Bewertungen</a></p>
+    <p class="hero-note"><a href="https://www.google.com/maps?cid=329045397772977203" target="_blank" rel="noopener"><span class="star">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <span data-g-rating>5,0</span> auf Google &middot; <span data-g-count>80</span> Bewertungen</a></p>
   </div>
 </header>
 <div class="pband">
@@ -219,10 +219,10 @@
         <h2>Das sagen Kunden.</h2>
       </div>
       <div class="rev-score">
-        <div class="rev-score-num">5,0</div>
+        <div class="rev-score-num" data-g-rating>5,0</div>
         <div>
           <div class="stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <div class="rev-score-sub">74 Bewertungen auf Google</div>
+          <div class="rev-score-sub"><span data-g-count>80</span> Bewertungen auf Google</div>
         </div>
       </div>
     </div>
@@ -279,7 +279,7 @@
 
     <div class="slider-dots" id="revDots" aria-hidden="true"></div>
 
-    <div class="placeholder-note" style="margin-top:26px"><a href="https://www.google.com/maps?cid=329045397772977203" target="_blank" rel="noopener" style="color:var(--blitz);text-decoration:underline">Alle 74 Rezensionen auf Google lesen &rarr;</a><br><span style="font-size:13px;display:inline-block;margin-top:10px">Die hier gezeigten Stimmen sind eine Auswahl aus meinen &ouml;ffentlichen Google-Rezensionen. Die Echtheitspr&uuml;fung erfolgt durch Google; ich kaufe keine Bewertungen und l&ouml;sche keine. &Uuml;ber den Link siehst du alle Bewertungen ungefiltert.</span></div>
+    <div class="placeholder-note" style="margin-top:26px"><a href="https://www.google.com/maps?cid=329045397772977203" target="_blank" rel="noopener" style="color:var(--blitz);text-decoration:underline">Alle <span data-g-count>80</span> Rezensionen auf Google lesen &rarr;</a><br><span style="font-size:13px;display:inline-block;margin-top:10px">Die hier gezeigten Stimmen sind eine Auswahl aus meinen &ouml;ffentlichen Google-Rezensionen. Die Echtheitspr&uuml;fung erfolgt durch Google; ich kaufe keine Bewertungen und l&ouml;sche keine. &Uuml;ber den Link siehst du alle Bewertungen ungefiltert.</span></div>
   </div>
 </section>
 <section class="cta">
@@ -373,6 +373,21 @@ if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a
   t.addEventListener('scroll',function(){window.clearTimeout(t._s);t._s=window.setTimeout(sync,80);});
   window.addEventListener('resize',function(){window.clearTimeout(t._r);t._r=window.setTimeout(build,150);});
   build();
+})();
+</script>
+<script>
+/* Google-Bewertungen: Zahl und Schnitt live aus dem Buchungssystem (das fragt alle paar Stunden bei Google nach).
+   Klappt das nicht, bleiben die Werte stehen, die hier im HTML stehen. */
+(function(){
+  var c = document.querySelectorAll('[data-g-count]'), r = document.querySelectorAll('[data-g-rating]');
+  if (!c.length && !r.length) return;
+  fetch('https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.dev/api/bewertungen')
+    .then(function(x){ return x.ok ? x.json() : null; })
+    .then(function(d){
+      if (!d || !d.count) return;
+      Array.prototype.forEach.call(c, function(e){ e.textContent = d.count; });
+      if (d.rating) Array.prototype.forEach.call(r, function(e){ e.textContent = Number(d.rating).toFixed(1).replace('.', ','); });
+    }).catch(function(){});
 })();
 </script>
 </body>

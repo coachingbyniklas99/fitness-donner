@@ -238,10 +238,10 @@
         <h2>Das sagen Kunden.</h2>
       </div>
       <div class="rev-score">
-        <div class="rev-score-num">5,0</div>
+        <div class="rev-score-num" data-g-rating>5,0</div>
         <div>
           <div class="stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <div class="rev-score-sub">74 Bewertungen auf Google</div>
+          <div class="rev-score-sub"><span data-g-count>80</span> Bewertungen auf Google</div>
         </div>
       </div>
     </div>
@@ -287,7 +287,7 @@
       </div>
       <button class="slider-nav next" type="button" aria-label="N&auml;chste Bewertungen">&#8250;</button>
     </div>
-    <div class="placeholder-note" style="margin-top:22px"><a href="https://www.google.com/maps?cid=329045397772977203" target="_blank" rel="noopener" style="color:var(--blitz);text-decoration:underline">Alle 74 Rezensionen auf Google lesen &rarr;</a></div>
+    <div class="placeholder-note" style="margin-top:22px"><a href="https://www.google.com/maps?cid=329045397772977203" target="_blank" rel="noopener" style="color:var(--blitz);text-decoration:underline">Alle <span data-g-count>80</span> Rezensionen auf Google lesen &rarr;</a></div>
   </div>
 </section>
 <section style="padding-top:0">
@@ -367,5 +367,20 @@
 if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&!a.classList.contains('sub-toggle')){n.classList.remove('open');b.textContent='☰';}});}})();
 </script>
 <script src="ui.js" defer></script>
+<script>
+/* Google-Bewertungen: Zahl und Schnitt live aus dem Buchungssystem (das fragt alle paar Stunden bei Google nach).
+   Klappt das nicht, bleiben die Werte stehen, die hier im HTML stehen. */
+(function(){
+  var c = document.querySelectorAll('[data-g-count]'), r = document.querySelectorAll('[data-g-rating]');
+  if (!c.length && !r.length) return;
+  fetch('https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.dev/api/bewertungen')
+    .then(function(x){ return x.ok ? x.json() : null; })
+    .then(function(d){
+      if (!d || !d.count) return;
+      Array.prototype.forEach.call(c, function(e){ e.textContent = d.count; });
+      if (d.rating) Array.prototype.forEach.call(r, function(e){ e.textContent = Number(d.rating).toFixed(1).replace('.', ','); });
+    }).catch(function(){});
+})();
+</script>
 </body>
 </html>
