@@ -75,6 +75,10 @@
       '<div class="ad-field"><label><input type="checkbox" id="wvTS" style="width:auto;margin-right:8px">Echten Code in Stripe anlegen</label></div>' +
       '<button type="button" class="btn btn-blitz" id="wvTest">Testmail senden</button></div>' +
 
+      '<h2 style="margin-top:30px">Alle Kundenmails testen</h2>' +
+      '<p class="ad-hint">Schickt jede Mail, die ein Kunde bekommen kann (Termin, Erinnerung, Verschieben, Absage, Karte, Gutschein, Rechnung, Wiedervorlage, Kurs), einmal mit Beispieldaten an deine Inhaber-Adresse. Es wird nichts gebucht, bezahlt oder gespeichert. Das sind etwa 18 Mails, es dauert rund 20 Sekunden.</p>' +
+      '<div class="ad-card"><button type="button" class="btn btn-blitz" id="wvAlle">Alle Test-Kundenmails senden</button><div class="ad-meta" id="wvAlleErg" style="margin-top:12px"></div></div>' +
+
       '<h2 style="margin-top:30px">Einwilligung eintragen (Altkunden)</h2>' +
       '<p class="ad-hint">Für Kunden, die vor dem Werbehinweis gebucht haben und dir ausdrücklich zugestimmt haben (z. B. mündlich). Trag Datum und Umstand mit ein – im Streitfall musst du die Einwilligung nachweisen können.</p>' +
       '<div class="ad-card"><div class="ad-field"><label for="wvCE">E-Mail-Adresse</label><input type="email" id="wvCE"></div>' +
@@ -163,6 +167,16 @@
         .then(function () { b.disabled = false; b.textContent = 'Testmail senden'; });
     };
 
+    q('#wvAlle').onclick = function () {
+      var b = this, erg = q('#wvAlleErg');
+      if (!armed(b, 'Wirklich senden?')) return;
+      b.disabled = true; b.textContent = 'Wird gesendet …'; erg.textContent = '';
+      A.api('wv/mailtest', { body: {} }).then(function (r) {
+        var ok = r.ergebnis.filter(function (x) { return x.ok; }).length;
+        erg.innerHTML = ok + ' von ' + r.ergebnis.length + ' Mails an ' + esc(r.an) + ' gesendet.' +
+          r.ergebnis.filter(function (x) { return !x.ok; }).map(function (x) { return '<br><span class="ak-warn">' + esc(x.titel) + ': ' + esc(x.fehler) + '</span>'; }).join('');
+      }).catch(fail).then(function () { b.disabled = false; b.textContent = 'Alle Test-Kundenmails senden'; });
+    };
     q('#wvCAdd').onclick = function () {
       A.api('wv/einwilligung', { body: { email: v('wvCE').value, notiz: v('wvCN').value } })
         .then(function () { A.note('Einwilligung gespeichert.'); return laden(); }).catch(fail);
