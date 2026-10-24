@@ -87,7 +87,8 @@
       if (leer) {
         html += '<div class="kp-bald"><div class="kp-bald-titel">Der Kursplan steht bald.</div>'
           + '<p>Die festen Kurszeiten im New Forge stimme ich gerade ab. Sobald sie stehen, findest du hier jeden Tag die Kurse mit freien Plätzen &ndash; direkt buchbar, als Einzelticket oder 5er- und 10er-Karte.</p>'
-          + '<a class="btn btn-blitz btn-sm" href="https://wa.me/491776311404?text=Hi%20Niklas%2C%20sag%20mir%20Bescheid%2C%20wenn%20der%20Kursplan%20steht." target="_blank" rel="noopener">Bescheid sagen lassen</a></div>';
+          + '<a class="btn btn-blitz btn-sm" href="https://wa.me/491776311404?text=Hi%20Niklas%2C%20sag%20mir%20Bescheid%2C%20wenn%20der%20Kursplan%20steht." target="_blank" rel="noopener">Bescheid sagen lassen</a> '
+          + '<a class="btn btn-ghost btn-sm" href="https://whatsapp.com/channel/0029Vb9Sacj9xVJgW1Vm7O2Z" target="_blank" rel="noopener">Im WhatsApp-Kanal bleiben</a></div>';
       } else if (!liste.length) {
         var n = naechster(plus(S.tag, 1));
         html += '<div class="kp-leer">An diesem Tag gibt es keine Kurse.' + (n ? '<br><button type="button" class="btn btn-ghost btn-sm" data-kp-tag="' + n + '">Nächster Kurstag: ' + kurz(n) + '</button>' : '') + '</div>';
