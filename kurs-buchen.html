@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#15171C">
+<title>Kurs buchen | Fitness Donner</title>
+<meta name="description" content="Kursplatz im New Forge Solingen-Ohligs sichern: Einzelticket oder 5er- und 10er-Karte mit festen Terminen. Termine stehen vor dem Kauf fest.">
+<link rel="canonical" href="https://fitnessdonner.de/kurs-buchen.html">
+<link rel="stylesheet" href="style.css?v=23">
+<link rel="stylesheet" href="gutschein.css?v=2">
+<link rel="stylesheet" href="termin.css?v=9">
+<link rel="stylesheet" href="kursplan.css?v=1">
+<link rel="stylesheet" href="kurs.css?v=2">
+</head>
+<body>
+<nav>
+  <div class="wrap nav-inner">
+    <a href="index.html" aria-label="Fitness Donner - Startseite"><svg width="140" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
+  <text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text>
+  <polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"/>
+</svg></a>
+    <div class="nav-links" id="navLinks">
+      <div class="has-sub">
+        <a href="#" class="sub-toggle" onclick="event.preventDefault();this.parentElement.classList.toggle('sub-open')">Personal Training</a>
+        <div class="sub">
+          <div class="sub-group">Vor Ort</div>
+          <a href="personal-training-solingen.html">Solingen &amp; Haan<span class="loc">New Forge Ohligs oder drau&szlig;en</span></a>
+          <a href="personal-training-koeln.html">K&ouml;ln<span class="loc">Iron&amp;Soul Zollstock</span></a>
+          <a href="personal-training-neuss.html">Neuss<span class="loc">Iron&amp;Soul R&ouml;merstra&szlig;e</span></a>
+          <div class="sub-group">Ortsunabh&auml;ngig</div>
+          <a href="online.html">Online-Coaching<span class="loc">von &uuml;berall</span></a>
+        </div>
+      </div>
+      <a href="kurse.html" class="nav-solo">Kurse</a>
+      <div class="has-sub">
+        <a href="#" class="sub-toggle" onclick="event.preventDefault();this.parentElement.classList.toggle('sub-open')">Schwerpunkte</a>
+        <div class="sub">
+          <a href="hyrox.html">Hyrox</a>
+          <a href="personal-training-rueckenschmerzen.html">Gesundheitstraining</a>
+        </div>
+      </div>
+      <a href="preise.html" class="nav-solo">Preise</a>
+      <a href="gutschein.html" class="nav-solo">Gutscheine</a>
+      <a href="ueber-mich.html">&Uuml;ber mich</a>
+      <a href="faq.html">FAQ</a>
+      <a class="nav-book" href="termin-buchen.html?art=probe">
+        <span class="nb-t">Probetraining buchen &middot; <span data-preis-probe>29&nbsp;&euro;</span></span>
+        <span class="nb-s">60 Minuten in Solingen &middot; wird angerechnet</span>
+      </a>
+      <div class="nav-kontakt">
+        <a href="tel:+491776311404">Anrufen</a>
+        <a href="https://wa.me/491776311404">WhatsApp</a>
+      </div>
+    </div>
+    <a class="btn btn-blitz btn-sm nav-cta" href="termin-buchen.html">Termin buchen</a>
+    <button class="menu-btn" aria-label="Men&uuml; &ouml;ffnen" onclick="document.getElementById('navLinks').classList.toggle('open');this.textContent=this.textContent==='☰'?'✕':'☰'">&#9776;</button>
+  </div>
+</nav>
+
+<header class="page-hero tk-hero ku-hero">
+  <div class="wrap">
+    <div class="eyebrow">Kurse &middot; New Forge Solingen</div>
+    <h1>Kurs buchen.</h1>
+    <p class="hero-sub">Termin w&auml;hlen, dann Einzelticket oder Karte &ndash; du siehst vor dem Kauf genau, welche Termine du bekommst.</p>
+  </div>
+</header>
+
+<div class="tk-steps" id="stepBar">
+  <div class="wrap tk-steps-inner">
+    <button type="button" class="tk-step is-now" data-goto="1"><span class="n">1</span><span class="l">Termin</span></button>
+    <span class="tk-step-line"></span>
+    <button type="button" class="tk-step" data-goto="2"><span class="n">2</span><span class="l">Angebot</span></button>
+    <span class="tk-step-line"></span>
+    <button type="button" class="tk-step" data-goto="3"><span class="n">3</span><span class="l">Daten</span></button>
+  </div>
+</div>
+
+<section class="tk-section">
+  <div class="wrap">
+    <div id="error" class="gs-error" hidden></div>
+    <div id="notice" class="tk-cardnote" hidden></div>
+    <div id="loading" class="gs-loading">Kursplan wird geladen &hellip;</div>
+
+    <!-- ---------- Schritt 1: Termin ---------- -->
+    <div class="tk-panel" data-panel="1" hidden>
+      <div id="plan"></div>
+    </div>
+
+    <!-- ---------- Schritt 2: Angebot ---------- -->
+    <div class="gs-form tk-panel" data-panel="2" hidden>
+      <button type="button" class="ku-zurueck" data-back="1">&larr; Anderen Termin w&auml;hlen</button>
+      <div class="ku-kopf">
+        <div>
+          <div class="eyebrow" id="aKurs"></div>
+          <h2 id="aTermin" style="margin-top:10px"></h2>
+          <p class="gs-sub" id="aMeta" style="margin:6px 0 0"></p>
+        </div>
+        <div id="aPill"></div>
+      </div>
+      <div class="ku-angebote" id="angebote"></div>
+      <div class="ku-box" id="aHinweis" hidden></div>
+
+      <div class="ku-wl" id="wlBox" hidden>
+        <h3>Warteliste</h3>
+        <p id="wlText"></p>
+        <div class="gs-row">
+          <div class="gs-field"><label for="wlName">Name <span class="req">*</span></label><input type="text" id="wlName" autocomplete="name"></div>
+          <div class="gs-field"><label for="wlMail">E-Mail <span class="req">*</span></label><input type="email" id="wlMail" autocomplete="email"></div>
+        </div>
+        <div class="gs-field"><label for="wlPhone">Telefon <span class="req">*</span></label><input type="tel" id="wlPhone" autocomplete="tel"></div>
+        <div class="gs-check"><input type="checkbox" id="wlOk"><label for="wlOk" id="wlOkText"></label></div>
+        <div style="margin-top:16px"><button type="button" class="btn btn-ghost" id="wlBtn">Auf die Warteliste</button></div>
+        <div class="ku-ok" id="wlDone" hidden></div>
+      </div>
+    </div>
+
+    <!-- ---------- Schritt 3: Daten ---------- -->
+    <form class="gs-form tk-panel" data-panel="3" id="form" hidden>
+      <button type="button" class="ku-zurueck" data-back="2">&larr; Andere M&ouml;glichkeit w&auml;hlen</button>
+      <h2>Deine Daten</h2>
+      <p class="gs-sub" id="s3Sub"></p>
+
+      <div class="gs-row">
+        <div class="gs-field"><label for="name">Name <span class="req">*</span></label><input type="text" id="name" required autocomplete="name"></div>
+        <div class="gs-field"><label for="email">E-Mail <span class="req">*</span></label><input type="email" id="email" required autocomplete="email"><div class="small">Hierhin gehen Best&auml;tigung, Rechnung und Kalenderdatei.</div></div>
+      </div>
+      <div class="gs-field"><label for="phone">Telefon <span class="req">*</span></label><input type="tel" id="phone" required autocomplete="tel"><div class="small">Falls ein Termin kurzfristig ausf&auml;llt, erreiche ich dich so am schnellsten.</div></div>
+
+      <div class="gs-field" id="gsField">
+        <label for="gutschein">Gutscheincode</label>
+        <div class="tk-voucher">
+          <input type="text" id="gutschein" placeholder="FD-XXXX-XXXX" autocomplete="off">
+          <button type="button" class="btn btn-ghost btn-sm" id="gsBtn">Einl&ouml;sen</button>
+        </div>
+        <div class="small" id="gsMsg"></div>
+      </div>
+
+      <div class="gs-order">
+        <div class="gs-order-title">Deine Buchung</div>
+        <ul id="orderList"></ul>
+      </div>
+
+      <div class="tk-mails">
+        <div class="tk-mails-title">Was du per Mail bekommst</div>
+        <ul>
+          <li>Best&auml;tigung mit allen Terminen und Kalenderdatei zum Antippen</li>
+          <li>Die Rechnung zu deiner Zahlung</li>
+          <li>Eine kurze Erinnerung am Tag vor jedem Termin</li>
+        </ul>
+      </div>
+
+      <div class="ku-box" id="regeln"></div>
+
+      <div class="ku-widerruf" id="widerrufBox">
+        <p id="widerrufText"></p>
+        <div class="gs-check"><input type="checkbox" id="widerrufOk"><label for="widerrufOk" id="widerrufLabel"></label></div>
+      </div>
+      <p class="ku-hinweis">Es gelten die <a href="buchungsbedingungen.html" target="_blank" rel="noopener" style="color:var(--blitz)">Buchungsbedingungen</a> und die <a href="datenschutz.html" target="_blank" rel="noopener" style="color:var(--blitz)">Datenschutzerkl&auml;rung</a>.</p>
+
+      <div class="gs-summary">
+        <div><div class="gs-sum-label">Zu zahlen</div><div class="gs-sum-value" id="sumValue">&ndash;</div></div>
+        <div class="gs-pay">
+          <button type="submit" class="btn btn-blitz" id="payBtn">Zahlungspflichtig buchen</button>
+          <div class="secure" id="secure">Zahlung &uuml;ber Stripe &middot; Lastschrift, Karte, PayPal, Apple&nbsp;Pay, Google&nbsp;Pay</div>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <svg width="120" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
+  <text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text>
+  <polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"/>
+</svg>
+    <div class="legal">
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
+      <a href="buchungsbedingungen.html">Buchungsbedingungen</a>
+      <a href="gutschein-bedingungen.html">Gutscheinbedingungen</a>
+      <a href="widerruf.html" class="legal-widerruf" style="color:var(--blitz);font-weight:600">Vertrag widerrufen</a>
+    </div>
+    <div>&copy; 2026 Fitness Donner &middot; Solingen, Haan, K&ouml;ln &amp; Neuss</div>
+  </div>
+</footer>
+<script>
+(function(){var n=document.getElementById('navLinks'),b=document.querySelector('.menu-btn');
+if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&!a.classList.contains('sub-toggle')){n.classList.remove('open');b.textContent='☰';}});}})();
+</script>
+<script src="kursplan.js?v=1"></script>
+<script src="kurs-buchen.js?v=3"></script>
+</body>
+</html>

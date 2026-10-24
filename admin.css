@@ -110,3 +110,35 @@
 .ad-resv-hint{border:1px solid rgba(239,185,46,.4);background:rgba(239,185,46,.08);color:var(--bone);
   font-size:14px;line-height:1.5;padding:12px 16px;margin-bottom:14px}
 .ad-linkbtn{background:none;border:0;padding:0;color:var(--blitz);font:inherit;text-decoration:underline;cursor:pointer}
+
+/* ---------- Reiter Kurse (admin-kurse.js) ---------- */
+.ak-anb{margin-bottom:14px}
+.ad-chip.ak-on{border-color:var(--blitz);color:var(--blitz)}
+.ak-views{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.ak-view{background:transparent;border:1px solid var(--line);color:var(--muted);font-family:var(--body);font-size:12px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;padding:9px 12px;cursor:pointer}
+.ak-view.on{border-color:var(--blitz);color:var(--blitz);background:rgba(239,185,46,.08)}
+.ak-bar{height:6px;background:var(--bg);border:1px solid var(--line);margin:8px 0 6px}
+.ak-bar span{display:block;height:100%;background:var(--blitz)}
+.ak-warn{color:#ffb3a8;font-weight:700}
+.ad-card.ak-aus{opacity:.75;border-style:dashed}
+.ak-red{border-color:rgba(255,138,122,.45)!important;color:#ffb3a8!important}
+.ak-tn{border-top:1px solid var(--line);margin-top:14px;padding-top:6px}
+.ak-tn-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.ak-tn-row .ad-link{margin-top:4px}
+.ak-src{font-size:12px;color:var(--muted)}
+.ak-sub{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blitz);margin:14px 0 2px}
+.ak-form{margin:14px 0 0}
+.ak-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+@media(max-width:560px){.ak-grid{grid-template-columns:1fr}}
+.ak-check{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--bone);margin:0 0 12px;cursor:pointer}
+.ak-check input{margin-top:3px;accent-color:var(--blitz);width:16px;height:16px;flex:0 0 16px}
+.ak-radio{display:flex;gap:18px;flex-wrap:wrap;margin:0 0 14px;font-size:14px}
+.ak-radio input{accent-color:var(--blitz);margin-right:6px}
+.ak-prod{border:1px solid var(--line);padding:12px 14px;margin-bottom:10px}
+.ak-prod b{display:block;margin-bottom:8px}
+.ak-prod .ak-check{margin-bottom:6px}
+.ak-usc{flex-wrap:wrap}
+.ak-usc-in{display:flex;gap:8px;align-items:center}
+.ak-usc-in input{width:74px;background:var(--bg);border:1px solid var(--line);color:var(--bone);font-family:var(--body);font-size:16px;padding:9px 10px;border-radius:0}
+.ak-kurs .ad-field textarea{width:100%}

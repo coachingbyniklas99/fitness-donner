@@ -265,13 +265,14 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
     </div>
 
     <div class="pblock" id="pb-kurse" hidden>
-      <div class="kurse-leer">
+      <div class="kurse-leer" id="kurseLeer">
         <div class="kl-kopf">Kurspreise</div>
         <p class="kl-gross">Preise folgen</p>
         <p class="kl-txt">Sobald der Kursplan mit den festen Terminen steht, stehen hier die Preise &ndash;
            f&uuml;r den Einzelkurs und f&uuml;r Karten &uuml;ber mehrere Kurse.</p>
         <a class="btn btn-ghost" href="kurse.html">Zur Kursseite</a>
       </div>
+      <div class="price-grid" id="kursPreise" hidden></div>
 
 
       <p class="kleingedruckt">Die Kurse finden im New Forge, Prinzenstra&szlig;e 2a in Solingen-Ohligs statt. Alle Preise sind Endpreise; als Kleinunternehmer im Sinne von &sect;&nbsp;19 UStG berechne ich keine Umsatzsteuer, sie wird daher nicht ausgewiesen.</p>
@@ -352,6 +353,32 @@ if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a
       history.replaceState(null, '', a.getAttribute('href'));
     });
   });
+})();
+</script>
+<script>
+/* Kurspreise kommen aus dem Buchungssystem – so stimmt die Seite immer mit dem Checkout überein. */
+(function () {
+  var API = window.FD_API_BASE || 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.dev';
+  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function eur(c) { var v = (c / 100).toFixed(2).replace('.', ','); return (v.slice(-3) === ',00' ? v.slice(0, -3) : v) + ' &euro;'; }
+  fetch(API + '/api/kurse?p=niklas').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+    if (!d || !d.kurse || !d.kurse.length) return;
+    var k = d.kurse[0], box = document.getElementById('kursPreise'), html = [];
+    ['karte10', 'karte5', 'tageskarte'].forEach(function (a) {
+      var p = k.produkte[a];
+      if (!p || !p.aktiv) return;
+      var karte = a !== 'tageskarte';
+      html.push('<div class="price' + (a === 'karte10' ? ' featured' : '') + '">' + (a === 'karte10' ? '<span class="pop">Empfohlen &middot; bester Preis pro Termin</span>' : '') + '<h3>' + esc(p.label) + '</h3>'
+        + '<div class="preiszeile"><span class="amount">' + eur(p.cents) + '</span></div>'
+        + '<div class="per">' + (karte ? p.termine + ' Termine in Folge &middot; ' + eur(Math.round(p.cents / p.termine)) + ' pro Termin' : 'ein einzelner Termin') + '</div>'
+        + '<p class="desc">' + (karte ? 'Du w&auml;hlst den ersten Termin, die Karte umfasst die ' + p.termine + ' Wochentermine ab dann. ' + d.gueltig_monate + ' Monate g&uuml;ltig.'
+          : 'Ab ' + p.freischalt_tage + ' Tagen vor einem Termin f&uuml;r die Pl&auml;tze, die dann noch frei sind.') + '</p>'
+        + '<a class="btn ' + (a === 'karte10' ? 'btn-blitz' : 'btn-ghost') + '" href="kurse.html#kursplan">Zum Kursplan</a></div>');
+    });
+    box.innerHTML = html.join('');
+    box.hidden = false;
+    document.getElementById('kurseLeer').hidden = true;
+  }).catch(function () {});
 })();
 </script>
 </body>

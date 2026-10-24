@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#15171C">
+<title>Deine Kursbuchung | Fitness Donner</title>
+<meta name="description" content="Deine Kursbuchung bei Fitness Donner.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="style.css?v=23">
+<link rel="stylesheet" href="gutschein.css?v=2">
+<link rel="stylesheet" href="termin.css?v=9">
+
+<link rel="stylesheet" href="kurs.css?v=2">
+</head>
+<body>
+<nav>
+  <div class="wrap nav-inner">
+    <a href="index.html" aria-label="Fitness Donner - Startseite"><svg width="140" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
+  <text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text>
+  <polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"/>
+</svg></a>
+    <div class="nav-links" id="navLinks">
+      <div class="has-sub">
+        <a href="#" class="sub-toggle" onclick="event.preventDefault();this.parentElement.classList.toggle('sub-open')">Personal Training</a>
+        <div class="sub">
+          <div class="sub-group">Vor Ort</div>
+          <a href="personal-training-solingen.html">Solingen &amp; Haan<span class="loc">New Forge Ohligs oder drau&szlig;en</span></a>
+          <a href="personal-training-koeln.html">K&ouml;ln<span class="loc">Iron&amp;Soul Zollstock</span></a>
+          <a href="personal-training-neuss.html">Neuss<span class="loc">Iron&amp;Soul R&ouml;merstra&szlig;e</span></a>
+          <div class="sub-group">Ortsunabh&auml;ngig</div>
+          <a href="online.html">Online-Coaching<span class="loc">von &uuml;berall</span></a>
+        </div>
+      </div>
+      <a href="kurse.html" class="nav-solo">Kurse</a>
+      <div class="has-sub">
+        <a href="#" class="sub-toggle" onclick="event.preventDefault();this.parentElement.classList.toggle('sub-open')">Schwerpunkte</a>
+        <div class="sub">
+          <a href="hyrox.html">Hyrox</a>
+          <a href="personal-training-rueckenschmerzen.html">Gesundheitstraining</a>
+        </div>
+      </div>
+      <a href="preise.html" class="nav-solo">Preise</a>
+      <a href="gutschein.html" class="nav-solo">Gutscheine</a>
+      <a href="ueber-mich.html">&Uuml;ber mich</a>
+      <a href="faq.html">FAQ</a>
+      <a class="nav-book" href="termin-buchen.html?art=probe">
+        <span class="nb-t">Probetraining buchen &middot; <span data-preis-probe>29&nbsp;&euro;</span></span>
+        <span class="nb-s">60 Minuten in Solingen &middot; wird angerechnet</span>
+      </a>
+      <div class="nav-kontakt">
+        <a href="tel:+491776311404">Anrufen</a>
+        <a href="https://wa.me/491776311404">WhatsApp</a>
+      </div>
+    </div>
+    <a class="btn btn-blitz btn-sm nav-cta" href="termin-buchen.html">Termin buchen</a>
+    <button class="menu-btn" aria-label="Men&uuml; &ouml;ffnen" onclick="document.getElementById('navLinks').classList.toggle('open');this.textContent=this.textContent==='☰'?'✕':'☰'">&#9776;</button>
+  </div>
+</nav>
+
+<header class="page-hero tk-hero">
+  <div class="wrap">
+    <div class="eyebrow">Kurse</div>
+    <h1>Deine<br>Kursbuchung.</h1>
+  </div>
+</header>
+
+<section class="tk-section">
+  <div class="wrap">
+    <div id="error" class="gs-error" hidden></div>
+    <div id="loading" class="gs-loading">Einen Moment &ndash; die Zahlung wird best&auml;tigt &hellip;</div>
+
+    <div class="gs-form" id="wlRaus" hidden>
+      <h2>Warteliste</h2>
+      <p class="gs-sub">M&ouml;chtest du dich von der Warteliste austragen? Deine Angaben werden dann nicht mehr f&uuml;r diesen Termin verwendet.</p>
+      <button type="button" class="btn btn-blitz" id="wlRausBtn">Von der Warteliste austragen</button>
+      <div class="ku-ok" id="wlRausOk" hidden>Erledigt &ndash; du stehst nicht mehr auf der Warteliste.</div>
+    </div>
+
+    <div class="gs-form" id="view" hidden>
+      <div class="ku-order-head">
+        <div>
+          <div class="eyebrow" id="vEyebrow">Gebucht</div>
+          <h2 style="margin-top:10px" id="vTitel"></h2>
+          <p class="gs-sub" id="vMeta" style="margin-bottom:0"></p>
+        </div>
+      </div>
+
+      <div class="tk-cardnote" id="vFrage" hidden></div>
+
+      <div class="ku-kal" id="vKal" hidden>
+        <div class="ku-kal-titel">In deinen Kalender</div>
+        <p id="vKalText"></p>
+        <div class="ku-act">
+          <a class="btn btn-blitz" id="vKalIcs" href="#">Alle Termine in den Kalender</a>
+          <a class="btn btn-ghost" id="vKalGoogle" href="#" target="_blank" rel="noopener">In Google Kalender</a>
+        </div>
+      </div>
+
+      <ul class="ku-termine" id="vTermine" style="margin-top:22px"></ul>
+
+
+      <div class="gs-order" style="margin-top:22px">
+        <div class="gs-order-title">Zur Buchung</div>
+        <ul id="vInfo"></ul>
+      </div>
+      <div class="ku-box" id="vRegeln"></div>
+      <p class="small" style="color:var(--muted)">Die Best&auml;tigung mit allen Terminen und der Kalenderdatei ist per Mail unterwegs. Diesen Link findest du dort jederzeit wieder.</p>
+    </div>
+  </div>
+</section>
+<script>
+var API_BASE = window.FD_API_BASE || 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.dev';
+(function () {
+  var Q = new URLSearchParams(location.search);
+  var P = Q.get('p') || 'niklas';
+  var el = function (id) { return document.getElementById(id); };
+  var WD = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+  var cur = null;
+  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function eur(c) { var v = (c / 100).toFixed(2).replace('.', ','); return (v.slice(-3) === ',00' ? v.slice(0, -3) : v) + ' €'; }
+  function dl(iso) { var d = new Date(iso + 'T12:00:00Z'); return WD[d.getUTCDay()] + ', ' + ('0' + d.getUTCDate()).slice(-2) + '.' + ('0' + (d.getUTCMonth() + 1)).slice(-2) + '.' + iso.slice(0, 4); }
+  function fail(t) { el('error').textContent = t; el('error').hidden = false; el('loading').hidden = true; }
+  try { sessionStorage.removeItem('fd_kurs'); } catch (e) {}
+
+  if (Q.get('w')) {
+    el('loading').hidden = true;
+    el('wlRaus').hidden = false;
+    el('wlRausBtn').onclick = function () {
+      el('wlRausBtn').disabled = true;
+      fetch(API_BASE + '/api/kurse/warteliste-austragen', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ p: P, w: Q.get('w') }) })
+        .then(function (r) { return r.json().then(function (d) { return { s: r.status, d: d }; }); })
+        .then(function (r) { if (r.s !== 200) { el('wlRausBtn').disabled = false; fail(r.d.error); return; } el('wlRausOk').hidden = false; el('wlRausBtn').hidden = true; })
+        .catch(function () { el('wlRausBtn').disabled = false; fail('Keine Verbindung.'); });
+    };
+    return;
+  }
+
+  var versuche = 0;
+  function laden() {
+    var url = Q.get('session_id')
+      ? API_BASE + '/api/kurse/bestellung?p=' + encodeURIComponent(P) + '&session_id=' + encodeURIComponent(Q.get('session_id'))
+      : API_BASE + '/api/kurse/bestellung?p=' + encodeURIComponent(P) + '&o=' + encodeURIComponent(Q.get('o') || '') + '&t=' + encodeURIComponent(Q.get('t') || '');
+    fetch(url).then(function (r) { return r.json().then(function (d) { return { s: r.status, d: d }; }); }).then(function (r) {
+      if (r.s === 202) {
+        if (++versuche > 30) { fail('Die Zahlung ist eingegangen, die Bestätigung braucht aber noch etwas. Du bekommst sie gleich per Mail.'); return; }
+        setTimeout(laden, 2000); return;
+      }
+      if (r.s !== 200 || r.d.status !== 'confirmed') { fail(r.d.error || 'Diese Buchung habe ich nicht gefunden.'); return; }
+      if (Q.get('session_id')) history.replaceState(null, '', 'kurs-buchung.html?p=' + encodeURIComponent(P) + '&o=' + r.d.o + '&t=' + r.d.t);
+      zeigen(r.d);
+    }).catch(function () { fail('Keine Verbindung. Bitte lade die Seite neu.'); });
+  }
+
+  function zeigen(d) {
+    cur = d;
+    el('loading').hidden = true;
+    el('view').hidden = false;
+    el('vTitel').textContent = d.kurs.titel;
+    el('vMeta').innerHTML = esc(d.label) + ' &middot; ' + esc(d.kurs.ort) + ' &middot; mit ' + esc(d.anbieterin.name);
+    el('vTermine').innerHTML = d.termine.map(function (t) {
+      var badge = '', extra = '', act = '';
+      if (t.status === 'gebucht') badge = t.vorbei ? '<span class="ku-badge">vorbei</span>' : '<span class="ku-badge ok">gebucht</span>';
+      else if (t.status === 'freigegeben') badge = '<span class="ku-badge">freigegeben</span>';
+      else if (t.status === 'abgesagt') badge = '<span class="ku-badge aus">fällt aus</span>';
+      else badge = '<span class="ku-badge">' + esc(t.status) + '</span>';
+      if (t.freigeben_moeglich) act = '<button type="button" class="btn btn-ghost" data-a="freigeben" data-d="' + t.datum + '">Ich kann nicht – Platz freigeben</button>';
+      if (t.status === 'abgesagt') {
+        if (t.ersatz) {
+          var ant = t.ersatz.antwort === 'angenommen' ? 'Du hast den Ersatztermin angenommen.' : t.ersatz.antwort === 'erstattung' ? 'Du hast die Erstattung gewählt.' : 'Dein Platz ist reserviert – passt dir der Termin?';
+          extra = '<div class="ku-ersatz">Ersatz: <b style="color:var(--bone)">' + esc(dl(t.ersatz.datum)) + ', ' + esc(t.ersatz.start) + '–' + esc(t.ersatz.ende) + ' Uhr</b>. ' + ant
+            + (t.erstattung ? ' Erstattung: ' + (t.erstattung.status === 'erledigt' ? 'veranlasst' : 'in Bearbeitung') + ' (' + eur(t.erstattung.cents) + ').' : '') + '</div>';
+          if (t.ersatz.waehlbar) {
+            act = (t.ersatz.antwort !== 'angenommen' ? '<button type="button" class="btn btn-blitz" data-a="ersatz" data-d="' + t.datum + '">Ersatztermin passt</button>' : '')
+              + '<button type="button" class="btn btn-ghost" data-a="erstattung" data-d="' + t.datum + '">Lieber Geld zurück</button>';
+          }
+        } else if (t.erstattung) {
+          extra = '<div class="ku-ersatz">Den Anteil für diesen Termin (' + eur(t.erstattung.cents) + ') bekommst du zurück – ' + (t.erstattung.status === 'erledigt' ? 'ist veranlasst.' : 'in Bearbeitung.') + '</div>';
+        }
+      }
+      var g = (d.kalender || []).filter(function (x) { return x.datum === t.datum && t.status === 'gebucht'; })[0];
+      return '<li><div><div class="d">' + esc(dl(t.datum)) + '</div><div class="z">' + esc(t.start) + '–' + esc(t.ende) + ' Uhr'
+        + (g ? '<a class="ku-glink" href="' + esc(g.google) + '" target="_blank" rel="noopener">+ Google</a>' : '') + '</div></div>'
+        + '<div>' + badge + '</div>' + extra + (act ? '<div class="ku-act" style="flex-basis:100%">' + act + '</div>' : '') + '</li>';
+    }).join('');
+    var info = [
+      'Anbieterin: ' + esc(d.anbieterin.name) + (d.anbieterin.email ? ' · ' + esc(d.anbieterin.email) : ''),
+      'Ort: ' + esc(d.kurs.ort) + (d.kurs.adresse ? ', ' + esc(d.kurs.adresse) : ''),
+      'Preis: ' + eur(d.preis_cents) + (d.gutschein ? ' · davon Gutschein ' + esc(d.gutschein.code) + ' ' + eur(d.gutschein.cents) : '') + ' · bezahlt ' + eur(d.offen_cents)
+    ];
+    if (d.art === 'karte5' || d.art === 'karte10') info.push('Karte gültig bis ' + esc(dl(d.gueltig_bis)));
+    if (d.widerruf_ausgeschlossen) info.push('Kein Widerrufsrecht (Kurs mit festen Terminen, § 312g Abs. 2 Nr. 9 BGB)');
+    var kal = d.kalender || [];
+    el('vKal').hidden = !kal.length;
+    if (kal.length) {
+      el('vKalIcs').href = API_BASE + '/api/kurse/bestellung.ics?p=' + encodeURIComponent(P) + '&o=' + encodeURIComponent(d.o) + '&t=' + encodeURIComponent(d.t);
+      el('vKalText').textContent = kal.length === 1
+        ? 'Ein Tipp, und der Termin steht in deinem Kalender – auf dem iPhone, in Outlook oder in Google.'
+        : 'Ein Tipp, und alle ' + kal.length + ' Termine stehen auf einmal in deinem iPhone-, Android- oder Outlook-Kalender. Für Google Kalender tippst du unten neben jedem Termin auf „+ Google“.';
+      el('vKalGoogle').hidden = kal.length !== 1;
+      if (kal.length === 1) el('vKalGoogle').href = kal[0].google;
+    }
+    el('vInfo').innerHTML = info.map(function (x) { return '<li>' + x + '</li>'; }).join('');
+    el('vRegeln').innerHTML = '<b>So l&auml;uft es</b><ul>' + d.regeln.map(function (r) { return '<li>' + esc(r) + '</li>'; }).join('') + '</ul>';
+    Array.prototype.forEach.call(el('vTermine').querySelectorAll('[data-a]'), function (b) { b.onclick = function () { aktion(b); }; });
+
+    // Aus der Mail: ?aktion=ersatz|erstattung&d= – nie automatisch ausführen, nur nachfragen
+    var a = Q.get('aktion'), ad = Q.get('d');
+    var z = a && ad && d.termine.filter(function (t) { return t.datum === ad && t.ersatz && t.ersatz.waehlbar; })[0];
+    if (z) {
+      var f = el('vFrage');
+      f.innerHTML = (a === 'ersatz' ? 'Du m&ouml;chtest den <b>Ersatztermin am ' + esc(dl(z.ersatz.datum)) + '</b> annehmen?' : 'Du m&ouml;chtest f&uuml;r den ausgefallenen Termin am <b>' + esc(dl(ad)) + '</b> lieber dein Geld zur&uuml;ck?')
+        + '<div class="ku-act"><button type="button" class="btn btn-blitz" data-a="' + (a === 'ersatz' ? 'ersatz' : 'erstattung') + '" data-d="' + esc(ad) + '">Ja, ' + (a === 'ersatz' ? 'Ersatz annehmen' : 'Erstattung wählen') + '</button></div>';
+      f.hidden = false;
+      f.querySelector('[data-a]').onclick = function () { aktion(this); f.hidden = true; };
+    }
+  }
+
+  function aktion(b) {
+    var a = b.getAttribute('data-a');
+    if (a === 'freigeben' && b.getAttribute('data-armed') !== '1') {
+      b.setAttribute('data-armed', '1');
+      b.textContent = 'Wirklich freigeben? (keine Erstattung)';
+      setTimeout(function () { b.removeAttribute('data-armed'); b.textContent = 'Ich kann nicht – Platz freigeben'; }, 5000);
+      return;
+    }
+    b.disabled = true;
+    fetch(API_BASE + '/api/kurse/aktion', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ p: P, o: cur.o, t: cur.t, aktion: a, datum: b.getAttribute('data-d') }) })
+      .then(function (r) { return r.json().then(function (d) { return { s: r.status, d: d }; }); })
+      .then(function (r) { if (r.s !== 200) { b.disabled = false; fail(r.d.error); return; } el('error').hidden = true; zeigen(r.d); })
+      .catch(function () { b.disabled = false; fail('Keine Verbindung.'); });
+  }
+
+  laden();
+})();
+</script>
+
+<footer>
+  <div class="wrap foot">
+    <svg width="120" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
+  <text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text>
+  <polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"/>
+</svg>
+    <div class="legal">
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
+      <a href="buchungsbedingungen.html">Buchungsbedingungen</a>
+      <a href="gutschein-bedingungen.html">Gutscheinbedingungen</a>
+      <a href="widerruf.html" class="legal-widerruf" style="color:var(--blitz);font-weight:600">Vertrag widerrufen</a>
+    </div>
+    <div>&copy; 2026 Fitness Donner &middot; Solingen, Haan, K&ouml;ln &amp; Neuss</div>
+  </div>
+</footer>
+<script>
+(function(){var n=document.getElementById('navLinks'),b=document.querySelector('.menu-btn');
+if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&!a.classList.contains('sub-toggle')){n.classList.remove('open');b.textContent='☰';}});}})();
+</script>
+</body>
+</html>

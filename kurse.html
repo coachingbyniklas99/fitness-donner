@@ -40,6 +40,7 @@
 }
 </script>
 <link rel="stylesheet" href="style.css?v=23">
+<link rel="stylesheet" href="kursplan.css?v=1">
 </head>
 <body>
 <nav>
@@ -92,7 +93,7 @@
     <h1>Trainieren<br>in der Gruppe.</h1>
     <p class="hero-sub">Neben dem Personal Training gebe ich Kurse im New Forge in Solingen-Ohligs. Kleine Gruppen, saubere Technik vor hohem Tempo &ndash; und jede &Uuml;bung in mehreren St&auml;rken, damit Einsteiger und Ge&uuml;bte in derselben Stunde auf ihre Kosten kommen.</p>
     <div class="hero-ctas">
-      <a class="btn btn-blitz" href="https://wa.me/491776311404?text=Hi%20Niklas%2C%20sag%20mir%20Bescheid%2C%20wenn%20der%20Kursplan%20steht.">Bescheid sagen, wenn es losgeht</a>
+      <a class="btn btn-blitz" id="heroCta" href="https://wa.me/491776311404?text=Hi%20Niklas%2C%20sag%20mir%20Bescheid%2C%20wenn%20der%20Kursplan%20steht.">Bescheid sagen, wenn es losgeht</a>
       <a class="btn btn-ghost" href="tel:+491776311404">0177 6311404 anrufen</a>
     </div>
   </div>
@@ -102,53 +103,25 @@
   <div class="wrap">
     <div class="eyebrow">Kursplan</div>
     <h2 style="margin-top:16px">Die Termine.</h2>
-
-    <div class="kplan-leer" id="kplanLeer" style="margin-top:28px">
-      <h3>Der Kursplan steht in K&uuml;rze fest.</h3>
-      <p>Die festen Zeiten stimme ich gerade mit dem New Forge ab. Sobald sie stehen, findest du sie genau hier &ndash; mit Tag, Uhrzeit und Kurs, direkt buchbar.</p>
-      <p>Willst du nichts verpassen? Schreib mir kurz, dann sage ich dir Bescheid, sobald die Anmeldung offen ist. Wenn du in der Zwischenzeit loslegen m&ouml;chtest, geht das <a href="termin-buchen.html?art=probe" style="color:var(--blitz);text-decoration:underline">im Personal Training</a> jederzeit.</p>
-      <div class="hero-ctas">
-        <a class="btn btn-blitz" href="https://wa.me/491776311404?text=Hi%20Niklas%2C%20sag%20mir%20Bescheid%2C%20wenn%20der%20Kursplan%20steht.">Per WhatsApp Bescheid sagen lassen</a>
-        <a class="btn btn-ghost" href="mailto:info@fitnessdonner.de?subject=Kurse%20in%20Solingen">Per E-Mail</a>
-      </div>
+    <p class="hero-sub" style="margin-top:14px;max-width:640px">W&auml;hl einen Tag und tipp beim passenden Kurs auf &bdquo;Kurs buchen&ldquo;. Dann siehst du, was f&uuml;r genau diesen Termin geht: 10er- oder 5er-Karte mit festen Terminen oder ein Einzelticket.</p>
+    <div id="kursplanApp" style="margin-top:26px">
+      <div class="kp-bald"><div class="kp-bald-titel">Der Kursplan steht bald.</div>
+        <p>Die festen Kurszeiten im New Forge stimme ich gerade ab. Sobald sie stehen, findest du hier jeden Tag die Kurse mit freien Pl&auml;tzen &ndash; direkt buchbar.</p></div>
     </div>
 
-    <!-- ===================== KURSPLAN EINSETZEN =====================
-         Wenn die Termine feststehen, sind es drei Handgriffe:
-         1. Den Block <div class="kplan-leer" id="kplanLeer"> daru:ber komplett loeschen.
-         2. Hier unten bei <table class="kplan" das Wort hidden entfernen.
-         3. Die Zeilen ausfuellen - pro Kurs eine <tr>. Nicht gebrauchte Zeilen loeschen.
-         Die Tabelle wird auf dem Handy automatisch zu Karten, da ist nichts weiter zu tun.
-         ============================================================== -->
-    <table class="kplan" hidden style="margin-top:28px">
-      <thead>
-        <tr><th>Tag</th><th>Zeit</th><th>Kurs</th><th></th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="k-tag">Montag</td>
-          <td class="k-zeit">18:00 &ndash; 19:00</td>
-          <td><span class="k-name">Name des Kurses</span><span class="k-sub">Ein Satz dazu, f&uuml;r wen er gedacht ist.</span></td>
-          <td><a class="btn btn-blitz btn-sm" href="termin-buchen.html">Platz sichern</a></td>
-        </tr>
-        <tr>
-          <td class="k-tag">Mittwoch</td>
-          <td class="k-zeit">19:00 &ndash; 20:00</td>
-          <td><span class="k-name">Name des Kurses</span><span class="k-sub">Ein Satz dazu, f&uuml;r wen er gedacht ist.</span></td>
-          <td><a class="btn btn-blitz btn-sm" href="termin-buchen.html">Platz sichern</a></td>
-        </tr>
-        <tr>
-          <td class="k-tag">Samstag</td>
-          <td class="k-zeit">10:00 &ndash; 11:00</td>
-          <td><span class="k-name">Name des Kurses</span><span class="k-sub">Ein Satz dazu, f&uuml;r wen er gedacht ist.</span></td>
-          <td><a class="btn btn-blitz btn-sm" href="termin-buchen.html">Platz sichern</a></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="ort-note" style="margin-top:24px"><b>Du hast eine 4er- oder 8er-Karte?</b> Dann sind Kurse schon drin: vier St&uuml;ck bei der 4er-Karte, acht bei der 8er-Karte &ndash; dazu einen beziehungsweise zwei Monate freies Training im New Forge. Mehr dazu auf der <a href="preise.html" style="color:var(--blitz);text-decoration:underline">Preisseite</a>.</div>
+    <div class="ort-note" style="margin-top:24px"><b>Kurse und Personal Training sind getrennte Angebote.</b> Deine 4er- oder 8er-Karte gilt f&uuml;rs Personal Training. Kurse buchst du hier mit einem Einzelticket oder einer 5er- bzw. 10er-Karte.</div>
 
     <div class="ort-note" style="margin-top:14px"><b>Lieber allein?</b> Im <a href="personal-training-solingen.html" style="color:var(--blitz);text-decoration:underline">Personal Training</a> bekommst du dieselbe Betreuung 1:1 &ndash; mit einem Plan, der nur auf dich zugeschnitten ist. Die Preise daf&uuml;r stehen auf der <a href="preise.html" style="color:var(--blitz);text-decoration:underline">Preisseite</a>.</div>
+  </div>
+</section>
+
+<section id="kurspreise" style="padding-top:0" hidden>
+  <div class="wrap">
+    <div class="eyebrow">Preise</div>
+    <h2 style="margin-top:16px">Einzeln oder<br>als Karte.</h2>
+    <p class="hero-sub" style="margin-top:14px;max-width:640px">Mit einer Karte bist du an 5 oder 10 Terminen in Folge fest dabei &ndash; dein Platz ist an jedem Termin sicher. Einzeltickets gibt es f&uuml;r die Pl&auml;tze, die kurz vorher noch frei sind.</p>
+    <div class="price-grid" id="kursPreise" style="margin-top:30px"></div>
+    <p style="margin-top:22px;max-width:860px;color:#8b9099;font-size:13.5px;line-height:1.6">Alle Preise sind Endpreise; als Kleinunternehmer im Sinne von &sect;&nbsp;19 UStG berechne ich keine Umsatzsteuer. Gutscheine von Fitness Donner kannst du beim Kauf einl&ouml;sen.</p>
   </div>
 </section>
 
@@ -213,7 +186,19 @@
       </details>
       <details>
         <summary>Was kosten die Kurse?</summary>
-        <p>Einzelpreise stehen fest, sobald der Kursplan steht.</p>
+        <p id="kursPreisFaq">Einzelpreise stehen fest, sobald der Kursplan steht.</p>
+      </details>
+      <details>
+        <summary>Karte oder Einzelticket &ndash; was ist der Unterschied?</summary>
+        <p>Mit einer 5er- oder 10er-Karte buchst du die n&auml;chsten 5 bzw. 10 Wochentermine eines Kurses ab deinem Wunschtermin &ndash; auch mitten in der laufenden Reihe. Welche Termine das genau sind, siehst du vor dem Kauf, und dein Platz ist an jedem davon sicher. Einzeltickets gibt es eine Woche vor einem Termin f&uuml;r die Pl&auml;tze, die dann noch frei sind.</p>
+      </details>
+      <details>
+        <summary>Was ist, wenn ich mal nicht kann?</summary>
+        <p>Verpasste Termine verfallen, nachholen geht leider nicht. &Uuml;ber den Link in deiner Best&auml;tigungsmail kannst du deinen Platz aber freigeben &ndash; dann kann jemand von der Warteliste nachr&uuml;cken.</p>
+      </details>
+      <details>
+        <summary>Und wenn ein Kurs ausf&auml;llt?</summary>
+        <p>Muss ich einen Termin absagen, bekommst du einen Ersatztermin oder den anteiligen Preis zur&uuml;ck. Passt dir der Ersatztermin nicht, w&auml;hlst du einfach die Erstattung.</p>
       </details>
       <details>
         <summary>Gibt es die Kurse auch in K&ouml;ln oder Neuss?</summary>
@@ -254,6 +239,45 @@
 <script>
 (function(){var n=document.getElementById('navLinks'),b=document.querySelector('.menu-btn');
 if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&!a.classList.contains('sub-toggle')){n.classList.remove('open');b.textContent='☰';}});}})();
+</script>
+<script src="kursplan.js?v=1"></script>
+<script>
+/* Kursplan und Kurspreise kommen live aus dem Buchungssystem.
+   Ohne aktive Kurse zeigt der Plan die Tage mit dem Hinweis „Der Kursplan steht bald“. */
+(function () {
+  var API = window.FD_API_BASE || 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.dev';
+  var box = document.getElementById('kursplanApp');
+  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function eur(c) { var v = (c / 100).toFixed(2).replace('.', ','); return (v.slice(-3) === ',00' ? v.slice(0, -3) : v) + '&nbsp;&euro;'; }
+  function plan(d) {
+    window.FDKursplan.start(box, {
+      daten: d,
+      onBuchen: function (k, t) { location.href = 'kurs-buchen.html?k=' + encodeURIComponent(k.id) + '&d=' + encodeURIComponent(t.datum); },
+    });
+  }
+  fetch(API + '/api/kurse?p=niklas').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+    plan(d);
+    if (!d || !d.kurse || !d.kurse.length) return;
+    // Preise (vom ersten Kurs – Abweichungen je Kurs stehen beim Buchen)
+    var pr = d.kurse[0].produkte, html = [];
+    ['karte10', 'karte5', 'tageskarte'].forEach(function (a) {
+      var p = pr[a];
+      if (!p || !p.aktiv) return;
+      var karte = a !== 'tageskarte';
+      html.push('<div class="price' + (a === 'karte10' ? ' featured' : '') + '">' + (a === 'karte10' ? '<span class="pop">Empfohlen &middot; bester Preis pro Termin</span>' : '')
+        + '<h3>' + esc(p.label) + '</h3><div class="amount">' + eur(p.cents) + '</div>'
+        + '<div class="per">' + (karte ? p.termine + ' feste Termine &middot; ' + eur(Math.round(p.cents / p.termine)) + ' pro Termin' : 'ein einzelner Termin') + '</div>'
+        + '<p class="desc">' + (karte ? 'Ab deinem Wunschtermin, auch mitten in der laufenden Reihe. ' + d.gueltig_monate + ' Monate g&uuml;ltig.' : 'Ab ' + p.freischalt_tage + ' Tagen vor dem Termin, solange Pl&auml;tze frei sind.') + '</p>'
+        + '<a class="btn ' + (a === 'karte10' ? 'btn-blitz' : 'btn-ghost') + '" href="kurs-buchen.html">Termin aussuchen</a></div>');
+    });
+    document.getElementById('kursPreise').innerHTML = html.join('');
+    document.getElementById('kurspreise').hidden = false;
+    document.getElementById('kursPreisFaq').innerHTML = (pr.tageskarte.aktiv ? 'Einzelticket ' + eur(pr.tageskarte.cents) + ', ' : '') + esc(pr.karte5.label) + ' ' + eur(pr.karte5.cents)
+      + ', ' + esc(pr.karte10.label) + ' ' + eur(pr.karte10.cents) + '. Alle Preise findest du <a href="#kurspreise">oben bei den Preisen</a>.';
+    var cta = document.getElementById('heroCta');
+    cta.href = '#kursplan'; cta.textContent = 'Zum Kursplan';
+  }).catch(function () { plan(null); });
+})();
 </script>
 </body>
 </html>
