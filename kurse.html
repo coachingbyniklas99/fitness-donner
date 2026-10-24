@@ -87,20 +87,9 @@
     <button class="menu-btn" aria-label="Men&uuml; &ouml;ffnen" onclick="document.getElementById('navLinks').classList.toggle('open');this.textContent=this.textContent==='☰'?'✕':'☰'">&#9776;</button>
   </div>
 </nav>
-<header class="page-hero">
-  <div class="wrap">
-    <div class="eyebrow">Kurse &middot; Solingen-Ohligs</div>
-    <h1>Trainieren<br>in der Gruppe.</h1>
-    <p class="hero-sub">Neben dem Personal Training gebe ich Kurse im New Forge in Solingen-Ohligs. Kleine Gruppen, saubere Technik vor hohem Tempo &ndash; und jede &Uuml;bung in mehreren St&auml;rken, damit Einsteiger und Ge&uuml;bte in derselben Stunde auf ihre Kosten kommen.</p>
-    <div class="hero-ctas">
-      <a class="btn btn-blitz" id="heroCta" href="https://wa.me/491776311404?text=Hi%20Niklas%2C%20sag%20mir%20Bescheid%2C%20wenn%20der%20Kursplan%20steht.">Bescheid sagen, wenn es losgeht</a>
-      <a class="btn btn-ghost" href="tel:+491776311404">0177 6311404 anrufen</a>
-    </div>
-  </div>
-</header>
-
 <section id="kursplan">
   <div class="wrap">
+    <h1 style="position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">Kurse in Solingen-Ohligs: Trainieren in der Gruppe</h1>
     <div class="eyebrow">Kursplan</div>
     <h2 style="margin-top:16px">Die Termine.</h2>
     <p class="hero-sub" style="margin-top:14px;max-width:640px">W&auml;hl einen Tag und tipp beim passenden Kurs auf &bdquo;Kurs buchen&ldquo;. Dann siehst du, was f&uuml;r genau diesen Termin geht: 10er- oder 5er-Karte mit festen Terminen oder ein Einzelticket.</p>
@@ -242,7 +231,7 @@
 (function(){var n=document.getElementById('navLinks'),b=document.querySelector('.menu-btn');
 if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&!a.classList.contains('sub-toggle')){n.classList.remove('open');b.textContent='☰';}});}})();
 </script>
-<script src="kursplan.js?v=2"></script>
+<script src="kursplan.js?v=3"></script>
 <script>
 /* Kursplan und Kurspreise kommen live aus dem Buchungssystem.
    Ohne aktive Kurse zeigt der Plan die Tage mit dem Hinweis „Der Kursplan steht bald“. */
@@ -276,8 +265,6 @@ if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a
     document.getElementById('kurspreise').hidden = false;
     document.getElementById('kursPreisFaq').innerHTML = (pr.tageskarte.aktiv ? 'Einzelticket ' + eur(pr.tageskarte.cents) + ', ' : '') + esc(pr.karte5.label) + ' ' + eur(pr.karte5.cents)
       + ', ' + esc(pr.karte10.label) + ' ' + eur(pr.karte10.cents) + '. Alle Preise findest du <a href="#kurspreise">oben bei den Preisen</a>.';
-    var cta = document.getElementById('heroCta');
-    cta.href = '#kursplan'; cta.textContent = 'Zum Kursplan';
   }).catch(function () { plan(null); });
 })();
 </script>
