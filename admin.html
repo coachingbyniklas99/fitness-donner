@@ -49,6 +49,7 @@
     <button type="button" class="ad-tab" data-tab="sperren">Sperren</button>
     <button type="button" class="ad-tab" data-tab="codes">Codes</button>
     <button type="button" class="ad-tab" data-tab="preise">Preise</button>
+    <button type="button" class="ad-tab" data-tab="wiedervorlage">Wiedervorlage</button>
   </nav>
 
   <main class="ad-main">
@@ -62,6 +63,12 @@
       </div>
       <div id="reservedHint" class="ad-resv-hint" hidden></div>
       <div id="bookings" class="ad-list"></div>
+    </section>
+
+    <!-- Wiedervorlage (admin-wiedervorlage.js) -->
+    <section class="ad-panel" data-panel="wiedervorlage" hidden>
+      <h2>Wiedervorlage</h2>
+      <div id="wvApp"><div class="ad-empty">L&auml;dt &hellip;</div></div>
     </section>
 
     <!-- Kurse (admin-kurse.js) -->
@@ -282,6 +289,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
       });
       if (name === 'codes' && !state.codes.length) loadCodes('');
       if (name === 'kurse' && window.FDKurse) window.FDKurse.open();
+      if (name === 'wiedervorlage' && window.FDWiedervorlage) window.FDWiedervorlage.open();
       window.scrollTo(0, 0);
     };
   });
@@ -584,5 +592,6 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
 })();
 </script>
 <script src="admin-kurse.js?v=2"></script>
+<script src="admin-wiedervorlage.js?v=1"></script>
 </body>
 </html>

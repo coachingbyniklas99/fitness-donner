@@ -142,3 +142,7 @@
 .ak-usc-in{display:flex;gap:8px;align-items:center}
 .ak-usc-in input{width:74px;background:var(--bg);border:1px solid var(--line);color:var(--bone);font-family:var(--body);font-size:16px;padding:9px 10px;border-radius:0}
 .ak-kurs .ad-field textarea{width:100%}
+/* Wiedervorlage */
+.ad-field textarea{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--bone);font-family:var(--body);font-size:15px;line-height:1.5;padding:12px 14px;outline:none;border-radius:0;resize:vertical}
+.ad-field textarea:focus{border-color:var(--blitz)}
+.ad-field input[type="date"]{color-scheme:dark}

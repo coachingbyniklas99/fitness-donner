@@ -240,11 +240,11 @@
       <div class="gs-field">
         <label for="note">Worum geht es dir?</label>
         <textarea id="note" name="note" maxlength="300" placeholder="Ziele, Vorerfahrung, Beschwerden &ndash; alles, was ich vorher wissen sollte."></textarea>
-        <div class="small">Freiwillig. Was du hier schreibst, steht nur in meinem Buchungssystem und in der Buchungsmail an mich &ndash; nicht in meinem Kalender und nicht in der Kalenderdatei. Schreibst du hier etwas zu deiner Gesundheit, willigst du ein, dass ich das f&uuml;r deine Trainingsplanung verarbeite (Art.&nbsp;9 DSGVO); das kannst du jederzeit widerrufen. Du kannst es auch einfach pers&ouml;nlich besprechen.</div>
+        <div class="small">Freiwillig. Was du hier schreibst, steht nur in meinem Buchungssystem und in der Buchungsmail an mich &ndash; nicht in meinem Kalender und nicht in der Kalenderdatei. Ziele, die du hier nennst, greife ich sp&auml;ter vielleicht in einer pers&ouml;nlichen Mail an dich wieder auf; Angaben zur Gesundheit verwende ich daf&uuml;r nicht. Schreibst du hier etwas zu deiner Gesundheit, willigst du ein, dass ich das f&uuml;r deine Trainingsplanung verarbeite (Art.&nbsp;9 DSGVO); das kannst du jederzeit widerrufen. Du kannst es auch einfach pers&ouml;nlich besprechen.</div>
       </div>
 
       <div class="gs-field" id="voucherField">
-        <label for="voucher">Gutschein- oder Guthabencode</label>
+        <label for="voucher">Gutschein-, Guthaben- oder Aktionscode</label>
         <div class="tk-voucher">
           <input type="text" id="voucher" name="voucher" placeholder="FD-XXXX-XXXX" autocomplete="off">
           <button type="button" class="btn btn-ghost btn-sm" id="voucherBtn">Einl&ouml;sen</button>
@@ -259,7 +259,7 @@
           <li>&Uuml;bersicht deiner weiteren gebuchten Termine, falls du mehrere hast</li>
           <li>Eine kurze Erinnerung am Tag vorher</li>
         </ul>
-        <p>Beides geh&ouml;rt zum Termin. Werbung bekommst du nicht, und die Erinnerung stellst du mit einer kurzen Antwort wieder ab. Mehr dazu in der <a href="datenschutz.html" target="_blank" rel="noopener">Datenschutzerkl&auml;rung</a>.</p>
+        <p>Beides geh&ouml;rt zum Termin; die Erinnerung stellst du mit einer kurzen Antwort wieder ab. Au&szlig;erdem melde ich mich als Bestandskunde gelegentlich per E-Mail mit &auml;hnlichen Angeboten, zum Beispiel mit einem Gutschein f&uuml;r deinen n&auml;chsten Einzeltermin. Dem kannst du jederzeit widersprechen &ndash; mit einem Klick in jeder dieser Mails oder per Nachricht an mich; au&szlig;er den &Uuml;bermittlungskosten entstehen dir dabei keine Kosten. Mehr dazu in der <a href="datenschutz.html" target="_blank" rel="noopener">Datenschutzerkl&auml;rung</a>.</p>
       </div>
 
       <div class="gs-order">
@@ -764,6 +764,10 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
           state.voucher = { code: d.code, remaining_cents: d.discount_cents };
           msg.className = 'small tk-good';
           msg.textContent = d.label + ' erkannt – eine Einheit wird eingelöst, noch ' + d.sessions_left + ' frei.';
+        } else if (d.kind === 'aktion') {
+          state.voucher = { code: d.code, remaining_cents: d.discount_cents, aktion: true };
+          msg.className = 'small tk-good';
+          msg.textContent = 'Aktionscode erkannt – ' + eur(d.discount_cents) + ' Rabatt auf deinen Einzeltermin.';
         } else {
           state.voucher = d;
           msg.className = 'small tk-good';
@@ -873,7 +877,9 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
           el('voucher').value = d.code;
           msg.textContent = d.kind === 'karte'
             ? 'Karte erkannt – such dir einen Termin aus, der Code wird im letzten Schritt eingelöst.'
-            : 'Das ist ein Gutschein, keine Karte – er wird dir im letzten Schritt automatisch angerechnet.';
+            : d.kind === 'aktion'
+              ? 'Das ist ein Aktionscode, keine Karte – der Rabatt wird dir im letzten Schritt automatisch abgezogen.'
+              : 'Das ist ein Gutschein, keine Karte – er wird dir im letzten Schritt automatisch angerechnet.';
           msg.className = 'small';
           setTimeout(function () { el('voucherBtn').click(); }, 50);
         } else {
@@ -945,7 +951,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
       items.push(state.chosen.place + ', ' + state.chosen.city);
     }
     if (full > 0) items.push('Preis: ' + eur(full));
-    if (applied > 0) items.push('Gutschein ' + state.voucher.code + ': −' + eur(applied));
+    if (applied > 0) items.push((state.voucher.aktion ? 'Aktionscode ' : 'Gutschein ') + state.voucher.code + ': −' + eur(applied));
     if (state.type === 'probe') items.push('Der Betrag wird auf dein erstes Training angerechnet');
     items.push('Verschieben kostenlos bis 12 Stunden vorher');
 
