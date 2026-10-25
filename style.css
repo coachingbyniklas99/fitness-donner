@@ -589,3 +589,16 @@ footer{border-top:1px solid var(--line);padding:44px 0;font-size:13px;color:var(
   .ort-galerie::-webkit-scrollbar{display:none}
   .ort-galerie a{flex:0 0 80%;scroll-snap-align:start}
 }
+
+/* Startseite: Race-Fotos im Hyrox-Teaser (Originalformate, nichts wird beschnitten) */
+.hyrox-fotos{position:relative;display:grid;grid-template-columns:8fr 9fr;grid-template-rows:1fr 1fr;gap:14px;margin-top:48px}
+.hyrox-fotos .hf{position:relative;margin:0;overflow:hidden;background:#15171C}
+.hyrox-fotos .hf-portrait{grid-row:1 / span 2;aspect-ratio:2/3}
+.hyrox-fotos .hf img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.hyrox-fotos figcaption{position:absolute;left:12px;bottom:12px;background:rgba(21,23,28,.88);color:var(--bone);padding:6px 11px;font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase}
+@media(max-width:700px){
+  .hyrox-fotos{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none;margin-top:36px;padding-bottom:4px}
+  .hyrox-fotos::-webkit-scrollbar{display:none}
+  .hyrox-fotos .hf{flex:0 0 auto;height:240px;scroll-snap-align:start}
+  .hyrox-fotos .hf:not(.hf-portrait){aspect-ratio:3/2}
+}
