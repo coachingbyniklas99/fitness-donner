@@ -576,3 +576,16 @@ footer{border-top:1px solid var(--line);padding:44px 0;font-size:13px;color:var(
   .partner-logos .pl-wellhub{height:24px}
   .partner-logos .pl-newforge{height:32px}
 }
+
+/* Startseite: Studio-Galerie unter der Hauptkarte */
+.ort-galerie{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+.ort-galerie a{display:block;position:relative;aspect-ratio:4/3;overflow:hidden;border:1px solid var(--line);background:var(--panel);transition:border-color .25s}
+.ort-galerie a:hover{border-color:rgba(239,185,46,.55)}
+.ort-galerie img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+.ort-galerie a:hover img{transform:scale(1.04)}
+.ort-galerie span{position:absolute;left:12px;bottom:12px;background:rgba(21,23,28,.85);padding:6px 11px;font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--bone)}
+@media(max-width:700px){
+  .ort-galerie{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none;margin-right:-4px;padding-bottom:4px}
+  .ort-galerie::-webkit-scrollbar{display:none}
+  .ort-galerie a{flex:0 0 80%;scroll-snap-align:start}
+}
