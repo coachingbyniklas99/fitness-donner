@@ -62,7 +62,7 @@
   }
 }
 </script>
-<link rel="stylesheet" href="style.css?v=26">
+<link rel="stylesheet" href="style.css?v=27">
 <style>
 /* Lizenzen auf dem Handy kompakt, damit die Liste die Seite nicht in die Länge zieht */
 @media(max-width:600px){
@@ -215,15 +215,15 @@
   </div>
   <div class="wrap hyrox-fotos">
     <figure class="hf hf-portrait">
-      <img src="run-cgn.webp" alt="L&auml;ufer beim Run CGN in K&ouml;ln" width="799" height="1200" loading="lazy">
+      <button class="hf-btn" type="button" data-cap="Run CGN" aria-label="Foto vergr&ouml;&szlig;ern: Run CGN"><img src="run-cgn.webp" alt="L&auml;ufer beim Run CGN in K&ouml;ln" width="799" height="1200" loading="lazy"></button>
       <figcaption>Run CGN</figcaption>
     </figure>
     <figure class="hf">
-      <img src="hyrox-halle.webp" alt="Hyrox Rotterdam: Athlet tr&auml;gt zwei Kettlebells durch die Halle" width="1200" height="800" loading="lazy">
+      <button class="hf-btn" type="button" data-cap="Hyrox Rotterdam" aria-label="Foto vergr&ouml;&szlig;ern: Hyrox Rotterdam"><img src="hyrox-halle.webp" alt="Hyrox Rotterdam: Athlet tr&auml;gt zwei Kettlebells durch die Halle" width="1200" height="800" loading="lazy"></button>
       <figcaption>Hyrox Rotterdam</figcaption>
     </figure>
     <figure class="hf">
-      <img src="hyrox-finish.webp" alt="Zwei Sportler jubeln im Ziel beim Hyrox Rotterdam" width="1200" height="800" loading="lazy">
+      <button class="hf-btn" type="button" data-cap="Im Ziel &middot; Hyrox Rotterdam" aria-label="Foto vergr&ouml;&szlig;ern: Im Ziel" ><img src="hyrox-finish.webp" alt="Zwei Sportler jubeln im Ziel beim Hyrox Rotterdam" width="1200" height="800" loading="lazy"></button>
       <figcaption>Im Ziel</figcaption>
     </figure>
   </div>
@@ -417,6 +417,56 @@ if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a
       Array.prototype.forEach.call(c, function(e){ e.textContent = d.count; });
       if (d.rating) Array.prototype.forEach.call(r, function(e){ e.textContent = Number(d.rating).toFixed(1).replace('.', ','); });
     }).catch(function(){});
+})();
+</script>
+<div class="hl" id="hyroxLb" hidden role="dialog" aria-modal="true" aria-label="Foto in voller Gr&ouml;&szlig;e">
+  <img id="hlImg" alt="">
+  <button class="hl-btn hl-close" type="button" aria-label="Schlie&szlig;en">&times;</button>
+  <button class="hl-btn hl-prev" type="button" aria-label="Vorheriges Foto">&#8249;</button>
+  <button class="hl-btn hl-next" type="button" aria-label="N&auml;chstes Foto">&#8250;</button>
+  <div class="hl-bar" id="hlCap"></div>
+</div>
+<script>
+/* Hyrox-Fotos: Antippen = Vollbild, Wischen oder Pfeile = naechstes Foto, Esc/Tippen daneben = zu */
+(function(){
+  var btns = Array.prototype.slice.call(document.querySelectorAll('.hyrox-fotos .hf-btn'));
+  var lb = document.getElementById('hyroxLb');
+  if (!btns.length || !lb) return;
+  var img = document.getElementById('hlImg'), cap = document.getElementById('hlCap');
+  var i = 0, last = null, x0 = null;
+  function show(n){
+    i = (n + btns.length) % btns.length;
+    var im = btns[i].querySelector('img');
+    img.src = im.currentSrc || im.src; img.alt = im.alt;
+    cap.innerHTML = btns[i].getAttribute('data-cap') || '';
+  }
+  function open(n){
+    last = document.activeElement; show(n);
+    lb.hidden = false; document.documentElement.style.overflow = 'hidden';
+    lb.querySelector('.hl-close').focus();
+  }
+  function close(){
+    lb.hidden = true; document.documentElement.style.overflow = '';
+    if (last) last.focus();
+  }
+  btns.forEach(function(b, n){ b.addEventListener('click', function(){ open(n); }); });
+  lb.querySelector('.hl-close').onclick = close;
+  lb.querySelector('.hl-prev').onclick = function(){ show(i - 1); };
+  lb.querySelector('.hl-next').onclick = function(){ show(i + 1); };
+  lb.addEventListener('click', function(e){ if (e.target === lb) close(); });
+  document.addEventListener('keydown', function(e){
+    if (lb.hidden) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') show(i - 1);
+    if (e.key === 'ArrowRight') show(i + 1);
+  });
+  lb.addEventListener('touchstart', function(e){ x0 = e.touches[0].clientX; }, {passive:true});
+  lb.addEventListener('touchend', function(e){
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 50) show(i + (dx < 0 ? 1 : -1));
+    x0 = null;
+  }, {passive:true});
 })();
 </script>
 </body>
