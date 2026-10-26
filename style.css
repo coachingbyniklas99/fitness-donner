@@ -631,3 +631,10 @@ footer{border-top:1px solid var(--line);padding:44px 0;font-size:13px;color:var(
 @media(max-width:900px){.kanal-qr{display:none}}
 .kanal-facts{display:flex;gap:10px 22px;flex-wrap:wrap;margin:26px 0 0;padding:0;list-style:none;font-size:14px;color:var(--muted)}
 .kanal-facts li::before{content:"\2713";color:var(--blitz);margin-right:8px;font-weight:700}
+
+/* Kanal-Seite: Foto neben dem Einstieg */
+.kanal-hero{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:56px;align-items:center}
+.kanal-foto{margin:0;position:relative;justify-self:end;width:100%;max-width:340px}
+.kanal-foto::before{content:"";position:absolute;inset:14px -14px -14px 14px;border:2px solid var(--blitz);z-index:0}
+.kanal-foto img{position:relative;z-index:1;display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;object-position:50% 12%;background:#1A1D23}
+@media(max-width:900px){.kanal-hero{grid-template-columns:1fr;gap:36px}.kanal-foto{justify-self:start;max-width:300px;margin-right:14px}}
