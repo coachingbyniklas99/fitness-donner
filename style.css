@@ -612,3 +612,22 @@ footer{border-top:1px solid var(--line);padding:44px 0;font-size:13px;color:var(
 .hl-prev{left:14px;top:50%;transform:translateY(-50%)}.hl-next{right:14px;top:50%;transform:translateY(-50%)}
 .hl-bar{position:absolute;left:0;right:0;bottom:0;padding:14px 18px calc(14px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(10,11,14,.9));color:var(--bone);font-size:14px;text-align:center;pointer-events:none}
 @media(max-width:600px){.hl-prev,.hl-next{top:auto;bottom:70px;transform:none}}
+
+
+/* News-Leiste: WhatsApp-Kanal */
+.newsbar{background:var(--blitz);color:#15171C;font-size:14px;line-height:1.35}
+.newsbar a{display:flex;align-items:center;justify-content:center;gap:10px;min-height:40px;padding:8px 16px;color:inherit;text-decoration:none;text-align:center}
+.newsbar a:hover .newsbar-go{text-decoration:underline}
+.newsbar b{font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:12px;background:#15171C;color:var(--blitz);padding:2px 7px}
+.newsbar .wa-ico{flex:0 0 auto}
+.newsbar-go{font-weight:700;white-space:nowrap}
+.newsbar .nb-short{display:none}
+@media(max-width:600px){.newsbar{font-size:13px}.newsbar .nb-long{display:none}.newsbar .nb-short{display:inline}.newsbar b{display:none}}
+/* Kanal-Seite */
+.kanal-join{display:flex;align-items:center;gap:36px;margin-top:34px;flex-wrap:wrap}
+.kanal-join .btn{display:inline-flex;align-items:center;gap:10px}
+.kanal-qr{display:flex;align-items:center;gap:16px;color:var(--muted);font-size:13px;max-width:240px}
+.kanal-qr svg{width:116px;height:116px;flex:0 0 auto;border:6px solid #ECE9E2;background:#ECE9E2;image-rendering:pixelated}
+@media(max-width:900px){.kanal-qr{display:none}}
+.kanal-facts{display:flex;gap:10px 22px;flex-wrap:wrap;margin:26px 0 0;padding:0;list-style:none;font-size:14px;color:var(--muted)}
+.kanal-facts li::before{content:"\2713";color:var(--blitz);margin-right:8px;font-weight:700}
