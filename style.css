@@ -640,6 +640,8 @@ footer{border-top:1px solid var(--line);padding:44px 0;font-size:13px;color:var(
 .kanal-foto img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 30%;filter:brightness(.93) contrast(1.04)}
 .kanal-foto::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--bg) 0,rgba(21,23,28,.88) 14%,rgba(21,23,28,.35) 45%,rgba(21,23,28,0) 75%),linear-gradient(0deg,var(--bg) 0,rgba(21,23,28,0) 32%),linear-gradient(180deg,var(--bg) 0,rgba(21,23,28,0) 14%)}
 @media(max-width:900px){.kanal-header{padding-bottom:0}.kanal-foto{position:relative;order:2;width:100%;height:340px;margin-top:-20px}.kanal-header{display:flex;flex-direction:column}.kanal-hero{order:1;padding-bottom:0}.kanal-foto::after{background:linear-gradient(180deg,var(--bg) 0,rgba(21,23,28,.3) 35%,rgba(21,23,28,0) 60%),linear-gradient(0deg,var(--bg) 0,rgba(21,23,28,0) 25%)}.kanal-foto img{object-position:60% 35%}}
+/* Handy: Foto oben, laeuft nach unten in Ueberschrift und Text aus */
+@media(max-width:700px){.kanal-header{padding-top:0}.kanal-foto{order:0;height:330px;margin:0}.kanal-hero{order:1;margin-top:-120px}.kanal-foto::after{background:linear-gradient(180deg,var(--bg) 0,rgba(21,23,28,0) 12%),linear-gradient(0deg,var(--bg) 0,rgba(21,23,28,.72) 30%,rgba(21,23,28,.15) 68%,rgba(21,23,28,0) 100%)}.kanal-foto img{object-position:62% 70%}}
 
 /* Kopfbereich mit auslaufendem Bild (Bild laeuft per Verlauf in den Seitenhintergrund aus) */
 .fade-hero{position:relative;overflow:hidden;padding-bottom:64px}
