@@ -628,7 +628,7 @@ footer{border-top:1px solid var(--line);padding:44px 0;font-size:13px;color:var(
 .kanal-join .btn{display:inline-flex;align-items:center;gap:10px}
 .kanal-qr{display:flex;align-items:center;gap:16px;color:var(--muted);font-size:13px;max-width:240px}
 .kanal-qr svg{width:116px;height:116px;flex:0 0 auto;border:6px solid #ECE9E2;background:#ECE9E2;image-rendering:pixelated}
-@media(max-width:900px){.kanal-qr{display:none}}
+@media(max-width:700px){.kanal-qr{display:none}}
 .kanal-facts{display:flex;gap:10px 22px;flex-wrap:wrap;margin:26px 0 0;padding:0;list-style:none;font-size:14px;color:var(--muted)}
 .kanal-facts li::before{content:"\2713";color:var(--blitz);margin-right:8px;font-weight:700}
 
