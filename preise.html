@@ -21,7 +21,7 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="style.css?v=28">
+<link rel="stylesheet" href="style.css?v=32">
 <style>
 /* ---------- Preisumstellung zum 01.01.2027 ---------- */
 .deal{background:var(--blitz);color:#15171C}
@@ -71,6 +71,14 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
 .kleingedruckt a{color:#b9bcc3;text-decoration:underline}
 @media(max-width:600px){.deal-in{gap:10px;padding:14px 18px}.cd div{min-width:48px}.cd b{font-size:20px}.was{flex-wrap:wrap;gap:6px}}
 
+/* Handy: Bild liegt hinter Ueberschrift und Text (nicht darunter), laeuft nach unten in den Seitenhintergrund aus - die Preise folgen direkt */
+@media(max-width:900px){
+  .hero-bg-m{display:block;padding-bottom:0}
+  .hero-bg-m>.fade-img{position:absolute;top:0;left:0;right:0;width:100%;height:300px;margin:0}
+  .hero-bg-m>.fade-img img{object-position:var(--posm,100% 40%)}
+  .hero-bg-m>.fade-img::after{background:linear-gradient(90deg,rgba(21,23,28,.88) 0,rgba(21,23,28,.5) 38%,rgba(21,23,28,0) 72%),linear-gradient(180deg,rgba(21,23,28,.5) 0,rgba(21,23,28,0) 16%,rgba(21,23,28,.05) 32%,var(--bg) 100%)}
+}
+}
 /* ---------- Umschalter Personal Training / Kurse ---------- */
 .ptabs{display:inline-flex;border:1px solid var(--line);background:var(--panel);margin-bottom:26px}
 .ptab{appearance:none;background:none;border:none;cursor:pointer;font-family:var(--body);
@@ -90,6 +98,7 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
 .sprung a:hover{border-color:var(--blitz);color:var(--blitz);background:var(--panel-2)}
 /* Die klebende Kopfzeile darf das Ziel nicht verdecken. */
 .price h3[id]{scroll-margin-top:96px}
+#preisbereich{scroll-margin-top:90px}
 
 /* ---------- Karten enden, wo ihr Inhalt endet - keine Luecken ---------- */
 .price-grid.four{align-items:start}
@@ -158,23 +167,21 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
     <button class="menu-btn" aria-label="Men&uuml; &ouml;ffnen" onclick="document.getElementById('navLinks').classList.toggle('open');this.textContent=this.textContent==='☰'?'✕':'☰'">&#9776;</button>
   </div>
 </nav>
-<header class="page-hero">
+<header class="page-hero fade-hero hero-bg-m">
+  <figure class="fade-img" style="--pos:58% 45%;--posm:30% 42%"><img src="newforge-power.webp" width="1600" height="1000" alt="Wandbild im New Forge mit goldener Schrift: Now is the moment of power" fetchpriority="high"></figure>
   <div class="wrap">
     <div class="eyebrow">Preise</div>
     <h1>Feste Preise.<br>Keine Rätsel.</h1>
     <p class="hero-sub">Was Training bei mir kostet, steht hier &ndash; nicht erst nach einem Verkaufsgespr&auml;ch. Du kannst dir direkt einen Termin aussuchen und online bezahlen. Oder erst mal unverbindlich kennenlernen.</p>
-    <div class="hero-ctas">
-      <a class="btn btn-blitz" href="termin-buchen.html">Termin aussuchen &amp; buchen</a>
-      <a class="btn btn-ghost" href="tel:+491776311404">Fragen telefonisch kl&auml;ren</a>
+    <div class="hero-ctas" role="tablist" aria-label="Preisbereich">
+      <button class="btn btn-blitz" type="button" data-ziel="pt" role="tab" aria-selected="true">Personal Training buchen</button>
+      <button class="btn btn-ghost" type="button" data-ziel="kurse" role="tab" aria-selected="false">Kurs buchen</button>
     </div>
   </div>
 </header>
 <section style="padding-top:56px">
   <div class="wrap">
-    <div class="ptabs" role="tablist" aria-label="Preisbereich">
-      <button class="ptab on" type="button" data-ziel="pt" role="tab" aria-selected="true">Personal Training</button>
-      <button class="ptab" type="button" data-ziel="kurse" role="tab" aria-selected="false">Kurse</button>
-    </div>
+    <div id="preisbereich"></div>
 
     <div class="pblock" id="pb-pt">
       <nav class="sprung" aria-label="Zu einem Angebot springen">
@@ -214,7 +221,7 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
         <a class="btn btn-ghost" href="termin-buchen.html?art=training">Termin buchen</a>
       </div>
       <div class="price featured">
-        <div class="pop">Beliebteste Wahl</div>
+        <div class="pop">Empfohlen</div>
         <h3 id="k-4er">4er-Karte</h3>
         <div class="preiszeile">
           <span class="amount">109 &euro;</span>
@@ -266,14 +273,24 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
     </div>
 
     <div class="pblock" id="pb-kurse" hidden>
-      <div class="kurse-leer" id="kurseLeer">
-        <div class="kl-kopf">Kurspreise</div>
-        <p class="kl-gross">Preise folgen</p>
-        <p class="kl-txt">Sobald der Kursplan mit den festen Terminen steht, stehen hier die Preise &ndash;
-           f&uuml;r den Einzelkurs und f&uuml;r Karten &uuml;ber mehrere Kurse.</p>
-        <a class="btn btn-ghost" href="kurse.html">Zur Kursseite</a>
+      <p class="kleingedruckt" id="kursStart" style="margin:0 0 22px">Startpreise &ndash; der Kursplan mit den festen Terminen folgt in K&uuml;rze. <a href="kanal.html" style="color:var(--blitz)">Im WhatsApp-Kanal bist du als Erste:r dabei.</a></p>
+      <div class="price-grid" id="kursPreise">
+        <div class="price"><h3>Einzelticket</h3>
+          <div class="preiszeile"><span class="amount">18 &euro;</span></div>
+          <div class="per">ein einzelner Termin</div>
+          <p class="desc">Du kommst zu einem Kurstermin deiner Wahl, solange Pl&auml;tze frei sind.</p>
+          <a class="btn btn-ghost" href="kurse.html">Kurs aussuchen &amp; buchen</a></div>
+        <div class="price"><h3>5er-Karte</h3>
+          <div class="preiszeile"><span class="amount">80 &euro;</span></div>
+          <div class="per">5 Termine in Folge &middot; 16 &euro; pro Termin</div>
+          <p class="desc">Du w&auml;hlst den ersten Termin, die Karte umfasst die 5 Wochentermine ab dann.</p>
+          <a class="btn btn-ghost" href="kurse.html">Kurs aussuchen &amp; buchen</a></div>
+        <div class="price featured"><span class="pop">Empfohlen &middot; bester Preis pro Termin</span><h3>10er-Karte</h3>
+          <div class="preiszeile"><span class="amount">140 &euro;</span></div>
+          <div class="per">10 Termine in Folge &middot; 14 &euro; pro Termin</div>
+          <p class="desc">Du w&auml;hlst den ersten Termin, die Karte umfasst die 10 Wochentermine ab dann.</p>
+          <a class="btn btn-blitz" href="kurse.html">Kurs aussuchen &amp; buchen</a></div>
       </div>
-      <div class="price-grid" id="kursPreise" hidden></div>
 
 
       <p class="kleingedruckt">Die Kurse finden im New Forge, Prinzenstra&szlig;e 2a in Solingen-Ohligs statt. Alle Preise sind Endpreise; als Kleinunternehmer im Sinne von &sect;&nbsp;19 UStG berechne ich keine Umsatzsteuer, sie wird daher nicht ausgewiesen.</p>
@@ -318,14 +335,15 @@ if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a
 /* Umschalter und Sprungleiste. Beides ohne Bibliothek, damit die Seite
    auch dann funktioniert, wenn sonst nichts laedt. */
 (function(){
-  var tabs = document.querySelectorAll('.ptab');
+  var tabs = document.querySelectorAll('[data-ziel]');
   var pt = document.getElementById('pb-pt'), kurse = document.getElementById('pb-kurse');
   function zeig(ziel){
     pt.hidden = (ziel !== 'pt');
     kurse.hidden = (ziel !== 'kurse');
     Array.prototype.forEach.call(tabs, function(t){
       var an = t.dataset.ziel === ziel;
-      t.classList.toggle('on', an);
+      t.classList.toggle('btn-blitz', an);
+      t.classList.toggle('btn-ghost', !an);
       t.setAttribute('aria-selected', an ? 'true' : 'false');
     });
   }
@@ -333,12 +351,13 @@ if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a
     t.addEventListener('click', function(){
       zeig(t.dataset.ziel);
       history.replaceState(null, '', t.dataset.ziel === 'kurse' ? '#kurse' : location.pathname);
+      document.getElementById('preisbereich').scrollIntoView({behavior:'smooth', block:'start'});
     });
   });
   Array.prototype.forEach.call(document.querySelectorAll('[data-zu-pt]'), function(a){
     a.addEventListener('click', function(e){
       e.preventDefault(); zeig('pt');
-      document.querySelector('.ptabs').scrollIntoView({behavior:'smooth', block:'start'});
+      document.getElementById('preisbereich').scrollIntoView({behavior:'smooth', block:'start'});
     });
   });
   if (location.hash === '#kurse') zeig('kurse');
@@ -365,7 +384,7 @@ if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a
   fetch(API + '/api/kurse?p=niklas').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
     if (!d || !d.kurse || !d.kurse.length) return;
     var k = d.kurse[0], box = document.getElementById('kursPreise'), html = [];
-    ['karte10', 'karte5', 'tageskarte'].forEach(function (a) {
+    ['tageskarte', 'karte5', 'karte10'].forEach(function (a) {
       var p = k.produkte[a];
       if (!p || !p.aktiv) return;
       var karte = a !== 'tageskarte';
@@ -374,11 +393,12 @@ if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a
         + '<div class="per">' + (karte ? p.termine + ' Termine in Folge &middot; ' + eur(Math.round(p.cents / p.termine)) + ' pro Termin' : 'ein einzelner Termin') + '</div>'
         + '<p class="desc">' + (karte ? 'Du w&auml;hlst den ersten Termin, die Karte umfasst die ' + p.termine + ' Wochentermine ab dann. ' + d.gueltig_monate + ' Monate g&uuml;ltig.'
           : 'Ab ' + p.freischalt_tage + ' Tagen vor einem Termin f&uuml;r die Pl&auml;tze, die dann noch frei sind.') + '</p>'
-        + '<a class="btn ' + (a === 'karte10' ? 'btn-blitz' : 'btn-ghost') + '" href="kurse.html#kursplan">Zum Kursplan</a></div>');
+        + '<a class="btn ' + (a === 'karte10' ? 'btn-blitz' : 'btn-ghost') + '" href="kurse.html#kursplan">Kurs aussuchen &amp; buchen</a></div>');
     });
+    if (!html.length) return;
     box.innerHTML = html.join('');
     box.hidden = false;
-    document.getElementById('kurseLeer').hidden = true;
+    var st = document.getElementById('kursStart'); if (st) st.hidden = true;
   }).catch(function () {});
 })();
 </script>

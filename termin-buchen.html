@@ -9,7 +9,7 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#15171C">
 <title>Termin buchen | Fitness Donner</title>
-<meta name="description" content="Personal Training im New Forge Solingen-Ohligs, in Köln und Neuss direkt online buchen und bezahlen. Probetraining für 29 € – wird auf dein erstes Training angerechnet.">
+<meta name="description" content="Personal Training oder Kurse im New Forge Solingen-Ohligs direkt online buchen und bezahlen. Probetraining für 29 € – wird auf dein erstes Training angerechnet.">
 <link rel="canonical" href="https://fitnessdonner.de/termin-buchen.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Fitness Donner">
@@ -23,7 +23,17 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="style.css?v=23">
 <link rel="stylesheet" href="gutschein.css?v=2">
-<link rel="stylesheet" href="termin.css?v=9">
+<link rel="stylesheet" href="termin.css?v=10">
+<script>
+/* Auswahl "Personal Training oder Kurse" nur zeigen, wenn niemand mit Vorauswahl (?art=, ?code=) oder laufender Buchung kommt */
+(function () {
+  try {
+    var q = new URLSearchParams(location.search), d = null;
+    try { d = window.sessionStorage.getItem('fd_buchung'); } catch (e) {}
+    if (!q.get('art') && !q.get('code') && !q.get('abgebrochen') && !q.get('bereich') && !d) document.documentElement.classList.add('wahl');
+  } catch (e) {}
+})();
+</script>
 </head>
 <body>
 <nav>
@@ -79,6 +89,27 @@
   </div>
 </header>
 
+<!-- Auswahl: Personal Training oder Kurse -->
+<section class="wahl-section" id="wahl">
+  <div class="wrap">
+    <h2>Wobei m&ouml;chtest du dabei sein?</h2>
+    <div class="wahl-grid">
+      <button type="button" class="wahl-kachel" id="wahlPt">
+        <span class="tk-type-name">Personal Training</span>
+        <span class="wahl-preis">ab 29&nbsp;&euro;</span>
+        <span class="tk-type-desc">Du und ich, 60 Minuten 1:1 &ndash; mit Probetraining zum Kennenlernen. In Solingen, K&ouml;ln oder Neuss.</span>
+        <span class="wahl-go">Termin aussuchen &rarr;</span>
+      </button>
+      <a class="wahl-kachel" href="kurse.html" id="wahlKurse">
+        <span class="tk-type-name">Kurse</span>
+        <span class="wahl-preis">ab 14&nbsp;&euro; <small>pro Termin</small></span>
+        <span class="tk-type-desc">Gemeinsam trainieren im New Forge in Solingen-Ohligs. Einzelticket oder Karte &ndash; mit Karte zahlst du weniger pro Termin.</span>
+        <span class="wahl-go">Zum Kursplan &rarr;</span>
+      </a>
+    </div>
+  </div>
+</section>
+
 <!-- Fortschrittsleiste, bleibt beim Scrollen oben stehen -->
 <div class="tk-steps" id="stepBar">
   <div class="wrap tk-steps-inner">
@@ -103,6 +134,7 @@
 
     <!-- ---------- Schritt 1 ---------- -->
     <div class="gs-form tk-panel" data-panel="1">
+      <a href="#" class="tk-zurwahl" id="zurWahl">&larr; Personal Training oder Kurse</a>
       <h2>Was m&ouml;chtest du buchen?</h2>
       <p class="gs-sub">Noch nie bei mir trainiert? Nimm das Probetraining &ndash; die 29&nbsp;&euro; ziehe ich dir vom ersten Training wieder ab. Bei den Karten zahlst du einmal und legst die Termine sp&auml;ter einzeln fest.</p>
 
@@ -1221,6 +1253,19 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
   }
 
   el('backFromData').onclick = function () { goStep(isCard() ? 1 : 2); };
+
+  /* Auswahl Personal Training / Kurse */
+  function wahlSchliessen() {
+    document.documentElement.classList.remove('wahl');
+    var bar = el('stepBar');
+    window.scrollTo({ top: Math.max(0, bar.getBoundingClientRect().top + window.scrollY - 8), behavior: 'smooth' });
+  }
+  el('wahlPt').onclick = wahlSchliessen;
+  el('zurWahl').onclick = function (e) {
+    e.preventDefault();
+    document.documentElement.classList.add('wahl');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   /* Vorauswahl über ?art= von der Preisseite */
   function preselect() {

@@ -236,3 +236,20 @@
 .tk-picked-more{font-size:13px;color:var(--muted);margin:12px 0 0;line-height:1.55}
 .tk-picked-more .tk-ortlink{font-size:13px;color:var(--blitz)}
 @media(min-width:900px){.tk-picked-more .tk-ortlink{display:none}}
+
+/* ---------- Auswahl: Personal Training oder Kurse ---------- */
+.wahl-section{display:none;padding:48px 0 72px}
+html.wahl .wahl-section{display:block}
+html.wahl .tk-steps,html.wahl .tk-section{display:none}
+.wahl-section h2{font-family:var(--display);font-size:clamp(28px,4vw,40px);text-transform:uppercase;margin-bottom:24px}
+.wahl-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:760px){.wahl-grid{grid-template-columns:1fr}}
+.wahl-kachel{display:flex;flex-direction:column;gap:10px;text-align:left;text-decoration:none;cursor:pointer;
+  border:1px solid var(--line);background:var(--bg);color:var(--bone);padding:28px 26px;font:inherit;
+  transition:border-color .15s,background .15s}
+.wahl-kachel:hover,.wahl-kachel:focus-visible{border-color:var(--blitz);background:rgba(239,185,46,.07)}
+.wahl-preis{font-family:var(--display);font-size:44px;line-height:1.05;color:var(--blitz)}
+.wahl-preis small{font-family:inherit;font-size:16px;color:var(--muted);letter-spacing:.02em}
+.wahl-go{margin-top:auto;padding-top:10px;font-weight:700;font-size:14px;letter-spacing:.08em;text-transform:uppercase}
+.tk-zurwahl{display:inline-block;margin-bottom:14px;font-size:13px;color:var(--muted);text-decoration:none}
+.tk-zurwahl:hover{color:var(--blitz)}
