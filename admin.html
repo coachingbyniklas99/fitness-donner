@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-title" content="FD Verwaltung">
 <meta name="theme-color" content="#15171C">
 <link rel="stylesheet" href="style.css?v=23">
-<link rel="stylesheet" href="admin.css?v=6">
+<link rel="stylesheet" href="admin.css?v=7">
 </head>
 <body class="ad-body">
 
@@ -45,6 +45,7 @@
 
   <nav class="ad-tabs" id="tabs">
     <button type="button" class="ad-tab on" data-tab="termine">Termine</button>
+    <button type="button" class="ad-tab" data-tab="kunden">Kunden</button>
     <button type="button" class="ad-tab" data-tab="kurse">Kurse</button>
     <button type="button" class="ad-tab" data-tab="sperren">Sperren</button>
     <button type="button" class="ad-tab" data-tab="codes">Codes</button>
@@ -63,6 +64,12 @@
       </div>
       <div id="reservedHint" class="ad-resv-hint" hidden></div>
       <div id="bookings" class="ad-list"></div>
+    </section>
+
+    <!-- Kunden (admin-kunden.js) -->
+    <section class="ad-panel" data-panel="kunden" hidden>
+      <h2>Kunden</h2>
+      <div id="kundenApp"><div class="ad-empty">L&auml;dt &hellip;</div></div>
     </section>
 
     <!-- Wiedervorlage (admin-wiedervorlage.js) -->
@@ -288,6 +295,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
         p.hidden = p.getAttribute('data-panel') !== name;
       });
       if (name === 'codes' && !state.codes.length) loadCodes('');
+      if (name === 'kunden' && window.FDKunden) window.FDKunden.open();
       if (name === 'kurse' && window.FDKurse) window.FDKurse.open();
       if (name === 'wiedervorlage' && window.FDWiedervorlage) window.FDWiedervorlage.open();
       window.scrollTo(0, 0);
@@ -593,5 +601,6 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
 </script>
 <script src="admin-kurse.js?v=2"></script>
 <script src="admin-wiedervorlage.js?v=2"></script>
+<script src="admin-kunden.js?v=1"></script>
 </body>
 </html>
