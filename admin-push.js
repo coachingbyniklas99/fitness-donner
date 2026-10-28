@@ -103,7 +103,11 @@
     }).then(function (d) {
       serverKey = d.key;
       pruefen();
-    }).catch(function () { /* still: Mitteilungen sind eine Zugabe */ });
+    }).catch(function (e) {
+      if (e && e.message === 'abgemeldet') return;
+      show('<span>Mitteilungen sind gerade nicht verfügbar (' + (e && e.message ? e.message : 'unbekannter Fehler') + ').</span>' + link('pushRetry', 'Nochmal versuchen'));
+      document.getElementById('pushRetry').onclick = init;
+    });
   }
 
   window.FDPush = { init: init };
