@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-title" content="FD Verwaltung">
 <meta name="theme-color" content="#15171C">
 <link rel="stylesheet" href="style.css?v=23">
-<link rel="stylesheet" href="admin.css?v=7">
+<link rel="stylesheet" href="admin.css?v=8">
 </head>
 <body class="ad-body">
 
@@ -41,6 +41,7 @@
       <div class="ad-head-title">Verwaltung</div>
       <button type="button" class="ad-logout" id="logout">Abmelden</button>
     </div>
+    <div class="ad-push" id="pushBox" hidden></div>
   </header>
 
   <nav class="ad-tabs" id="tabs">
@@ -283,6 +284,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     el('loginView').hidden = true;
     el('app').hidden = false;
     load();
+    if (window.FDPush) window.FDPush.init();
   }
 
   /* ---------- Reiter ---------- */
@@ -602,5 +604,6 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
 <script src="admin-kurse.js?v=2"></script>
 <script src="admin-wiedervorlage.js?v=2"></script>
 <script src="admin-kunden.js?v=1"></script>
+<script src="admin-push.js?v=1"></script>
 </body>
 </html>
