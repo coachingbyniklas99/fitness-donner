@@ -86,7 +86,7 @@
 
       if (leer) {
         html += '<div class="kp-bald"><div class="kp-bald-titel">Der Kursplan steht bald.</div>'
-          + '<p>Die festen Kurszeiten im New Forge stimme ich gerade ab. Sobald sie stehen, findest du hier jeden Tag die Kurse mit freien Plätzen &ndash; direkt buchbar, als Einzelticket oder 5er- und 10er-Karte.</p>'
+          + '<p>Die festen Kurszeiten im <a href="https://www.google.com/maps/search/?api=1&amp;query=Prinzenstra%C3%9Fe+2a%2C+42697+Solingen" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline dotted;text-underline-offset:3px" title="Adresse in Karten öffnen">Forged Studio</a> stimme ich gerade ab. Sobald sie stehen, findest du hier jeden Tag die Kurse mit freien Plätzen &ndash; direkt buchbar, als Einzelticket oder 5er- und 10er-Karte.</p>'
           + (document.querySelector('.kanal-header') ? '</div>' : '<p>Erhalte die neuesten Infos inklusive Early-Bird-Angebote im WhatsApp-Kanal.</p>'
           + '<a class="btn btn-blitz btn-sm" href="https://whatsapp.com/channel/0029Vb9Sacj9xVJgW1Vm7O2Z" target="_blank" rel="noopener">Zum WhatsApp-Kanal</a></div>');
       } else if (!liste.length) {

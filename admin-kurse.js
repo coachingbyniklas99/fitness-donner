@@ -247,7 +247,7 @@
   }
 
   function kursForm() {
-    var k = S.edit.neu ? { wochentag: 1, start: '18:00', minuten: 60, kapazitaet: 12, ort: 'New Forge Solingen', adresse: 'Prinzenstraße 2a, 42697 Solingen', start_datum: new Date().toISOString().slice(0, 10), produkte: {}, preise: {}, aktiv: false, sichtbar: true } : S.edit;
+    var k = S.edit.neu ? { wochentag: 1, start: '18:00', minuten: 60, kapazitaet: 12, ort: 'Forged Studio Solingen', adresse: 'Prinzenstraße 2a, 42697 Solingen', start_datum: new Date().toISOString().slice(0, 10), produkte: {}, preise: {}, aktiv: false, sichtbar: true } : S.edit;
     var s = S.data.einstellungen;
     var pr = k.preise || {}, pd = k.produkte || {};
     var cent = function (v) { return v == null ? '' : Math.round(v / 100); };
