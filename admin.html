@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-title" content="FD Verwaltung">
 <meta name="theme-color" content="#15171C">
 <link rel="stylesheet" href="style.css?v=23">
-<link rel="stylesheet" href="admin.css?v=8">
+<link rel="stylesheet" href="admin.css?v=9">
 </head>
 <body class="ad-body">
 
@@ -62,6 +62,7 @@
       <div class="ad-sec-head">
         <h2>Kommende Termine</h2>
         <button type="button" class="ad-refresh" id="refresh">Neu laden</button>
+        <button type="button" class="ad-refresh" id="terminNeu">Termin eintragen</button>
       </div>
       <div id="reservedHint" class="ad-resv-hint" hidden></div>
       <div id="bookings" class="ad-list"></div>
@@ -315,6 +316,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
       renderSettings();
     }).catch(function (e) { if (e.message !== 'abgemeldet') note(e.message, true); });
   }
+  el('terminNeu').onclick = function () { if (window.FDTermine) window.FDTermine.eintragen({}, function () { load(); }); };
   el('refresh').onclick = function () { load().then(function () { note('Aktualisiert.'); }); };
 
   /* ---------- Termine ---------- */
@@ -334,9 +336,18 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
         + (b.phone ? '<a class="ad-link" href="tel:' + esc(b.phone.replace(/\s/g, '')) + '">' + esc(b.phone) + '</a>' : '')
         + '<a class="ad-link" href="mailto:' + esc(b.email) + '">' + esc(b.email) + '</a>'
         + (b.note ? '<div class="ad-note">' + esc(b.note) + '</div>' : '')
+        + '<div class="ad-actions" style="margin-top:12px"><button type="button" class="ad-mini" data-move="' + esc(b.date + '|' + b.slot_id) + '">Verschieben</button></div>'
         + '<button type="button" class="ad-danger" data-cancel="' + esc(b.date + '|' + b.slot_id) + '">Absagen</button>'
         + '</div>';
     }).join('');
+
+    Array.prototype.forEach.call(box.querySelectorAll('[data-move]'), function (btn) {
+      btn.onclick = function () {
+        var k = btn.getAttribute('data-move');
+        var b = list.filter(function (x) { return x.date + '|' + x.slot_id === k; })[0];
+        if (b && window.FDTermine) window.FDTermine.verschieben(b, function () { load(); });
+      };
+    });
 
     Array.prototype.forEach.call(box.querySelectorAll('[data-cancel]'), function (btn) {
       btn.onclick = function () {
@@ -500,18 +511,29 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
           + '<span class="ad-tagline">' + esc(c.label) + '</span></div>'
           + '<div class="ad-who">' + esc(c.name || '–') + '</div>'
           + '<div class="ad-meta">' + esc(rest) + ' &middot; bis ' + esc(c.expires.split('-').reverse().join('.')) + '</div>'
+          + (c.kind === 'karte'
+            ? '<div class="ad-meta"><b>' + c.done + ' absolviert</b> &middot; ' + c.upcoming + ' kommend gebucht &middot; ' + c.left + ' frei'
+              + (c.manual > 0 ? ' &middot; ' + c.manual + ' von Hand abgezogen' : '') + '</div>'
+            : '')
           + '<div class="ad-meta">' + esc(c.email || '') + (c.status !== 'active' ? ' &middot; ' + esc(c.status) : '') + '</div>'
           + '<div class="ad-actions">'
           + (c.kind === 'karte'
             ? '<button type="button" class="ad-mini" data-code="' + esc(c.code) + '" data-aktion="einheit_zurueck">+1 Einheit</button>'
               + '<button type="button" class="ad-mini" data-code="' + esc(c.code) + '" data-aktion="einheit_abziehen">−1 Einheit</button>'
             : '')
+          + (c.kind === 'karte' && c.status === 'active' && c.left > 0
+            ? '<button type="button" class="ad-mini" data-eintragen="' + esc(c.code) + '">Termin eintragen</button>' : '')
           + '<button type="button" class="ad-mini" data-code="' + esc(c.code) + '" data-aktion="verlaengern">Verlängern</button>'
           + '<button type="button" class="ad-mini" data-code="' + esc(c.code) + '" data-aktion="'
           + (c.status === 'cancelled' ? 'aktivieren">Aktivieren' : 'stornieren">Stornieren') + '</button>'
           + '</div></div>';
       }).join('') : '<div class="ad-empty">Nichts gefunden.</div>';
 
+      Array.prototype.forEach.call(el('codes').querySelectorAll('[data-eintragen]'), function (b) {
+        b.onclick = function () {
+          if (window.FDTermine) window.FDTermine.eintragen({ code: b.getAttribute('data-eintragen') }, function () { load(); loadCodes(el('codeSearch').value); });
+        };
+      });
       Array.prototype.forEach.call(el('codes').querySelectorAll('[data-aktion]'), function (b) {
         b.onclick = function () {
           b.disabled = true;
@@ -603,7 +625,8 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
 </script>
 <script src="admin-kurse.js?v=2"></script>
 <script src="admin-wiedervorlage.js?v=2"></script>
-<script src="admin-kunden.js?v=1"></script>
+<script src="admin-termine.js?v=1"></script>
+<script src="admin-kunden.js?v=2"></script>
 <script src="admin-push.js?v=2"></script>
 </body>
 </html>

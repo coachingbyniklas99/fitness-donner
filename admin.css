@@ -165,3 +165,19 @@ a.ad-mini{text-decoration:none;display:inline-block}
   font-weight:700;text-decoration:underline;cursor:pointer}
 .ad-pushlink[disabled]{opacity:.6}
 .ad-pushhint{flex-basis:100%}
+
+/* Dialog Termin verschieben / eintragen */
+body.tm-offen{overflow:hidden}
+.tm-overlay{position:fixed;inset:0;z-index:100;background:rgba(10,11,14,.78);display:flex;align-items:flex-start;justify-content:center;
+  padding:calc(env(safe-area-inset-top) + 16px) 14px 24px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.tm-box{width:100%;max-width:520px;background:var(--bg-2,#1B1E25);border:1px solid var(--line);padding:20px 18px 22px}
+.tm-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.tm-head h2{margin:0}
+.tm-form{margin-top:14px}
+.tm-check{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--muted);margin:14px 0}
+.tm-check input{margin-top:3px;flex:none}
+.tm-msg{min-height:0;font-size:14px;margin:6px 0 10px}
+.tm-msg.bad{color:#ff8f7e;border-left:3px solid #ff8f7e;padding:6px 10px}
+.tm-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.ad-card .ad-actions .ad-mini+.ad-danger{margin-left:0}
+.ad-sub{font-size:13px;color:var(--muted);margin-top:4px}

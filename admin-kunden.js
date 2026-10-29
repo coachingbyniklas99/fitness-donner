@@ -125,7 +125,8 @@
         '<div class="ad-meta">Bezahlt: ' + (t.card_code ? 'mit Karte ' + esc(t.card_code) : t.voucher_code ? esc(t.paid) + ' (Gutschein ' + esc(t.voucher_code) + ')' : esc(t.paid)) + (t.promo_code ? ' · Aktionscode ' + esc(t.promo_code) : '') + '</div>' +
         (verschoben ? '<div class="ad-meta">Verschoben von ' + esc(fd(t.orig_date)) + '</div>' : '') +
         '<div class="ad-meta">Gebucht am ' + esc(ts(t.created)) + '</div>' +
-        (t.note ? '<div class="ad-note">' + esc(t.note) + '</div>' : '') + '</div>';
+        (t.note ? '<div class="ad-note">' + esc(t.note) + '</div>' : '') +
+        (t.status === 'confirmed' && t.date >= t0 && t.slot_id ? '<div class="ad-actions" style="margin-top:12px"><button type="button" class="ad-mini" data-move="' + esc(t.date + '|' + t.slot_id) + '">Verschieben</button></div>' : '') + '</div>';
     }
 
     var termineHtml = '';
@@ -135,8 +136,10 @@
     var kartenHtml = p.karten.length ? '<div class="ad-list">' + p.karten.map(function (k) {
       return '<div class="ad-card"><div class="ad-card-top"><span class="ad-code">' + esc(k.code) + '</span><span class="ad-tagline">' + esc(k.label) + '</span></div>' +
         '<div class="ad-who">Übrig: ' + esc(k.rest) + '</div>' +
+        (k.kind === 'karte' ? '<div class="ad-meta"><b>' + k.absolviert + ' absolviert</b> · ' + k.kommend + ' kommend gebucht · ' + k.frei + ' frei' + (k.manuell > 0 ? ' · ' + k.manuell + ' von Hand abgezogen' : '') + '</div>' : '') +
         '<div class="ad-meta">' + esc(k.rolle) + ' · ' + esc(stat(k.status)) + ' · gültig bis ' + esc(fd(k.expires)) + ' · gekauft ' + esc(fd(k.created)) + '</div>' +
-        (k.einloesungen ? '<div class="ad-meta">' + n(k.einloesungen, 'Einlösung', 'Einlösungen') + '</div>' : '') + '</div>';
+        (k.einloesungen ? '<div class="ad-meta">' + n(k.einloesungen, 'Einlösung', 'Einlösungen') + '</div>' : '') +
+        (k.kind === 'karte' && k.status === 'active' && k.frei > 0 ? '<div class="ad-actions" style="margin-top:12px"><button type="button" class="ad-mini" data-eintragen="' + esc(k.code) + '">Termin eintragen</button></div>' : '') + '</div>';
     }).join('') + '</div>' : '';
 
     var kurseHtml = p.kurse.length ? '<div class="ad-list">' + p.kurse.map(function (k) {
@@ -191,6 +194,21 @@
       'Mails werden 3 Jahre gespeichert.</p>';
 
     document.getElementById('kdZurueck').onclick = function () { S.profil = null; S.mail = null; if (!S.liste) laden(); else render(); window.scrollTo(0, 0); };
+    function nachAktion() { profilLaden(p.email); }
+    Array.prototype.forEach.call(box.querySelectorAll('[data-move]'), function (b) {
+      b.onclick = function () {
+        var k = b.getAttribute('data-move'), t = p.termine.filter(function (x) { return x.date + '|' + x.slot_id === k; })[0];
+        if (!t || !window.FDTermine) return;
+        var min = t.minutes || (t.end && t.start ? (Number(t.end.slice(0, 2)) * 60 + Number(t.end.slice(3))) - (Number(t.start.slice(0, 2)) * 60 + Number(t.start.slice(3))) : 60);
+        var ende = t.end || '';
+        window.FDTermine.verschieben({ date: t.date, slot_id: t.slot_id, start: t.start, end: ende, city: t.city, name: p.name || p.email, minutesFallback: min }, nachAktion);
+      };
+    });
+    Array.prototype.forEach.call(box.querySelectorAll('[data-eintragen]'), function (b) {
+      b.onclick = function () {
+        if (window.FDTermine) window.FDTermine.eintragen({ code: b.getAttribute('data-eintragen'), name: p.name, email: p.email, phone: p.phone }, nachAktion);
+      };
+    });
     Array.prototype.forEach.call(box.querySelectorAll('.kd-mailrow'), function (b) {
       b.onclick = function () { mailLaden(b.getAttribute('data-key')); };
     });
