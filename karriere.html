@@ -174,14 +174,14 @@ details.calc p,details.calc .calc-body p.note{padding:0;max-width:none;font-size
       <div class="job-block">
         <h2>Das biete ich dir</h2>
         <ul class="job-list">
-          <li><b>Ein faires Honorar nach Teilnehmerzahl:</b> ab 25 € pro Termin, bei voller Gruppe 40 €. Online-Teilnehmende zählen extra. Wie sich das zusammensetzt, kannst du hier durchrechnen.</li>
+          <li><b>Ein faires Honorar nach Teilnehmerzahl:</b> mindestens 30 € pro Termin, bei voller Gruppe 45 €. Online-Teilnehmende zählen extra. Wie sich das zusammensetzt, kannst du hier durchrechnen.</li>
         </ul>
 
         <details class="calc" id="calc">
           <summary>Honorar im Detail durchrechnen</summary>
           <div class="calc-body">
             <ul class="rules">
-              <li><span>25,00 €</span><span>pro Termin fix, auch bei kleiner Gruppe</span></li>
+              <li><span>30,00 €</span><span>pro Termin als Mindesthonorar, auch bei kleiner Gruppe</span></li>
               <li><span>+ 3,00 €</span><span>für die 5. und die 6. Person im Kursraum</span></li>
               <li><span>+ 1,50 €</span><span>für jede weitere Person im Kursraum ab der 7.</span></li>
               <li><span>+ 1,50 €</span><span>für jede Person, die live online mitmacht (beliebig viele)</span></li>
@@ -213,7 +213,7 @@ details.calc p,details.calc .calc-body p.note{padding:0;max-width:none;font-size
             </div>
             <table class="parts" aria-label="Zusammensetzung des Honorars">
               <tbody>
-                <tr><td>Fix pro Termin</td><td id="p-base"></td></tr>
+                <tr><td>Mindesthonorar pro Termin</td><td id="p-base"></td></tr>
                 <tr><td>Zuschlag Kursraum<span class="small" id="p-pres-note"></span></td><td id="p-pres"></td></tr>
                 <tr><td>Zuschlag online<span class="small" id="p-onl-note"></span></td><td id="p-onl"></td></tr>
                 <tr class="sum"><td>Summe pro Termin</td><td id="p-sum"></td></tr>
@@ -279,7 +279,7 @@ if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a
   function fee(p, o) {
     var z = Math.min(Math.max(p - 4, 0), 2) * 3 + Math.max(p - 6, 0) * 1.5;
     var on = o * 1.5;
-    return { base: 25, pres: z, onl: on, total: 25 + z + on };
+    return { base: 30, pres: z, onl: on, total: 30 + z + on };
   }
   function read(el, lo, hi) {
     var v = parseInt(el.value, 10);
@@ -290,7 +290,7 @@ if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a
     var max = fee(12, 0).total, html = '';
     for (var i = 1; i <= 12; i++) {
       var f = fee(i, 0).total;
-      var h = Math.round(30 + 62 * (f - 25) / (max - 25));
+      var h = Math.round(30 + 62 * (f - 30) / (max - 30));
       var v = f % 1 === 0 ? String(f) : f.toFixed(1).replace('.', ',');
       html += '<div class="col' + (i === p ? ' on' : '') + '"><span class="v">' + v + '</span><div class="bar" style="height:' + h + 'px"></div><span class="n">' + i + '</span></div>';
     }
