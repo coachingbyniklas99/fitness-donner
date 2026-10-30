@@ -103,7 +103,7 @@
     });
   }
 
-  var STATUS = { confirmed: 'bestätigt', cancelled: 'storniert', active: 'aktiv', redeemed: 'aufgebraucht', bestaetigt: 'bestätigt', abgesagt: 'abgesagt' };
+  var STATUS = { confirmed: 'bestätigt', cancelled: 'storniert', active: 'aktiv', redeemed: 'aufgebraucht', bestaetigt: 'bestätigt', abgesagt: 'abgesagt', verfallen: 'kurzfristig abgesagt (verfallen)' };
   function stat(s) { return STATUS[s] || s || ''; }
 
   function abschnitt(titel, anzahl, inhalt, leer) {
