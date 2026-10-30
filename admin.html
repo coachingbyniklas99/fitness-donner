@@ -337,7 +337,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
         + '<a class="ad-link" href="mailto:' + esc(b.email) + '">' + esc(b.email) + '</a>'
         + (b.note ? '<div class="ad-note">' + esc(b.note) + '</div>' : '')
         + '<div class="ad-actions" style="margin-top:12px"><button type="button" class="ad-mini" data-move="' + esc(b.date + '|' + b.slot_id) + '">Verschieben</button></div>'
-        + '<button type="button" class="ad-danger" data-cancel="' + esc(b.date + '|' + b.slot_id) + '">Absagen</button>'
+        + '<button type="button" class="ad-danger" data-cancel="' + esc(b.date + '|' + b.slot_id) + '">Absagen</button>' + ((b.card_code || b.voucher_code) ? '<button type="button" class="ad-danger" data-verfall="' + esc(b.date + '|' + b.slot_id) + '">Kurzfristig abgesagt – Einheit verfällt</button>' : '')
         + '</div>';
     }).join('');
 
@@ -346,6 +346,29 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
         var k = btn.getAttribute('data-move');
         var b = list.filter(function (x) { return x.date + '|' + x.slot_id === k; })[0];
         if (b && window.FDTermine) window.FDTermine.verschieben(b, function () { load(); });
+      };
+    });
+
+    /* Kurzfristige Absage: Termin fällt weg, die Einheit bleibt auf der Karte abgezogen (keine Mail an den Kunden) */
+    Array.prototype.forEach.call(box.querySelectorAll('[data-verfall]'), function (btn) {
+      btn.onclick = function () {
+        var parts = btn.getAttribute('data-verfall').split('|');
+        if (btn.getAttribute('data-armed') !== '1') {
+          btn.setAttribute('data-armed', '1');
+          btn.textContent = 'Wirklich? Die Einheit bleibt abgezogen.';
+          setTimeout(function () {
+            btn.removeAttribute('data-armed');
+            btn.textContent = 'Kurzfristig abgesagt – Einheit verfällt';
+          }, 4000);
+          return;
+        }
+        btn.disabled = true;
+        api('cancel', { body: { date: parts[0], slotId: parts[1], verfallen: true, notify: false } })
+          .then(function (d) {
+            note('Abgesagt. ' + (d.hinweis || ''));
+            return load();
+          })
+          .catch(function (e) { btn.disabled = false; note(e.message, true); });
       };
     });
 
@@ -626,7 +649,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
 <script src="admin-kurse.js?v=2"></script>
 <script src="admin-wiedervorlage.js?v=2"></script>
 <script src="admin-termine.js?v=1"></script>
-<script src="admin-kunden.js?v=2"></script>
+<script src="admin-kunden.js?v=3"></script>
 <script src="admin-push.js?v=2"></script>
 </body>
 </html>
