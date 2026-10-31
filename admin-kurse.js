@@ -7,7 +7,7 @@
   var box = document.getElementById('kurseApp');
   var WD = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
   var WDL = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
-  var S = { p: 'niklas', view: 'termine', data: null, offen: {}, edit: null, best: null };
+  var S = { p: 'niklas', view: 'home', kurs: '', data: null, offen: {}, edit: null, best: null };
   function esc(x) { return String(x == null ? '' : x).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
   function eur(c) { return A.eur(c || 0); }
   function dk(iso) { var d = new Date(iso + 'T12:00:00Z'); return WD[d.getUTCDay()] + ', ' + d.getUTCDate() + '.' + (d.getUTCMonth() + 1) + '.'; }
@@ -32,7 +32,10 @@
     })
       .catch(function (e) { if (e.message !== 'abgemeldet') A.note(e.message, true); });
   }
-  window.FDKurse = { open: function () { if (!S.data) laden(); else render(); } };
+  window.FDKurse = { open: function (zurueck) {
+    if (zurueck) { S.view = 'home'; S.kurs = ''; S.edit = null; }
+    if (!S.data) laden(); else render();
+  } };
 
   /* ---------- Rahmen ---------- */
   function render() {
@@ -40,15 +43,19 @@
     var anb = d.anbieterinnen.length > 1 ? '<div class="ad-chips ak-anb">' + d.anbieterinnen.map(function (a) {
       return '<button type="button" class="ad-chip' + (a.id === S.p ? ' ak-on' : '') + '" data-anb="' + esc(a.id) + '">' + esc(a.name) + '<span>' + (a.aktiv ? (a.zahlung_bereit ? 'aktiv' : 'Stripe fehlt') : 'vorbereitet, inaktiv') + '</span></button>';
     }).join('') + '</div>' : '';
-    var views = [['termine', 'Termine'], ['usc', 'Urban Sports' + (d.usc.length ? ' (' + d.usc.length + ')' : '')], ['erstattungen', 'Erstattungen' + (d.erstattungen.length ? ' (' + d.erstattungen.length + ')' : '')],
-      ['kurse', 'Kurse'], ['bestellungen', 'Bestellungen'], ['einstellungen', 'Preise & Regeln']];
-    box.innerHTML = anb + '<div class="ak-views">' + views.map(function (v) {
-      return '<button type="button" class="ak-view' + (S.view === v[0] ? ' on' : '') + '" data-view="' + v[0] + '">' + esc(v[1]) + '</button>';
-    }).join('') + '</div><div id="akBody"></div>';
-    on('[data-anb]', function (b) { S.p = b.getAttribute('data-anb'); S.data = null; laden(); });
-    on('[data-view]', function (b) { S.view = b.getAttribute('data-view'); S.edit = null; render(); });
-    ({ termine: vTermine, usc: vUsc, erstattungen: vErstattungen, kurse: vKurse, bestellungen: vBestellungen, einstellungen: vEinstellungen })[S.view]();
+    var TITEL = { termine: 'Termine', usc: 'Urban Sports', erstattungen: 'Erstattungen', bestellungen: 'Bestellungen', einstellungen: 'Preise & Regeln', kurse: S.edit && S.edit.neu ? 'Neuer Kurs' : 'Kurs bearbeiten' };
+    var kopf = S.view === 'home' ? '' : '<div class="ak-nav"><button type="button" class="ak-back" data-view="home">&lsaquo; Kurse</button><span class="ak-nav-t">' + esc(TITEL[S.view] || '') + (S.kurs && (S.view === 'termine' || S.view === 'bestellungen') ? ' &middot; ' + esc(kursTitel(S.kurs)) : '') + '</span></div>';
+    box.innerHTML = anb + kopf + '<div id="akBody"></div>';
+    on('[data-anb]', function (b) { S.p = b.getAttribute('data-anb'); S.data = null; S.view = 'home'; S.kurs = ''; S.edit = null; laden(); });
+    on('[data-view]', gehe);
+    ({ home: vHome, termine: vTermine, usc: vUsc, erstattungen: vErstattungen, kurse: vKurse, bestellungen: vBestellungen, einstellungen: vEinstellungen })[S.view]();
   }
+  function gehe(b) {
+    S.view = b.getAttribute('data-view'); S.edit = null;
+    S.kurs = S.view === 'home' ? '' : (b.getAttribute('data-kurs') || '');
+    render(); window.scrollTo(0, 0);
+  }
+  function kursTitel(id) { var k = (S.data.kurse || []).filter(function (x) { return x.id === id; })[0]; return k ? k.titel : ''; }
   function body(html) { q('#akBody').innerHTML = html; }
 
   /* ---------- Termine ---------- */
@@ -66,11 +73,11 @@
 
   function vTermine() {
     var d = S.data;
-    if (!d.kurse.length) { body('<div class="ad-empty">Noch kein Kurs angelegt. <button type="button" class="ad-linkbtn" data-go="kurse">Kurs anlegen</button></div>'); on('[data-go]', function () { S.view = 'kurse'; render(); }); return; }
-    var list = d.termine.filter(function (t) { return !t.vorbei; });
+    if (!d.kurse.length) { body('<div class="ad-empty">Noch kein Kurs angelegt. <button type="button" class="ad-linkbtn" data-go="kurse">Kurs anlegen</button></div>'); on('[data-go]', function () { S.view = 'kurse'; S.edit = { neu: true }; render(); }); return; }
+    var list = d.termine.filter(function (t) { return !t.vorbei && (!S.kurs || t.kurs === S.kurs); });
     var html = '<div class="ad-sec-head"><h2>Kurstermine</h2><button type="button" class="ad-refresh" id="akReload">Neu laden</button></div>'
       + (d.blockiert_pt ? '<p class="ad-hint">Kurszeiten sind f&uuml;r dein Personal Training automatisch blockiert &ndash; online, in „Zeit blockieren“ und beim Verschieben.</p>' : '')
-      + '<div class="ad-list">' + list.map(terminKarte).join('') + '</div>';
+      + (list.length ? '<div class="ad-list">' + list.map(terminKarte).join('') + '</div>' : '<div class="ad-empty">Keine kommenden Termine.</div>');
     body(html);
     q('#akReload').onclick = function () { laden().then(function () { A.note('Aktualisiert.'); }); };
     on('[data-tn]', function (b) { var k = b.getAttribute('data-tn'); S.offen[k] = S.offen[k] === 'tn' ? '' : 'tn'; vTermine(); });
@@ -235,19 +242,39 @@
 
   /* ---------- Kurse ---------- */
   function vKurse() {
-    var d = S.data;
-    if (S.edit) return kursForm();
-    var html = '<div class="ad-sec-head"><h2>Kurse</h2><button type="button" class="ad-refresh" id="akNeu">Neuer Kurs</button></div>'
-      + '<p class="ad-hint">Ein Kurs l&auml;uft jede Woche am selben Tag zur selben Zeit. Erst wenn er <b>aktiv</b> ist, blockiert er dein Personal Training und ist buchbar.</p>'
+    if (!S.edit) { S.view = 'home'; return render(); }
+    kursForm();
+  }
+
+  /* ---------- Startseite: Kurse ---------- */
+  function zeile(view, ico, titel, sub) {
+    return '<button type="button" class="mh-row" data-view="' + view + '"><span class="mh-ico">' + ico + '</span><span class="mh-txt"><b>' + titel + '</b><small>' + sub + '</small></span><span class="hd-chev">&rsaquo;</span></button>';
+  }
+  function vHome() {
+    var d = S.data, todo = [];
+    if (d.erstattungen.length) todo.push(zeile('erstattungen', '&euro;', d.erstattungen.length + (d.erstattungen.length === 1 ? ' Erstattung offen' : ' Erstattungen offen'), 'Nach Kursabsagen &ndash; ausf&uuml;hren oder abhaken'));
+    if (d.usc.length) todo.push(zeile('usc', '&#9889;', d.usc.length + (d.usc.length === 1 ? ' Termin' : ' Termine') + ' f&uuml;r Urban Sports melden', 'Freie Pl&auml;tze bei Urban Sports Club eintragen'));
+    var html = (todo.length ? '<h3 class="hd-h" style="margin-top:4px">Zu tun</h3><div class="mh-group">' + todo.join('') + '</div>' : '')
+      + '<div class="ad-sec-head"><h2>Meine Kurse</h2><button type="button" class="ad-refresh" id="akNeu">+ Neuer Kurs</button></div>'
       + (d.kurse.length ? '<div class="ad-list">' + d.kurse.map(function (k) {
+        var next = d.termine.filter(function (t) { return t.kurs === k.id && !t.vorbei && !t.abgesagt; })[0];
+        var bel = next ? next.belegung.gebucht + next.belegung.reserviert + (next.usc_gemeinsam ? next.belegung.usc : 0) : 0;
         return '<div class="ad-card"><div class="ad-card-top"><span class="ad-when">' + esc(k.titel) + '</span><span class="ad-tagline">' + (k.aktiv ? (k.sichtbar === false ? 'aktiv · versteckt' : 'aktiv') : 'Entwurf') + '</span></div>'
-          + '<div class="ad-meta">' + esc(WDL[k.wochentag]) + 's ' + esc(k.start) + ' · ' + k.minuten + ' Min. · ' + k.kapazitaet + ' Plätze · ' + esc(k.ort) + '</div>'
-          + '<div class="ad-meta">ab ' + esc(k.start_datum.split('-').reverse().join('.')) + (k.end_datum ? ' bis ' + esc(k.end_datum.split('-').reverse().join('.')) : ' · laufend') + (k.min_teilnehmer ? ' · mind. ' + k.min_teilnehmer : '') + '</div>'
-          + '<div class="ad-actions"><button type="button" class="ad-mini" data-ed="' + esc(k.id) + '">Bearbeiten</button></div></div>';
-      }).join('') + '</div>' : '<div class="ad-empty">Noch kein Kurs.</div>');
+          + '<div class="ad-meta">' + esc(WDL[k.wochentag]) + 's ' + esc(k.start) + ' · ' + k.minuten + ' Min. · ' + k.kapazitaet + ' Pl&auml;tze · ' + esc(k.ort) + '</div>'
+          + '<div class="ad-meta">' + (next ? 'N&auml;chster Termin: ' + esc(dk(next.datum)) + ' &middot; <b>' + bel + ' / ' + next.belegung.kap + ' belegt</b>' : 'Kein kommender Termin') + '</div>'
+          + '<div class="ad-actions"><button type="button" class="ad-mini" data-view="termine" data-kurs="' + esc(k.id) + '">Termine &amp; Teilnehmende</button>'
+          + '<button type="button" class="ad-mini" data-view="bestellungen" data-kurs="' + esc(k.id) + '">Bestellungen</button>'
+          + '<button type="button" class="ad-mini" data-ed="' + esc(k.id) + '">Bearbeiten</button></div></div>';
+      }).join('') + '</div>' : '<div class="ad-empty"><b>Noch kein Kurs.</b><br>So legst du den ersten an: 1) &bdquo;+ Neuer Kurs&ldquo; tippen, 2) Wochentag, Uhrzeit und Pl&auml;tze eintragen, 3) &bdquo;aktiv&ldquo; setzen und speichern.</div>')
+      + '<h3 class="hd-h">Weiteres</h3><div class="mh-group">'
+      + zeile('bestellungen', '&#128269;', 'Alle Bestellungen', 'Suchen nach Name, E-Mail oder Code')
+      + zeile('einstellungen', '&#9881;', 'Preise &amp; Regeln', 'Tageskarte, Karten und Fristen f&uuml;r Kurse')
+      + (d.erstattungen.length ? '' : zeile('erstattungen', '&euro;', 'Erstattungen', 'Keine offenen &ndash; hier siehst du die erledigten'))
+      + zeile('usc', '&#9889;', 'Urban Sports', 'Freie Pl&auml;tze melden') + '</div>';
     body(html);
-    q('#akNeu').onclick = function () { S.edit = { neu: true }; render(); };
-    on('[data-ed]', function (b) { S.edit = S.data.kurse.filter(function (k) { return k.id === b.getAttribute('data-ed'); })[0]; render(); });
+    on('[data-view]', gehe);
+    q('#akNeu').onclick = function () { S.edit = { neu: true }; S.view = 'kurse'; render(); window.scrollTo(0, 0); };
+    on('[data-ed]', function (b) { S.edit = S.data.kurse.filter(function (k) { return k.id === b.getAttribute('data-ed'); })[0]; S.view = 'kurse'; render(); window.scrollTo(0, 0); });
   }
 
   function kursForm() {
@@ -338,7 +365,8 @@
     q('#akSuche').oninput = function () { clearTimeout(t); var v = this.value; t = setTimeout(function () { S.bq = v; liste(); }, 300); };
     function liste() {
       A.api('kurse/bestellungen?p=' + encodeURIComponent(S.p) + '&q=' + encodeURIComponent(S.bq || '')).then(function (d) {
-        q('#akBest').innerHTML = d.bestellungen.length ? d.bestellungen.map(function (o) {
+        var bl = d.bestellungen.filter(function (o) { return !S.kurs || o.kurs === kursTitel(S.kurs); });
+        q('#akBest').innerHTML = bl.length ? bl.map(function (o) {
           return '<div class="ad-card"><div class="ad-card-top"><span class="ad-code">' + esc(o.label) + '</span><span class="ad-tagline">' + esc(o.kurs) + '</span></div>'
             + '<div class="ad-who">' + esc(o.name) + '</div><div class="ad-meta">' + esc(o.email) + (o.phone ? ' · ' + esc(o.phone) : '') + '</div>'
             + '<div class="ad-meta">' + o.termine.map(dk).join(', ') + '</div>'
