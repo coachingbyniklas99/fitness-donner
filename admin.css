@@ -3,7 +3,7 @@
 /* muss auch bei flex- und grid-Elementen greifen */
 [hidden]{display:none!important}
 
-.ad-body{background:var(--bg);color:var(--bone);padding-bottom:60px}
+.ad-body{background:var(--bg);color:var(--bone);padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 
 /* Anmeldung */
 .ad-login{min-height:100svh;display:flex;align-items:center;justify-content:center;padding:24px}
@@ -15,21 +15,29 @@
 .ad-login-box input:focus{border-color:var(--blitz)}
 .ad-login-box .btn{width:100%}
 
-/* Kopf und Reiter */
+/* Kopf */
 .ad-head{position:sticky;top:0;z-index:50;background:rgba(21,23,28,.96);backdrop-filter:blur(10px);
   border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
-.ad-head-in{display:flex;align-items:center;justify-content:space-between;gap:16px;
-  max-width:820px;margin:0 auto;padding:14px 18px}
-.ad-head-title{font-family:var(--display);font-size:20px;letter-spacing:.02em;text-transform:uppercase}
-.ad-logout{background:transparent;border:0;color:var(--muted);font-family:var(--body);font-size:13px;
-  text-decoration:underline;cursor:pointer;padding:6px}
+.ad-head-in{display:grid;grid-template-columns:88px 1fr 88px;align-items:center;gap:8px;
+  max-width:820px;margin:0 auto;padding:6px 10px;min-height:56px}
+.ad-head-title{font-family:var(--display);font-size:19px;letter-spacing:.02em;text-transform:uppercase;text-align:center;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ad-back,.ad-iconbtn{min-height:44px;background:transparent;border:0;color:var(--blitz);font-family:var(--body);
+  font-size:16px;font-weight:600;cursor:pointer;padding:0 8px}
+.ad-back{justify-self:start}
+.ad-iconbtn{justify-self:end;min-width:44px;font-size:24px;color:var(--muted)}
+.ad-iconbtn:active{color:var(--bone)}
 
-.ad-tabs{position:sticky;top:0;z-index:49;display:flex;gap:0;border-bottom:1px solid var(--line);
-  background:rgba(21,23,28,.96);backdrop-filter:blur(10px);overflow-x:auto}
-.ad-tab{flex:1 0 auto;min-width:88px;background:transparent;border:0;border-bottom:2px solid transparent;
-  color:var(--muted);font-family:var(--body);font-size:13px;font-weight:700;letter-spacing:.08em;
-  text-transform:uppercase;padding:15px 10px;cursor:pointer;transition:.2s}
-.ad-tab.on{color:var(--blitz);border-bottom-color:var(--blitz)}
+/* Navigation: unten am Handy, links am großen Bildschirm */
+.ad-tabs{position:fixed;top:auto;left:0;right:0;bottom:0;z-index:60;border-bottom:0;display:grid;grid-template-columns:repeat(5,1fr);
+  border-top:1px solid var(--line);background:rgba(21,23,28,.97);backdrop-filter:blur(10px);
+  padding-bottom:env(safe-area-inset-bottom)}
+.ad-tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:58px;min-width:0;
+  background:transparent;border:0;color:var(--muted);font-family:var(--body);font-size:11px;font-weight:600;
+  letter-spacing:.02em;padding:7px 2px;cursor:pointer;transition:color .2s}
+.ad-tab svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ad-tab.on{color:var(--blitz)}
+.ad-tab.on svg{fill:rgba(239,185,46,.16)}
 
 .ad-main{max-width:820px;margin:0 auto;padding:22px 18px 40px}
 .ad-panel{padding:0}
@@ -43,7 +51,7 @@
 
 /* Meldungen */
 .ad-msg{font-size:14px;margin-top:12px;min-height:20px}
-.ad-msg-top{position:sticky;top:104px;z-index:30;border:1px solid var(--line);background:var(--panel);
+.ad-msg-top{position:sticky;top:70px;z-index:30;border:1px solid var(--line);background:var(--panel);
   padding:12px 16px;margin-bottom:18px}
 .ad-msg.good{border-color:rgba(127,209,138,.5);color:#7fd18a}
 .ad-msg.bad{border-color:#ff8a7a;color:#ffb3a8}
@@ -181,3 +189,63 @@ body.tm-offen{overflow:hidden}
 .tm-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .ad-card .ad-actions .ad-mini+.ad-danger{margin-left:0}
 .ad-sub{font-size:13px;color:var(--muted);margin-top:4px}
+
+/* ---------- Neue Oberfläche: Heute, Listen, Mehr ---------- */
+.hd-greet{font-family:var(--display);font-size:30px;letter-spacing:.01em;text-transform:uppercase;line-height:1.1}
+.hd-date{color:var(--muted);font-size:15px;margin:4px 0 18px}
+.hd-h{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:26px 0 10px}
+.hd-day{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blitz);margin:20px 0 8px}
+.hd-quick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.hd-quick-2{grid-template-columns:repeat(2,1fr);margin-bottom:16px}
+.hd-tile{display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:10px;min-height:84px;
+  background:var(--panel);border:1px solid var(--line);color:var(--bone);font-family:var(--body);font-size:14px;font-weight:600;
+  text-align:left;padding:12px 13px;cursor:pointer;border-radius:14px;transition:border-color .2s}
+.hd-tile b{font-size:22px;line-height:1;color:var(--blitz);font-weight:600}
+.hd-tile:active,.hd-tile:hover{border-color:var(--blitz)}
+.hd-row,.mh-row{display:flex;align-items:center;gap:14px;width:100%;min-height:64px;text-align:left;background:var(--panel);
+  border:1px solid var(--line);border-radius:14px;color:var(--bone);font-family:var(--body);padding:12px 16px;cursor:pointer;transition:border-color .2s}
+.hd-row:active,.hd-row:hover,.mh-row:active,.mh-row:hover{border-color:var(--blitz)}
+.hd-time{flex:0 0 52px;font-family:var(--display);font-size:20px;letter-spacing:.02em;line-height:1}
+.hd-time small{display:block;font-family:var(--body);font-size:12px;color:var(--muted);letter-spacing:0;margin-top:4px}
+.hd-main,.mh-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.hd-main b,.mh-txt b{font-size:16px;font-weight:600}
+.hd-main span,.mh-txt small{font-size:13px;color:var(--muted);line-height:1.35}
+.hd-chev{flex:0 0 auto;color:var(--muted);font-size:26px;line-height:1}
+.mh-group{display:flex;flex-direction:column;gap:8px;margin-bottom:22px}
+.mh-ico{flex:0 0 36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:10px;
+  background:rgba(239,185,46,.1);color:var(--blitz);font-size:18px;font-weight:700}
+.mh-out .mh-txt b{color:#F2958B}
+.hd-setup{border:1px solid rgba(239,185,46,.4);background:rgba(239,185,46,.06);border-radius:16px;padding:12px;margin-top:20px}
+.hd-setup-h{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blitz);margin:2px 4px 10px}
+
+/* Absage-Dialog */
+.ab-opt{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:10px;cursor:pointer}
+.ab-opt:has(input:checked){border-color:var(--blitz);background:rgba(239,185,46,.06)}
+.ab-opt input{margin-top:4px;accent-color:var(--blitz);width:18px;height:18px;flex:0 0 18px}
+.ab-opt span{display:flex;flex-direction:column;gap:4px}
+.ab-opt b{font-size:16px}
+.ab-opt small{font-size:13px;color:var(--muted);line-height:1.45}
+.ad-danger-solid{background:#F2958B;border:0;color:#15171C;font-family:var(--body);font-size:15px;font-weight:700;
+  padding:14px 22px;min-height:48px;border-radius:12px;cursor:pointer}
+.ad-danger-solid:disabled{opacity:.5}
+.tm-actions .btn{min-height:48px}
+.ad-more{margin:0 0 16px;border:1px solid var(--line);border-radius:12px;padding:0 14px}
+.ad-more summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-size:14px;color:var(--muted)}
+.ad-more[open] summary{margin-bottom:8px}
+.ad-push{padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--panel);max-width:none;margin:0}
+
+/* Großer Bildschirm: Navigation links */
+@media(min-width:900px){
+  .ad-body{padding-bottom:0}
+  .ad-tabs{top:0;bottom:auto;right:auto;width:210px;height:100vh;display:flex;flex-direction:column;justify-content:flex-start;
+    padding:76px 12px 0;border-top:0;border-right:1px solid var(--line);gap:4px}
+  .ad-tab{flex-direction:row;justify-content:flex-start;gap:14px;min-height:50px;padding:0 16px;font-size:15px;border-radius:12px}
+  .ad-tab.on{background:rgba(239,185,46,.1)}
+  .ad-head{margin-left:210px}
+  .ad-main{margin:0 0 0 210px;max-width:780px}
+  .ad-head-in{max-width:780px;margin:0}
+  .ad-head-in{grid-template-columns:88px 1fr 88px;padding-left:18px}
+  .ad-head-title{text-align:left}
+  .ad-head-in:has(#back[hidden]){grid-template-columns:1fr 88px}
+  .ad-head-in:has(#back[hidden]) #back{display:none}
+}
