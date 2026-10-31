@@ -21,22 +21,25 @@
     return true;
   }
 
-  function show(html) { box.innerHTML = html; box.hidden = false; }
+  function show(html, st) {
+    box.innerHTML = html; box.hidden = false;
+    document.dispatchEvent(new CustomEvent('fd:push', { detail: st || '' }));
+  }
   function link(id, text) { return '<button type="button" class="ad-pushlink" id="' + id + '">' + text + '</button>'; }
 
   function renderUnsupported() {
     var ios = /iPhone|iPad|iPod/.test(navigator.userAgent);
-    show('<span>Mitteilungen gehen nur in der App auf dem Home-Bildschirm' + (ios ? ' (Safari: Teilen → „Zum Home-Bildschirm“).' : '.') + '</span>');
+    show('<span>Mitteilungen gehen nur in der App auf dem Home-Bildschirm' + (ios ? ' (Safari: Teilen → „Zum Home-Bildschirm“).' : '.') + '</span>', 'unsupported');
   }
   function renderOff() {
-    show(link('pushOn', 'Mitteilungen einschalten') + '<span class="ad-pushhint">Du bekommst eine Meldung bei neuer Buchung, Verschiebung, Verkauf und Widerruf.</span>');
+    show(link('pushOn', 'Mitteilungen einschalten') + '<span class="ad-pushhint">Du bekommst eine Meldung bei neuer Buchung, Verschiebung, Verkauf und Widerruf.</span>', 'off');
     document.getElementById('pushOn').onclick = einschalten;
   }
   function renderDenied() {
-    show('<span>Mitteilungen sind blockiert. iPhone: Einstellungen → Mitteilungen → „FD Verwaltung“ → Mitteilungen erlauben.</span>');
+    show('<span>Mitteilungen sind blockiert. iPhone: Einstellungen → Mitteilungen → „FD Verwaltung“ → Mitteilungen erlauben.</span>', 'denied');
   }
   function renderOn() {
-    show('<span class="ad-pushon">Mitteilungen an</span>' + link('pushTest', 'Test senden') + link('pushOff', 'Ausschalten'));
+    show('<span class="ad-pushon">Mitteilungen an</span>' + link('pushTest', 'Test senden') + link('pushOff', 'Ausschalten'), 'on');
     document.getElementById('pushTest').onclick = testen;
     document.getElementById('pushOff').onclick = ausschalten;
   }
@@ -105,7 +108,7 @@
       pruefen();
     }).catch(function (e) {
       if (e && e.message === 'abgemeldet') return;
-      show('<span>Mitteilungen sind gerade nicht verfügbar (' + (e && e.message ? e.message : 'unbekannter Fehler') + ').</span>' + link('pushRetry', 'Nochmal versuchen'));
+      show('<span>Mitteilungen sind gerade nicht verfügbar (' + (e && e.message ? e.message : 'unbekannter Fehler') + ').</span>' + link('pushRetry', 'Nochmal versuchen'), 'error');
       document.getElementById('pushRetry').onclick = init;
     });
   }
