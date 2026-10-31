@@ -249,3 +249,8 @@ body.tm-offen{overflow:hidden}
   .ad-head-in:has(#back[hidden]){grid-template-columns:1fr 88px}
   .ad-head-in:has(#back[hidden]) #back{display:none}
 }
+
+/* Kurse: Startseite und Rücksprung */
+.ak-nav{display:flex;align-items:center;gap:12px;margin:0 0 16px;min-height:44px}
+.ak-back{background:transparent;border:0;color:var(--blitz);font-family:var(--body);font-size:16px;font-weight:600;cursor:pointer;padding:0;min-height:44px}
+.ak-nav-t{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
