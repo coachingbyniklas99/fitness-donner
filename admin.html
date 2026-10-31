@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-title" content="FD Verwaltung">
 <meta name="theme-color" content="#15171C">
 <link rel="stylesheet" href="style.css?v=23">
-<link rel="stylesheet" href="admin.css?v=9">
+<link rel="stylesheet" href="admin.css?v=10">
 </head>
 <body class="ad-body">
 
@@ -38,55 +38,85 @@
 <div id="app" hidden>
   <header class="ad-head">
     <div class="ad-head-in">
-      <div class="ad-head-title">Verwaltung</div>
-      <button type="button" class="ad-logout" id="logout">Abmelden</button>
+      <button type="button" class="ad-back" id="back" hidden>&lsaquo; Zur&uuml;ck</button>
+      <div class="ad-head-title" id="pageTitle">Heute</div>
+      <button type="button" class="ad-iconbtn" id="refresh" aria-label="Neu laden" title="Neu laden">&#8635;</button>
     </div>
-    <div class="ad-push" id="pushBox" hidden></div>
   </header>
 
-  <nav class="ad-tabs" id="tabs">
-    <button type="button" class="ad-tab on" data-tab="termine">Termine</button>
-    <button type="button" class="ad-tab" data-tab="kunden">Kunden</button>
-    <button type="button" class="ad-tab" data-tab="kurse">Kurse</button>
-    <button type="button" class="ad-tab" data-tab="sperren">Sperren</button>
-    <button type="button" class="ad-tab" data-tab="codes">Codes</button>
-    <button type="button" class="ad-tab" data-tab="preise">Preise</button>
-    <button type="button" class="ad-tab" data-tab="wiedervorlage">Wiedervorlage</button>
+  <nav class="ad-tabs" id="tabs" aria-label="Bereiche">
+    <button type="button" class="ad-tab on" data-tab="heute"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><span>Heute</span></button>
+    <button type="button" class="ad-tab" data-tab="termine"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span>Kalender</span></button>
+    <button type="button" class="ad-tab" data-tab="kunden"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 20c.8-4 3.7-6 7.5-6s6.7 2 7.5 6"/></svg><span>Kunden</span></button>
+    <button type="button" class="ad-tab" data-tab="kurse"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg><span>Kurse</span></button>
+    <button type="button" class="ad-tab" data-tab="mehr"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5.5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18.5" cy="12" r="1.6"/></svg><span>Mehr</span></button>
   </nav>
 
   <main class="ad-main">
     <div class="ad-msg ad-msg-top" id="msg" hidden></div>
 
-    <!-- Termine -->
-    <section class="ad-panel" data-panel="termine">
-      <div class="ad-sec-head">
-        <h2>Kommende Termine</h2>
-        <button type="button" class="ad-refresh" id="refresh">Neu laden</button>
-        <button type="button" class="ad-refresh" id="terminNeu">Termin eintragen</button>
+    <!-- HEUTE -->
+    <section class="ad-panel" data-panel="heute">
+      <div class="hd-greet" id="heuteGruss"></div>
+      <div class="hd-date" id="heuteDatum"></div>
+
+      <div class="hd-quick">
+        <button type="button" class="hd-tile" id="tileTermin"><b>+</b><span>Termin eintragen</span></button>
+        <button type="button" class="hd-tile" id="tileKarte"><b>+</b><span>Karte ausstellen</span></button>
+        <button type="button" class="hd-tile" id="tileBlock"><b>&#9208;</b><span>Zeit blockieren</span></button>
       </div>
-      <div id="reservedHint" class="ad-resv-hint" hidden></div>
-      <div id="bookings" class="ad-list"></div>
+
+      <div id="heuteSetup"></div>
+
+      <h3 class="hd-h">Heute</h3>
+      <div id="heuteList" class="ad-list"></div>
+
+      <h3 class="hd-h">Als N&auml;chstes</h3>
+      <div id="heuteNext" class="ad-list"></div>
+
+      <h3 class="hd-h">Offene Aufgaben</h3>
+      <div id="heuteTodo" class="ad-list"></div>
     </section>
 
-    <!-- Kunden (admin-kunden.js) -->
+    <!-- KALENDER -->
+    <section class="ad-panel" data-panel="termine" hidden>
+      <div class="hd-quick hd-quick-2">
+        <button type="button" class="hd-tile" id="terminNeu"><b>+</b><span>Termin eintragen</span></button>
+        <button type="button" class="hd-tile" id="tileBlock2"><b>&#9208;</b><span>Zeit blockieren</span></button>
+      </div>
+      <div id="reservedHint" class="ad-resv-hint" hidden></div>
+      <div id="bookings"></div>
+    </section>
+
+    <!-- KUNDEN (admin-kunden.js) -->
     <section class="ad-panel" data-panel="kunden" hidden>
-      <h2>Kunden</h2>
       <div id="kundenApp"><div class="ad-empty">L&auml;dt &hellip;</div></div>
     </section>
 
-    <!-- Wiedervorlage (admin-wiedervorlage.js) -->
-    <section class="ad-panel" data-panel="wiedervorlage" hidden>
-      <h2>Wiedervorlage</h2>
-      <div id="wvApp"><div class="ad-empty">L&auml;dt &hellip;</div></div>
-    </section>
-
-    <!-- Kurse (admin-kurse.js) -->
+    <!-- KURSE (admin-kurse.js) -->
     <section class="ad-panel" data-panel="kurse" hidden>
       <div id="kurseApp"><div class="ad-empty">L&auml;dt &hellip;</div></div>
     </section>
 
-    <!-- Sperren -->
-    <section class="ad-panel" data-panel="sperren" hidden>
+    <!-- MEHR -->
+    <section class="ad-panel" data-panel="mehr" hidden>
+      <div class="mh-group">
+        <button type="button" class="mh-row" data-go="karten"><span class="mh-ico">&#127915;</span><span class="mh-txt"><b>Karten &amp; Gutscheine</b><small>Ausstellen, suchen, Einheiten korrigieren</small></span><span class="hd-chev">&rsaquo;</span></button>
+        <button type="button" class="mh-row" data-go="blockieren"><span class="mh-ico">&#9208;</span><span class="mh-txt"><b>Zeit blockieren</b><small>Urlaub, Fortbildung, Termin direkt vergeben</small></span><span class="hd-chev">&rsaquo;</span></button>
+        <button type="button" class="mh-row" data-go="reserviert"><span class="mh-ico">&#9203;</span><span class="mh-txt"><b>Offene Zahlungen</b><small>Termine, bei denen gerade jemand bezahlt</small></span><span class="hd-chev">&rsaquo;</span></button>
+      </div>
+      <div class="mh-group">
+        <button type="button" class="mh-row" data-go="preise"><span class="mh-ico">&euro;</span><span class="mh-txt"><b>Preise &amp; Fristen</b><small>Personal Training, Karten, Vorlauf</small></span><span class="hd-chev">&rsaquo;</span></button>
+        <button type="button" class="mh-row" data-go="erinnerung"><span class="mh-ico">&#9993;</span><span class="mh-txt"><b>Automatische Erinnerung</b><small>Mail an Kunden, die lange nicht da waren</small></span><span class="hd-chev">&rsaquo;</span></button>
+        <button type="button" class="mh-row" data-go="mitteilungen"><span class="mh-ico">&#128276;</span><span class="mh-txt"><b>Mitteilungen aufs Handy</b><small id="mhPushSub">Meldung bei neuer Buchung</small></span><span class="hd-chev">&rsaquo;</span></button>
+      </div>
+      <div class="mh-group">
+        <button type="button" class="mh-row mh-out" id="logout"><span class="mh-ico">&#10162;</span><span class="mh-txt"><b>Abmelden</b></span></button>
+      </div>
+    </section>
+
+    <!-- Unterseite: Zeit blockieren -->
+    <section class="ad-panel" data-panel="blockieren" hidden>
       <h2>Einzelnen Termin sperren</h2>
       <p class="ad-hint">Wenn jemand anruft und den Termin direkt bei dir bucht &ndash; nimm ihn hier raus, dann ist er online weg.</p>
       <div class="ad-field">
@@ -108,18 +138,19 @@
 
       <h2 style="margin-top:34px">Aktuell gesperrt</h2>
       <div id="blocked" class="ad-list"></div>
+    </section>
 
-      <h2 style="margin-top:34px" id="reservedHead">Reservierungen w&auml;hrend der Zahlung</h2>
-      <p class="ad-hint">Termine, bei denen gerade jemand auf der Zahlseite ist. Sie werden nach sp&auml;testens 40&nbsp;Minuten von selbst frei. Bleibt einer h&auml;ngen oder blockiert etwas, gibst du ihn hier <b>sofort</b> frei &ndash; die offene Zahlseite wird dabei geschlossen. Feste Buchungen tauchen hier nicht auf, die sagst du unter &bdquo;Termine&ldquo; ab.</p>
+    <!-- Unterseite: Offene Zahlungen -->
+    <section class="ad-panel" data-panel="reserviert" hidden>
+      <p class="ad-hint">Termine, bei denen gerade jemand auf der Zahlseite ist. Sie werden nach sp&auml;testens 40&nbsp;Minuten von selbst frei. Bleibt einer h&auml;ngen oder blockiert etwas, gibst du ihn hier <b>sofort</b> frei &ndash; die offene Zahlseite wird dabei geschlossen. Feste Buchungen tauchen hier nicht auf, die sagst du im Kalender ab.</p>
       <div id="reserved" class="ad-list"></div>
       <button type="button" class="ad-danger" id="releaseAll" hidden>Alle Reservierungen freigeben</button>
     </section>
 
-    <!-- Codes -->
-    <section class="ad-panel" data-panel="codes" hidden>
+    <!-- Unterseite: Karten & Gutscheine -->
+    <section class="ad-panel" data-panel="karten" hidden>
       <div class="ad-sec-head">
-        <h2>Gutscheine &amp; Karten</h2>
-        <button type="button" class="ad-refresh" id="issueToggle">Neu ausstellen</button>
+        <button type="button" class="btn btn-blitz" id="issueToggle" style="width:100%">+ Karte oder Gutschein ausstellen</button>
       </div>
 
       <form class="ad-issue" id="issueBox" hidden>
@@ -146,18 +177,27 @@
           <label for="issueMail">E-Mail</label>
           <input type="email" id="issueMail" autocomplete="off">
         </div>
-        <button type="submit" class="btn btn-blitz">Ausstellen und per Mail schicken</button>
-        <p class="ad-hint">Der Code geht direkt per Mail raus. Nutz das f&uuml;r Barzahlung oder Kulanz &ndash; es l&auml;uft keine Zahlung &uuml;ber Stripe.</p>
+        <div id="issueKarteExtras">
+          <label class="ak-check"><input type="checkbox" id="issueNoMail"> Keine Mail an den Kunden schicken (z.&nbsp;B. wenn ich ihm den Code selbst gebe)</label>
+          <details class="ad-more">
+            <summary>Weitere Angaben (optional)</summary>
+            <div class="ad-field"><label for="issuePreis">Preis pro Einheit in Euro</label><input type="number" id="issuePreis" min="0" step="0.01" placeholder="wie in den Preisen"></div>
+            <div class="ad-field"><label for="issueBis">G&uuml;ltig bis</label><input type="date" id="issueBis"></div>
+            <div class="ad-field"><label for="issueRechnung">Rechnungsnummer</label><input type="text" id="issueRechnung" autocomplete="off"></div>
+            <div class="ad-field"><label for="issueNotiz">Notiz</label><input type="text" id="issueNotiz" autocomplete="off"></div>
+          </details>
+        </div>
+        <button type="submit" class="btn btn-blitz" id="issueGo">Ausstellen und per Mail schicken</button>
+        <p class="ad-hint">Nutz das f&uuml;r Barzahlung oder Kulanz &ndash; es l&auml;uft keine Zahlung &uuml;ber Stripe.</p>
       </form>
 
       <input type="search" id="codeSearch" placeholder="Code, Name oder E-Mail suchen" class="ad-search">
       <div id="codes" class="ad-list"></div>
     </section>
 
-    <!-- Preise -->
+    <!-- Unterseite: Preise -->
     <section class="ad-panel" data-panel="preise" hidden>
-      <h2>Preise</h2>
-      <p class="ad-hint">Gilt sofort f&uuml;r alle neuen Buchungen. Schon verkaufte Karten und Gutscheine bleiben, wie sie sind.</p>
+      <p class="ad-hint">Gilt sofort f&uuml;r alle neuen Buchungen. Schon verkaufte Karten und Gutscheine bleiben, wie sie sind. Preise und Regeln f&uuml;r Kurse stellst du unter &bdquo;Kurse&ldquo; ein.</p>
       <form id="settingsForm">
         <div class="ad-field">
           <label for="pTraining">Personal Training, pro Einheit</label>
@@ -190,6 +230,17 @@
         <button type="submit" class="btn btn-blitz">Speichern</button>
         <p class="ad-hint">Achtung: Die Preise auf <b>preise.html</b> stehen als Text auf der Seite und &auml;ndern sich hier nicht mit. Sag mir Bescheid, wenn ich sie anpassen soll.</p>
       </form>
+    </section>
+
+    <!-- Unterseite: Automatische Erinnerung (admin-wiedervorlage.js) -->
+    <section class="ad-panel" data-panel="erinnerung" hidden>
+      <div id="wvApp"><div class="ad-empty">L&auml;dt &hellip;</div></div>
+    </section>
+
+    <!-- Unterseite: Mitteilungen aufs Handy (admin-push.js) -->
+    <section class="ad-panel" data-panel="mitteilungen" hidden>
+      <p class="ad-hint">Dein Handy meldet sich bei neuer Buchung, Verschiebung, Verkauf und Widerruf &ndash; auch wenn die Verwaltung nicht offen ist. Das geht nur in der App auf dem Home-Bildschirm (Safari: Teilen &rarr; &bdquo;Zum Home-Bildschirm&ldquo;).</p>
+      <div class="ad-push" id="pushBox"><span>Wird gepr&uuml;ft &hellip;</span></div>
     </section>
   </main>
 </div>
@@ -284,26 +335,50 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
   function start() {
     el('loginView').hidden = true;
     el('app').hidden = false;
+    go('heute');
     load();
     if (window.FDPush) window.FDPush.init();
+    if (window.FDKurse) window.FDKurse.open();   // lädt im Hintergrund, damit „Heute“ offene Erstattungen zeigen kann
   }
 
-  /* ---------- Reiter ---------- */
+  /* ---------- Bereiche und Unterseiten ---------- */
+  var TITLES = { heute: 'Heute', termine: 'Kalender', kunden: 'Kunden', kurse: 'Kurse', mehr: 'Mehr',
+    blockieren: 'Zeit blockieren', reserviert: 'In Zahlung', karten: 'Karten', preise: 'Preise',
+    erinnerung: 'Erinnerung', mitteilungen: 'Mitteilungen' };
+  var PARENT = { blockieren: 'termine', reserviert: 'termine', karten: 'mehr', preise: 'mehr', erinnerung: 'mehr', mitteilungen: 'mehr' };
+  var current = 'heute', backTo = '';
+
+  function go(name, from) {
+    if (!TITLES[name]) name = 'heute';
+    current = name;
+    backTo = from || PARENT[name] || '';
+    Array.prototype.forEach.call(document.querySelectorAll('.ad-panel'), function (p) {
+      p.hidden = p.getAttribute('data-panel') !== name;
+    });
+    var main = PARENT[name] || name;
+    Array.prototype.forEach.call(document.querySelectorAll('.ad-tab'), function (t) {
+      var on = t.getAttribute('data-tab') === main;
+      t.classList.toggle('on', on);
+      if (on) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current');
+    });
+    el('pageTitle').textContent = TITLES[name];
+    el('back').hidden = !backTo;
+    if (name === 'heute') renderHeute();
+    if (name === 'karten' && !state.codes.length) loadCodes('');
+    if (name === 'kunden' && window.FDKunden) window.FDKunden.open();
+    if (name === 'kurse' && window.FDKurse) window.FDKurse.open();
+    if (name === 'erinnerung' && window.FDWiedervorlage) window.FDWiedervorlage.open();
+    window.scrollTo(0, 0);
+  }
+  window.FD_ADMIN.go = go;
+
   Array.prototype.forEach.call(document.querySelectorAll('.ad-tab'), function (t) {
-    t.onclick = function () {
-      var name = t.getAttribute('data-tab');
-      Array.prototype.forEach.call(document.querySelectorAll('.ad-tab'), function (x) { x.classList.remove('on'); });
-      t.classList.add('on');
-      Array.prototype.forEach.call(document.querySelectorAll('.ad-panel'), function (p) {
-        p.hidden = p.getAttribute('data-panel') !== name;
-      });
-      if (name === 'codes' && !state.codes.length) loadCodes('');
-      if (name === 'kunden' && window.FDKunden) window.FDKunden.open();
-      if (name === 'kurse' && window.FDKurse) window.FDKurse.open();
-      if (name === 'wiedervorlage' && window.FDWiedervorlage) window.FDWiedervorlage.open();
-      window.scrollTo(0, 0);
-    };
+    t.onclick = function () { go(t.getAttribute('data-tab')); };
   });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-go]'), function (r) {
+    r.onclick = function () { go(r.getAttribute('data-go')); };
+  });
+  el('back').onclick = function () { go(backTo || 'heute'); };
 
   /* ---------- Laden ---------- */
   function load() {
@@ -314,85 +389,191 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
       renderBlocked();
       renderReserved();
       renderSettings();
+      renderHeute();
     }).catch(function (e) { if (e.message !== 'abgemeldet') note(e.message, true); });
   }
-  el('terminNeu').onclick = function () { if (window.FDTermine) window.FDTermine.eintragen({}, function () { load(); }); };
-  el('refresh').onclick = function () { load().then(function () { note('Aktualisiert.'); }); };
+  function neuerTermin() { if (window.FDTermine) window.FDTermine.eintragen({}, function () { load(); }); }
+  el('terminNeu').onclick = neuerTermin;
+  el('tileTermin').onclick = neuerTermin;
+  el('tileKarte').onclick = function () { go('karten'); el('issueBox').hidden = false; el('issueName').focus(); };
+  el('tileBlock').onclick = function () { go('blockieren'); };
+  el('tileBlock2').onclick = function () { go('blockieren'); };
+  el('refresh').onclick = function () {
+    load().then(function () { note('Aktualisiert.'); });
+    if (current === 'kurse' && window.FDKurse) window.FDKurse.open();
+  };
 
-  /* ---------- Termine ---------- */
+  /* ---------- Hilfen für Termine ---------- */
+  function pad(n) { return ('0' + n).slice(-2); }
+  function isoOf(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  function todayISO() { return isoOf(new Date()); }
+  function tomorrowISO() { var d = new Date(); d.setDate(d.getDate() + 1); return isoOf(d); }
+  function dayLabel(iso) {
+    if (iso === todayISO()) return 'Heute';
+    if (iso === tomorrowISO()) return 'Morgen';
+    return dshort(iso);
+  }
+  function confirmed() {
+    return (state.data ? state.data.bookings : []).filter(function (b) { return b.status === 'confirmed'; })
+      .sort(function (a, b) { return (a.date + a.start) < (b.date + b.start) ? -1 : 1; });
+  }
+  function bKey(b) { return b.date + '|' + b.slot_id; }
+  function bRow(b, mitTag) {
+    var art = b.card_code ? 'Karte' : b.voucher_code ? 'Gutschein' : '';
+    return '<button type="button" class="hd-row" data-bk="' + esc(bKey(b)) + '">'
+      + '<span class="hd-time">' + esc(b.start) + '<small>' + esc(b.end) + '</small></span>'
+      + '<span class="hd-main"><b>' + esc(b.name) + '</b><span>' + esc(b.label) + ' &middot; ' + esc(b.city) + (art ? ' &middot; mit ' + art : '') + '</span></span>'
+      + '<span class="hd-chev">&rsaquo;</span></button>';
+  }
+  function wireRows(box) {
+    Array.prototype.forEach.call(box.querySelectorAll('[data-bk]'), function (r) {
+      r.onclick = function () {
+        var b = confirmed().filter(function (x) { return bKey(x) === r.getAttribute('data-bk'); })[0];
+        if (b) openTermin(b);
+      };
+    });
+  }
+
+  /* ---------- Heute ---------- */
+  var pushState = '', erstattungenOffen = 0;
+  document.addEventListener('fd:push', function (e) {
+    pushState = e.detail || '';
+    var sub = el('mhPushSub');
+    if (sub) sub.textContent = pushState === 'on' ? 'Ist an' : 'Meldung bei neuer Buchung';
+    if (current === 'heute') renderHeute();
+  });
+  document.addEventListener('fd:kurse', function (e) {
+    erstattungenOffen = (e.detail && e.detail.erstattungen) || 0;
+    if (current === 'heute') renderHeute();
+  });
+
+  function renderHeute() {
+    var now = new Date(), h = now.getHours();
+    el('heuteGruss').textContent = (h < 11 ? 'Guten Morgen' : h < 18 ? 'Hallo' : 'Guten Abend') + ', Niklas';
+    el('heuteDatum').textContent = now.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
+    if (!state.data) return;
+
+    var all = confirmed(), t = todayISO();
+    var heute = all.filter(function (b) { return b.date === t; });
+    var spaeter = all.filter(function (b) { return b.date > t; }).slice(0, 3);
+
+    el('heuteList').innerHTML = heute.length ? heute.map(bRow).join('')
+      : '<div class="ad-empty">Heute ist nichts gebucht.</div>';
+    el('heuteNext').innerHTML = spaeter.length ? spaeter.map(function (b) {
+      return '<div class="hd-day">' + esc(dayLabel(b.date)) + '</div>' + bRow(b);
+    }).join('') : '<div class="ad-empty">Keine weiteren Termine. Neue entstehen, wenn jemand auf der Website bucht &ndash; oder du tr&auml;gst einen ein.</div>';
+
+    var pend = state.data.bookings.filter(function (b) { return b.status === 'pending'; }).length;
+    var todo = [];
+    if (erstattungenOffen) todo.push('<button type="button" class="mh-row" data-todo="kurse"><span class="mh-ico">&euro;</span><span class="mh-txt"><b>' + erstattungenOffen + (erstattungenOffen === 1 ? ' Erstattung' : ' Erstattungen') + ' offen</b><small>Nach Kursabsagen &ndash; im Bereich Kurse ausf&uuml;hren</small></span><span class="hd-chev">&rsaquo;</span></button>');
+    if (pend) todo.push('<button type="button" class="mh-row" data-todo="reserviert"><span class="mh-ico">&#9203;</span><span class="mh-txt"><b>' + pend + (pend === 1 ? ' Termin' : ' Termine') + ' in Zahlung</b><small>Gerade reserviert &ndash; werden nach sp&auml;testens 40 Minuten von selbst frei</small></span><span class="hd-chev">&rsaquo;</span></button>');
+    el('heuteTodo').innerHTML = todo.length ? '<div class="mh-group">' + todo.join('') + '</div>'
+      : '<div class="ad-empty">Alles erledigt. &#10003;</div>';
+
+    el('heuteSetup').innerHTML = pushState && pushState !== 'on'
+      ? '<div class="hd-setup"><div class="hd-setup-h">Einrichtung &middot; 1 Schritt offen</div>'
+        + '<button type="button" class="mh-row" data-todo="mitteilungen"><span class="mh-ico">&#128276;</span><span class="mh-txt"><b>Mitteilungen aufs Handy einschalten</b><small>So bekommst du jede neue Buchung sofort gemeldet</small></span><span class="hd-chev">&rsaquo;</span></button></div>'
+      : '';
+
+    wireRows(el('heuteList')); wireRows(el('heuteNext'));
+    Array.prototype.forEach.call(el('heuteTodo').querySelectorAll('[data-todo]'), function (r) { r.onclick = function () { go(r.getAttribute('data-todo')); }; });
+    Array.prototype.forEach.call(el('heuteSetup').querySelectorAll('[data-todo]'), function (r) { r.onclick = function () { go(r.getAttribute('data-todo')); }; });
+  }
+
+  /* ---------- Kalender ---------- */
   function renderBookings() {
     var box = el('bookings');
-    var list = state.data.bookings.filter(function (b) { return b.status === 'confirmed'; });
+    var list = confirmed();
     if (!list.length) {
-      box.innerHTML = '<div class="ad-empty">Keine kommenden Termine.</div>';
+      box.innerHTML = '<div class="ad-empty">Keine kommenden Termine. Neue entstehen, wenn jemand auf der Website bucht &ndash; oder du tr&auml;gst einen ein.</div>';
       return;
     }
-    box.innerHTML = list.map(function (b) {
-      return '<div class="ad-card">'
-        + '<div class="ad-card-top"><span class="ad-when">' + esc(dshort(b.date)) + ' &middot; ' + esc(b.start) + '–' + esc(b.end) + '</span>'
-        + '<span class="ad-tagline">' + esc(b.label) + '</span></div>'
-        + '<div class="ad-who">' + esc(b.name) + '</div>'
-        + '<div class="ad-meta">' + esc(b.city) + ' &middot; ' + esc(b.paid) + '</div>'
-        + (b.phone ? '<a class="ad-link" href="tel:' + esc(b.phone.replace(/\s/g, '')) + '">' + esc(b.phone) + '</a>' : '')
-        + '<a class="ad-link" href="mailto:' + esc(b.email) + '">' + esc(b.email) + '</a>'
-        + (b.note ? '<div class="ad-note">' + esc(b.note) + '</div>' : '')
-        + '<div class="ad-actions" style="margin-top:12px"><button type="button" class="ad-mini" data-move="' + esc(b.date + '|' + b.slot_id) + '">Verschieben</button></div>'
-        + '<button type="button" class="ad-danger" data-cancel="' + esc(b.date + '|' + b.slot_id) + '">Absagen</button>' + ((b.card_code || b.voucher_code) ? '<button type="button" class="ad-danger" data-verfall="' + esc(b.date + '|' + b.slot_id) + '">Kurzfristig abgesagt – Einheit verfällt</button>' : '')
-        + '</div>';
-    }).join('');
-
-    Array.prototype.forEach.call(box.querySelectorAll('[data-move]'), function (btn) {
-      btn.onclick = function () {
-        var k = btn.getAttribute('data-move');
-        var b = list.filter(function (x) { return x.date + '|' + x.slot_id === k; })[0];
-        if (b && window.FDTermine) window.FDTermine.verschieben(b, function () { load(); });
-      };
+    var html = '', last = '';
+    list.forEach(function (b) {
+      if (b.date !== last) {
+        if (last) html += '</div>';
+        html += '<div class="hd-day">' + esc(dayLabel(b.date)) + '</div><div class="ad-list">';
+        last = b.date;
+      }
+      html += bRow(b);
     });
+    box.innerHTML = html + '</div>';
+    wireRows(box);
+  }
 
-    /* Kurzfristige Absage: Termin fällt weg, die Einheit bleibt auf der Karte abgezogen (keine Mail an den Kunden) */
-    Array.prototype.forEach.call(box.querySelectorAll('[data-verfall]'), function (btn) {
-      btn.onclick = function () {
-        var parts = btn.getAttribute('data-verfall').split('|');
-        if (btn.getAttribute('data-armed') !== '1') {
-          btn.setAttribute('data-armed', '1');
-          btn.textContent = 'Wirklich? Die Einheit bleibt abgezogen.';
-          setTimeout(function () {
-            btn.removeAttribute('data-armed');
-            btn.textContent = 'Kurzfristig abgesagt – Einheit verfällt';
-          }, 4000);
-          return;
-        }
-        btn.disabled = true;
-        api('cancel', { body: { date: parts[0], slotId: parts[1], verfallen: true, notify: false } })
-          .then(function (d) {
-            note('Abgesagt. ' + (d.hinweis || ''));
-            return load();
-          })
-          .catch(function (e) { btn.disabled = false; note(e.message, true); });
-      };
-    });
+  /* ---------- Fenster (Termin, Absage) ---------- */
+  var sheetEl = null;
+  function closeSheet() {
+    if (sheetEl && sheetEl.parentNode) sheetEl.parentNode.removeChild(sheetEl);
+    sheetEl = null;
+    document.body.classList.remove('tm-offen');
+  }
+  function sheet(title, inner) {
+    closeSheet();
+    sheetEl = document.createElement('div');
+    sheetEl.className = 'tm-overlay';
+    sheetEl.innerHTML = '<div class="tm-box" role="dialog" aria-modal="true"><div class="tm-head"><h2>' + esc(title) + '</h2>'
+      + '<button type="button" class="ad-undo" id="shClose">Schlie&szlig;en</button></div>' + inner + '</div>';
+    document.body.appendChild(sheetEl);
+    document.body.classList.add('tm-offen');
+    sheetEl.querySelector('#shClose').onclick = closeSheet;
+    sheetEl.addEventListener('click', function (e) { if (e.target === sheetEl) closeSheet(); });
+    return sheetEl;
+  }
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && sheetEl) closeSheet(); });
 
-    Array.prototype.forEach.call(box.querySelectorAll('[data-cancel]'), function (btn) {
-      btn.onclick = function () {
-        var parts = btn.getAttribute('data-cancel').split('|');
-        if (btn.getAttribute('data-armed') !== '1') {
-          btn.setAttribute('data-armed', '1');
-          btn.textContent = 'Wirklich absagen?';
-          setTimeout(function () {
-            btn.removeAttribute('data-armed');
-            btn.textContent = 'Absagen';
-          }, 4000);
-          return;
-        }
-        btn.disabled = true;
-        api('cancel', { body: { date: parts[0], slotId: parts[1] } })
-          .then(function (d) {
-            note('Abgesagt. ' + (d.refunded || '') + ' ' + (d.hinweis || ''));
-            return load();
-          })
-          .catch(function (e) { btn.disabled = false; note(e.message, true); });
-      };
+  function openTermin(b) {
+    var art = b.card_code ? 'Bezahlt mit Karte ' + b.card_code : b.voucher_code ? 'Bezahlt mit Gutschein ' + b.voucher_code : b.paid;
+    var s = sheet(dshort(b.date) + ' · ' + b.start + '–' + b.end,
+      '<div class="ad-who">' + esc(b.name) + '</div>'
+      + '<div class="ad-meta">' + esc(b.label) + ' &middot; ' + esc(b.city) + '</div>'
+      + (art ? '<div class="ad-meta">' + esc(art) + '</div>' : '')
+      + (b.phone ? '<a class="ad-link" href="tel:' + esc(b.phone.replace(/\s/g, '')) + '">' + esc(b.phone) + '</a>' : '')
+      + '<a class="ad-link" href="mailto:' + esc(b.email) + '">' + esc(b.email) + '</a>'
+      + (b.note ? '<div class="ad-note">' + esc(b.note) + '</div>' : '')
+      + '<div class="tm-actions" style="margin-top:20px"><button type="button" class="btn btn-blitz" id="shMove">Verschieben</button>'
+      + '<button type="button" class="ad-mini ak-red" id="shCancel">Absagen &hellip;</button></div>');
+    s.querySelector('#shMove').onclick = function () {
+      closeSheet();
+      if (window.FDTermine) window.FDTermine.verschieben(b, function () { load(); });
+    };
+    s.querySelector('#shCancel').onclick = function () { openAbsage(b); };
+  }
+
+  function openAbsage(b) {
+    var karte = !!b.card_code, gutschein = !karte && !!b.voucher_code, mitCode = karte || gutschein;
+    var normalText = karte ? 'Der Termin wird frei. Die Einheit kommt zur&uuml;ck auf die Karte.'
+      : gutschein ? 'Der Termin wird frei. Das Guthaben geht zur&uuml;ck auf den Gutschein.'
+      : 'Der Termin wird frei. Wurde schon bezahlt, machst du die R&uuml;ckzahlung selbst in Stripe.';
+    var s = sheet('Termin absagen',
+      '<p class="ad-hint" style="margin-bottom:14px"><b>' + esc(b.name) + '</b> &middot; ' + esc(dshort(b.date)) + ', ' + esc(b.start) + ' Uhr. Was soll passieren?</p>'
+      + '<label class="ab-opt"><input type="radio" name="abArt" value="normal" checked><span><b>Normal absagen</b><small>' + normalText + '</small></span></label>'
+      + (mitCode ? '<label class="ab-opt"><input type="radio" name="abArt" value="verfall"><span><b>Kurzfristig abgesagt &ndash; Einheit verf&auml;llt</b><small>Der Termin wird frei, aber ' + (karte ? 'die Einheit bleibt von der Karte abgezogen' : 'das Guthaben bleibt verbraucht') + ' &ndash; als h&auml;tte das Training stattgefunden. Im Kalender bleibt er als &bdquo;verfallen&ldquo; stehen.</small></span></label>' : '')
+      + '<label class="tm-check"><input type="checkbox" id="abMail" checked> Kunde per Mail informieren</label>'
+      + '<div class="tm-msg" id="abMsg"></div>'
+      + '<div class="tm-actions"><button type="button" class="ad-danger-solid" id="abGo">Termin absagen</button>'
+      + '<button type="button" class="ad-mini" id="abNo">Zur&uuml;ck</button></div>');
+    var mail = s.querySelector('#abMail');
+    Array.prototype.forEach.call(s.querySelectorAll('[name="abArt"]'), function (r) {
+      r.onchange = function () { mail.checked = r.value === 'normal'; };
     });
+    s.querySelector('#abNo').onclick = function () { openTermin(b); };
+    s.querySelector('#abGo').onclick = function () {
+      var art = s.querySelector('[name="abArt"]:checked').value;
+      var go_ = s.querySelector('#abGo'), msg = s.querySelector('#abMsg');
+      go_.disabled = true;
+      var body = { date: b.date, slotId: b.slot_id, notify: mail.checked };
+      if (art === 'verfall') body.verfallen = true;
+      api('cancel', { body: body }).then(function (d) {
+        closeSheet();
+        note('Abgesagt. ' + (d.refunded || '') + ' ' + (d.hinweis || ''));
+        return load();
+      }).catch(function (e) {
+        go_.disabled = false;
+        if (e.message === 'abgemeldet') return;
+        msg.className = 'tm-msg bad'; msg.textContent = e.message;
+      });
+    };
   }
 
   /* ---------- Sperren ---------- */
@@ -469,8 +650,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
         + ' gerade w&auml;hrend der Zahlung reserviert. <button type="button" class="ad-linkbtn" id="toReserved">Ansehen &amp; freigeben</button>';
       hint.hidden = false;
       el('toReserved').onclick = function () {
-        document.querySelector('.ad-tab[data-tab="sperren"]').click();
-        el('reservedHead').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        go('reserviert');
       };
     } else {
       hint.hidden = true;
@@ -571,24 +751,42 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
   el('issueToggle').onclick = function () {
     el('issueBox').hidden = !el('issueBox').hidden;
   };
+  function issueLabel() {
+    var karte = el('issueArt').value === 'karte';
+    el('issueKarteExtras').hidden = !karte;
+    el('issueGo').textContent = karte && el('issueNoMail').checked ? 'Ausstellen (ohne Mail)' : 'Ausstellen und per Mail schicken';
+  }
   el('issueArt').onchange = function () {
     var karte = el('issueArt').value === 'karte';
     el('issueCardField').hidden = !karte;
     el('issueAmountField').hidden = karte;
+    issueLabel();
   };
+  el('issueNoMail').onchange = issueLabel;
   el('issueBox').onsubmit = function (e) {
     e.preventDefault();
-    api('issue', { body: {
+    var karte = el('issueArt').value === 'karte';
+    var noMail = karte && el('issueNoMail').checked;
+    var body = {
       art: el('issueArt').value,
       card: el('issueCard').value,
       betrag: Number(el('issueAmount').value),
       name: el('issueName').value,
       email: el('issueMail').value,
-    } })
+    };
+    if (karte) {
+      if (noMail) body.mail = false;
+      if (el('issuePreis').value) body.einheitspreis = Number(el('issuePreis').value);
+      if (el('issueBis').value) body.gueltig_bis = el('issueBis').value;
+      if (el('issueRechnung').value) body.rechnung = el('issueRechnung').value;
+      if (el('issueNotiz').value) body.notiz = el('issueNotiz').value;
+    }
+    api('issue', { body: body })
       .then(function (d) {
-        note('Ausgestellt: ' + d.code + ' – die Mail ist raus.');
-        el('issueName').value = '';
-        el('issueMail').value = '';
+        note('Ausgestellt: ' + d.code + (noMail ? ' – ohne Mail.' : ' – die Mail ist raus.'));
+        ['issueName', 'issueMail', 'issuePreis', 'issueBis', 'issueRechnung', 'issueNotiz'].forEach(function (id) { el(id).value = ''; });
+        el('issueNoMail').checked = false;
+        issueLabel();
         el('issueBox').hidden = true;
         loadCodes('');
       })
@@ -646,10 +844,10 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
   }
 })();
 </script>
-<script src="admin-kurse.js?v=2"></script>
-<script src="admin-wiedervorlage.js?v=2"></script>
+<script src="admin-kurse.js?v=3"></script>
+<script src="admin-wiedervorlage.js?v=3"></script>
 <script src="admin-termine.js?v=1"></script>
 <script src="admin-kunden.js?v=3"></script>
-<script src="admin-push.js?v=2"></script>
+<script src="admin-push.js?v=3"></script>
 </body>
 </html>
