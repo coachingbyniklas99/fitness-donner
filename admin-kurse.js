@@ -25,7 +25,11 @@
   function post(path, body) { body.p = S.p; return A.api('kurse/' + path, { body: body }); }
 
   function laden() {
-    return A.api('kurse/state?p=' + encodeURIComponent(S.p)).then(function (d) { S.data = d; render(); })
+    return A.api('kurse/state?p=' + encodeURIComponent(S.p)).then(function (d) {
+      S.data = d;
+      document.dispatchEvent(new CustomEvent('fd:kurse', { detail: { erstattungen: (d.erstattungen || []).filter(function (e) { return e.status !== 'erledigt'; }).length } }));
+      render();
+    })
       .catch(function (e) { if (e.message !== 'abgemeldet') A.note(e.message, true); });
   }
   window.FDKurse = { open: function () { if (!S.data) laden(); else render(); } };
@@ -65,7 +69,7 @@
     if (!d.kurse.length) { body('<div class="ad-empty">Noch kein Kurs angelegt. <button type="button" class="ad-linkbtn" data-go="kurse">Kurs anlegen</button></div>'); on('[data-go]', function () { S.view = 'kurse'; render(); }); return; }
     var list = d.termine.filter(function (t) { return !t.vorbei; });
     var html = '<div class="ad-sec-head"><h2>Kurstermine</h2><button type="button" class="ad-refresh" id="akReload">Neu laden</button></div>'
-      + (d.blockiert_pt ? '<p class="ad-hint">Kurszeiten sind f&uuml;r dein Personal Training automatisch blockiert &ndash; online, in der Sperren-Liste und beim Verschieben.</p>' : '')
+      + (d.blockiert_pt ? '<p class="ad-hint">Kurszeiten sind f&uuml;r dein Personal Training automatisch blockiert &ndash; online, in „Zeit blockieren“ und beim Verschieben.</p>' : '')
       + '<div class="ad-list">' + list.map(terminKarte).join('') + '</div>';
     body(html);
     q('#akReload').onclick = function () { laden().then(function () { A.note('Aktualisiert.'); }); };
