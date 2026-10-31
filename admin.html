@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-title" content="FD Verwaltung">
 <meta name="theme-color" content="#15171C">
 <link rel="stylesheet" href="style.css?v=23">
-<link rel="stylesheet" href="admin.css?v=10">
+<link rel="stylesheet" href="admin.css?v=11">
 </head>
 <body class="ad-body">
 
@@ -366,11 +366,19 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     if (name === 'heute') renderHeute();
     if (name === 'karten' && !state.codes.length) loadCodes('');
     if (name === 'kunden' && window.FDKunden) window.FDKunden.open();
-    if (name === 'kurse' && window.FDKurse) window.FDKurse.open();
+    if (name === 'kurse' && window.FDKurse) window.FDKurse.open(true);
     if (name === 'erinnerung' && window.FDWiedervorlage) window.FDWiedervorlage.open();
     window.scrollTo(0, 0);
   }
   window.FD_ADMIN.go = go;
+  window.FD_ADMIN.absagen = function (b, fertig) { openAbsage(b, fertig, false); };
+  window.FD_ADMIN.neueKarte = function (v, from) {
+    go('karten', from || '');
+    el('issueBox').hidden = false;
+    el('issueName').value = (v && v.name) || '';
+    el('issueMail').value = (v && v.email) || '';
+    el('issueName').focus();
+  };
 
   Array.prototype.forEach.call(document.querySelectorAll('.ad-tab'), function (t) {
     t.onclick = function () { go(t.getAttribute('data-tab')); };
@@ -537,10 +545,10 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
       closeSheet();
       if (window.FDTermine) window.FDTermine.verschieben(b, function () { load(); });
     };
-    s.querySelector('#shCancel').onclick = function () { openAbsage(b); };
+    s.querySelector('#shCancel').onclick = function () { openAbsage(b, null, true); };
   }
 
-  function openAbsage(b) {
+  function openAbsage(b, fertig, vonSheet) {
     var karte = !!b.card_code, gutschein = !karte && !!b.voucher_code, mitCode = karte || gutschein;
     var normalText = karte ? 'Der Termin wird frei. Die Einheit kommt zur&uuml;ck auf die Karte.'
       : gutschein ? 'Der Termin wird frei. Das Guthaben geht zur&uuml;ck auf den Gutschein.'
@@ -557,7 +565,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     Array.prototype.forEach.call(s.querySelectorAll('[name="abArt"]'), function (r) {
       r.onchange = function () { mail.checked = r.value === 'normal'; };
     });
-    s.querySelector('#abNo').onclick = function () { openTermin(b); };
+    s.querySelector('#abNo').onclick = function () { if (vonSheet) openTermin(b); else closeSheet(); };
     s.querySelector('#abGo').onclick = function () {
       var art = s.querySelector('[name="abArt"]:checked').value;
       var go_ = s.querySelector('#abGo'), msg = s.querySelector('#abMsg');
@@ -567,6 +575,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
       api('cancel', { body: body }).then(function (d) {
         closeSheet();
         note('Abgesagt. ' + (d.refunded || '') + ' ' + (d.hinweis || ''));
+        if (fertig) fertig();
         return load();
       }).catch(function (e) {
         go_.disabled = false;
@@ -844,10 +853,10 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
   }
 })();
 </script>
-<script src="admin-kurse.js?v=3"></script>
+<script src="admin-kurse.js?v=4"></script>
 <script src="admin-wiedervorlage.js?v=3"></script>
 <script src="admin-termine.js?v=1"></script>
-<script src="admin-kunden.js?v=3"></script>
+<script src="admin-kunden.js?v=4"></script>
 <script src="admin-push.js?v=3"></script>
 </body>
 </html>
