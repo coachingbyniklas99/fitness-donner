@@ -126,7 +126,7 @@
         (verschoben ? '<div class="ad-meta">Verschoben von ' + esc(fd(t.orig_date)) + '</div>' : '') +
         '<div class="ad-meta">Gebucht am ' + esc(ts(t.created)) + '</div>' +
         (t.note ? '<div class="ad-note">' + esc(t.note) + '</div>' : '') +
-        (t.status === 'confirmed' && t.date >= t0 && t.slot_id ? '<div class="ad-actions" style="margin-top:12px"><button type="button" class="ad-mini" data-move="' + esc(t.date + '|' + t.slot_id) + '">Verschieben</button></div>' : '') + '</div>';
+        (t.status === 'confirmed' && t.date >= t0 && t.slot_id ? '<div class="ad-actions" style="margin-top:12px"><button type="button" class="ad-mini" data-move="' + esc(t.date + '|' + t.slot_id) + '">Verschieben</button><button type="button" class="ad-mini ak-red" data-absagen="' + esc(t.date + '|' + t.slot_id) + '">Absagen &hellip;</button></div>' : '') + '</div>';
     }
 
     var termineHtml = '';
@@ -181,6 +181,7 @@
       '<div class="ad-actions" style="margin-top:10px">' +
       '<a class="ad-mini" href="mailto:' + esc(p.email) + '">' + esc(p.email) + '</a>' +
       (p.phone ? '<a class="ad-mini" href="tel:' + esc(String(p.phone).replace(/[^+\d]/g, '')) + '">' + esc(p.phone) + '</a>' : '') + '</div>' +
+      '<div class="ad-actions" style="margin-top:14px"><button type="button" class="ad-mini" id="kdNeuTermin">+ Termin eintragen</button><button type="button" class="ad-mini" id="kdNeueKarte">+ Karte ausstellen</button></div>' +
       '<div class="ad-meta" style="margin-top:12px">' + [n(p.termine.length, 'Termin', 'Termine'), n(p.karten.length, 'Karte/Gutschein', 'Karten/Gutscheine'), n(p.kurse.length, 'Kurs', 'Kurse'), n(p.mails.length, 'Mail', 'Mails')].join(' · ') + '</div>' +
       '<div class="ad-meta">Wiedervorlage: ' + (p.wv.abgemeldet ? 'abgemeldet' : p.wv.einwilligung ? 'Einwilligung eingetragen' : 'keine Besonderheit') + '</div></div>' +
       abschnitt('Termine', p.termine.length, termineHtml, 'Keine Termine gespeichert.') +
@@ -204,6 +205,18 @@
         window.FDTermine.verschieben({ date: t.date, slot_id: t.slot_id, start: t.start, end: ende, city: t.city, name: p.name || p.email, minutesFallback: min }, nachAktion);
       };
     });
+    Array.prototype.forEach.call(box.querySelectorAll('[data-absagen]'), function (b) {
+      b.onclick = function () {
+        var k = b.getAttribute('data-absagen'), t = p.termine.filter(function (x) { return x.date + '|' + x.slot_id === k; })[0];
+        if (t && A.absagen) A.absagen({ date: t.date, slot_id: t.slot_id, start: t.start, end: t.end, name: p.name || p.email, card_code: t.card_code, voucher_code: t.voucher_code }, nachAktion);
+      };
+    });
+    document.getElementById('kdNeuTermin').onclick = function () {
+      if (!window.FDTermine) return;
+      var kt = p.karten.filter(function (k) { return k.kind === 'karte' && k.status === 'active' && k.frei > 0; })[0];
+      window.FDTermine.eintragen({ code: kt ? kt.code : '', art: kt ? 'karte' : 'bar', name: p.name, email: p.email, phone: p.phone }, nachAktion);
+    };
+    document.getElementById('kdNeueKarte').onclick = function () { if (A.neueKarte) A.neueKarte({ name: p.name, email: p.email }, 'kunden'); };
     Array.prototype.forEach.call(box.querySelectorAll('[data-eintragen]'), function (b) {
       b.onclick = function () {
         if (window.FDTermine) window.FDTermine.eintragen({ code: b.getAttribute('data-eintragen'), name: p.name, email: p.email, phone: p.phone }, nachAktion);
