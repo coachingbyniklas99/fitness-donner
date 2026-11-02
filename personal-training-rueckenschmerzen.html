@@ -95,6 +95,157 @@
 }
 </script>
 <link rel="stylesheet" href="style.css?v=28">
+<style>
+/* Beschwerdebilder als dunkles Skizzenbuch */
+.bb-nb{overflow-x:clip;--ink:#F3F0E8;--hand:'Caveat','Segoe Print','Bradley Hand',cursive}
+@font-face{font-family:'Caveat';src:url('caveat-600.woff2') format('woff2');font-weight:600;font-style:normal;font-display:swap}
+.bb-stage{position:relative;display:flex;justify-content:center;padding:30px 0 10px}
+.bb-stage::before{content:"";position:absolute;left:50%;top:50%;width:min(1200px,100vw);height:150%;transform:translate(-50%,-50%);background:radial-gradient(50% 50% at 50% 50%,rgba(255,238,200,.10),rgba(255,238,200,.035) 45%,rgba(255,238,200,0) 72%);pointer-events:none}
+.bb-pg a:not(.bb-pbtn){color:inherit}
+.bb-ctrl{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:18px}
+.bb-btn{appearance:none;width:48px;height:48px;border-radius:999px;border:1px solid rgba(236,233,226,.22);background:rgba(236,233,226,.06);color:var(--bone);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.bb-btn:hover{border-color:var(--blitz)}
+.bb-btn:disabled{opacity:.3;cursor:default}
+.bb-btn svg{width:20px;height:20px}
+.bb-status{min-width:230px;text-align:center;font-size:14px;color:#C9CBD0}
+.bb-btns .bb-pbtn{display:inline-flex;align-items:center;justify-content:center}
+.bb-pg .bb-pbtn.bb-wa{background:#25D366;border-color:#25D366;color:#fff;padding:0;width:calc(var(--u) * 11);height:calc(var(--u) * 11);min-width:46px;min-height:46px;border-radius:999px}
+.bb-pg .bb-pbtn.bb-wa:hover{background:#1FB857;border-color:#1FB857}
+.bb-wa svg{width:56%;height:56%}
+.bb-credit{margin-top:10px;font-size:12px;color:var(--muted);opacity:.75}
+.bb-credit a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.bb-pbtn:focus-visible,.bb-btn:focus-visible,.bb-chip:focus-visible{outline:2px solid var(--blitz);outline-offset:3px}
+@media(max-width:600px){.bb-status{min-width:0;font-size:13px}}
+@media(prefers-reduced-motion:reduce){.bb-leaf,.bb-book{transition:none!important}.bb-tap i{animation:none!important}}
+.bb-book{--u:.5cqw;container:book / size;position:relative;width:min(1100px,100%);aspect-ratio:2.6 / 1;perspective:2800px;transition:transform 1s cubic-bezier(.645,.045,.355,1);touch-action:pan-y;outline:none;cursor:pointer;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+.bb-book:focus-visible{outline:2px solid var(--blitz);outline-offset:14px;border-radius:6px}
+.bb-book.bb-at-front{transform:translateX(-25%)}
+.bb-book.bb-at-back{transform:translateX(25%)}
+.bb-book .bb-shadow{position:absolute;left:3%;right:3%;bottom:-34px;height:50px;background:radial-gradient(50% 50% at 50% 50%,rgba(0,0,0,.75),rgba(0,0,0,0) 70%);filter:blur(8px);pointer-events:none;transition:left 1s,right 1s}
+.bb-book.bb-at-front .bb-shadow{left:52%}
+.bb-book.bb-at-back .bb-shadow{right:52%}
+.bb-leaf{position:absolute;top:0;left:50%;width:50%;height:100%;transform-origin:left center;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transition:transform 1.15s cubic-bezier(.645,.045,.355,1)}
+.bb-leaf.bb-flipped{transform:rotateY(-180deg)}
+.bb-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;background:#191B20;border-radius:0 6px 6px 0}
+.bb-face.bb-back{transform:rotateY(180deg);border-radius:6px 0 0 6px}
+.bb-face::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:6}
+.bb-face.bb-front::after{background:linear-gradient(to right,rgba(0,0,0,.26),rgba(0,0,0,.05) 5%,rgba(0,0,0,0) 11%)}
+.bb-face.bb-back::after{background:linear-gradient(to left,rgba(0,0,0,.26),rgba(0,0,0,.05) 5%,rgba(0,0,0,0) 11%)}
+.bb-leaf.bb-turning .bb-face::before{content:"";position:absolute;inset:0;z-index:7;pointer-events:none;background:linear-gradient(to left,rgba(0,0,0,.4),rgba(0,0,0,0) 70%);animation:bbShade 1.15s ease both}
+@keyframes bbShade{0%{opacity:0}50%{opacity:1}100%{opacity:0}}
+.bb-spiral{position:absolute;z-index:400;top:4%;bottom:4%;left:50%;width:calc(var(--u) * 4.6);transform:translateX(-50%);pointer-events:none;
+  background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0,rgba(0,0,0,0) calc(var(--u) * 2.2),#6F6C67 calc(var(--u) * 2.2),#D9D6CF calc(var(--u) * 2.9),#A9A69F calc(var(--u) * 3.5),rgba(0,0,0,0) calc(var(--u) * 3.6),rgba(0,0,0,0) calc(var(--u) * 5.2));
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 20%,#000 80%,transparent);mask-image:linear-gradient(to right,transparent,#000 20%,#000 80%,transparent);filter:drop-shadow(0 1px 1px rgba(0,0,0,.5))}
+.bb-book.bb-single{--u:1cqw;width:min(340px,100%);aspect-ratio:.68;overflow:hidden;border-radius:6px 10px 10px 6px;box-shadow:0 40px 70px -26px rgba(0,0,0,.95)}
+.bb-book.bb-single .bb-leaf{left:0;width:100%}
+.bb-book.bb-single .bb-shadow{display:none}
+.bb-book.bb-single .bb-face{border-radius:6px 10px 10px 6px}
+.bb-book.bb-single .bb-spiral{left:calc(var(--u) * 1.6);width:calc(var(--u) * 4.4);transform:none}
+.bb-pg{position:absolute;inset:0;display:flex;flex-direction:column;color:#1B1C20}
+.bb-dot{background-color:#191B20;background-image:radial-gradient(rgba(27,28,32,.16) calc(var(--u) * .28),rgba(0,0,0,0) calc(var(--u) * .34));background-size:calc(var(--u) * 4.4) calc(var(--u) * 4.4);background-position:calc(var(--u) * 2.2) calc(var(--u) * 2.2)}
+.bb-pad{padding:calc(var(--u) * 8) calc(var(--u) * 8) calc(var(--u) * 7) calc(var(--u) * 10)}
+.bb-face.bb-back .bb-pad{padding:calc(var(--u) * 8) calc(var(--u) * 10) calc(var(--u) * 7) calc(var(--u) * 8)}
+.bb-book.bb-single .bb-pad{padding:calc(var(--u) * 8) calc(var(--u) * 7) calc(var(--u) * 7) calc(var(--u) * 11)}
+.bb-k{font-size:max(10px,calc(var(--u) * 2.2));font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:#8A6A12}
+.bb-disp{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:.98;letter-spacing:.005em;margin:0}
+.bb-hand{font-family:var(--hand);color:var(--ink);font-weight:600}
+.bb-pn{position:absolute;bottom:calc(var(--u) * 3.4);font-family:var(--hand);font-size:max(13px,calc(var(--u) * 3));color:#8B8C90;z-index:3}
+.bb-face.bb-front .bb-pn{right:calc(var(--u) * 5)}
+.bb-face.bb-back .bb-pn{left:calc(var(--u) * 6)}
+.bb-book.bb-single .bb-pn{right:calc(var(--u) * 5);left:auto}
+.bb-cover{background:radial-gradient(130% 90% at 25% 15%,#2A2C31,#17181C 55%,#0F1013);color:var(--bone);align-items:center;justify-content:center;gap:calc(var(--u) * 3)}
+.bb-cover::after{content:"";position:absolute;top:0;bottom:0;right:9%;width:calc(var(--u) * 2.6);background:linear-gradient(90deg,#B8861A,#EFB92E 45%,#C99A22);box-shadow:0 0 6px rgba(0,0,0,.5)}
+.bb-label{position:relative;z-index:2;width:58%;padding:calc(var(--u) * 5) calc(var(--u) * 4);background:#191B20;color:#1B1C20;text-align:center;box-shadow:0 2px 0 rgba(0,0,0,.25),0 10px 24px rgba(0,0,0,.4);transform:rotate(-1.2deg)}
+.bb-label .bb-disp{font-size:max(30px,calc(var(--u) * 12));}
+.bb-label .bb-hand{display:block;font-size:max(18px,calc(var(--u) * 5.4));margin-top:calc(var(--u) * 1)}
+.bb-cover svg{position:relative;z-index:2;width:calc(var(--u) * 26);margin-top:calc(var(--u) * 4)}
+.bb-tap{position:absolute;z-index:2;bottom:calc(var(--u) * 6);left:0;right:0;display:flex;justify-content:center;align-items:center;gap:10px;font-size:max(11px,calc(var(--u) * 2));letter-spacing:.18em;text-transform:uppercase;color:#C9C6BF}
+.bb-tap i{width:8px;height:8px;border-radius:50%;background:var(--blitz);animation:bbPulse 1.8s ease-out infinite}
+@keyframes bbPulse{0%{box-shadow:0 0 0 0 rgba(239,185,46,.6)}100%{box-shadow:0 0 0 12px rgba(239,185,46,0)}}
+.bb-backcover{background:radial-gradient(130% 90% at 75% 15%,#2A2C31,#17181C 55%,#0F1013);align-items:center;justify-content:center;gap:calc(var(--u) * 2);color:#9AA0AB}
+.bb-backcover svg{width:calc(var(--u) * 24)}
+.bb-backcover span{font-size:max(10px,calc(var(--u) * 2));letter-spacing:.2em;text-transform:uppercase}
+.bb-big{font-size:max(44px,calc(var(--u) * 17))}
+.bb-sub{font-family:var(--display);text-transform:uppercase;font-size:max(16px,calc(var(--u) * 4.4));margin-top:calc(var(--u) * 2);color:#1B1C20}
+.bb-txt{font-size:max(13px,calc(var(--u) * 3));line-height:1.55;color:#3A3B40;margin:calc(var(--u) * 4) 0 0;max-width:30em}
+.bb-hint{font-size:max(17px,calc(var(--u) * 4.4))}
+.bb-plan{list-style:none;margin:calc(var(--u) * 3) 0 0;padding:0;display:grid;gap:calc(var(--u) * .8)}
+.bb-plan li{display:grid;grid-template-columns:auto 1fr auto;align-items:baseline;gap:calc(var(--u) * 2.2);font-family:var(--hand);font-weight:600;color:var(--ink);font-size:max(16px,calc(var(--u) * 4.2));line-height:1.15;border-bottom:1px solid rgba(30,58,107,.18);padding-bottom:calc(var(--u) * .6)}
+.bb-plan li i{font-style:normal;font-family:var(--display);color:#8A6A12;font-size:.78em}
+.bb-plan li small{font-family:var(--body);font-weight:600;font-size:max(10px,calc(var(--u) * 2.2));color:#6A6B70}
+.bb-photo{padding:0}
+.bb-snap{position:absolute;inset:11% 9% 21% 12%;background:#fff;padding:calc(var(--u) * 1.4);box-shadow:0 1px 2px rgba(0,0,0,.2),0 calc(var(--u) * 2) calc(var(--u) * 5) rgba(0,0,0,.25);transform:rotate(-1.6deg)}
+.bb-face.bb-back .bb-snap{inset:11% 12% 21% 9%}
+.bb-snap img{display:block;width:100%;height:100%;object-fit:cover;max-width:none}
+.bb-tape{position:absolute;width:calc(var(--u) * 16);height:calc(var(--u) * 5);background:rgba(239,185,46,.62);box-shadow:0 1px 2px rgba(0,0,0,.12);z-index:2}
+.bb-tape.bb-l{top:calc(var(--u) * -2.2);left:calc(var(--u) * -4);transform:rotate(-24deg)}
+.bb-tape.bb-r{top:calc(var(--u) * -2.2);right:calc(var(--u) * -4);transform:rotate(22deg)}
+.bb-cap{position:absolute;left:12%;right:9%;bottom:8%;font-size:max(18px,calc(var(--u) * 5.2));transform:rotate(-1deg)}
+.bb-face.bb-back .bb-cap{left:9%;right:12%}
+.bb-no{position:absolute;top:calc(var(--u) * 4);right:calc(var(--u) * 6);font-family:var(--display);font-size:max(48px,calc(var(--u) * 19));line-height:1;color:transparent;-webkit-text-stroke:max(1px,calc(var(--u) * .3)) #C99A22;opacity:.9}
+.bb-face.bb-back .bb-no{right:calc(var(--u) * 9)}
+.bb-nm{font-size:max(28px,calc(var(--u) * 9.6));margin-top:calc(var(--u) * 1.6)}
+.bb-tip{margin-top:calc(var(--u) * 3);font-size:max(17px,calc(var(--u) * 4.5));line-height:1.12;transform:rotate(-.6deg)}
+.bb-hl{background:linear-gradient(transparent 52%,rgba(239,185,46,.75) 52%,rgba(239,185,46,.75) 92%,transparent 92%);padding:0 .1em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.bb-ziel .bb-big{color:#1B1C20}
+.bb-ziel .bb-line{margin-top:calc(var(--u) * 6);font-size:max(20px,calc(var(--u) * 5.6));border-bottom:2px solid rgba(30,58,107,.35);padding-bottom:calc(var(--u) * 1);max-width:85%}
+.bb-cta{background:var(--blitz)}
+.bb-cta .bb-k{color:#5A4510}
+.bb-cta .bb-txt{color:#2E2A1F}
+.bb-btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:calc(var(--u) * 5)}
+.bb-pbtn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 max(16px,calc(var(--u) * 4));font-weight:700;font-size:max(12px,calc(var(--u) * 2.6));letter-spacing:.06em;text-transform:uppercase;text-decoration:none;background:#15171C;color:var(--blitz)}
+.bb-pbtn:hover{color:#F7CF5E}
+.bb-m-photo{position:relative;height:42%;margin:calc(var(--u) * 7) calc(var(--u) * 6) 0 calc(var(--u) * 10);background:#fff;padding:calc(var(--u) * 1.6);box-shadow:0 1px 2px rgba(0,0,0,.2),0 6px 14px rgba(0,0,0,.22);transform:rotate(-1.4deg)}
+.bb-m-photo img{display:block;width:100%;height:100%;object-fit:cover;max-width:none}
+.bb-m-body{position:relative;padding:calc(var(--u) * 5) calc(var(--u) * 6) calc(var(--u) * 6) calc(var(--u) * 11);display:flex;flex-direction:column;flex:1}
+.bb-m-body .bb-no{top:calc(var(--u) * 1);right:calc(var(--u) * 6);font-size:max(40px,calc(var(--u) * 15))}
+.bb-m-body .bb-nm{font-size:max(26px,calc(var(--u) * 8));margin-top:calc(var(--u) * 1)}
+.bb-m-body .bb-tip{font-size:max(17px,calc(var(--u) * 5.4))}
+.bb-m-body .wt{font-size:max(12px,calc(var(--u) * 3.4));margin-top:calc(var(--u) * 2.4)}
+.bb-face{background:#17191E}
+.bb-dot{background-color:#191B20;background-image:radial-gradient(rgba(236,233,226,.13) calc(var(--u) * .26),rgba(0,0,0,0) calc(var(--u) * .32))}
+.bb-pg{color:var(--bone)}
+.bb-k{color:var(--blitz)}
+.bb-txt{color:#B6B9C1}
+.bb-sub,.bb-ziel .bb-big,.run{color:var(--bone)}
+.bb-hand{color:#F3F0E8}
+.bb-plan li{color:#F3F0E8;border-bottom-color:rgba(236,233,226,.14)}
+.bb-plan li i{color:var(--blitz)}
+.bb-plan li small,.dist small,.wt thead th{color:#8D919B}
+.wt th,.wt td{border-bottom-color:rgba(236,233,226,.14)}
+.wt tbody th{color:var(--blitz)}
+.bb-no{-webkit-text-stroke-color:rgba(239,185,46,.75)}
+.bb-hl{color:#15171C;background:linear-gradient(transparent 8%,rgba(239,185,46,.92) 8%,rgba(239,185,46,.92) 94%,transparent 94%)}
+.bb-snap,.bb-m-photo{background:#ECE9E2;box-shadow:0 2px 4px rgba(0,0,0,.4),0 calc(var(--u) * 2) calc(var(--u) * 6) rgba(0,0,0,.5)}
+.bb-tape{background:rgba(239,185,46,.55)}
+.bb-pn{color:#6F7380}
+.bb-ziel .bb-line{border-bottom-color:rgba(236,233,226,.3)}
+.bb-face.bb-front::after{background:linear-gradient(to right,rgba(0,0,0,.55),rgba(0,0,0,.12) 5%,rgba(0,0,0,0) 11%)}
+.bb-face.bb-back::after{background:linear-gradient(to left,rgba(0,0,0,.55),rgba(0,0,0,.12) 5%,rgba(0,0,0,0) 11%)}
+.bb-cover{background:radial-gradient(130% 90% at 25% 15%,#24262B,#111215 55%,#0A0B0D)}
+.bb-label{background:var(--blitz)}
+.bb-label .bb-hand{color:#15171C}
+.bb-face{box-shadow:inset 0 0 0 1px rgba(236,233,226,.07)}
+.bb-book.bb-single{box-shadow:0 40px 70px -26px rgba(0,0,0,.95),0 0 0 1px rgba(236,233,226,.08)}
+.bb-cl{list-style:none;margin:calc(var(--u) * 3) 0 0;padding:0;display:grid;gap:calc(var(--u) * 1.1)}
+.bb-cl.bb-two{grid-template-columns:1fr 1fr;column-gap:calc(var(--u) * 4)}
+.bb-cl li{position:relative;padding-left:calc(var(--u) * 4.2);font-family:var(--hand);font-weight:600;color:#F3F0E8;font-size:max(16px,calc(var(--u) * 4.1));line-height:1.08}
+.bb-cl li::before{content:"";position:absolute;left:0;top:.38em;width:calc(var(--u) * 2.2);height:calc(var(--u) * 1.1);min-width:9px;min-height:5px;border-left:2px solid var(--blitz);border-bottom:2px solid var(--blitz);transform:rotate(-45deg)}
+.bb-book.bb-single .bb-cl.bb-two{grid-template-columns:1fr}
+.bb-book.bb-single .bb-cl li{font-size:max(15px,calc(var(--u) * 4.6))}
+.bb-book.bb-single .bb-m-photo{height:34%}
+.bb-pbtn.bb-alt{background:transparent;color:#15171C;border:1.5px solid rgba(21,23,28,.5)}
+.bb-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:56px auto 0;max-width:1000px}
+.bb-chip{appearance:none;display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 16px;border:1px solid rgba(236,233,226,.2);background:rgba(236,233,226,.03);color:#C9CBD0;font:600 14px/1 var(--body);cursor:pointer;transition:background .2s,border-color .2s,color .2s}
+.bb-chip b{font-family:var(--display);font-weight:400;color:var(--blitz);font-size:15px}
+.bb-chip:hover{border-color:var(--blitz);color:var(--bone)}
+.bb-chip[aria-current="true"]{background:var(--blitz);border-color:var(--blitz);color:#15171C}
+.bb-chip[aria-current="true"] b{color:#15171C}
+.bb-cta,.bb-cta .bb-disp{color:#15171C}
+.bb-cta .bb-txt{color:#2E2A1F}
+.bb-m-body .bb-nm{padding-right:calc(var(--u) * 17)}
+.bb-pg.bb-pad .bb-nm{padding-right:calc(var(--u) * 20)}
+</style>
 </head>
 <body>
 <div class="newsbar"><a href="https://whatsapp.com/channel/0029Vb9Sacj9xVJgW1Vm7O2Z" target="_blank" rel="noopener"><svg class="wa-ico" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.9L2 22l5.27-1.38A9.9 9.9 0 1 0 12.04 2Zm0 1.8a8.1 8.1 0 1 1-4.13 15.07l-.3-.18-3.13.82.84-3.05-.2-.31A8.1 8.1 0 0 1 12.04 3.8Zm-3.1 4.1c-.17 0-.45.06-.69.32-.23.26-.9.88-.9 2.15s.92 2.5 1.05 2.67c.13.17 1.8 2.86 4.45 3.9 2.2.87 2.65.7 3.13.65.48-.04 1.54-.63 1.76-1.24.22-.6.22-1.13.15-1.24-.06-.1-.23-.17-.49-.3-.26-.13-1.54-.76-1.78-.85-.24-.09-.41-.13-.58.13-.17.26-.67.85-.82 1.02-.15.17-.3.2-.56.07-.26-.13-1.1-.4-2.09-1.29-.77-.69-1.3-1.54-1.45-1.8-.15-.26-.02-.4.11-.53.12-.12.26-.3.39-.46.13-.15.17-.26.26-.43.09-.17.04-.33-.02-.46-.07-.13-.58-1.4-.8-1.92-.2-.5-.42-.43-.58-.44h-.5Z"/></svg><b>Neu</b><span class="nb-long">Kurse in Solingen: Termine &amp; Early-Bird zuerst im WhatsApp-Kanal</span><span class="nb-short">Kurse in Solingen: Early-Bird zuerst im WhatsApp-Kanal</span><span class="newsbar-go">Kanal beitreten &rarr;</span></a></div>
@@ -175,7 +326,7 @@
   </div>
 </section>
 
-<section style="padding-top:0">
+<section style="padding-top:0" class="bb-nb">
   <div class="wrap">
     <div class="sec-head">
       <div>
@@ -184,14 +335,30 @@
       </div>
       <p>Ausbildungsinhalte meiner Lizenz &ndash; wenn dein Fall nicht dabei ist, frag einfach nach.</p>
     </div>
-    <div class="feat-grid m-slide">
+    <template id="bbDouble"><div class="bb-pg bb-cover"><div class="bb-label"><p class="bb-disp">Gesundheit</p><span class="bb-hand">Beschwerdebilder</span></div><svg viewBox="0 0 300 110" aria-hidden="true"><text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text><text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text><polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"></polyline></svg><span class="bb-tap"><i></i>Zum Öffnen tippen</span></div><div class="bb-pg bb-dot bb-pad"><span class="bb-k">Womit ich arbeite</span><p class="bb-disp bb-big" style="font-size:max(34px,calc(var(--u) * 11.5))">Beschwerde&shy;bilder, die ich kenne.</p><p class="bb-txt">Ausbildungsinhalte meiner Lizenz – wenn dein Fall nicht dabei ist, frag einfach nach.</p><p class="bb-hand bb-hint" style="margin-top:auto">Seite umblättern &rarr;</p><span class="bb-pn">1</span></div><div class="bb-pg bb-dot bb-pad"><span class="bb-k">Inhalt</span><p class="bb-hand" style="font-size:max(16px,calc(var(--u) * 4));margin:calc(var(--u) * 1.4) 0 0">sechs Bereiche, ein Ziel: wieder belastbar</p><ul class="bb-plan"><li><i>01</i><span>Rücken & Wirbelsäule</span><small>S. 4</small></li><li><i>02</i><span>Gelenke & Verschleiß</span><small>S. 6</small></li><li><i>03</i><span>Nach Verletzung</span><small>S. 8</small></li><li><i>04</i><span>Schulter & Arm</span><small>S. 10</small></li><li><i>05</i><span>Hüfte, Knie & Fuß</span><small>S. 12</small></li><li><i>06</i><span>Stoffwechsel & Herz-Kreislauf</span><small>S. 14</small></li></ul><span class="bb-pn">2</span></div><div class="bb-pg bb-dot bb-photo"><div class="bb-snap"><span class="bb-tape bb-l"></span><span class="bb-tape bb-r"></span><img src="beschwerde-ruecken.webp" alt="Nacken mit markierter Schmerzstelle" loading="lazy" decoding="async"></div><p class="bb-cap bb-hand">01 · Rücken & Wirbelsäule</p></div><div class="bb-pg bb-dot bb-pad"><span class="bb-no" aria-hidden="true">01</span><span class="bb-k">Bereich 01</span><p class="bb-disp bb-nm">Rücken & Wirbelsäule</p><ul class="bb-cl bb-two"><li>Unspezifische Nacken- und Rückenschmerzen</li><li>Bandscheibenvorfall</li><li>Spinalkanalstenose</li><li>Wirbelgleiten</li><li>Skoliose</li><li>Hexenschuss</li><li>ISG-Beschwerden</li><li>Morbus Scheuermann</li><li>Morbus Bechterew</li></ul><span class="bb-pn">4</span></div><div class="bb-pg bb-dot bb-photo"><div class="bb-snap"><span class="bb-tape bb-l"></span><span class="bb-tape bb-r"></span><img src="beschwerde-gelenke.webp" alt="Mann dehnt im Fitnessstudio den Oberschenkel" loading="lazy" decoding="async"></div><p class="bb-cap bb-hand">02 · Gelenke & Verschleiß</p></div><div class="bb-pg bb-dot bb-pad"><span class="bb-no" aria-hidden="true">02</span><span class="bb-k">Bereich 02</span><p class="bb-disp bb-nm">Gelenke & Verschleiß</p><ul class="bb-cl"><li>Arthrose</li><li>Osteoporose</li><li>Zustand nach Gelenkersatz (TEP)</li><li>Beinlängendifferenz</li></ul><p class="bb-tip bb-hand"><span class="bb-hl">Training, angepasst an deine Belastbarkeit.</span></p><span class="bb-pn">6</span></div><div class="bb-pg bb-dot bb-photo"><div class="bb-snap"><span class="bb-tape bb-l"></span><span class="bb-tape bb-r"></span><img src="beschwerde-verletzung.webp" alt="Bandagiertes Knie" loading="lazy" decoding="async"></div><p class="bb-cap bb-hand">03 · Nach Verletzung</p></div><div class="bb-pg bb-dot bb-pad"><span class="bb-no" aria-hidden="true">03</span><span class="bb-k">Bereich 03</span><p class="bb-disp bb-nm">Nach Verletzung</p><ul class="bb-cl"><li>Kreuzbandriss</li><li>Meniskusriss</li><li>Muskelverletzungen</li><li>Laterale Sprunggelenksverletzung</li></ul><p class="bb-tip bb-hand"><span class="bb-hl">Strukturierter Trainingsaufbau, abgestimmt mit Arzt und Physiotherapie.</span></p><span class="bb-pn">8</span></div><div class="bb-pg bb-dot bb-photo"><div class="bb-snap"><span class="bb-tape bb-l"></span><span class="bb-tape bb-r"></span><img src="beschwerde-schulter.webp" alt="Hand auf der Schulter, Schwarz-Weiß-Aufnahme" loading="lazy" decoding="async"></div><p class="bb-cap bb-hand">04 · Schulter & Arm</p></div><div class="bb-pg bb-dot bb-pad"><span class="bb-no" aria-hidden="true">04</span><span class="bb-k">Bereich 04</span><p class="bb-disp bb-nm">Schulter & Arm</p><ul class="bb-cl"><li>Subakromiales Schmerzsyndrom</li><li>Frozen Shoulder</li><li>Tennisarm</li><li>Golferellenbogen</li><li>Karpaltunnelsyndrom</li></ul><span class="bb-pn">10</span></div><div class="bb-pg bb-dot bb-photo"><div class="bb-snap"><span class="bb-tape bb-l"></span><span class="bb-tape bb-r"></span><img src="beschwerde-knie.webp" alt="Hände auf dem Knie in Sportkleidung" loading="lazy" decoding="async"></div><p class="bb-cap bb-hand">05 · Hüfte, Knie & Fuß</p></div><div class="bb-pg bb-dot bb-pad"><span class="bb-no" aria-hidden="true">05</span><span class="bb-k">Bereich 05</span><p class="bb-disp bb-nm">Hüfte, Knie & Fuß</p><ul class="bb-cl"><li>Piriformis-Syndrom</li><li>Patellaspitzensyndrom</li><li>Läuferknie</li><li>Plantarer Fersenschmerz</li></ul><span class="bb-pn">12</span></div><div class="bb-pg bb-dot bb-photo"><div class="bb-snap"><span class="bb-tape bb-l"></span><span class="bb-tape bb-r"></span><img src="beschwerde-stoffwechsel.webp" alt="Beine auf dem Rudergerät" loading="lazy" decoding="async"></div><p class="bb-cap bb-hand">06 · Stoffwechsel & Herz-Kreislauf</p></div><div class="bb-pg bb-dot bb-pad"><span class="bb-no" aria-hidden="true">06</span><span class="bb-k">Bereich 06</span><p class="bb-disp bb-nm">Stoffwechsel & Herz-Kreislauf</p><ul class="bb-cl"><li>Bluthochdruck</li><li>Metabolisches Syndrom</li><li>Diabetes</li><li>Arteriosklerose</li></ul><p class="bb-tip bb-hand"><span class="bb-hl">Training als Teil deiner Gesundheitsstrategie.</span></p><span class="bb-pn">14</span></div><div class="bb-pg bb-dot bb-pad bb-ziel"><span class="bb-k">Nicht dabei?</span><p class="bb-disp bb-big" style="font-size:max(36px,calc(var(--u) * 13))">Frag einfach nach.</p><p class="bb-txt">Bring mit, was du hast – Befunde, Berichte, Erfahrungen aus der Physio. Dann schauen wir gemeinsam, was geht.</p><p class="bb-hand bb-line">Mein Thema: ____________</p><span class="bb-pn">15</span></div><div class="bb-pg bb-pad bb-cta"><span class="bb-k">Aufbauen statt schonen</span><p class="bb-disp" style="font-size:max(30px,calc(var(--u) * 10));margin-top:calc(var(--u) * 2)">Wir starten da, wo du heute stehst.</p><p class="bb-txt">Im Probetraining klären wir deine Vorgeschichte und testen, was aktuell geht.</p><div class="bb-btns"><a class="bb-pbtn" href="termin-buchen.html">Termin buchen</a><a class="bb-pbtn bb-wa" href="https://wa.me/491776311404" target="_blank" rel="noopener" aria-label="Per WhatsApp schreiben" title="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.9L2 22l5.27-1.38A9.9 9.9 0 1 0 12.04 2Zm0 1.8a8.1 8.1 0 1 1-4.13 15.07l-.3-.18-3.13.82.84-3.05-.2-.31A8.1 8.1 0 0 1 12.04 3.8Zm-3.1 4.1c-.17 0-.45.06-.69.32-.23.26-.9.88-.9 2.15s.92 2.5 1.05 2.67c.13.17 1.8 2.86 4.45 3.9 2.2.87 2.65.7 3.13.65.48-.04 1.54-.63 1.76-1.24.22-.6.22-1.13.15-1.24-.06-.1-.23-.17-.49-.3-.26-.13-1.54-.76-1.78-.85-.24-.09-.41-.13-.58.13-.17.26-.67.85-.82 1.02-.15.17-.3.2-.56.07-.26-.13-1.1-.4-2.09-1.29-.77-.69-1.3-1.54-1.45-1.8-.15-.26-.02-.4.11-.53.12-.12.26-.3.39-.46.13-.15.17-.26.26-.43.09-.17.04-.33-.02-.46-.07-.13-.58-1.4-.8-1.92-.2-.5-.42-.43-.58-.44h-.5Z"/></svg></a></div><span class="bb-pn" style="color:#5A4510">16</span></div><div class="bb-pg bb-backcover"><svg viewBox="0 0 300 110" aria-hidden="true"><text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text><text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text><polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"></polyline></svg><span>fitnessdonner.de</span></div></template>
+    <template id="bbSingle"><div class="bb-pg bb-cover"><div class="bb-label"><p class="bb-disp">Gesundheit</p><span class="bb-hand">Beschwerdebilder</span></div><svg viewBox="0 0 300 110" aria-hidden="true"><text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text><text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text><polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"></polyline></svg><span class="bb-tap"><i></i>Zum Öffnen tippen</span></div><div class="bb-pg bb-dot bb-pad"><span class="bb-k">Womit ich arbeite</span><p class="bb-disp bb-big" style="font-size:max(34px,calc(var(--u) * 11))">Beschwerde&shy;bilder, die ich kenne.</p><p class="bb-txt">Ausbildungsinhalte meiner Lizenz – wenn dein Fall nicht dabei ist, frag einfach nach.</p><ul class="bb-plan"><li><i>01</i><span>Rücken & Wirbelsäule</span></li><li><i>02</i><span>Gelenke & Verschleiß</span></li><li><i>03</i><span>Nach Verletzung</span></li><li><i>04</i><span>Schulter & Arm</span></li><li><i>05</i><span>Hüfte, Knie & Fuß</span></li><li><i>06</i><span>Stoffwechsel & Herz-Kreislauf</span></li></ul><p class="bb-hand bb-hint" style="margin-top:auto">Wischen zum Blättern &rarr;</p></div><div class="bb-pg bb-dot"><div class="bb-m-photo"><span class="bb-tape bb-l"></span><span class="bb-tape bb-r"></span><img src="beschwerde-ruecken.webp" alt="Nacken mit markierter Schmerzstelle" loading="lazy" decoding="async"></div><div class="bb-m-body"><span class="bb-no" aria-hidden="true">01</span><span class="bb-k">Bereich 01</span><p class="bb-disp bb-nm">Rücken & Wirbelsäule</p><ul class="bb-cl bb-two"><li>Unspezifische Nacken- und Rückenschmerzen</li><li>Bandscheibenvorfall</li><li>Spinalkanalstenose</li><li>Wirbelgleiten</li><li>Skoliose</li><li>Hexenschuss</li><li>ISG-Beschwerden</li><li>Morbus Scheuermann</li><li>Morbus Bechterew</li></ul></div></div><div class="bb-pg bb-dot"><div class="bb-m-photo"><span class="bb-tape bb-l"></span><span class="bb-tape bb-r"></span><img src="beschwerde-gelenke.webp" alt="Mann dehnt im Fitnessstudio den Oberschenkel" loading="lazy" decoding="async"></div><div class="bb-m-body"><span class="bb-no" aria-hidden="true">02</span><span class="bb-k">Bereich 02</span><p class="bb-disp bb-nm">Gelenke & Verschleiß</p><ul class="bb-cl"><li>Arthrose</li><li>Osteoporose</li><li>Zustand nach Gelenkersatz (TEP)</li><li>Beinlängendifferenz</li></ul><p class="bb-tip bb-hand"><span class="bb-hl">Training, angepasst an deine Belastbarkeit.</span></p></div></div><div class="bb-pg bb-dot"><div class="bb-m-photo"><span class="bb-tape bb-l"></span><span class="bb-tape bb-r"></span><img src="beschwerde-verletzung.webp" alt="Bandagiertes Knie" loading="lazy" decoding="async"></div><div class="bb-m-body"><span class="bb-no" aria-hidden="true">03</span><span class="bb-k">Bereich 03</span><p class="bb-disp bb-nm">Nach Verletzung</p><ul class="bb-cl"><li>Kreuzbandriss</li><li>Meniskusriss</li><li>Muskelverletzungen</li><li>Laterale Sprunggelenksverletzung</li></ul><p class="bb-tip bb-hand"><span class="bb-hl">Strukturierter Trainingsaufbau, abgestimmt mit Arzt und Physiotherapie.</span></p></div></div><div class="bb-pg bb-dot"><div class="bb-m-photo"><span class="bb-tape bb-l"></span><span class="bb-tape bb-r"></span><img src="beschwerde-schulter.webp" alt="Hand auf der Schulter, Schwarz-Weiß-Aufnahme" loading="lazy" decoding="async"></div><div class="bb-m-body"><span class="bb-no" aria-hidden="true">04</span><span class="bb-k">Bereich 04</span><p class="bb-disp bb-nm">Schulter & Arm</p><ul class="bb-cl"><li>Subakromiales Schmerzsyndrom</li><li>Frozen Shoulder</li><li>Tennisarm</li><li>Golferellenbogen</li><li>Karpaltunnelsyndrom</li></ul></div></div><div class="bb-pg bb-dot"><div class="bb-m-photo"><span class="bb-tape bb-l"></span><span class="bb-tape bb-r"></span><img src="beschwerde-knie.webp" alt="Hände auf dem Knie in Sportkleidung" loading="lazy" decoding="async"></div><div class="bb-m-body"><span class="bb-no" aria-hidden="true">05</span><span class="bb-k">Bereich 05</span><p class="bb-disp bb-nm">Hüfte, Knie & Fuß</p><ul class="bb-cl"><li>Piriformis-Syndrom</li><li>Patellaspitzensyndrom</li><li>Läuferknie</li><li>Plantarer Fersenschmerz</li></ul></div></div><div class="bb-pg bb-dot"><div class="bb-m-photo"><span class="bb-tape bb-l"></span><span class="bb-tape bb-r"></span><img src="beschwerde-stoffwechsel.webp" alt="Beine auf dem Rudergerät" loading="lazy" decoding="async"></div><div class="bb-m-body"><span class="bb-no" aria-hidden="true">06</span><span class="bb-k">Bereich 06</span><p class="bb-disp bb-nm">Stoffwechsel & Herz-Kreislauf</p><ul class="bb-cl"><li>Bluthochdruck</li><li>Metabolisches Syndrom</li><li>Diabetes</li><li>Arteriosklerose</li></ul><p class="bb-tip bb-hand"><span class="bb-hl">Training als Teil deiner Gesundheitsstrategie.</span></p></div></div><div class="bb-pg bb-pad bb-cta"><span class="bb-k">Nicht dabei?</span><p class="bb-disp bb-big" style="font-size:max(36px,calc(var(--u) * 12))">Frag einfach nach.</p><p class="bb-txt">Bring mit, was du hast – Befunde, Berichte, Erfahrungen aus der Physio. Im Probetraining klären wir deine Vorgeschichte und testen, was aktuell geht.</p><div class="bb-btns"><a class="bb-pbtn" href="termin-buchen.html">Termin buchen</a><a class="bb-pbtn bb-wa" href="https://wa.me/491776311404" target="_blank" rel="noopener" aria-label="Per WhatsApp schreiben" title="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.9L2 22l5.27-1.38A9.9 9.9 0 1 0 12.04 2Zm0 1.8a8.1 8.1 0 1 1-4.13 15.07l-.3-.18-3.13.82.84-3.05-.2-.31A8.1 8.1 0 0 1 12.04 3.8Zm-3.1 4.1c-.17 0-.45.06-.69.32-.23.26-.9.88-.9 2.15s.92 2.5 1.05 2.67c.13.17 1.8 2.86 4.45 3.9 2.2.87 2.65.7 3.13.65.48-.04 1.54-.63 1.76-1.24.22-.6.22-1.13.15-1.24-.06-.1-.23-.17-.49-.3-.26-.13-1.54-.76-1.78-.85-.24-.09-.41-.13-.58.13-.17.26-.67.85-.82 1.02-.15.17-.3.2-.56.07-.26-.13-1.1-.4-2.09-1.29-.77-.69-1.3-1.54-1.45-1.8-.15-.26-.02-.4.11-.53.12-.12.26-.3.39-.46.13-.15.17-.26.26-.43.09-.17.04-.33-.02-.46-.07-.13-.58-1.4-.8-1.92-.2-.5-.42-.43-.58-.44h-.5Z"/></svg></a></div></div></template>
+    <div class="bb-stage">
+      <div class="bb-book" id="bbBook" tabindex="0" role="group" aria-roledescription="Notizbuch" aria-label="Notizbuch mit sechs Bereichen von Beschwerdebildern. Mit den Pfeiltasten bl&auml;ttern.">
+        <div class="bb-shadow" aria-hidden="true"></div>
+        <div class="bb-spiral" aria-hidden="true"></div>
+      </div>
+    </div>
+    <div class="bb-chips" role="group" aria-label="Zu einem Bereich springen"><button class="bb-chip" type="button" data-go="2"><b>01</b>Rücken</button><button class="bb-chip" type="button" data-go="3"><b>02</b>Gelenke</button><button class="bb-chip" type="button" data-go="4"><b>03</b>Verletzung</button><button class="bb-chip" type="button" data-go="5"><b>04</b>Schulter &amp; Arm</button><button class="bb-chip" type="button" data-go="6"><b>05</b>Hüfte, Knie, Fuß</button><button class="bb-chip" type="button" data-go="7"><b>06</b>Stoffwechsel</button></div>
+    <div class="bb-ctrl">
+      <button class="bb-btn" id="bbPrev" type="button" aria-label="Zur&uuml;ckbl&auml;ttern"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+      <span class="bb-status" id="bbLabel" aria-live="polite">Cover</span>
+      <button class="bb-btn" id="bbNext" type="button" aria-label="Weiterbl&auml;ttern"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+    </div>
+    <noscript><div class="feat-grid m-slide">
       <div class="feat"><div class="ico">&#9889;</div><h3>R&uuml;cken &amp; Wirbels&auml;ule</h3><p>Unspezifische Nacken- und R&uuml;ckenschmerzen, Bandscheibenvorfall, Spinalkanalstenose, Wirbelgleiten, Skoliose, Hexenschuss, ISG-Beschwerden, Morbus Scheuermann und Bechterew.</p></div>
       <div class="feat"><div class="ico">&#9889;</div><h3>Gelenke &amp; Verschlei&szlig;</h3><p>Arthrose, Osteoporose, Zustand nach Gelenkersatz (TEP), Beinl&auml;ngendifferenz &ndash; Training, angepasst an deine Belastbarkeit.</p></div>
       <div class="feat"><div class="ico">&#9889;</div><h3>Nach Verletzung</h3><p>Kreuzbandriss, Meniskusriss, Muskelverletzungen, laterale Sprunggelenksverletzung: strukturierter Trainingsaufbau, abgestimmt mit Arzt und Physiotherapie.</p></div>
       <div class="feat"><div class="ico">&#9889;</div><h3>Schulter &amp; Arm</h3><p>Subakromiales Schmerzsyndrom, Frozen Shoulder, Tennisarm, Golferellenbogen, Karpaltunnelsyndrom.</p></div>
       <div class="feat"><div class="ico">&#9889;</div><h3>H&uuml;fte, Knie &amp; Fu&szlig;</h3><p>Piriformis-Syndrom, Patellaspitzensyndrom, L&auml;uferknie, plantarer Fersenschmerz.</p></div>
       <div class="feat"><div class="ico">&#9889;</div><h3>Stoffwechsel &amp; Herz-Kreislauf</h3><p>Bluthochdruck, metabolisches Syndrom, Diabetes, Arteriosklerose &ndash; Training als Teil deiner Gesundheitsstrategie.</p></div>
-    </div>
+    </div></noscript>
+    <div class="placeholder-note" style="margin-top:24px">Tippe auf eine Seite oder wische, um zu bl&auml;ttern.</div>
+    <p class="bb-credit">Fotos: Sasun Bughdaryan, Gilson Gomes, Alexey Demidov, Carlos Henrique, Zulfugar Karimov, Kyle Kranz &middot; <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a></p>
   </div>
 </section>
 
@@ -367,6 +534,127 @@
 <script>
 (function(){var n=document.getElementById('navLinks'),b=document.querySelector('.menu-btn');
 if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&!a.classList.contains('sub-toggle')){n.classList.remove('open');b.textContent='☰';}});}})();
+</script>
+<script>
+/* Beschwerdebilder: Notizbuch zum Blaettern (Doppelseiten ab 640 px Breite, sonst Einzelseiten) */
+(function () {
+  var el = document.getElementById('bbBook');
+  if (!el) return;
+  var NAMES = ['Rücken & Wirbelsäule', 'Gelenke & Verschleiß', 'Nach Verletzung', 'Schulter & Arm', 'Hüfte, Knie & Fuß', 'Stoffwechsel & Herz-Kreislauf'];
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var prevB = document.getElementById('bbPrev'), nextB = document.getElementById('bbNext'), label = document.getElementById('bbLabel');
+  var bar = document.querySelector('.bb-chips');
+  var chips = [].slice.call(document.querySelectorAll('.bb-chips [data-go]'));
+  var tpl = { double: [].slice.call(document.getElementById('bbDouble').content.children), single: [].slice.call(document.getElementById('bbSingle').content.children) };
+  var mode = null, state = 0, max = 0, leaves = [], touched = false, opened = false;
+  function layout() {
+    var m = el.parentNode.clientWidth < 640 ? 'single' : 'double';
+    if (m === mode) { update(); return; }
+    var first = mode === null; mode = m;
+    el.classList.toggle('bb-single', m === 'single');
+    leaves.forEach(function (n) { n.parentNode.removeChild(n); });
+    leaves = [];
+    var P = tpl[m], pairs = [], i;
+    if (m === 'double') { for (i = 0; i < P.length; i += 2) pairs.push([P[i], P[i + 1]]); }
+    else { for (i = 0; i < P.length; i++) pairs.push([P[i], null]); }
+    pairs.forEach(function (pair) {
+      var leaf = document.createElement('div'); leaf.className = 'bb-leaf';
+      var f = document.createElement('div'); f.className = 'bb-face bb-front'; f.appendChild(pair[0].cloneNode(true));
+      var b = document.createElement('div'); b.className = 'bb-face bb-back'; if (pair[1]) b.appendChild(pair[1].cloneNode(true));
+      leaf.appendChild(f); leaf.appendChild(b);
+      el.insertBefore(leaf, el.querySelector('.bb-spiral'));
+      leaves.push(leaf);
+    });
+    max = m === 'double' ? leaves.length : leaves.length - 1;
+    state = first ? 0 : Math.min(state, max);
+    leaves.forEach(function (l, j) { l.style.transition = 'none'; l.classList.toggle('bb-flipped', j < state); });
+    update();
+    void el.offsetWidth;
+    leaves.forEach(function (l) { l.style.transition = ''; });
+  }
+  function labelFor(s) {
+    if (s === 0) return 'Cover';
+    if (s === 1) return 'Einleitung · Inhalt';
+    if (s >= 2 && s <= 7) return 'Bereich ' + (s - 1) + ' · ' + NAMES[s - 2];
+    if (s === 8) return 'Nicht dabei? Frag nach';
+    return 'Rückseite';
+  }
+  function update() {
+    var n = leaves.length;
+    leaves.forEach(function (l, i) {
+      if (l.classList.contains('bb-turning')) return;
+      l.style.zIndex = i < state ? String(i + 1) : String(2 * n - i);
+    });
+    el.classList.toggle('bb-at-front', mode === 'double' && state === 0);
+    el.classList.toggle('bb-at-back', mode === 'double' && state === max);
+    prevB.disabled = state <= 0;
+    nextB.disabled = state >= max;
+    label.textContent = labelFor(state);
+    chips.forEach(function (c) {
+      var on = +c.getAttribute('data-go') === state;
+      c.setAttribute('aria-current', on ? 'true' : 'false');
+      if (on && bar && bar.scrollWidth > bar.clientWidth) {
+        bar.scrollTo({ left: c.offsetLeft - (bar.clientWidth - c.offsetWidth) / 2, behavior: reduce ? 'auto' : 'smooth' });
+      }
+    });
+  }
+  function go(target) {
+    target = Math.max(0, Math.min(max, target));
+    if (target === state) return;
+    var from = state, step = target > from ? 1 : -1, delay = 0, gap = reduce ? 0 : Math.max(60, 160 - Math.abs(target - from) * 12);
+    for (var s = from; s !== target; s += step) {
+      (function (idx, fwd, wait) {
+        setTimeout(function () {
+          var leaf = leaves[idx]; if (!leaf) return;
+          leaf.classList.add('bb-turning');
+          leaf.style.zIndex = String(500 + (fwd ? idx : 100 - idx));
+          leaf.classList.toggle('bb-flipped', fwd);
+          setTimeout(function () { leaf.classList.remove('bb-turning'); update(); }, reduce ? 0 : 1150);
+        }, wait);
+      })(step > 0 ? s : s - 1, step > 0, delay);
+      delay += gap;
+    }
+    state = target;
+    update();
+  }
+  prevB.addEventListener('click', function () { touched = true; go(state - 1); });
+  nextB.addEventListener('click', function () { touched = true; go(state + 1); });
+  chips.forEach(function (c) { c.addEventListener('click', function () { touched = true; go(+c.getAttribute('data-go')); }); });
+  el.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight') { e.preventDefault(); touched = true; go(state + 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); touched = true; go(state - 1); }
+  });
+  var sx = null, sy = null;
+  el.addEventListener('pointerdown', function (e) { sx = e.clientX; sy = e.clientY; });
+  el.addEventListener('pointercancel', function () { sx = null; });
+  el.addEventListener('pointerup', function (e) {
+    if (sx === null) return;
+    var dx = e.clientX - sx, dy = e.clientY - sy; sx = null;
+    if (e.target.closest && e.target.closest('a')) return;
+    touched = true;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { go(state + (dx < 0 ? 1 : -1)); return; }
+    if (Math.abs(dx) > 10 || Math.abs(dy) > 10) return;
+    if (mode === 'double' && state === 0) { go(1); return; }
+    var r = el.getBoundingClientRect();
+    var mid = mode === 'single' ? r.left + r.width * 0.33 : r.left + r.width / 2;
+    go(state + (e.clientX >= mid ? 1 : -1));
+  });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (en) {
+        if (en.isIntersecting && en.intersectionRatio > 0.55 && !opened && !touched) {
+          opened = true; io.disconnect();
+          setTimeout(function () { if (!touched && state === 0) go(1); }, 650);
+        }
+      });
+    }, { threshold: [0, 0.55, 0.8] });
+    io.observe(el);
+  }
+  if ('ResizeObserver' in window) new ResizeObserver(layout).observe(el.parentNode);
+  else window.addEventListener('resize', layout);
+  layout();
+})();
+
 </script>
 <script src="ui.js" defer></script>
 <script>
