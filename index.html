@@ -147,6 +147,41 @@
 /* Logo-Intro nur mit Bewegung: sonst bleibt das normale Logo im Menue stehen */
 (function(){try{if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('fx','hp-fluid');else document.documentElement.classList.add('hp-fluid');}catch(e){}})();
 </script>
+<style>
+/* ===== Startseite: Studio-Karte mit "Startschuss" (gelber Balken gibt das Foto frei) ===== */
+#leistungen{padding-top:40px}
+@media(max-width:900px){#leistungen{padding-top:30px}}
+.st-card .oh-media{min-height:440px}
+.st-card .oh-media img{object-position:50% 62%;filter:none;transition:transform .9s cubic-bezier(.2,.7,.2,1)}
+.st-card:hover .oh-media img{transform:scale(1.035)}
+@media(max-width:900px){.st-card .oh-media{min-height:260px}}
+.st-card .oh-body h3 .ln{display:block;overflow:hidden;padding-bottom:.04em}
+.st-card .oh-body h3 .ln>span{display:block}
+.st-wipe,.st-go{display:none}
+.js-st .st-card .rv{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .8s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
+.js-st .st-card .oh-body h3 .ln>span.rv{opacity:1;transform:translateY(105%)}
+.js-st .st-card .oh-tag.rv{transform:scale(.6);transform-origin:left center}
+.js-st .st-card.in .rv,.js-st .st-card.in .oh-body h3 .ln>span.rv,.js-st .st-card.in .oh-tag.rv{opacity:1;transform:none}
+.js-st .st-wipe{display:block;position:absolute;inset:0;z-index:3;background:var(--blitz);transform:scaleX(0);transform-origin:left center;pointer-events:none}
+.js-st .st-go{display:block;position:absolute;z-index:4;left:22px;top:20px;font-family:var(--display);font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:#15171C;background:var(--blitz);padding:5px 10px;opacity:0}
+.js-st .st-card .oh-media img{opacity:0}
+.js-st .st-card.in .oh-media img{opacity:1;animation:stImg 1.9s cubic-bezier(.2,.7,.2,1) backwards}
+.js-st .st-card.in .st-wipe{animation:stWipe 1.25s cubic-bezier(.77,0,.18,1) both}
+.js-st .st-card.in .st-go{animation:stGo 1.9s ease both}
+@keyframes stWipe{0%{transform:scaleX(0);transform-origin:left center}46%{transform:scaleX(1);transform-origin:left center}54%{transform:scaleX(1);transform-origin:right center}100%{transform:scaleX(0);transform-origin:right center}}
+@keyframes stImg{0%,30%{opacity:0;transform:scale(1.22)}31%{opacity:1;transform:scale(1.22)}100%{opacity:1;transform:scale(1)}}
+@keyframes stGo{0%,62%{opacity:0;transform:translateX(-10px)}75%,100%{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+  .js-st .st-card .rv,.js-st .st-card .oh-body h3 .ln>span.rv{opacity:1;transform:none;transition:none}
+  .js-st .st-card .oh-media img{opacity:1;animation:none!important}
+  .js-st .st-wipe,.js-st .st-go{display:none!important}
+}
+/* Untere Leiste erst ab "Personal Training" einblenden, bei der Schluss-Box wieder ausblenden */
+@media(max-width:900px){
+  .mbar{transition:transform .45s cubic-bezier(.2,.7,.2,1),opacity .3s ease}
+  .mbar.mb-off{transform:translateY(calc(100% + 40px));opacity:0;pointer-events:none}
+}
+</style>
 </head>
 <body>
 <div class="newsbar"><a href="https://whatsapp.com/channel/0029Vb9Sacj9xVJgW1Vm7O2Z" target="_blank" rel="noopener"><svg class="wa-ico" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.9L2 22l5.27-1.38A9.9 9.9 0 1 0 12.04 2Zm0 1.8a8.1 8.1 0 1 1-4.13 15.07l-.3-.18-3.13.82.84-3.05-.2-.31A8.1 8.1 0 0 1 12.04 3.8Zm-3.1 4.1c-.17 0-.45.06-.69.32-.23.26-.9.88-.9 2.15s.92 2.5 1.05 2.67c.13.17 1.8 2.86 4.45 3.9 2.2.87 2.65.7 3.13.65.48-.04 1.54-.63 1.76-1.24.22-.6.22-1.13.15-1.24-.06-.1-.23-.17-.49-.3-.26-.13-1.54-.76-1.78-.85-.24-.09-.41-.13-.58.13-.17.26-.67.85-.82 1.02-.15.17-.3.2-.56.07-.26-.13-1.1-.4-2.09-1.29-.77-.69-1.3-1.54-1.45-1.8-.15-.26-.02-.4.11-.53.12-.12.26-.3.39-.46.13-.15.17-.26.26-.43.09-.17.04-.33-.02-.46-.07-.13-.58-1.4-.8-1.92-.2-.5-.42-.43-.58-.44h-.5Z"/></svg><b>Neu</b><span class="nb-long">Kurse in Solingen: Termine &amp; Early-Bird zuerst im WhatsApp-Kanal</span><span class="nb-short">Kurse in Solingen: Early-Bird zuerst im WhatsApp-Kanal</span><span class="newsbar-go">Kanal beitreten &rarr;</span></a></div>
@@ -262,41 +297,26 @@
       </div>
     </div>
 
-    <a class="ort-haupt" href="personal-training-solingen.html">
+    <a class="ort-haupt st-card" href="personal-training-solingen.html">
       <div class="oh-media">
-        <!-- Studiofoto: Datei als newforge-studio.webp ablegen, dann greift sie automatisch. -->
-        <img src="newforge-studio.webp" alt="Personal Training im Forged Studio, Solingen-Ohligs"
-             onerror="this.onerror=null;this.src='trainer.webp';this.alt='Niklas Donner, Personal Trainer in Solingen'">
+        <img src="newforge-sprint.webp" alt="Sprintbahn mit Kunstrasen im Forged Studio, Solingen-Ohligs" width="1600" height="1000">
+        <span class="st-wipe" aria-hidden="true"></span>
+        <span class="st-go" aria-hidden="true">Forged Studio</span>
       </div>
       <div class="oh-body">
-        <span class="oh-tag">Forged Studio &middot; Solingen-Ohligs</span>
-        <h3>Personal Training<br>Solingen</h3>
-        <p>Kraft- und Cardioger&auml;te, ein separater Kursraum und ein privater Trainingsraum f&uuml;r uns allein. Duschen und Umkleiden sind im Haus &ndash; du gehst direkt weiter zur Arbeit oder nach Hause.</p>
-        <div class="oh-adr">Prinzenstra&szlig;e 2a, 42697 Solingen <span>&middot; Ohligs</span></div>
+        <span class="oh-tag rv" style="--d:.15s">Forged Studio &middot; Solingen-Ohligs</span>
+        <h3><span class="ln"><span class="rv" style="--d:.25s">Personal Training</span></span><span class="ln"><span class="rv" style="--d:.35s">Solingen</span></span></h3>
+        <p class="rv" style="--d:.5s">Kraft- und Cardioger&auml;te, ein separater Kursraum und ein privater Trainingsraum f&uuml;r uns allein. Duschen und Umkleiden sind im Haus &ndash; du gehst direkt weiter zur Arbeit oder nach Hause.</p>
+        <div class="oh-adr rv" style="--d:.6s">Prinzenstra&szlig;e 2a, 42697 Solingen <span>&middot; Ohligs</span></div>
         <ul class="oh-facts">
-          <li>Privater Trainingsraum</li>
-          <li>Kraft &amp; Cardio</li>
-          <li>Duschen &amp; Umkleiden</li>
-          <li>SECA-K&ouml;rperanalyse</li>
+          <li class="rv" style="--d:.7s">Privater Trainingsraum</li>
+          <li class="rv" style="--d:.78s">Kraft &amp; Cardio</li>
+          <li class="rv" style="--d:.86s">Duschen &amp; Umkleiden</li>
+          <li class="rv" style="--d:.94s">SECA-K&ouml;rperanalyse</li>
         </ul>
-        <span class="card-link">Mehr &uuml;ber das Studio <span>&rarr;</span></span>
+        <span class="card-link rv" style="--d:1.05s">Mehr &uuml;ber das Studio <span>&rarr;</span></span>
       </div>
     </a>
-
-    <div class="ort-galerie">
-      <a href="personal-training-solingen.html" aria-label="Sprintbahn im Forged Studio">
-        <img src="newforge-sprint.webp" alt="Sprintbahn mit Kunstrasen und Woodway-Laufband im Forged Studio" width="1600" height="1000" loading="lazy">
-        <span>Sprintbahn</span>
-      </a>
-      <a href="personal-training-solingen.html" aria-label="Racks und Freihanteln im Forged Studio">
-        <img src="newforge-rack.webp" alt="Racks und Spiegelwand im Forged Studio" width="1600" height="1000" loading="lazy">
-        <span>Racks &amp; Hanteln</span>
-      </a>
-      <a href="personal-training-solingen.html" aria-label="Kursraum im Forged Studio">
-        <img src="newforge-kursraum.webp" alt="Separater Kursraum mit Spiegelwand im Forged Studio" width="1600" height="1000" loading="lazy">
-        <span>Kursraum</span>
-      </a>
-    </div>
 
     <div class="ort-note" style="margin-top:26px"><b>Lieber in K&ouml;ln oder Neuss?</b> Rund um meine Kurse trainiere ich auch im Iron&amp;Soul &ndash; in <a href="personal-training-koeln.html" style="color:var(--blitz);text-decoration:underline">K&ouml;ln-Zollstock</a> und an der <a href="personal-training-neuss.html" style="color:var(--blitz);text-decoration:underline">R&ouml;merstra&szlig;e in Neuss</a>. Beide Termine buchst du genauso online.</div>
   </div>
@@ -630,6 +650,34 @@ if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a
   window.addEventListener('resize', function(){ measure(); tick(); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ measure(); tick(); });
   measure(); tick();
+})();
+</script>
+<script>
+/* Startseite: Studio-Karte spielt den "Startschuss" ab, sobald sie sichtbar wird; untere Leiste (Handy) erst ab "Personal Training" */
+(function(){
+  var root = document.documentElement;
+  var card = document.querySelector('.st-card');
+  if (card && 'IntersectionObserver' in window && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+    root.classList.add('js-st');
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting) { card.classList.add('in'); io.disconnect(); } });
+    }, { threshold: 0.35 });
+    io.observe(card);
+  }
+  var bar = document.querySelector('.mbar'), sec = document.getElementById('leistungen'), cta = document.querySelector('section.cta');
+  if (!bar || !sec) return;
+  var raf = 0;
+  function upd(){
+    raf = 0;
+    var vh = window.innerHeight;
+    var on = sec.getBoundingClientRect().top < vh * 0.75;
+    if (on && cta) { var r = cta.getBoundingClientRect(); if (r.top < vh * 0.8 && r.bottom > vh * 0.2) on = false; }
+    bar.classList.toggle('mb-off', !on);
+  }
+  bar.classList.add('mb-off');
+  window.addEventListener('scroll', function(){ if (!raf) raf = requestAnimationFrame(upd); }, {passive:true});
+  window.addEventListener('resize', upd);
+  upd();
 })();
 </script>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "d721903bce9e4bb1b2e31002e9c3d559"}'></script><!-- End Cloudflare Web Analytics -->
