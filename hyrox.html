@@ -72,11 +72,11 @@
 <link rel="stylesheet" href="style.css?v=28">
 <style>
 /* Hyrox-Format als dunkles Skizzenbuch */
-.hx-nb{--ink:#F3F0E8;--hand:'Caveat','Segoe Print','Bradley Hand',cursive}
+.hx-nb{overflow-x:clip;--ink:#F3F0E8;--hand:'Caveat','Segoe Print','Bradley Hand',cursive}
 @font-face{font-family:'Caveat';src:url('caveat-600.woff2') format('woff2');font-weight:600;font-style:normal;font-display:swap}
 .hx-stage{position:relative;display:flex;justify-content:center;padding:30px 0 10px}
-.hx-stage::before{content:"";position:absolute;left:50%;top:50%;width:min(1200px,120%);height:150%;transform:translate(-50%,-50%);background:radial-gradient(50% 50% at 50% 50%,rgba(255,238,200,.10),rgba(255,238,200,.035) 45%,rgba(255,238,200,0) 72%);pointer-events:none}
-.hx-pg a{color:inherit}
+.hx-stage::before{content:"";position:absolute;left:50%;top:50%;width:min(1200px,100vw);height:150%;transform:translate(-50%,-50%);background:radial-gradient(50% 50% at 50% 50%,rgba(255,238,200,.10),rgba(255,238,200,.035) 45%,rgba(255,238,200,0) 72%);pointer-events:none}
+.hx-pg a:not(.hx-pbtn){color:inherit}
 .hx-nb .race-bar{margin-top:56px}
 .hx-nb .race-pin{width:32px;height:32px;font-size:13px}
 .hx-ctrl{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:18px}
