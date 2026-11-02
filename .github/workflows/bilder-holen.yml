@@ -1,0 +1,31 @@
+name: Bilder holen (einmalig)
+on:
+  push:
+    paths:
+      - .github/workflows/bilder-holen.yml
+permissions:
+  contents: write
+jobs:
+  holen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unsplash-Fotos laden (freie Lizenz)
+        run: |
+          set -e
+          get() { curl -fsSL -o "$1" "https://images.unsplash.com/$2?w=900&q=66&fm=webp"; }
+          get beschwerde-ruecken.webp      photo-1767972463825-96eaa9e0766b
+          get beschwerde-gelenke.webp      photo-1776710669971-eebdde536700
+          get beschwerde-verletzung.webp   photo-1652354989460-ecccd5644412
+          get beschwerde-schulter.webp     photo-1622020310962-225cfa9171de
+          get beschwerde-knie.webp         photo-1762331660777-840a589195f0
+          get beschwerde-stoffwechsel.webp photo-1467818488384-3a21f2b79959
+          file beschwerde-*.webp
+          ls -l beschwerde-*.webp
+      - name: Committen
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add beschwerde-*.webp
+          git commit -m "Beschwerdebilder: Fotos von Unsplash (freie Lizenz)"
+          git push
