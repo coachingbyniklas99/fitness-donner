@@ -70,6 +70,146 @@
 }
 </script>
 <link rel="stylesheet" href="style.css?v=28">
+<style>
+/* Hyrox-Format als dunkles Skizzenbuch */
+.hx-nb{--ink:#F3F0E8;--hand:'Caveat','Segoe Print','Bradley Hand',cursive}
+@font-face{font-family:'Caveat';src:url('caveat-600.woff2') format('woff2');font-weight:600;font-style:normal;font-display:swap}
+.hx-stage{position:relative;display:flex;justify-content:center;padding:30px 0 10px}
+.hx-stage::before{content:"";position:absolute;left:50%;top:50%;width:min(1200px,120%);height:150%;transform:translate(-50%,-50%);background:radial-gradient(50% 50% at 50% 50%,rgba(255,238,200,.10),rgba(255,238,200,.035) 45%,rgba(255,238,200,0) 72%);pointer-events:none}
+.hx-pg a{color:inherit}
+.hx-nb .race-bar{margin-top:56px}
+.hx-nb .race-pin{width:32px;height:32px;font-size:13px}
+.hx-ctrl{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:18px}
+.hx-btn{appearance:none;width:48px;height:48px;border-radius:999px;border:1px solid rgba(236,233,226,.22);background:rgba(236,233,226,.06);color:var(--bone);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.hx-btn:hover{border-color:var(--blitz)}
+.hx-btn:disabled{opacity:.3;cursor:default}
+.hx-btn svg{width:20px;height:20px}
+.hx-status{min-width:190px;text-align:center;font-size:14px;color:#C9CBD0}
+.hx-pbtn:focus-visible,.hx-btn:focus-visible,.race-pin:focus-visible{outline:2px solid var(--blitz);outline-offset:3px}
+@media(max-width:600px){.hx-nb .race-pin{width:22px;height:22px;font-size:10px;margin:0 1px}.hx-status{min-width:0;font-size:13px}.hx-nb .race-bar{margin-top:34px}}
+@media(prefers-reduced-motion:reduce){.hx-leaf,.hx-book{transition:none!important}.hx-tap i{animation:none!important}}
+.hx-book{--u:.5cqw;container:book / size;position:relative;width:min(1100px,100%);aspect-ratio:2.6 / 1;perspective:2800px;transition:transform 1s cubic-bezier(.645,.045,.355,1);touch-action:pan-y;outline:none;cursor:pointer;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+.hx-book:focus-visible{outline:2px solid var(--blitz);outline-offset:14px;border-radius:6px}
+.hx-book.hx-at-front{transform:translateX(-25%)}
+.hx-book.hx-at-back{transform:translateX(25%)}
+.hx-book .hx-shadow{position:absolute;left:3%;right:3%;bottom:-34px;height:50px;background:radial-gradient(50% 50% at 50% 50%,rgba(0,0,0,.75),rgba(0,0,0,0) 70%);filter:blur(8px);pointer-events:none;transition:left 1s,right 1s}
+.hx-book.hx-at-front .hx-shadow{left:52%}
+.hx-book.hx-at-back .hx-shadow{right:52%}
+.hx-leaf{position:absolute;top:0;left:50%;width:50%;height:100%;transform-origin:left center;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transition:transform 1.15s cubic-bezier(.645,.045,.355,1)}
+.hx-leaf.hx-flipped{transform:rotateY(-180deg)}
+.hx-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;background:#191B20;border-radius:0 6px 6px 0}
+.hx-face.hx-back{transform:rotateY(180deg);border-radius:6px 0 0 6px}
+.hx-face::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:6}
+.hx-face.hx-front::after{background:linear-gradient(to right,rgba(0,0,0,.26),rgba(0,0,0,.05) 5%,rgba(0,0,0,0) 11%)}
+.hx-face.hx-back::after{background:linear-gradient(to left,rgba(0,0,0,.26),rgba(0,0,0,.05) 5%,rgba(0,0,0,0) 11%)}
+.hx-leaf.hx-turning .hx-face::before{content:"";position:absolute;inset:0;z-index:7;pointer-events:none;background:linear-gradient(to left,rgba(0,0,0,.4),rgba(0,0,0,0) 70%);animation:hxShade 1.15s ease both}
+@keyframes hxShade{0%{opacity:0}50%{opacity:1}100%{opacity:0}}
+.hx-spiral{position:absolute;z-index:400;top:4%;bottom:4%;left:50%;width:calc(var(--u) * 4.6);transform:translateX(-50%);pointer-events:none;
+  background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0,rgba(0,0,0,0) calc(var(--u) * 2.2),#6F6C67 calc(var(--u) * 2.2),#D9D6CF calc(var(--u) * 2.9),#A9A69F calc(var(--u) * 3.5),rgba(0,0,0,0) calc(var(--u) * 3.6),rgba(0,0,0,0) calc(var(--u) * 5.2));
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 20%,#000 80%,transparent);mask-image:linear-gradient(to right,transparent,#000 20%,#000 80%,transparent);filter:drop-shadow(0 1px 1px rgba(0,0,0,.5))}
+.hx-book.hx-single{--u:1cqw;width:min(340px,100%);aspect-ratio:.68;overflow:hidden;border-radius:6px 10px 10px 6px;box-shadow:0 40px 70px -26px rgba(0,0,0,.95)}
+.hx-book.hx-single .hx-leaf{left:0;width:100%}
+.hx-book.hx-single .hx-shadow{display:none}
+.hx-book.hx-single .hx-face{border-radius:6px 10px 10px 6px}
+.hx-book.hx-single .hx-spiral{left:calc(var(--u) * 1.6);width:calc(var(--u) * 4.4);transform:none}
+.hx-pg{position:absolute;inset:0;display:flex;flex-direction:column;color:#1B1C20}
+.hx-dot{background-color:#191B20;background-image:radial-gradient(rgba(27,28,32,.16) calc(var(--u) * .28),rgba(0,0,0,0) calc(var(--u) * .34));background-size:calc(var(--u) * 4.4) calc(var(--u) * 4.4);background-position:calc(var(--u) * 2.2) calc(var(--u) * 2.2)}
+.hx-pad{padding:calc(var(--u) * 8) calc(var(--u) * 8) calc(var(--u) * 7) calc(var(--u) * 10)}
+.hx-face.hx-back .hx-pad{padding:calc(var(--u) * 8) calc(var(--u) * 10) calc(var(--u) * 7) calc(var(--u) * 8)}
+.hx-book.hx-single .hx-pad{padding:calc(var(--u) * 8) calc(var(--u) * 7) calc(var(--u) * 7) calc(var(--u) * 11)}
+.hx-k{font-size:max(10px,calc(var(--u) * 2.2));font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:#8A6A12}
+.hx-disp{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:.98;letter-spacing:.005em;margin:0}
+.hx-hand{font-family:var(--hand);color:var(--ink);font-weight:600}
+.hx-pn{position:absolute;bottom:calc(var(--u) * 3.4);font-family:var(--hand);font-size:max(13px,calc(var(--u) * 3));color:#8B8C90;z-index:3}
+.hx-face.hx-front .hx-pn{right:calc(var(--u) * 5)}
+.hx-face.hx-back .hx-pn{left:calc(var(--u) * 6)}
+.hx-book.hx-single .hx-pn{right:calc(var(--u) * 5);left:auto}
+.hx-cover{background:radial-gradient(130% 90% at 25% 15%,#2A2C31,#17181C 55%,#0F1013);color:var(--bone);align-items:center;justify-content:center;gap:calc(var(--u) * 3)}
+.hx-cover::after{content:"";position:absolute;top:0;bottom:0;right:9%;width:calc(var(--u) * 2.6);background:linear-gradient(90deg,#B8861A,#EFB92E 45%,#C99A22);box-shadow:0 0 6px rgba(0,0,0,.5)}
+.hx-label{position:relative;z-index:2;width:58%;padding:calc(var(--u) * 5) calc(var(--u) * 4);background:#191B20;color:#1B1C20;text-align:center;box-shadow:0 2px 0 rgba(0,0,0,.25),0 10px 24px rgba(0,0,0,.4);transform:rotate(-1.2deg)}
+.hx-label .hx-disp{font-size:max(30px,calc(var(--u) * 12));}
+.hx-label .hx-hand{display:block;font-size:max(18px,calc(var(--u) * 5.4));margin-top:calc(var(--u) * 1)}
+.hx-cover svg{position:relative;z-index:2;width:calc(var(--u) * 26);margin-top:calc(var(--u) * 4)}
+.hx-tap{position:absolute;z-index:2;bottom:calc(var(--u) * 6);left:0;right:0;display:flex;justify-content:center;align-items:center;gap:10px;font-size:max(11px,calc(var(--u) * 2));letter-spacing:.18em;text-transform:uppercase;color:#C9C6BF}
+.hx-tap i{width:8px;height:8px;border-radius:50%;background:var(--blitz);animation:hxPulse 1.8s ease-out infinite}
+@keyframes hxPulse{0%{box-shadow:0 0 0 0 rgba(239,185,46,.6)}100%{box-shadow:0 0 0 12px rgba(239,185,46,0)}}
+.hx-backcover{background:radial-gradient(130% 90% at 75% 15%,#2A2C31,#17181C 55%,#0F1013);align-items:center;justify-content:center;gap:calc(var(--u) * 2);color:#9AA0AB}
+.hx-backcover svg{width:calc(var(--u) * 24)}
+.hx-backcover span{font-size:max(10px,calc(var(--u) * 2));letter-spacing:.2em;text-transform:uppercase}
+.hx-big{font-size:max(44px,calc(var(--u) * 17))}
+.hx-sub{font-family:var(--display);text-transform:uppercase;font-size:max(16px,calc(var(--u) * 4.4));margin-top:calc(var(--u) * 2);color:#1B1C20}
+.hx-txt{font-size:max(13px,calc(var(--u) * 3));line-height:1.55;color:#3A3B40;margin:calc(var(--u) * 4) 0 0;max-width:30em}
+.hx-hint{font-size:max(17px,calc(var(--u) * 4.4))}
+.hx-plan{list-style:none;margin:calc(var(--u) * 3) 0 0;padding:0;display:grid;gap:calc(var(--u) * .8)}
+.hx-plan li{display:grid;grid-template-columns:auto 1fr auto;align-items:baseline;gap:calc(var(--u) * 2.2);font-family:var(--hand);font-weight:600;color:var(--ink);font-size:max(16px,calc(var(--u) * 4.2));line-height:1.15;border-bottom:1px solid rgba(30,58,107,.18);padding-bottom:calc(var(--u) * .6)}
+.hx-plan li i{font-style:normal;font-family:var(--display);color:#8A6A12;font-size:.78em}
+.hx-plan li small{font-family:var(--body);font-weight:600;font-size:max(10px,calc(var(--u) * 2.2));color:#6A6B70}
+.hx-run{display:flex;align-items:center;gap:calc(var(--u) * 1.6);font-family:var(--display);text-transform:uppercase;font-size:max(12px,calc(var(--u) * 2.8));letter-spacing:.08em;color:#1B1C20}
+.hx-run b{display:inline-flex;align-items:center;justify-content:center;background:var(--blitz);padding:calc(var(--u) * .8) calc(var(--u) * 2);font-weight:400}
+.hx-photo{padding:0}
+.hx-snap{position:absolute;inset:11% 9% 21% 12%;background:#fff;padding:calc(var(--u) * 1.4);box-shadow:0 1px 2px rgba(0,0,0,.2),0 calc(var(--u) * 2) calc(var(--u) * 5) rgba(0,0,0,.25);transform:rotate(-1.6deg)}
+.hx-face.hx-back .hx-snap{inset:11% 12% 21% 9%}
+.hx-snap img{display:block;width:100%;height:100%;object-fit:cover;max-width:none}
+.hx-tape{position:absolute;width:calc(var(--u) * 16);height:calc(var(--u) * 5);background:rgba(239,185,46,.62);box-shadow:0 1px 2px rgba(0,0,0,.12);z-index:2}
+.hx-tape.hx-l{top:calc(var(--u) * -2.2);left:calc(var(--u) * -4);transform:rotate(-24deg)}
+.hx-tape.hx-r{top:calc(var(--u) * -2.2);right:calc(var(--u) * -4);transform:rotate(22deg)}
+.hx-cap{position:absolute;left:12%;right:9%;bottom:8%;font-size:max(18px,calc(var(--u) * 5.2));transform:rotate(-1deg)}
+.hx-face.hx-back .hx-cap{left:9%;right:12%}
+.hx-no{position:absolute;top:calc(var(--u) * 4);right:calc(var(--u) * 6);font-family:var(--display);font-size:max(48px,calc(var(--u) * 19));line-height:1;color:transparent;-webkit-text-stroke:max(1px,calc(var(--u) * .3)) #C99A22;opacity:.9}
+.hx-face.hx-back .hx-no{right:calc(var(--u) * 9)}
+.hx-nm{font-size:max(28px,calc(var(--u) * 9.6));margin-top:calc(var(--u) * 1.6)}
+.hx-dist{margin-top:calc(var(--u) * 1.6);font-weight:700;font-size:max(14px,calc(var(--u) * 3.6))}
+.hx-dist small{font-weight:500;color:#6A6B70;font-size:.82em}
+.hx-wt{width:100%;border-collapse:collapse;margin-top:calc(var(--u) * 3);font-size:max(12px,calc(var(--u) * 2.9))}
+.hx-wt th,.hx-wt td{text-align:left;padding:calc(var(--u) * 1.1) calc(var(--u) * 1.4);border-bottom:1px solid rgba(27,28,32,.16)}
+.hx-wt thead th{font-size:max(9px,calc(var(--u) * 2));letter-spacing:.18em;text-transform:uppercase;color:#6A6B70;font-weight:700}
+.hx-wt tbody th{font-weight:700;color:#8A6A12;width:22%}
+.hx-wt td{font-weight:600;font-variant-numeric:tabular-nums}
+.hx-wt .hx-all td{font-weight:500}
+.hx-tip{margin-top:calc(var(--u) * 3);font-size:max(17px,calc(var(--u) * 4.5));line-height:1.12;transform:rotate(-.6deg)}
+.hx-hl{background:linear-gradient(transparent 52%,rgba(239,185,46,.75) 52%,rgba(239,185,46,.75) 92%,transparent 92%);padding:0 .1em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.hx-foot{margin-top:auto;padding-top:calc(var(--u) * 2)}
+.hx-ziel .hx-big{color:#1B1C20}
+.hx-ziel .hx-line{margin-top:calc(var(--u) * 6);font-size:max(20px,calc(var(--u) * 5.6));border-bottom:2px solid rgba(30,58,107,.35);padding-bottom:calc(var(--u) * 1);max-width:85%}
+.hx-cta{background:var(--blitz)}
+.hx-cta .hx-k{color:#5A4510}
+.hx-cta .hx-txt{color:#2E2A1F}
+.hx-btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:calc(var(--u) * 5)}
+.hx-pbtn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 max(16px,calc(var(--u) * 4));font-weight:700;font-size:max(12px,calc(var(--u) * 2.6));letter-spacing:.06em;text-transform:uppercase;text-decoration:none;background:#15171C;color:var(--blitz)}
+.hx-pbtn:hover{color:#F7CF5E}
+.hx-m-photo{position:relative;height:42%;margin:calc(var(--u) * 7) calc(var(--u) * 6) 0 calc(var(--u) * 10);background:#fff;padding:calc(var(--u) * 1.6);box-shadow:0 1px 2px rgba(0,0,0,.2),0 6px 14px rgba(0,0,0,.22);transform:rotate(-1.4deg)}
+.hx-m-photo img{display:block;width:100%;height:100%;object-fit:cover;max-width:none}
+.hx-m-body{position:relative;padding:calc(var(--u) * 5) calc(var(--u) * 6) calc(var(--u) * 6) calc(var(--u) * 11);display:flex;flex-direction:column;flex:1}
+.hx-m-body .hx-no{top:calc(var(--u) * 1);right:calc(var(--u) * 6);font-size:max(40px,calc(var(--u) * 15))}
+.hx-m-body .hx-nm{font-size:max(26px,calc(var(--u) * 8));margin-top:calc(var(--u) * 1)}
+.hx-m-body .hx-tip{font-size:max(17px,calc(var(--u) * 5.4))}
+.hx-m-body .hx-wt{font-size:max(12px,calc(var(--u) * 3.4));margin-top:calc(var(--u) * 2.4)}
+.hx-face{background:#17191E}
+.hx-dot{background-color:#191B20;background-image:radial-gradient(rgba(236,233,226,.13) calc(var(--u) * .26),rgba(0,0,0,0) calc(var(--u) * .32))}
+.hx-pg{color:var(--bone)}
+.hx-k{color:var(--blitz)}
+.hx-txt{color:#B6B9C1}
+.hx-sub,.hx-ziel .hx-big,.hx-run{color:var(--bone)}
+.hx-hand{color:#F3F0E8}
+.hx-plan li{color:#F3F0E8;border-bottom-color:rgba(236,233,226,.14)}
+.hx-plan li i{color:var(--blitz)}
+.hx-plan li small,.hx-dist small,.hx-wt thead th{color:#8D919B}
+.hx-wt th,.hx-wt td{border-bottom-color:rgba(236,233,226,.14)}
+.hx-wt tbody th{color:var(--blitz)}
+.hx-no{-webkit-text-stroke-color:rgba(239,185,46,.75)}
+.hx-hl{color:#15171C;background:linear-gradient(transparent 8%,rgba(239,185,46,.92) 8%,rgba(239,185,46,.92) 94%,transparent 94%)}
+.hx-snap,.hx-m-photo{background:#ECE9E2;box-shadow:0 2px 4px rgba(0,0,0,.4),0 calc(var(--u) * 2) calc(var(--u) * 6) rgba(0,0,0,.5)}
+.hx-tape{background:rgba(239,185,46,.55)}
+.hx-pn{color:#6F7380}
+.hx-ziel .hx-line{border-bottom-color:rgba(236,233,226,.3)}
+.hx-face.hx-front::after{background:linear-gradient(to right,rgba(0,0,0,.55),rgba(0,0,0,.12) 5%,rgba(0,0,0,0) 11%)}
+.hx-face.hx-back::after{background:linear-gradient(to left,rgba(0,0,0,.55),rgba(0,0,0,.12) 5%,rgba(0,0,0,0) 11%)}
+.hx-cover{background:radial-gradient(130% 90% at 25% 15%,#24262B,#111215 55%,#0A0B0D)}
+.hx-label{background:var(--blitz)}
+.hx-label .hx-hand{color:#15171C}
+.hx-face{box-shadow:inset 0 0 0 1px rgba(236,233,226,.07)}
+.hx-book.hx-single{box-shadow:0 40px 70px -26px rgba(0,0,0,.95),0 0 0 1px rgba(236,233,226,.08)}
+</style>
 </head>
 <body>
 <div class="newsbar"><a href="https://whatsapp.com/channel/0029Vb9Sacj9xVJgW1Vm7O2Z" target="_blank" rel="noopener"><svg class="wa-ico" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.9L2 22l5.27-1.38A9.9 9.9 0 1 0 12.04 2Zm0 1.8a8.1 8.1 0 1 1-4.13 15.07l-.3-.18-3.13.82.84-3.05-.2-.31A8.1 8.1 0 0 1 12.04 3.8Zm-3.1 4.1c-.17 0-.45.06-.69.32-.23.26-.9.88-.9 2.15s.92 2.5 1.05 2.67c.13.17 1.8 2.86 4.45 3.9 2.2.87 2.65.7 3.13.65.48-.04 1.54-.63 1.76-1.24.22-.6.22-1.13.15-1.24-.06-.1-.23-.17-.49-.3-.26-.13-1.54-.76-1.78-.85-.24-.09-.41-.13-.58.13-.17.26-.67.85-.82 1.02-.15.17-.3.2-.56.07-.26-.13-1.1-.4-2.09-1.29-.77-.69-1.3-1.54-1.45-1.8-.15-.26-.02-.4.11-.53.12-.12.26-.3.39-.46.13-.15.17-.26.26-.43.09-.17.04-.33-.02-.46-.07-.13-.58-1.4-.8-1.92-.2-.5-.42-.43-.58-.44h-.5Z"/></svg><b>Neu</b><span class="nb-long">Kurse in Solingen: Termine &amp; Early-Bird zuerst im WhatsApp-Kanal</span><span class="nb-short">Kurse in Solingen: Early-Bird zuerst im WhatsApp-Kanal</span><span class="newsbar-go">Kanal beitreten &rarr;</span></a></div>
@@ -166,113 +306,30 @@
     </div>
   </div>
 </section>
-<section style="padding-top:0">
+<section style="padding-top:0" class="hx-nb">
   <div class="wrap">
     <div class="sec-head">
       <div>
         <div class="eyebrow">Das Format</div>
         <h2>8&times; 1 km Laufen.<br>8 Stationen.</h2>
       </div>
-      <p>Vor jeder Station l&auml;ufst du einen Kilometer. Wische dich einmal durchs komplette Race &ndash; mit den offiziellen Gewichten f&uuml;r Open und Pro.</p>
+      <p>Vor jeder Station l&auml;ufst du einen Kilometer. Bl&auml;ttere dich einmal durchs komplette Race &ndash; mit den offiziellen Gewichten f&uuml;r Open und Pro, jeweils f&uuml;r Damen und Herren.</p>
     </div>
-    <div class="race-track" id="raceTrack" tabindex="0" role="group" aria-roledescription="Karussell" aria-label="Die 8 Hyrox-Stationen mit Laufstrecke">
-      <div class="race-card rc-startend"><div><div class="big">START</div><p>8 Stationen und 8 km Laufen<br>liegen vor dir.</p></div></div>
-      <div class="race-gap"><span>1 km Lauf &#10132;</span></div>
-      <div class="race-card">
-        <img class="rc-img" src="hyrox-skierg.webp" alt="Niklas Donner am SkiErg bei einem Hyrox-Wettkampf" loading="lazy">
-        <div class="rc-body"><div class="rc-num">01</div>
-          <div class="rc-name"><span style="color:var(--blitz)">01 &middot;</span> SkiErg</div>
-          <div class="rc-dist">1.000 m</div>
-          <div class="rc-w"><span><b>Alle Divisionen</b> eigenes K&ouml;rpergewicht</span></div>
-          <p class="rc-tip">H&uuml;ftschwung statt Arme: Wer hier nur zieht, bezahlt es auf den n&auml;chsten Kilometern.</p>
-        </div>
+    <template id="hxDouble"><div class="hx-pg hx-cover"><div class="hx-label"><p class="hx-disp">Hyrox</p><span class="hx-hand">Race-Notizen</span></div><svg viewBox="0 0 300 110" aria-hidden="true"><text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text><text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text><polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"></polyline></svg><span class="hx-tap"><i></i>Zum Öffnen tippen</span></div><div class="hx-pg hx-dot hx-pad"><span class="hx-k">Das Format</span><p class="hx-disp hx-big">Start.</p><p class="hx-sub">8 × 1 km Laufen · 8 Stationen</p><p class="hx-txt">Vor jeder Station läufst du einen Kilometer. Blättere dich einmal durchs komplette Race – mit den offiziellen Gewichten für Open und Pro.</p><p class="hx-hand hx-hint" style="margin-top:auto">Seite umblättern &rarr;</p><span class="hx-pn">1</span></div><div class="hx-pg hx-dot hx-pad"><span class="hx-k">Rennplan</span><p class="hx-hand" style="font-size:max(16px,calc(var(--u) * 4));margin:calc(var(--u) * 1.4) 0 0">vor jeder Station: 1 km Lauf</p><ul class="hx-plan"><li><i>01</i><span>SkiErg</span><small>1.000 m</small></li><li><i>02</i><span>Sled Push</span><small>50 m</small></li><li><i>03</i><span>Sled Pull</span><small>50 m</small></li><li><i>04</i><span>Burpee Broad Jumps</span><small>80 m</small></li><li><i>05</i><span>Rowing</span><small>1.000 m</small></li><li><i>06</i><span>Farmers Carry</span><small>200 m</small></li><li><i>07</i><span>Sandbag Lunges</span><small>100 m</small></li><li><i>08</i><span>Wall Balls</span><small>75–100 Wdh.</small></li></ul><span class="hx-pn">2</span></div><div class="hx-pg hx-dot hx-photo"><div class="hx-snap"><span class="hx-tape hx-l"></span><span class="hx-tape hx-r"></span><img src="hyrox-skierg.webp" loading="lazy" decoding="async" style="object-position:50% 40%" alt="Niklas Donner bei der Station SkiErg"></div><p class="hx-cap hx-hand">Station 01 · SkiErg</p></div><div class="hx-pg hx-dot hx-pad"><span class="hx-no" aria-hidden="true">01</span><span class="hx-k">Station 01</span><p class="hx-disp hx-nm">SkiErg</p><p class="hx-dist">1.000 m</p><table class="hx-wt"><tbody><tr class="hx-all"><th scope="row">Alle</th><td colspan="2">eigenes Körpergewicht</td></tr></tbody></table><p class="hx-tip hx-hand"><span class="hx-hl">Hüftschwung statt Arme</span>: Wer hier nur zieht, bezahlt es auf den nächsten Kilometern.</p><div class="hx-run hx-foot"><b>1 km Lauf</b> danach weiter &rarr;</div><span class="hx-pn">4</span></div><div class="hx-pg hx-dot hx-photo"><div class="hx-snap"><span class="hx-tape hx-l"></span><span class="hx-tape hx-r"></span><img src="hyrox-sled-push.webp" loading="lazy" decoding="async" style="object-position:50% 40%" alt="Niklas Donner bei der Station Sled Push"></div><p class="hx-cap hx-hand">Station 02 · Sled Push</p></div><div class="hx-pg hx-dot hx-pad"><span class="hx-no" aria-hidden="true">02</span><span class="hx-k">Station 02</span><p class="hx-disp hx-nm">Sled Push</p><p class="hx-dist">50 m <small>· inkl. Schlitten</small></p><table class="hx-wt"><thead><tr><th></th><th scope="col">Damen</th><th scope="col">Herren</th></tr></thead><tbody><tr><th scope="row">Open</th><td>102 kg</td><td>152 kg</td></tr><tr><th scope="row">Pro</th><td>152 kg</td><td>202 kg</td></tr></tbody></table><p class="hx-tip hx-hand"><span class="hx-hl">Körperposition und Schrittfrequenz</span> entscheiden, ob der Schlitten rollt oder klebt.</p><div class="hx-run hx-foot"><b>1 km Lauf</b> danach weiter &rarr;</div><span class="hx-pn">6</span></div><div class="hx-pg hx-dot hx-photo"><div class="hx-snap"><span class="hx-tape hx-l"></span><span class="hx-tape hx-r"></span><img src="hyrox-sled-pull.webp" loading="lazy" decoding="async" style="object-position:50% 22%" alt="Niklas Donner bei der Station Sled Pull"></div><p class="hx-cap hx-hand">Station 03 · Sled Pull</p></div><div class="hx-pg hx-dot hx-pad"><span class="hx-no" aria-hidden="true">03</span><span class="hx-k">Station 03</span><p class="hx-disp hx-nm">Sled Pull</p><p class="hx-dist">50 m <small>· inkl. Schlitten</small></p><table class="hx-wt"><thead><tr><th></th><th scope="col">Damen</th><th scope="col">Herren</th></tr></thead><tbody><tr><th scope="row">Open</th><td>78 kg</td><td>103 kg</td></tr><tr><th scope="row">Pro</th><td>103 kg</td><td>153 kg</td></tr></tbody></table><p class="hx-tip hx-hand"><span class="hx-hl">Rhythmus und Griffkraft</span>: eine der Stationen, an denen Rennen verloren gehen.</p><div class="hx-run hx-foot"><b>1 km Lauf</b> danach weiter &rarr;</div><span class="hx-pn">8</span></div><div class="hx-pg hx-dot hx-photo"><div class="hx-snap"><span class="hx-tape hx-l"></span><span class="hx-tape hx-r"></span><img src="hyrox-burpees.webp" loading="lazy" decoding="async" style="object-position:50% 50%" alt="Niklas Donner bei der Station Burpee Broad Jumps"></div><p class="hx-cap hx-hand">Station 04 · Burpee Broad Jumps</p></div><div class="hx-pg hx-dot hx-pad"><span class="hx-no" aria-hidden="true">04</span><span class="hx-k">Station 04</span><p class="hx-disp hx-nm">Burpee Broad Jumps</p><p class="hx-dist">80 m</p><table class="hx-wt"><tbody><tr class="hx-all"><th scope="row">Alle</th><td colspan="2">eigenes Körpergewicht</td></tr></tbody></table><p class="hx-tip hx-hand"><span class="hx-hl">Tempo-Disziplin statt Sprint</span>: Wer zu schnell startet, steht hier still.</p><div class="hx-run hx-foot"><b>1 km Lauf</b> danach weiter &rarr;</div><span class="hx-pn">10</span></div><div class="hx-pg hx-dot hx-photo"><div class="hx-snap"><span class="hx-tape hx-l"></span><span class="hx-tape hx-r"></span><img src="hyrox-row.webp" loading="lazy" decoding="async" style="object-position:50% 30%" alt="Niklas Donner bei der Station Rowing"></div><p class="hx-cap hx-hand">Station 05 · Rowing</p></div><div class="hx-pg hx-dot hx-pad"><span class="hx-no" aria-hidden="true">05</span><span class="hx-k">Station 05</span><p class="hx-disp hx-nm">Rowing</p><p class="hx-dist">1.000 m</p><table class="hx-wt"><tbody><tr class="hx-all"><th scope="row">Alle</th><td colspan="2">eigenes Tempo, freier Widerstand</td></tr></tbody></table><p class="hx-tip hx-hand"><span class="hx-hl">Schlagzahl und Zuglänge</span> so wählen, dass die Beine fürs Laufen frisch bleiben.</p><div class="hx-run hx-foot"><b>1 km Lauf</b> danach weiter &rarr;</div><span class="hx-pn">12</span></div><div class="hx-pg hx-dot hx-photo"><div class="hx-snap"><span class="hx-tape hx-l"></span><span class="hx-tape hx-r"></span><img src="hyrox-farmers-carry.webp" loading="lazy" decoding="async" style="object-position:50% 40%" alt="Niklas Donner bei der Station Farmers Carry"></div><p class="hx-cap hx-hand">Station 06 · Farmers Carry</p></div><div class="hx-pg hx-dot hx-pad"><span class="hx-no" aria-hidden="true">06</span><span class="hx-k">Station 06</span><p class="hx-disp hx-nm">Farmers Carry</p><p class="hx-dist">200 m</p><table class="hx-wt"><thead><tr><th></th><th scope="col">Damen</th><th scope="col">Herren</th></tr></thead><tbody><tr><th scope="row">Open</th><td>2 × 16 kg</td><td>2 × 24 kg</td></tr><tr><th scope="row">Pro</th><td>2 × 24 kg</td><td>2 × 32 kg</td></tr></tbody></table><p class="hx-tip hx-hand"><span class="hx-hl">Griffkraft und aufrechte Haltung</span>: hier kannst du atmen und Zeit gutmachen.</p><div class="hx-run hx-foot"><b>1 km Lauf</b> danach weiter &rarr;</div><span class="hx-pn">14</span></div><div class="hx-pg hx-dot hx-photo"><div class="hx-snap"><span class="hx-tape hx-l"></span><span class="hx-tape hx-r"></span><img src="station-lunges.webp" loading="lazy" decoding="async" style="object-position:50% 25%" alt="Niklas Donner bei der Station Sandbag Lunges"></div><p class="hx-cap hx-hand">Station 07 · Sandbag Lunges</p></div><div class="hx-pg hx-dot hx-pad"><span class="hx-no" aria-hidden="true">07</span><span class="hx-k">Station 07</span><p class="hx-disp hx-nm">Sandbag Lunges</p><p class="hx-dist">100 m</p><table class="hx-wt"><thead><tr><th></th><th scope="col">Damen</th><th scope="col">Herren</th></tr></thead><tbody><tr><th scope="row">Open</th><td>10 kg</td><td>20 kg</td></tr><tr><th scope="row">Pro</th><td>20 kg</td><td>30 kg</td></tr></tbody></table><p class="hx-tip hx-hand"><span class="hx-hl">Schrittlänge und Beinkraft</span>: die Station, die volle Oberschenkel gnadenlos bestraft.</p><div class="hx-run hx-foot"><b>1 km Lauf</b> danach weiter &rarr;</div><span class="hx-pn">16</span></div><div class="hx-pg hx-dot hx-photo"><div class="hx-snap"><span class="hx-tape hx-l"></span><span class="hx-tape hx-r"></span><img src="hyrox-wallballs.webp" loading="lazy" decoding="async" style="object-position:50% 35%" alt="Niklas Donner bei der Station Wall Balls"></div><p class="hx-cap hx-hand">Station 08 · Wall Balls</p></div><div class="hx-pg hx-dot hx-pad"><span class="hx-no" aria-hidden="true">08</span><span class="hx-k">Station 08</span><p class="hx-disp hx-nm">Wall Balls</p><p class="hx-dist">75–100 Wdh. <small>· das Finale</small></p><table class="hx-wt"><thead><tr><th></th><th scope="col">Damen</th><th scope="col">Herren</th></tr></thead><tbody><tr><th scope="row">Open</th><td>4 kg · 75 Wdh.</td><td>6 kg · 100 Wdh.</td></tr><tr><th scope="row">Pro</th><td>6 kg · 100 Wdh.</td><td>9 kg · 100 Wdh.</td></tr></tbody></table><p class="hx-tip hx-hand"><span class="hx-hl">Technik und Wurfrhythmus</span> entscheiden, ob No-Reps dich Minuten kosten.</p><div class="hx-run hx-foot"><b>1 km Lauf</b> dann ins Ziel &rarr;</div><span class="hx-pn">18</span></div><div class="hx-pg hx-dot hx-pad hx-ziel"><span class="hx-k">Geschafft</span><p class="hx-disp hx-big">Ziel.</p><p class="hx-txt">8 Kilometer und 8 Stationen. Bereit, dafür zu trainieren?</p><p class="hx-hand hx-line">Meine Zeit: &nbsp;__ : __ : __</p><span class="hx-pn">19</span></div><div class="hx-pg hx-pad hx-cta"><span class="hx-k">Hyrox-Vorbereitung</span><p class="hx-disp" style="font-size:max(30px,calc(var(--u) * 10));margin-top:calc(var(--u) * 2)">Vom ersten Hyrox bis zur Bestzeit.</p><p class="hx-txt">Gezielte Wettkampf-Vorbereitung bei Iron&amp;Soul in Köln und Neuss – mit einem zertifizierten Hyrox-Coach.</p><div class="hx-btns"><a class="hx-pbtn" href="termin-buchen.html?art=probe">Probetraining buchen · 29 €</a></div><span class="hx-pn" style="color:#5A4510">20</span></div><div class="hx-pg hx-backcover"><svg viewBox="0 0 300 110" aria-hidden="true"><text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text><text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text><polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"></polyline></svg><span>fitnessdonner.de</span></div></template>
+    <template id="hxSingle"><div class="hx-pg hx-cover"><div class="hx-label"><p class="hx-disp">Hyrox</p><span class="hx-hand">Race-Notizen</span></div><svg viewBox="0 0 300 110" aria-hidden="true"><text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text><text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text><polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"></polyline></svg><span class="hx-tap"><i></i>Zum Öffnen tippen</span></div><div class="hx-pg hx-dot hx-pad"><span class="hx-k">Das Format</span><p class="hx-disp hx-big">Start.</p><p class="hx-sub">8 × 1 km Laufen · 8 Stationen</p><ul class="hx-plan"><li><i>01</i><span>SkiErg</span><small>1.000 m</small></li><li><i>02</i><span>Sled Push</span><small>50 m</small></li><li><i>03</i><span>Sled Pull</span><small>50 m</small></li><li><i>04</i><span>Burpee Broad Jumps</span><small>80 m</small></li><li><i>05</i><span>Rowing</span><small>1.000 m</small></li><li><i>06</i><span>Farmers Carry</span><small>200 m</small></li><li><i>07</i><span>Sandbag Lunges</span><small>100 m</small></li><li><i>08</i><span>Wall Balls</span><small>75–100 Wdh.</small></li></ul><p class="hx-hand hx-hint" style="margin-top:auto">Wischen zum Blättern &rarr;</p></div><div class="hx-pg hx-dot"><div class="hx-m-photo"><span class="hx-tape hx-l"></span><span class="hx-tape hx-r"></span><img src="hyrox-skierg.webp" loading="lazy" decoding="async" style="object-position:50% 40%" alt="Niklas Donner bei der Station SkiErg"></div><div class="hx-m-body"><span class="hx-no" aria-hidden="true">01</span><span class="hx-k">Station 01 · 1.000 m</span><p class="hx-disp hx-nm">SkiErg</p><table class="hx-wt"><tbody><tr class="hx-all"><th scope="row">Alle</th><td colspan="2">eigenes Körpergewicht</td></tr></tbody></table><p class="hx-tip hx-hand"><span class="hx-hl">Hüftschwung statt Arme</span>: Wer hier nur zieht, bezahlt es auf den nächsten Kilometern.</p></div></div><div class="hx-pg hx-dot"><div class="hx-m-photo"><span class="hx-tape hx-l"></span><span class="hx-tape hx-r"></span><img src="hyrox-sled-push.webp" loading="lazy" decoding="async" style="object-position:50% 40%" alt="Niklas Donner bei der Station Sled Push"></div><div class="hx-m-body"><span class="hx-no" aria-hidden="true">02</span><span class="hx-k">Station 02 · 50 m</span><p class="hx-disp hx-nm">Sled Push</p><table class="hx-wt"><thead><tr><th></th><th scope="col">Damen</th><th scope="col">Herren</th></tr></thead><tbody><tr><th scope="row">Open</th><td>102 kg</td><td>152 kg</td></tr><tr><th scope="row">Pro</th><td>152 kg</td><td>202 kg</td></tr></tbody></table><p class="hx-tip hx-hand"><span class="hx-hl">Körperposition und Schrittfrequenz</span> entscheiden, ob der Schlitten rollt oder klebt.</p></div></div><div class="hx-pg hx-dot"><div class="hx-m-photo"><span class="hx-tape hx-l"></span><span class="hx-tape hx-r"></span><img src="hyrox-sled-pull.webp" loading="lazy" decoding="async" style="object-position:50% 22%" alt="Niklas Donner bei der Station Sled Pull"></div><div class="hx-m-body"><span class="hx-no" aria-hidden="true">03</span><span class="hx-k">Station 03 · 50 m</span><p class="hx-disp hx-nm">Sled Pull</p><table class="hx-wt"><thead><tr><th></th><th scope="col">Damen</th><th scope="col">Herren</th></tr></thead><tbody><tr><th scope="row">Open</th><td>78 kg</td><td>103 kg</td></tr><tr><th scope="row">Pro</th><td>103 kg</td><td>153 kg</td></tr></tbody></table><p class="hx-tip hx-hand"><span class="hx-hl">Rhythmus und Griffkraft</span>: eine der Stationen, an denen Rennen verloren gehen.</p></div></div><div class="hx-pg hx-dot"><div class="hx-m-photo"><span class="hx-tape hx-l"></span><span class="hx-tape hx-r"></span><img src="hyrox-burpees.webp" loading="lazy" decoding="async" style="object-position:50% 50%" alt="Niklas Donner bei der Station Burpee Broad Jumps"></div><div class="hx-m-body"><span class="hx-no" aria-hidden="true">04</span><span class="hx-k">Station 04 · 80 m</span><p class="hx-disp hx-nm">Burpee Broad Jumps</p><table class="hx-wt"><tbody><tr class="hx-all"><th scope="row">Alle</th><td colspan="2">eigenes Körpergewicht</td></tr></tbody></table><p class="hx-tip hx-hand"><span class="hx-hl">Tempo-Disziplin statt Sprint</span>: Wer zu schnell startet, steht hier still.</p></div></div><div class="hx-pg hx-dot"><div class="hx-m-photo"><span class="hx-tape hx-l"></span><span class="hx-tape hx-r"></span><img src="hyrox-row.webp" loading="lazy" decoding="async" style="object-position:50% 30%" alt="Niklas Donner bei der Station Rowing"></div><div class="hx-m-body"><span class="hx-no" aria-hidden="true">05</span><span class="hx-k">Station 05 · 1.000 m</span><p class="hx-disp hx-nm">Rowing</p><table class="hx-wt"><tbody><tr class="hx-all"><th scope="row">Alle</th><td colspan="2">eigenes Tempo, freier Widerstand</td></tr></tbody></table><p class="hx-tip hx-hand"><span class="hx-hl">Schlagzahl und Zuglänge</span> so wählen, dass die Beine fürs Laufen frisch bleiben.</p></div></div><div class="hx-pg hx-dot"><div class="hx-m-photo"><span class="hx-tape hx-l"></span><span class="hx-tape hx-r"></span><img src="hyrox-farmers-carry.webp" loading="lazy" decoding="async" style="object-position:50% 40%" alt="Niklas Donner bei der Station Farmers Carry"></div><div class="hx-m-body"><span class="hx-no" aria-hidden="true">06</span><span class="hx-k">Station 06 · 200 m</span><p class="hx-disp hx-nm">Farmers Carry</p><table class="hx-wt"><thead><tr><th></th><th scope="col">Damen</th><th scope="col">Herren</th></tr></thead><tbody><tr><th scope="row">Open</th><td>2 × 16 kg</td><td>2 × 24 kg</td></tr><tr><th scope="row">Pro</th><td>2 × 24 kg</td><td>2 × 32 kg</td></tr></tbody></table><p class="hx-tip hx-hand"><span class="hx-hl">Griffkraft und aufrechte Haltung</span>: hier kannst du atmen und Zeit gutmachen.</p></div></div><div class="hx-pg hx-dot"><div class="hx-m-photo"><span class="hx-tape hx-l"></span><span class="hx-tape hx-r"></span><img src="station-lunges.webp" loading="lazy" decoding="async" style="object-position:50% 25%" alt="Niklas Donner bei der Station Sandbag Lunges"></div><div class="hx-m-body"><span class="hx-no" aria-hidden="true">07</span><span class="hx-k">Station 07 · 100 m</span><p class="hx-disp hx-nm">Sandbag Lunges</p><table class="hx-wt"><thead><tr><th></th><th scope="col">Damen</th><th scope="col">Herren</th></tr></thead><tbody><tr><th scope="row">Open</th><td>10 kg</td><td>20 kg</td></tr><tr><th scope="row">Pro</th><td>20 kg</td><td>30 kg</td></tr></tbody></table><p class="hx-tip hx-hand"><span class="hx-hl">Schrittlänge und Beinkraft</span>: die Station, die volle Oberschenkel gnadenlos bestraft.</p></div></div><div class="hx-pg hx-dot"><div class="hx-m-photo"><span class="hx-tape hx-l"></span><span class="hx-tape hx-r"></span><img src="hyrox-wallballs.webp" loading="lazy" decoding="async" style="object-position:50% 35%" alt="Niklas Donner bei der Station Wall Balls"></div><div class="hx-m-body"><span class="hx-no" aria-hidden="true">08</span><span class="hx-k">Station 08 · 75–100</span><p class="hx-disp hx-nm">Wall Balls</p><table class="hx-wt"><thead><tr><th></th><th scope="col">Damen</th><th scope="col">Herren</th></tr></thead><tbody><tr><th scope="row">Open</th><td>4 kg · 75 Wdh.</td><td>6 kg · 100 Wdh.</td></tr><tr><th scope="row">Pro</th><td>6 kg · 100 Wdh.</td><td>9 kg · 100 Wdh.</td></tr></tbody></table><p class="hx-tip hx-hand"><span class="hx-hl">Technik und Wurfrhythmus</span> entscheiden, ob No-Reps dich Minuten kosten.</p></div></div><div class="hx-pg hx-pad hx-cta"><span class="hx-k">Geschafft</span><p class="hx-disp hx-big">Ziel.</p><p class="hx-txt">8 Kilometer und 8 Stationen. Bereit, dafür zu trainieren? Gezielte Vorbereitung bei Iron&amp;Soul in Köln und Neuss.</p><div class="hx-btns"><a class="hx-pbtn" href="termin-buchen.html?art=probe">Probetraining buchen · 29 €</a></div></div></template>
+    <div class="hx-stage">
+      <div class="hx-book" id="hxBook" tabindex="0" role="group" aria-roledescription="Notizbuch" aria-label="Hyrox-Notizbuch mit allen 8 Stationen. Mit den Pfeiltasten bl&auml;ttern.">
+        <div class="hx-shadow" aria-hidden="true"></div>
+        <div class="hx-spiral" aria-hidden="true"></div>
       </div>
-      <div class="race-gap"><span>1 km Lauf &#10132;</span></div>
-      <div class="race-card">
-        <img class="rc-img" src="hyrox-sled-push.webp" alt="Niklas Donner beim Sled Push auf der Hyrox Race-Floor" loading="lazy">
-        <div class="rc-body"><div class="rc-num">02</div>
-          <div class="rc-name"><span style="color:var(--blitz)">02 &middot;</span> Sled Push</div>
-          <div class="rc-dist">50 m <small>&middot; inkl. Schlitten</small></div>
-          <div class="rc-w"><span><b>Open</b> Damen 102 kg &middot; Herren 152 kg</span><span><b>Pro</b> Damen 152 kg &middot; Herren 202 kg</span></div>
-          <p class="rc-tip">K&ouml;rperposition und Schrittfrequenz entscheiden, ob der Schlitten rollt oder klebt.</p>
-        </div>
-      </div>
-      <div class="race-gap"><span>1 km Lauf &#10132;</span></div>
-      <div class="race-card">
-        <img class="rc-img" src="hyrox-sled-pull.webp" alt="Niklas Donner beim Sled Pull bei einem Hyrox-Wettkampf" loading="lazy" style="object-position:50% 22%">
-        <div class="rc-body"><div class="rc-num">03</div>
-          <div class="rc-name"><span style="color:var(--blitz)">03 &middot;</span> Sled Pull</div>
-          <div class="rc-dist">50 m <small>&middot; inkl. Schlitten</small></div>
-          <div class="rc-w"><span><b>Open</b> Damen 78 kg &middot; Herren 103 kg</span><span><b>Pro</b> Damen 103 kg &middot; Herren 153 kg</span></div>
-          <p class="rc-tip">Rhythmus und Griffkraft: eine der Stationen, an denen Rennen verloren gehen.</p>
-        </div>
-      </div>
-      <div class="race-gap"><span>1 km Lauf &#10132;</span></div>
-      <div class="race-card">
-        <img class="rc-img" src="hyrox-burpees.webp" alt="Niklas Donner in der tiefen Position eines Burpee Broad Jump" loading="lazy">
-        <div class="rc-body"><div class="rc-num">04</div>
-          <div class="rc-name"><span style="color:var(--blitz)">04 &middot;</span> Burpee Broad Jumps</div>
-          <div class="rc-dist">80 m</div>
-          <div class="rc-w"><span><b>Alle Divisionen</b> eigenes K&ouml;rpergewicht</span></div>
-          <p class="rc-tip">Tempo-Disziplin statt Sprint: Wer zu schnell startet, steht hier still.</p>
-        </div>
-      </div>
-      <div class="race-gap"><span>1 km Lauf &#10132;</span></div>
-      <div class="race-card">
-        <img class="rc-img" src="hyrox-row.webp" alt="Niklas Donner beim 1.000-m-Rudern auf dem RowErg bei Hyrox" loading="lazy" style="object-position:50% 30%">
-        <div class="rc-body"><div class="rc-num">05</div>
-          <div class="rc-name"><span style="color:var(--blitz)">05 &middot;</span> Rowing</div>
-          <div class="rc-dist">1.000 m</div>
-          <div class="rc-w"><span><b>Alle Divisionen</b> eigenes Tempo, freier Widerstand</span></div>
-          <p class="rc-tip">Schlagzahl und Zugl&auml;nge so w&auml;hlen, dass die Beine f&uuml;rs Laufen frisch bleiben.</p>
-        </div>
-      </div>
-      <div class="race-gap"><span>1 km Lauf &#10132;</span></div>
-      <div class="race-card">
-        <img class="rc-img" src="hyrox-farmers-carry.webp" alt="Niklas Donner beim Farmers Carry mit Kettlebells bei Hyrox" loading="lazy">
-        <div class="rc-body"><div class="rc-num">06</div>
-          <div class="rc-name"><span style="color:var(--blitz)">06 &middot;</span> Farmers Carry</div>
-          <div class="rc-dist">200 m</div>
-          <div class="rc-w"><span><b>Open</b> Damen 2&times;16 kg &middot; Herren 2&times;24 kg</span><span><b>Pro</b> Damen 2&times;24 kg &middot; Herren 2&times;32 kg</span></div>
-          <p class="rc-tip">Griffkraft und aufrechte Haltung: hier kannst du atmen und Zeit gutmachen.</p>
-        </div>
-      </div>
-      <div class="race-gap"><span>1 km Lauf &#10132;</span></div>
-      <div class="race-card">
-        <img class="rc-img" src="station-lunges.webp" alt="Niklas Donner bei Sandbag Lunges mit 20-kg-Sandsack bei Hyrox" loading="lazy" style="object-position:50% 25%">
-        <div class="rc-body"><div class="rc-num">07</div>
-          <div class="rc-name"><span style="color:var(--blitz)">07 &middot;</span> Sandbag Lunges</div>
-          <div class="rc-dist">100 m</div>
-          <div class="rc-w"><span><b>Open</b> Damen 10 kg &middot; Herren 20 kg</span><span><b>Pro</b> Damen 20 kg &middot; Herren 30 kg</span></div>
-          <p class="rc-tip">Schrittl&auml;nge und Beinkraft: die Station, die volle Oberschenkel gnadenlos bestraft.</p>
-        </div>
-      </div>
-      <div class="race-gap"><span>1 km Lauf &#10132;</span></div>
-      <div class="race-card">
-        <img class="rc-img" src="hyrox-wallballs.webp" alt="Niklas Donner bei Wall Balls in der tiefen Kniebeuge bei Hyrox" loading="lazy" style="object-position:50% 35%">
-        <div class="rc-body"><div class="rc-num">08</div>
-          <div class="rc-name"><span style="color:var(--blitz)">08 &middot;</span> Wall Balls</div>
-          <div class="rc-dist">75&ndash;100 Wdh. <small>&middot; das Finale</small></div>
-          <div class="rc-w"><span><b>Open</b> Damen 4 kg (75 Wdh.) &middot; Herren 6 kg (100 Wdh.)</span><span><b>Pro</b> Damen 6 kg &middot; Herren 9 kg (je 100 Wdh.)</span></div>
-          <p class="rc-tip">Technik und Wurfrhythmus entscheiden, ob No-Reps dich Minuten kosten.</p>
-        </div>
-      </div>
-      <div class="race-card rc-startend" style="margin-left:12px"><div><div class="big" style="color:var(--blitz)">ZIEL</div><p>Geschafft.<br>Bereit, daf&uuml;r zu trainieren?</p></div></div>
     </div>
-    <div class="race-bar" aria-hidden="true">
-      <span class="race-lbl">START</span>
-      <span class="race-seg"></span><button class="race-pin" data-i="1" type="button">1</button>
-      <span class="race-seg"></span><button class="race-pin" data-i="2" type="button">2</button>
-      <span class="race-seg"></span><button class="race-pin" data-i="3" type="button">3</button>
-      <span class="race-seg"></span><button class="race-pin" data-i="4" type="button">4</button>
-      <span class="race-seg"></span><button class="race-pin" data-i="5" type="button">5</button>
-      <span class="race-seg"></span><button class="race-pin" data-i="6" type="button">6</button>
-      <span class="race-seg"></span><button class="race-pin" data-i="7" type="button">7</button>
-      <span class="race-seg"></span><button class="race-pin" data-i="8" type="button">8</button>
-      <span class="race-seg"></span><span class="race-lbl">ZIEL</span>
+    <div class="race-bar"><span class="race-lbl">START</span><span class="race-seg"></span><button class="race-pin" type="button" data-go="2" aria-label="Zu Station 1: SkiErg">1</button><span class="race-seg"></span><button class="race-pin" type="button" data-go="3" aria-label="Zu Station 2: Sled Push">2</button><span class="race-seg"></span><button class="race-pin" type="button" data-go="4" aria-label="Zu Station 3: Sled Pull">3</button><span class="race-seg"></span><button class="race-pin" type="button" data-go="5" aria-label="Zu Station 4: Burpee Broad Jumps">4</button><span class="race-seg"></span><button class="race-pin" type="button" data-go="6" aria-label="Zu Station 5: Rowing">5</button><span class="race-seg"></span><button class="race-pin" type="button" data-go="7" aria-label="Zu Station 6: Farmers Carry">6</button><span class="race-seg"></span><button class="race-pin" type="button" data-go="8" aria-label="Zu Station 7: Sandbag Lunges">7</button><span class="race-seg"></span><button class="race-pin" type="button" data-go="9" aria-label="Zu Station 8: Wall Balls">8</button><span class="race-seg"></span><span class="race-lbl">ZIEL</span></div>
+    <div class="hx-ctrl">
+      <button class="hx-btn" id="hxPrev" type="button" aria-label="Zur&uuml;ckbl&auml;ttern"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+      <span class="hx-status" id="hxLabel" aria-live="polite">Cover</span>
+      <button class="hx-btn" id="hxNext" type="button" aria-label="Weiterbl&auml;ttern"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
     </div>
-    <div class="slider-dots" id="raceDots" aria-hidden="true"></div>
-    <div class="placeholder-note" style="margin-top:20px">Jedes Segment der Leiste ist ein Kilometer Laufen. Doubles &amp; Relay: alle Divisionen im <a href="https://hyrox.com/rulebook/" target="_blank" rel="noopener" style="color:var(--blitz);text-decoration:underline">offiziellen Hyrox-Rulebook &rarr;</a></div>
+    <div class="placeholder-note" style="margin-top:24px">Tippe auf eine Seite oder wische, um zu bl&auml;ttern. Doubles &amp; Relay: alle Divisionen im <a href="https://hyrox.com/rulebook/" target="_blank" rel="noopener" style="color:var(--blitz);text-decoration:underline">offiziellen Hyrox-Rulebook &rarr;</a></div>
   </div>
 </section>
 <section style="padding-top:0">
@@ -466,39 +523,125 @@
 if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&!a.classList.contains('sub-toggle')){n.classList.remove('open');b.textContent='☰';}});}})();
 </script>
 <script>
-(function(){
-  var t=document.getElementById('raceTrack'); if(!t) return;
-  var cards=[].slice.call(t.querySelectorAll('.race-card'));
-  var pins=[].slice.call(document.querySelectorAll('.race-pin'));
-  var segs=[].slice.call(document.querySelectorAll('.race-seg'));
-  var dots=document.getElementById('raceDots');
-  function goTo(i){var c=cards[i];if(c)t.scrollTo({left:c.offsetLeft-t.offsetLeft,behavior:'smooth'});}
-  pins.forEach(function(p){p.addEventListener('click',function(){goTo(parseInt(p.getAttribute('data-i'),10));});});
-  function cur(){var x=t.scrollLeft+t.clientWidth*0.35,b=0;cards.forEach(function(c,i){if(c.offsetLeft-t.offsetLeft<=x)b=i;});return b;}
-  function sync(){
-    var c=cur();
-    pins.forEach(function(p,i){var n=i+1;p.classList.toggle('act',n===c);p.classList.toggle('done',n<c);});
-    segs.forEach(function(s,i){s.classList.toggle('done',(i+1)<=c);});
-    if(dots)[].slice.call(dots.children).forEach(function(el,i){el.setAttribute('aria-current',i===c?'true':'false');});
-  }
-  function buildDots(){
-    if(!dots) return; dots.innerHTML='';
-    cards.forEach(function(c,i){
-      var b=document.createElement('button'); b.type='button';
-      b.setAttribute('aria-label','Abschnitt '+(i+1));
-      b.addEventListener('click',function(){goTo(i);});
-      dots.appendChild(b);
+/* Hyrox-Format: Notizbuch zum Blaettern (Doppelseiten ab 640 px Breite, sonst Einzelseiten) */
+(function () {
+  var el = document.getElementById('hxBook');
+  if (!el) return;
+  var NAMES = ["SkiErg", "Sled Push", "Sled Pull", "Burpee Broad Jumps", "Rowing", "Farmers Carry", "Sandbag Lunges", "Wall Balls"];
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var prevB = document.getElementById('hxPrev'), nextB = document.getElementById('hxNext'), label = document.getElementById('hxLabel');
+  var pins = [].slice.call(document.querySelectorAll('.hx-nb .race-pin'));
+  var segs = [].slice.call(document.querySelectorAll('.hx-nb .race-seg'));
+  var tpl = { double: [].slice.call(document.getElementById('hxDouble').content.children), single: [].slice.call(document.getElementById('hxSingle').content.children) };
+  var mode = null, state = 0, max = 0, leaves = [], touched = false, opened = false;
+  function layout() {
+    var m = el.parentNode.clientWidth < 640 ? 'single' : 'double';
+    if (m === mode) { update(); return; }
+    var first = mode === null; mode = m;
+    el.classList.toggle('hx-single', m === 'single');
+    leaves.forEach(function (n) { n.parentNode.removeChild(n); });
+    leaves = [];
+    var P = tpl[m], pairs = [], i;
+    if (m === 'double') { for (i = 0; i < P.length; i += 2) pairs.push([P[i], P[i + 1]]); }
+    else { for (i = 0; i < P.length; i++) pairs.push([P[i], null]); }
+    pairs.forEach(function (pair) {
+      var leaf = document.createElement('div'); leaf.className = 'hx-leaf';
+      var f = document.createElement('div'); f.className = 'hx-face hx-front'; f.appendChild(pair[0].cloneNode(true));
+      var b = document.createElement('div'); b.className = 'hx-face hx-back'; if (pair[1]) b.appendChild(pair[1].cloneNode(true));
+      leaf.appendChild(f); leaf.appendChild(b);
+      el.insertBefore(leaf, el.querySelector('.hx-spiral'));
+      leaves.push(leaf);
     });
-    sync();
+    max = m === 'double' ? leaves.length : leaves.length - 1;
+    state = first ? 0 : Math.min(state, max);
+    leaves.forEach(function (l, j) { l.style.transition = 'none'; l.classList.toggle('hx-flipped', j < state); });
+    update();
+    void el.offsetWidth;
+    leaves.forEach(function (l) { l.style.transition = ''; });
   }
-  t.addEventListener('scroll',function(){window.clearTimeout(t._s);t._s=window.setTimeout(sync,80);});
-  t.addEventListener('keydown',function(e){
-    if(e.key==='ArrowRight'){e.preventDefault();goTo(Math.min(cards.length-1,cur()+1));}
-    if(e.key==='ArrowLeft'){e.preventDefault();goTo(Math.max(0,cur()-1));}
+  function labelFor(s) {
+    if (s === 0) return 'Cover';
+    if (s === 1) return 'Start · Rennplan';
+    if (s >= 2 && s <= 9) return 'Station ' + (s - 1) + ' · ' + NAMES[s - 2];
+    if (s === 10) return 'Ziel';
+    return 'Rückseite';
+  }
+  function update() {
+    var n = leaves.length;
+    leaves.forEach(function (l, i) {
+      if (l.classList.contains('hx-turning')) return;
+      l.style.zIndex = i < state ? String(i + 1) : String(2 * n - i);
+    });
+    el.classList.toggle('hx-at-front', mode === 'double' && state === 0);
+    el.classList.toggle('hx-at-back', mode === 'double' && state === max);
+    prevB.disabled = state <= 0;
+    nextB.disabled = state >= max;
+    label.textContent = labelFor(state);
+    var c = Math.max(0, Math.min(state, 10) - 1);
+    pins.forEach(function (p) {
+      var st = +p.getAttribute('data-go') - 1;
+      p.classList.toggle('act', st === c && state >= 2 && state <= 9);
+      p.classList.toggle('done', st < c);
+    });
+    segs.forEach(function (s, i) { s.classList.toggle('done', i + 1 <= c); });
+  }
+  function go(target) {
+    target = Math.max(0, Math.min(max, target));
+    if (target === state) return;
+    var from = state, step = target > from ? 1 : -1, delay = 0, gap = reduce ? 0 : Math.max(60, 160 - Math.abs(target - from) * 12);
+    for (var s = from; s !== target; s += step) {
+      (function (idx, fwd, wait) {
+        setTimeout(function () {
+          var leaf = leaves[idx]; if (!leaf) return;
+          leaf.classList.add('hx-turning');
+          leaf.style.zIndex = String(500 + (fwd ? idx : 100 - idx));
+          leaf.classList.toggle('hx-flipped', fwd);
+          setTimeout(function () { leaf.classList.remove('hx-turning'); update(); }, reduce ? 0 : 1150);
+        }, wait);
+      })(step > 0 ? s : s - 1, step > 0, delay);
+      delay += gap;
+    }
+    state = target;
+    update();
+  }
+  prevB.addEventListener('click', function () { touched = true; go(state - 1); });
+  nextB.addEventListener('click', function () { touched = true; go(state + 1); });
+  pins.forEach(function (p) { p.addEventListener('click', function () { touched = true; go(+p.getAttribute('data-go')); }); });
+  el.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight') { e.preventDefault(); touched = true; go(state + 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); touched = true; go(state - 1); }
   });
-  window.addEventListener('resize',function(){window.clearTimeout(t._r);t._r=window.setTimeout(sync,150);});
-  buildDots();
+  var sx = null, sy = null;
+  el.addEventListener('pointerdown', function (e) { sx = e.clientX; sy = e.clientY; });
+  el.addEventListener('pointercancel', function () { sx = null; });
+  el.addEventListener('pointerup', function (e) {
+    if (sx === null) return;
+    var dx = e.clientX - sx, dy = e.clientY - sy; sx = null;
+    if (e.target.closest && e.target.closest('a')) return;
+    touched = true;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { go(state + (dx < 0 ? 1 : -1)); return; }
+    if (Math.abs(dx) > 10 || Math.abs(dy) > 10) return;
+    if (mode === 'double' && state === 0) { go(1); return; }
+    var r = el.getBoundingClientRect();
+    var mid = mode === 'single' ? r.left + r.width * 0.33 : r.left + r.width / 2;
+    go(state + (e.clientX >= mid ? 1 : -1));
+  });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (en) {
+        if (en.isIntersecting && en.intersectionRatio > 0.55 && !opened && !touched) {
+          opened = true; io.disconnect();
+          setTimeout(function () { if (!touched && state === 0) go(1); }, 650);
+        }
+      });
+    }, { threshold: [0, 0.55, 0.8] });
+    io.observe(el);
+  }
+  if ('ResizeObserver' in window) new ResizeObserver(layout).observe(el.parentNode);
+  else window.addEventListener('resize', layout);
+  layout();
 })();
+
 </script>
 <script src="ui.js" defer></script>
 <script>
