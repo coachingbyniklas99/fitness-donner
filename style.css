@@ -673,3 +673,7 @@ footer{border-top:1px solid var(--line);padding:44px 0;font-size:13px;color:var(
   .hero-ctas .btn.btn-wa{flex:0 0 52px;width:52px}
 }
 
+/* ---------- Handy-Menue: WhatsApp als Logo ---------- */
+.nav-kontakt .nk-wa{flex:0 0 58px;display:flex;align-items:center;justify-content:center;padding:0;color:#25D366}
+.nk-wa svg{width:26px;height:26px;display:block}
+
