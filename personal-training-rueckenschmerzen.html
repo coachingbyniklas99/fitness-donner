@@ -94,7 +94,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="style.css?v=28">
+<link rel="stylesheet" href="style.css?v=37">
 <style>
 /* Beschwerdebilder als dunkles Skizzenbuch */
 .bb-nb{overflow-x:clip;--ink:#F3F0E8;--hand:'Caveat','Segoe Print','Bradley Hand',cursive}
@@ -299,8 +299,8 @@
     <h1>Training trotz<br>R&uuml;ckenschmerzen.</h1>
     <p class="hero-sub">Personal Training mit Lizenz als Medizinischer Fitnesstrainer &ndash; auch bei R&uuml;ckenbeschwerden, Arthrose oder nach einer Verletzung, in Absprache mit deiner &Auml;rztin oder deinem Arzt. Schritt f&uuml;r Schritt zu mehr Belastbarkeit im Training.</p>
     <div class="hero-ctas">
-      <a class="btn btn-blitz" href="termin-buchen.html?art=probe">Probetraining buchen &middot; 29&nbsp;&euro;</a>
-      <a class="btn btn-ghost" href="https://wa.me/491776311404">Fragen? WhatsApp schreiben</a>
+      <a class="btn btn-blitz" href="termin-buchen.html">Termin buchen</a>
+      <a class="btn btn-wa" href="https://wa.me/491776311404" target="_blank" rel="noopener" aria-label="Per WhatsApp schreiben" title="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.9L2 22l5.27-1.38A9.9 9.9 0 1 0 12.04 2Zm0 1.8a8.1 8.1 0 1 1-4.13 15.07l-.3-.18-3.13.82.84-3.05-.2-.31A8.1 8.1 0 0 1 12.04 3.8Zm-3.1 4.1c-.17 0-.45.06-.69.32-.23.26-.9.88-.9 2.15s.92 2.5 1.05 2.67c.13.17 1.8 2.86 4.45 3.9 2.2.87 2.65.7 3.13.65.48-.04 1.54-.63 1.76-1.24.22-.6.22-1.13.15-1.24-.06-.1-.23-.17-.49-.3-.26-.13-1.54-.76-1.78-.85-.24-.09-.41-.13-.58.13-.17.26-.67.85-.82 1.02-.15.17-.3.2-.56.07-.26-.13-1.1-.4-2.09-1.29-.77-.69-1.3-1.54-1.45-1.8-.15-.26-.02-.4.11-.53.12-.12.26-.3.39-.46.13-.15.17-.26.26-.43.09-.17.04-.33-.02-.46-.07-.13-.58-1.4-.8-1.92-.2-.5-.42-.43-.58-.44h-.5Z"/></svg></a>
     </div>
     <p class="cta-tel">Oder ruf einfach an: <a href="tel:+491776311404">0177&nbsp;6311404</a></p>
   </div>
@@ -508,8 +508,8 @@
     <h2 style="margin-top:16px">Mach den<br>ersten Schritt.</h2>
     <p>Eine volle Stunde Training f&uuml;r 29&nbsp;&euro; &ndash; kein Verkaufsgespr&auml;ch. Danach wei&szlig;t du, wie sich das anf&uuml;hlt, und die 29&nbsp;&euro; ziehe ich dir vom ersten regul&auml;ren Training wieder ab.</p>
     <div class="hero-ctas">
-      <a class="btn btn-blitz" href="termin-buchen.html?art=probe">Probetraining buchen &middot; 29&nbsp;&euro;</a>
-      <a class="btn btn-ghost" href="https://wa.me/491776311404">Fragen? WhatsApp schreiben</a>
+      <a class="btn btn-blitz" href="termin-buchen.html">Termin buchen</a>
+      <a class="btn btn-wa" href="https://wa.me/491776311404" target="_blank" rel="noopener" aria-label="Per WhatsApp schreiben" title="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.9L2 22l5.27-1.38A9.9 9.9 0 1 0 12.04 2Zm0 1.8a8.1 8.1 0 1 1-4.13 15.07l-.3-.18-3.13.82.84-3.05-.2-.31A8.1 8.1 0 0 1 12.04 3.8Zm-3.1 4.1c-.17 0-.45.06-.69.32-.23.26-.9.88-.9 2.15s.92 2.5 1.05 2.67c.13.17 1.8 2.86 4.45 3.9 2.2.87 2.65.7 3.13.65.48-.04 1.54-.63 1.76-1.24.22-.6.22-1.13.15-1.24-.06-.1-.23-.17-.49-.3-.26-.13-1.54-.76-1.78-.85-.24-.09-.41-.13-.58.13-.17.26-.67.85-.82 1.02-.15.17-.3.2-.56.07-.26-.13-1.1-.4-2.09-1.29-.77-.69-1.3-1.54-1.45-1.8-.15-.26-.02-.4.11-.53.12-.12.26-.3.39-.46.13-.15.17-.26.26-.43.09-.17.04-.33-.02-.46-.07-.13-.58-1.4-.8-1.92-.2-.5-.42-.43-.58-.44h-.5Z"/></svg></a>
     </div>
     <p class="cta-tel">Oder ruf einfach an: <a href="tel:+491776311404">0177&nbsp;6311404</a></p>
   </div>
@@ -620,25 +620,46 @@ if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a
   prevB.addEventListener('click', function () { touched = true; go(state - 1); });
   nextB.addEventListener('click', function () { touched = true; go(state + 1); });
   chips.forEach(function (c) { c.addEventListener('click', function () { touched = true; go(+c.getAttribute('data-go')); }); });
-  el.addEventListener('keydown', function (e) {
-    if (e.key === 'ArrowRight') { e.preventDefault(); touched = true; go(state + 1); }
-    if (e.key === 'ArrowLeft') { e.preventDefault(); touched = true; go(state - 1); }
+  /* Tastatur: Pfeiltasten blaettern, sobald das Notizbuch im Bild ist (ohne vorher klicken zu muessen) */
+  function inView() {
+    var r = el.getBoundingClientRect(), vh = window.innerHeight || document.documentElement.clientHeight;
+    return r.bottom > vh * 0.2 && r.top < vh * 0.8;
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    var t = e.target, tag = t && t.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (t && t.isContentEditable)) return;
+    if (t && t !== el && t.closest && t.closest('.rev-slider, .slider, [role="tablist"]')) return;
+    if (t !== el && !inView()) return;
+    e.preventDefault(); touched = true;
+    go(state + (e.key === 'ArrowRight' ? 1 : -1));
   });
+  /* Wischen (Touch) und Ziehen (Maus) */
   var sx = null, sy = null;
-  el.addEventListener('pointerdown', function (e) { sx = e.clientX; sy = e.clientY; });
-  el.addEventListener('pointercancel', function () { sx = null; });
-  el.addEventListener('pointerup', function (e) {
+  function finish(x, y, target) {
     if (sx === null) return;
-    var dx = e.clientX - sx, dy = e.clientY - sy; sx = null;
-    if (e.target.closest && e.target.closest('a')) return;
+    var dx = x - sx, dy = y - sy; sx = null;
+    if (target && target.closest && target.closest('a')) return;
     touched = true;
-    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { go(state + (dx < 0 ? 1 : -1)); return; }
+    if (Math.abs(dx) > 36 && Math.abs(dx) > Math.abs(dy) * 1.1) { go(state + (dx < 0 ? 1 : -1)); return; }
     if (Math.abs(dx) > 10 || Math.abs(dy) > 10) return;
     if (mode === 'double' && state === 0) { go(1); return; }
     var r = el.getBoundingClientRect();
     var mid = mode === 'single' ? r.left + r.width * 0.33 : r.left + r.width / 2;
-    go(state + (e.clientX >= mid ? 1 : -1));
-  });
+    go(state + (x >= mid ? 1 : -1));
+  }
+  el.addEventListener('touchstart', function (e) { var t = e.touches[0]; sx = t.clientX; sy = t.clientY; }, { passive: true });
+  el.addEventListener('touchmove', function (e) {
+    if (sx === null) return;
+    var t = e.touches[0];
+    if (Math.abs(t.clientX - sx) > 18 && Math.abs(t.clientX - sx) > Math.abs(t.clientY - sy) && e.cancelable) e.preventDefault();
+  }, { passive: false });
+  el.addEventListener('touchend', function (e) { var t = e.changedTouches[0]; finish(t.clientX, t.clientY, e.target); });
+  el.addEventListener('touchcancel', function () { sx = null; });
+  el.addEventListener('pointerdown', function (e) { if (e.pointerType === 'touch') return; sx = e.clientX; sy = e.clientY; });
+  el.addEventListener('pointercancel', function (e) { if (e.pointerType !== 'touch') sx = null; });
+  el.addEventListener('pointerup', function (e) { if (e.pointerType === 'touch') return; finish(e.clientX, e.clientY, e.target); });
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (en) {
