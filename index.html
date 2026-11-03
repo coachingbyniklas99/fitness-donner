@@ -82,6 +82,7 @@
   mask-composite:intersect}
 .hv-logo{display:none;position:absolute;z-index:55;top:clamp(130px,22vh,230px);left:max(24px,calc(50% - 576px));width:min(520px,38vw,54vh);transform-origin:0 0;pointer-events:none;will-change:transform;filter:drop-shadow(0 6px 24px rgba(0,0,0,.45))}
 .fx .hv-logo{display:block}
+@media(min-width:901px){.hv-logo{transition:opacity .18s ease}body:has(.has-sub:hover) .hv-logo,body:has(.has-sub:focus-within) .hv-logo{opacity:0!important}}
 .hv-logo svg{display:block;width:100%;height:auto;overflow:visible}
 .hv-logo .lg-d text{animation:lgRise 1.05s cubic-bezier(.2,.75,.15,1) both;animation-delay:calc(var(--i) * 70ms + .35s)}
 .hv-logo .lg-f text{animation:lgUnfold 1s cubic-bezier(.2,.75,.15,1) both;animation-delay:calc(var(--i) * 25ms + 1s)}
