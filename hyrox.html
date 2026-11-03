@@ -70,7 +70,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="style.css?v=28">
+<link rel="stylesheet" href="style.css?v=38">
 <style>
 /* Hyrox-Format als dunkles Skizzenbuch */
 .hx-nb{overflow-x:clip;--ink:#F3F0E8;--hand:'Caveat','Segoe Print','Bradley Hand',cursive}
@@ -379,6 +379,111 @@
 @media(prefers-reduced-motion:reduce){
   .vpC-line i,.vz-ph img,.vz-b,.vp .num,.vpC-s::before{transition:none!important}
 }
+
+/* ===== FAQ ===== */
+.fq{padding:112px 0 120px;border-top:1px solid rgba(236,233,226,.08)}
+.fq-grid{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:88px;align-items:start}
+.fq-left{position:sticky;top:132px}
+.fq h2{font-size:clamp(40px,5.4vw,76px);line-height:1.04;margin-top:18px}
+.fq h2 em{font-style:normal;color:var(--blitz)}
+.fq-help{margin-top:40px;padding:26px 26px 24px;border:1px solid rgba(236,233,226,.14);background:linear-gradient(160deg,rgba(236,233,226,.05),rgba(236,233,226,.01));max-width:420px}
+.fq-help b{display:block;font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:24px;letter-spacing:.02em;line-height:1.1}
+.fq-help p{margin:10px 0 0;color:#B6B9C1;font-size:15px;line-height:1.55}
+.fq-help .hero-ctas{margin-top:20px;align-items:center;flex-wrap:nowrap;gap:10px}
+.fq-help .cta-tel{margin-top:16px}
+.fq-list{counter-reset:fq}
+.fq-i{position:relative;border-top:1px solid rgba(236,233,226,.14)}
+.fq-i:last-child{border-bottom:1px solid rgba(236,233,226,.14)}
+.fq-i::before{content:"";position:absolute;left:0;top:-1px;height:2px;width:100%;background:var(--blitz);transform:scaleX(0);transform-origin:left;transition:transform .6s cubic-bezier(.3,.7,.2,1)}
+.fq-i.on::before{transform:scaleX(1)}
+.fq-q{appearance:none;background:none;border:0;color:inherit;font:inherit;width:100%;text-align:left;cursor:pointer;display:flex;align-items:center;gap:22px;padding:28px 0}
+.fq-q:focus-visible{outline:2px solid var(--blitz);outline-offset:2px}
+.fq-n{font-family:var(--display);font-size:22px;width:34px;flex-shrink:0;color:transparent;-webkit-text-stroke:1px var(--blitz);transition:color .35s}
+.fq-t{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.015em;line-height:1.12;font-size:clamp(21px,2.3vw,29px);color:rgba(236,233,226,.62);transition:color .35s}
+.fq-q:hover .fq-t{color:var(--bone)}
+.fq-i.on .fq-t{color:var(--bone)}
+.fq-i.on .fq-n{color:var(--blitz)}
+.fq-pl{margin-left:auto;flex-shrink:0;width:44px;height:44px;border-radius:50%;border:1px solid rgba(236,233,226,.24);position:relative;transition:background .35s,border-color .35s,transform .45s cubic-bezier(.3,.7,.2,1)}
+.fq-pl::before,.fq-pl::after{content:"";position:absolute;left:50%;top:50%;width:14px;height:2px;margin:-1px 0 0 -7px;background:var(--bone);transition:background .35s,transform .45s}
+.fq-pl::after{transform:rotate(90deg)}
+.fq-q:hover .fq-pl{border-color:var(--blitz)}
+.fq-i.on .fq-pl{background:var(--blitz);border-color:var(--blitz);transform:rotate(180deg)}
+.fq-i.on .fq-pl::before,.fq-i.on .fq-pl::after{background:#15171C}
+.fq-i.on .fq-pl::after{transform:rotate(0)}
+.fq-b{display:grid;grid-template-rows:1fr;transition:grid-template-rows .55s cubic-bezier(.3,.7,.2,1)}
+.fq-on .fq-b{grid-template-rows:0fr}
+.fq-on .fq-i.on .fq-b{grid-template-rows:1fr}
+.fq-b>div{overflow:hidden;padding-left:56px}
+.fq-b p{color:#B6B9C1;font-size:16.5px;line-height:1.65;max-width:560px;margin:0;padding:0 56px 32px 0}
+.fq-b p b{color:var(--bone);font-weight:600}
+.fq-b a{color:var(--blitz);border-bottom:1px solid rgba(239,185,46,.5)}
+
+/* ===== Bewertungen (gemeinsam) ===== */
+.rv{position:relative;overflow:clip;background:var(--panel);padding:112px 0 104px;border-top:1px solid rgba(236,233,226,.08)}
+.rv h2{font-size:clamp(40px,5.4vw,76px);line-height:1.04;margin-top:18px}
+.rv h2 em{font-style:normal;color:var(--blitz)}
+.rv-stars{color:var(--blitz);letter-spacing:.14em;font-size:20px;line-height:1}
+.rv-score b{display:block;font-family:var(--display);font-weight:400;line-height:.9;color:var(--bone)}
+.rv-sub{color:var(--muted);font-size:14px;margin-top:10px}
+.rv-sub strong{color:var(--bone);font-weight:600}
+.rv-g{display:inline-flex;align-items:center;gap:10px;margin-top:26px;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blitz);border-bottom:1px solid var(--blitz);padding-bottom:4px}
+.rv-note{margin-top:34px;max-width:430px;font-size:12.5px;line-height:1.6;color:#7E8591}
+.ava{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;letter-spacing:.04em;flex-shrink:0}
+.rv-who{display:flex;align-items:center;gap:14px}
+.rv-who strong{display:block;font-weight:600;color:var(--bone);font-size:16px}
+.rv-who div span{display:block;font-size:12px;letter-spacing:.06em;color:var(--muted);margin-top:2px}
+
+/* ===== A: Zitat-Bühne ===== */
+.rvA-grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:88px;align-items:center}
+.rvA .rv-score b{font-size:clamp(110px,13vw,190px);margin-top:34px}
+.rvA .rv-stars{margin-top:20px}
+.rvA-mark{position:absolute;right:-1%;top:-4%;font-family:var(--display);font-size:clamp(300px,38vw,620px);line-height:1;color:transparent;-webkit-text-stroke:1px rgba(236,233,226,.06);pointer-events:none;user-select:none}
+.rvA-stage{position:relative;z-index:2}
+.rvA-view{position:relative;overflow:hidden;touch-action:pan-y;outline:none;cursor:grab}
+.rvA-view:focus-visible{box-shadow:0 0 0 2px var(--blitz);border-radius:2px}
+.rvA-track{display:flex;align-items:flex-start;transition:transform .7s cubic-bezier(.3,.7,.2,1)}
+.rvA-view{transition:height .5s cubic-bezier(.3,.7,.2,1)}
+.rvA-s{flex:0 0 100%;min-width:0;padding-right:4px}
+.rvA-s blockquote{margin:0;font-weight:500;font-size:clamp(21px,2.5vw,32px);line-height:1.38;letter-spacing:-.005em;color:var(--bone)}
+.rvA-s.long blockquote{font-size:clamp(17px,1.6vw,20px);line-height:1.6;font-weight:400;color:#DAD8D2}
+.rvA-s blockquote::before{content:"\201C";display:block;font-family:var(--display);font-size:96px;line-height:1;height:46px;margin-bottom:10px;color:var(--blitz)}
+.rvA-s .rv-who{margin-top:34px}
+.rvA-ctl{display:flex;align-items:center;gap:22px;margin-top:38px}
+.rvA-btn{appearance:none;width:52px;height:52px;border-radius:50%;border:1px solid rgba(236,233,226,.26);background:transparent;color:var(--bone);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.25s}
+.rvA-btn:hover:not([disabled]){background:var(--blitz);border-color:var(--blitz);color:#15171C}
+.rvA-btn[disabled]{opacity:.25;cursor:default}
+.rvA-btn svg{width:20px;height:20px}
+.rvA-bars{display:flex;gap:6px;flex:1;max-width:300px}
+.rvA-bars button{appearance:none;border:0;padding:12px 0;background:none;flex:1;cursor:pointer}
+.rvA-bars button i{display:block;height:3px;background:rgba(236,233,226,.18);transition:background .4s}
+.rvA-bars button[aria-current="true"] i{background:var(--blitz)}
+.rvA-cnt{font-family:var(--display);font-size:20px;letter-spacing:.06em;color:var(--muted)}
+.rvA-cnt b{color:var(--bone);font-weight:400}
+
+@media(max-width:900px){
+  .fq{padding:64px 0 72px}
+  .fq-grid{grid-template-columns:minmax(0,1fr);gap:40px}
+  .fq-left{position:static}
+  .fq h2,.rv h2{font-size:clamp(38px,11.4vw,64px)}
+  .fq-help{margin-top:30px;max-width:none}
+  .fq-q{gap:14px;padding:22px 0}
+  .fq-n{width:26px;font-size:18px}
+  .fq-pl{width:38px;height:38px}
+  .fq-b>div{padding-left:40px}
+  .fq-b p{padding:0 4px 26px 0;font-size:16px}
+  .rv{padding:64px 0 64px}
+  .rvA-grid{grid-template-columns:minmax(0,1fr);gap:34px}
+  .rvA-grid>*{min-width:0}
+  .rvA .rv-score{display:flex;align-items:center;gap:20px;margin-top:26px}
+  .rvA .rv-score b{font-size:92px;margin-top:0}
+  .rvA .rv-stars{margin-top:0}
+  .rvA-mark{font-size:300px;top:-1%}
+  .rvA-s blockquote{font-size:20px}
+  .rvA-s.long blockquote{font-size:16.5px}
+  .rvA-ctl{margin-top:26px;gap:16px}
+  .rvA-btn{width:46px;height:46px}
+}
+@media(prefers-reduced-motion:reduce){.fq-b,.fq-pl,.fq-i::before,.rvA-track{transition:none!important}}
 </style>
 </head>
 <body>
@@ -414,13 +519,13 @@
       <a href="gutschein.html" class="nav-solo">Gutscheine</a>
       <a href="ueber-mich.html">&Uuml;ber mich</a>
       <a href="faq.html">FAQ</a>
-      <a class="nav-book" href="termin-buchen.html?art=probe">
-        <span class="nb-t">Probetraining buchen &middot; 29&nbsp;&euro;</span>
-        <span class="nb-s">60 Minuten in Solingen &middot; wird angerechnet</span>
+      <a class="nav-book" href="termin-buchen.html">
+        <span class="nb-t">Termin buchen</span>
+        <span class="nb-s">Probetraining: 60 Minuten f&uuml;r 29&nbsp;&euro; &middot; wird angerechnet</span>
       </a>
       <div class="nav-kontakt">
         <a href="tel:+491776311404">Anrufen</a>
-        <a href="https://wa.me/491776311404">WhatsApp</a>
+        <a class="nk-wa" href="https://wa.me/491776311404" target="_blank" rel="noopener" aria-label="Per WhatsApp schreiben" title="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.9L2 22l5.27-1.38A9.9 9.9 0 1 0 12.04 2Zm0 1.8a8.1 8.1 0 1 1-4.13 15.07l-.3-.18-3.13.82.84-3.05-.2-.31A8.1 8.1 0 0 1 12.04 3.8Zm-3.1 4.1c-.17 0-.45.06-.69.32-.23.26-.9.88-.9 2.15s.92 2.5 1.05 2.67c.13.17 1.8 2.86 4.45 3.9 2.2.87 2.65.7 3.13.65.48-.04 1.54-.63 1.76-1.24.22-.6.22-1.13.15-1.24-.06-.1-.23-.17-.49-.3-.26-.13-1.54-.76-1.78-.85-.24-.09-.41-.13-.58.13-.17.26-.67.85-.82 1.02-.15.17-.3.2-.56.07-.26-.13-1.1-.4-2.09-1.29-.77-.69-1.3-1.54-1.45-1.8-.15-.26-.02-.4.11-.53.12-.12.26-.3.39-.46.13-.15.17-.26.26-.43.09-.17.04-.33-.02-.46-.07-.13-.58-1.4-.8-1.92-.2-.5-.42-.43-.58-.44h-.5Z"/></svg></a>
       </div>
     </div>
     <a class="btn btn-blitz btn-sm nav-cta" href="termin-buchen.html">Termin buchen</a>
@@ -510,96 +615,66 @@
     </div>
   </div>
 </section>
-<section style="padding-top:0">
+<section class="fq" id="faq">
   <div class="wrap">
-    <div class="sec-head">
-      <div>
+    <div class="fq-grid">
+      <div class="fq-left">
         <div class="eyebrow">H&auml;ufige Fragen</div>
-        <h2>Hyrox, kurz<br>beantwortet.</h2>
+        <h2>Hyrox, kurz<br><em>beantwortet.</em></h2>
+        <div class="fq-help">
+          <b>Noch etwas offen?</b>
+          <p>Schreib mir direkt &ndash; ich antworte pers&ouml;nlich und meistens noch am selben Tag.</p>
+          <div class="hero-ctas">
+            <a class="btn btn-blitz" href="termin-buchen.html">Termin buchen</a>
+            <a class="btn btn-wa" href="https://wa.me/491776311404" target="_blank" rel="noopener" aria-label="Per WhatsApp schreiben" title="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.9L2 22l5.27-1.38A9.9 9.9 0 1 0 12.04 2Zm0 1.8a8.1 8.1 0 1 1-4.13 15.07l-.3-.18-3.13.82.84-3.05-.2-.31A8.1 8.1 0 0 1 12.04 3.8Zm-3.1 4.1c-.17 0-.45.06-.69.32-.23.26-.9.88-.9 2.15s.92 2.5 1.05 2.67c.13.17 1.8 2.86 4.45 3.9 2.2.87 2.65.7 3.13.65.48-.04 1.54-.63 1.76-1.24.22-.6.22-1.13.15-1.24-.06-.1-.23-.17-.49-.3-.26-.13-1.54-.76-1.78-.85-.24-.09-.41-.13-.58.13-.17.26-.67.85-.82 1.02-.15.17-.3.2-.56.07-.26-.13-1.1-.4-2.09-1.29-.77-.69-1.3-1.54-1.45-1.8-.15-.26-.02-.4.11-.53.12-.12.26-.3.39-.46.13-.15.17-.26.26-.43.09-.17.04-.33-.02-.46-.07-.13-.58-1.4-.8-1.92-.2-.5-.42-.43-.58-.44h-.5Z"/></svg></a>
+          </div>
+          <p class="cta-tel">Oder ruf einfach an: <a href="tel:+491776311404">0177&nbsp;6311404</a></p>
+        </div>
       </div>
-    </div>
-    <div class="faq-list">
-      <details open>
-        <summary>Wie lange dauert eine Hyrox-Vorbereitung?</summary>
-        <p>Als Richtwert plane ich mit <b>8 bis 12 Wochen</b> gezielter Vorbereitung. Wie lang dein Weg tats&auml;chlich ist, h&auml;ngt von deinem Startpunkt und deinem Ziel ab &ndash; das kl&auml;ren wir im Leistungstest zu Beginn und takten den Plan auf dein Race-Datum.</p>
-      </details>
-      <details>
-        <summary>Kann ich als Anf&auml;nger bei einem Hyrox starten?</summary>
-        <p>Ja. Hyrox ist ausdr&uuml;cklich auch f&uuml;r Einsteiger gemacht &ndash; die Distanzen und Gewichte sind in der Open-Division gut machbar, und im Doubles-Format teilst du dir die Stationen mit einem Partner. Mit strukturierter Vorbereitung kommst du sicher und mit gutem Gef&uuml;hl ins Ziel.</p>
-      </details>
-      <details>
-        <summary>Wo findet das Hyrox-Training statt?</summary>
-        <p>An <b>allen meinen Standorten</b>: in <a href="personal-training-solingen.html" style="color:var(--blitz)">Solingen</a>, in <a href="personal-training-koeln.html" style="color:var(--blitz)">K&ouml;ln</a> (Iron&amp;Soul Zollstock) und in <a href="personal-training-neuss.html" style="color:var(--blitz)">Neuss</a> (Iron&amp;Soul). Du suchst dir den Standort aus, der f&uuml;r dich am besten erreichbar ist. In den Iron&amp;Soul-Clubs trainieren wir direkt auf den Hyrox-Fl&auml;chen mit Wettkampf-Equipment.</p>
-      </details>
-      <details>
-        <summary>Was kostet Hyrox-Coaching?</summary>
-        <p>Hyrox-Coaching l&auml;uft &uuml;ber dieselben Preise wie mein Personal Training: <b>Einzelstunde 119&nbsp;&euro;</b>, in der 4er-Karte 109&nbsp;&euro; und in der 8er-Karte 99&nbsp;&euro; pro Einheit &ndash; kombinierbar mit einem Trainingsplan f&uuml;r deine eigenen Einheiten. Einsteigen kannst du mit dem <b>Probetraining f&uuml;r 29&nbsp;&euro;</b>, das auf dein erstes Training angerechnet wird. Alles steht auf der <a href="preise.html" style="color:var(--blitz);text-decoration:underline">Preisseite</a>. Unsicher, was passt? <a href="tel:+491776311404" style="color:var(--blitz);text-decoration:underline">Ruf kurz an</a> oder schreib <a href="https://wa.me/491776311404" style="color:var(--blitz);text-decoration:underline">per WhatsApp</a>.</p>
-      </details>
-      <details>
-        <summary>Trainierst du auch Doubles-Teams?</summary>
-        <p>Ja &ndash; Doubles-Vorbereitung ist sogar besonders effektiv, weil Aufteilung und Wechselstrategie viel Zeit sparen k&ouml;nnen. Wir trainieren die Stationen gemeinsam und legen fest, wer wo seine St&auml;rken ausspielt.</p>
-      </details>
+      <div class="fq-list" id="fq">
+        <div class="fq-i on"><button class="fq-q" type="button" aria-expanded="true"><span class="fq-n">01</span><span class="fq-t">Wie lange dauert eine Hyrox-Vorbereitung?</span><span class="fq-pl" aria-hidden="true"></span></button><div class="fq-b"><div><p>Als Richtwert plane ich mit <b>8 bis 12 Wochen</b> gezielter Vorbereitung. Wie lang dein Weg tats&auml;chlich ist, h&auml;ngt von deinem Startpunkt und deinem Ziel ab &ndash; das kl&auml;ren wir im Leistungstest zu Beginn und takten den Plan auf dein Race-Datum.</p></div></div></div>
+        <div class="fq-i"><button class="fq-q" type="button" aria-expanded="false"><span class="fq-n">02</span><span class="fq-t">Kann ich als Anf&auml;nger bei einem Hyrox starten?</span><span class="fq-pl" aria-hidden="true"></span></button><div class="fq-b"><div><p>Ja. Hyrox ist ausdr&uuml;cklich auch f&uuml;r Einsteiger gemacht &ndash; die Distanzen und Gewichte sind in der Open-Division gut machbar, und im Doubles-Format teilst du dir die Stationen mit einem Partner. Mit strukturierter Vorbereitung kommst du sicher und mit gutem Gef&uuml;hl ins Ziel.</p></div></div></div>
+        <div class="fq-i"><button class="fq-q" type="button" aria-expanded="false"><span class="fq-n">03</span><span class="fq-t">Wo findet das Hyrox-Training statt?</span><span class="fq-pl" aria-hidden="true"></span></button><div class="fq-b"><div><p>An <b>allen meinen Standorten</b>: in <a href="personal-training-solingen.html" style="color:var(--blitz)">Solingen</a>, in <a href="personal-training-koeln.html" style="color:var(--blitz)">K&ouml;ln</a> (Iron&amp;Soul Zollstock) und in <a href="personal-training-neuss.html" style="color:var(--blitz)">Neuss</a> (Iron&amp;Soul). Du suchst dir den Standort aus, der f&uuml;r dich am besten erreichbar ist. In den Iron&amp;Soul-Clubs trainieren wir direkt auf den Hyrox-Fl&auml;chen mit Wettkampf-Equipment.</p></div></div></div>
+        <div class="fq-i"><button class="fq-q" type="button" aria-expanded="false"><span class="fq-n">04</span><span class="fq-t">Was kostet Hyrox-Coaching?</span><span class="fq-pl" aria-hidden="true"></span></button><div class="fq-b"><div><p>Hyrox-Coaching l&auml;uft &uuml;ber dieselben Preise wie mein Personal Training: <b>Einzelstunde 119&nbsp;&euro;</b>, in der 4er-Karte 109&nbsp;&euro; und in der 8er-Karte 99&nbsp;&euro; pro Einheit &ndash; kombinierbar mit einem Trainingsplan f&uuml;r deine eigenen Einheiten. Einsteigen kannst du mit dem <b>Probetraining f&uuml;r 29&nbsp;&euro;</b>, das auf dein erstes Training angerechnet wird. Alles steht auf der <a href="preise.html" style="color:var(--blitz);text-decoration:underline">Preisseite</a>. Unsicher, was passt? <a href="tel:+491776311404" style="color:var(--blitz);text-decoration:underline">Ruf kurz an</a> oder schreib <a href="https://wa.me/491776311404" style="color:var(--blitz);text-decoration:underline">per WhatsApp</a>.</p></div></div></div>
+        <div class="fq-i"><button class="fq-q" type="button" aria-expanded="false"><span class="fq-n">05</span><span class="fq-t">Trainierst du auch Doubles-Teams?</span><span class="fq-pl" aria-hidden="true"></span></button><div class="fq-b"><div><p>Ja &ndash; Doubles-Vorbereitung ist sogar besonders effektiv, weil Aufteilung und Wechselstrategie viel Zeit sparen k&ouml;nnen. Wir trainieren die Stationen gemeinsam und legen fest, wer wo seine St&auml;rken ausspielt.</p></div></div></div>
+      </div>
     </div>
   </div>
 </section>
-<section class="reviews" style="padding:64px 0">
+<section class="rv rvA" id="stimmen">
+  <div class="rvA-mark" aria-hidden="true">&bdquo;</div>
   <div class="wrap">
-    <div class="sec-head" style="margin-bottom:28px">
-      <div>
+    <div class="rvA-grid">
+      <div class="rv-left">
         <div class="eyebrow">Erfahrungen</div>
-        <h2>Das sagen Kunden.</h2>
+        <h2>Das sagen<br><em>Kunden.</em></h2>
+        <div class="rv-score">
+          <b data-g-rating>5,0</b>
+          <div><div class="rv-stars" aria-label="5 von 5 Sternen">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <div class="rv-sub"><strong><span data-g-count>80</span> Bewertungen</strong> auf Google</div></div>
+        </div>
+        <a class="rv-g" href="https://www.google.com/maps?cid=329045397772977203" target="_blank" rel="noopener">Alle Rezensionen auf Google &rarr;</a>
+        <p class="rv-note">Auswahl aus meinen &ouml;ffentlichen Google-Rezensionen, K&uuml;rzungen mit [&hellip;] gekennzeichnet. Google pr&uuml;ft Rezensionen nicht auf Echtheit. Ich kaufe keine Bewertungen und l&ouml;sche keine.</p>
       </div>
-      <div class="rev-score">
-        <div class="rev-score-num" data-g-rating>5,0</div>
-        <div>
-          <div class="stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <div class="rev-score-sub"><span data-g-count>80</span> Bewertungen auf Google</div>
+      <div class="rvA-stage">
+        <div class="rvA-view" tabindex="0" role="group" aria-roledescription="Karussell" aria-label="Kundenbewertungen">
+          <div class="rvA-track" id="rvT">
+            <figure class="rvA-s" style="margin:0"><blockquote>Trainiere regelm&auml;&szlig;ig bei Niklas Hyrox und Laufintervalle. Training ist anspruchsvoll und abwechslungsreich. Er pusht einen, fragt aber auch regelm&auml;&szlig;ig nach, wie man sich w&auml;hrend des Trainings f&uuml;hlt. Professionelles und pers&ouml;nliches Training!&ldquo;</blockquote><figcaption class="rv-who"><span class="ava" style="background:#4E7A5C">MM</span><div><strong>M. M.</strong><span>Google &middot; Hyrox &amp; Laufintervalle</span></div></figcaption></figure>
+            <figure class="rvA-s long" style="margin:0"><blockquote>Ich hab jetzt bereits seit ein paar Wochen das Coaching und die Unterst&uuml;tzung von Niklas testen k&ouml;nnen und bin begeistert. Der Kontakt kam zustande &uuml;ber mein Interesse f&uuml;r Hyrox und hier habe ich mit Niklas direkt meinen idealen Ansprechpartner gefunden. Nach einer ersten Analyse meiner Ist-Situation sowie meiner Ziele und meiner Einsatzbereitschaft wurde ein Trainingsplan erstellt, dem wir gemeinsam folgen. Auch notwendige Korrekturen oder auf zeitliche Herausforderungen reagiert Niklas sehr flexibel und immer professionell! Absolut empfehlenswert!&ldquo;</blockquote><figcaption class="rv-who"><span class="ava" style="background:#8E4E4E">DW</span><div><strong>Dennis W.</strong><span>Google &middot; Hyrox-Coaching</span></div></figcaption></figure>
+            <figure class="rvA-s" style="margin:0"><blockquote>Niklas macht ein sehr gutes und intensives Hyrox Training. Er motiviert einen auch w&auml;hrenddessen, wenn die Kraft zwischendurch mal nachl&auml;sst.&ldquo;</blockquote><figcaption class="rv-who"><span class="ava" style="background:#3B6E8F">D</span><div><strong>Droth</strong><span>Google &middot; Hyrox-Training</span></div></figcaption></figure>
+            <figure class="rvA-s" style="margin:0"><blockquote>Super intensives Hyrox Training, gute &Uuml;bungen, toller Motivator :) Hat Spa&szlig; gemacht!&ldquo;</blockquote><figcaption class="rv-who"><span class="ava" style="background:#8E6B3B">AL</span><div><strong>Alina L.</strong><span>Google &middot; Hyrox-Training</span></div></figcaption></figure>
+            <figure class="rvA-s" style="margin:0"><blockquote>Heute habe ich meinen ersten HYROX-Kurs bei Iron and Soul abgeschlossen, und unser Trainer war Niklas. Er war ein fantastischer Trainer, und ich kann ihn nur empfehlen, wenn man dar&uuml;ber nachdenkt, einen Personaltrainer zu engagieren.&ldquo;</blockquote><figcaption class="rv-who"><span class="ava" style="background:#8E6B3B">AS</span><div><strong>Abdulrahman S.</strong><span>Google &middot; Hyrox-Kurs</span></div></figcaption></figure>
+            <figure class="rvA-s" style="margin:0"><blockquote>Super Training! Vor allem im Bereich Hyrox. Sehr zufrieden :)&ldquo;</blockquote><figcaption class="rv-who"><span class="ava" style="background:#7A5C8E">PV</span><div><strong>Paula V.</strong><span>Google &middot; Hyrox</span></div></figcaption></figure>
+          </div>
+        </div>
+        <div class="rvA-ctl">
+          <button class="rvA-btn" id="rvP" type="button" aria-label="Vorherige Bewertung"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+          <button class="rvA-btn" id="rvN" type="button" aria-label="N&auml;chste Bewertung"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          <div class="rvA-bars" id="rvB"></div>
+          <div class="rvA-cnt"><b id="rvC">01</b> / 06</div>
         </div>
       </div>
     </div>
-    <div class="slider" role="group" aria-roledescription="Karussell" aria-label="Kundenbewertungen">
-      <button class="slider-nav prev" type="button" aria-label="Vorherige Bewertungen">&#8249;</button>
-      <div class="rev-slider" tabindex="0">
-        <article class="rev">
-          <div class="rev-top"><span class="ava" style="background:#8E4E4E">DW</span>
-            <div><div class="rev-name">Dennis W.</div><div class="rev-meta">Google &middot; Hyrox-Coaching</div></div></div>
-          <div class="stars" aria-label="5 von 5 Sternen">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p>&bdquo;Ich hab jetzt bereits seit ein paar Wochen das Coaching und die Unterstützung von Niklas testen können und bin begeistert. Der Kontakt kam zustande über mein Interesse für Hyrox und hier habe ich mit Niklas direkt meinen idealen Ansprechpartner gefunden. Nach einer erste Analyse meiner Ist Situation, sowie meiner Ziele und meiner Einsatzbereitschaft wurde ein Trainingsplan erstellt, dem wir gemeinsam folgen. Auch notwendige Korrekturen oder auf zeitliche Herausforderungen reagiert Niklas sehr flexibel und immer professionell! Absolut empfehlenswert!&ldquo;</p>
-        </article>
-        <article class="rev">
-          <div class="rev-top"><span class="ava" style="background:#4E7A5C">MM</span>
-            <div><div class="rev-name">M. M.</div><div class="rev-meta">Google &middot; Hyrox &amp; Laufintervalle</div></div></div>
-          <div class="stars" aria-label="5 von 5 Sternen">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p>&bdquo;Trainiere regelmäßig bei Niklas Hyrox und Laufintervalle. Training ist anspruchsvoll und abwechslungsreich. Er pusht einen, fragt aber auch regelmäßig nach wie man sich während des Trainings fühlt. Professionelles und persönliches Training!&ldquo;</p>
-        </article>
-        <article class="rev">
-          <div class="rev-top"><span class="ava" style="background:#3B6E8F">D</span>
-            <div><div class="rev-name">Droth</div><div class="rev-meta">Google &middot; Hyrox-Training</div></div></div>
-          <div class="stars" aria-label="5 von 5 Sternen">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p>&bdquo;Niklas macht ein sehr gutes und intensives Hyrox Training. Er motiviert einen auch währenddessen, wenn die Kraft zwischendurch mal nachlässt.&ldquo;</p>
-        </article>
-        <article class="rev">
-          <div class="rev-top"><span class="ava" style="background:#8E6B3B">AL</span>
-            <div><div class="rev-name">Alina L.</div><div class="rev-meta">Google &middot; Hyrox-Training</div></div></div>
-          <div class="stars" aria-label="5 von 5 Sternen">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p>&bdquo;Super intensives Hyrox Training, gute Übungen, toller Motivator :) Hat Spaß gemacht!&ldquo;</p>
-        </article>
-        <article class="rev">
-          <div class="rev-top"><span class="ava" style="background:#8E6B3B">AS</span>
-            <div><div class="rev-name">Abdulrahman S.</div><div class="rev-meta">Google &middot; Hyrox-Kurs</div></div></div>
-          <div class="stars" aria-label="5 von 5 Sternen">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p>&bdquo;Heute habe ich meinen ersten HYROX-Kurs bei Iron and Soul abgeschlossen, und unser Trainer war Niklas. Er war ein fantastischer Trainer, und ich kann ihn nur empfehlen, wenn man darüber nachdenkt, einen Personaltrainer zu engagieren.&ldquo;</p>
-        </article>
-        <article class="rev">
-          <div class="rev-top"><span class="ava" style="background:#7A5C8E">PV</span>
-            <div><div class="rev-name">Paula V.</div><div class="rev-meta">Google &middot; Hyrox</div></div></div>
-          <div class="stars" aria-label="5 von 5 Sternen">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p>&bdquo;Super Training! Vor allem im Bereich Hyrox. Sehr zufrieden :)&ldquo;</p>
-        </article>
-      </div>
-      <button class="slider-nav next" type="button" aria-label="N&auml;chste Bewertungen">&#8250;</button>
-    </div>
-    <div class="placeholder-note" style="margin-top:22px"><a href="https://www.google.com/maps?cid=329045397772977203" target="_blank" rel="noopener" style="color:var(--blitz);text-decoration:underline">Alle <span data-g-count>80</span> Rezensionen auf Google lesen &rarr;</a><br><span style="font-size:13px;display:inline-block;margin-top:10px">Die hier gezeigten Stimmen sind eine Auswahl aus meinen &ouml;ffentlichen Google-Rezensionen, K&uuml;rzungen sind mit [&hellip;] gekennzeichnet. Google &uuml;berpr&uuml;ft Rezensionen nicht auf Echtheit. Ich kaufe keine Bewertungen und l&ouml;sche keine. &Uuml;ber den Link siehst du alle Bewertungen ungefiltert.</span></div>
   </div>
 </section>
 <section class="cta hxc">
@@ -799,6 +874,35 @@ if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a
     r.querySelector('.vz-t').addEventListener('click', function(){ sel(i); });
     r.addEventListener('mouseenter', function(){ if (window.matchMedia && matchMedia('(hover:hover)').matches) sel(i); });
   });
+})();
+</script>
+<script>
+/* Hyrox: FAQ zum Aufklappen, Bewertungen als Zitat-Buehne */
+(function(){
+  /* FAQ: immer eine Frage offen */
+  var fq=document.getElementById('fq'); fq.parentNode.parentNode.parentNode.classList.add('fq-on');
+  var items=[].slice.call(fq.querySelectorAll('.fq-i'));
+  items.forEach(function(it){
+    var b=it.querySelector('.fq-q');
+    b.addEventListener('click',function(){
+      var was=it.classList.contains('on');
+      items.forEach(function(o){o.classList.remove('on');o.querySelector('.fq-q').setAttribute('aria-expanded','false');});
+      if(!was){it.classList.add('on');b.setAttribute('aria-expanded','true');}
+    });
+  });
+  /* Zitat-Buehne */
+  var T=document.getElementById('rvT'),sl=[].slice.call(T.children),P=document.getElementById('rvP'),N=document.getElementById('rvN'),Bx=document.getElementById('rvB'),C=document.getElementById('rvC'),view=T.parentNode,cur=0;
+  sl.forEach(function(_,i){var b=document.createElement('button');b.type='button';b.setAttribute('aria-label','Bewertung '+(i+1));b.innerHTML='<i></i>';b.addEventListener('click',function(){go(i);});Bx.appendChild(b);});
+  function go(i){cur=Math.max(0,Math.min(sl.length-1,i));T.style.transform='translateX('+(-cur*100)+'%)';P.disabled=cur===0;N.disabled=cur===sl.length-1;C.textContent=('0'+(cur+1)).slice(-2);[].forEach.call(Bx.children,function(b,k){b.setAttribute('aria-current',k===cur?'true':'false');});sl.forEach(function(s,k){s.setAttribute('aria-hidden',k===cur?'false':'true');});fit();}
+  function fit(){view.style.height=sl[cur].offsetHeight+'px';}
+  window.addEventListener('resize',fit);window.addEventListener('load',fit);
+  P.addEventListener('click',function(){go(cur-1);});N.addEventListener('click',function(){go(cur+1);});
+  view.addEventListener('keydown',function(e){if(e.key==='ArrowRight'){e.preventDefault();go(cur+1);}if(e.key==='ArrowLeft'){e.preventDefault();go(cur-1);}});
+  var sx=null,sy=null;
+  view.addEventListener('pointerdown',function(e){sx=e.clientX;sy=e.clientY;});
+  view.addEventListener('pointerup',function(e){if(sx===null)return;var dx=e.clientX-sx,dy=e.clientY-sy;sx=null;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy))go(cur+(dx<0?1:-1));});
+  view.addEventListener('pointercancel',function(){sx=null;});
+  go(0);
 })();
 </script>
 <script src="ui.js" defer></script>
