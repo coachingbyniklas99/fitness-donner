@@ -51,7 +51,7 @@
   /* ---------- Liste ---------- */
   function aktiveKarte(email) {
     var l = K() ? K().karten(email) : [];
-    return l.filter(function (c) { return c.status === 'active' && ((c.left || 0) > 0 || (c.upcoming || 0) > 0); })[0] || null;
+    return l.filter(function (c) { return (c.status === 'active' && ((c.left || 0) > 0 || (c.upcoming || 0) > 0)) || (c.status === 'redeemed' && (c.upcoming || 0) > 0); })[0] || null;
   }
   function kartenZeile(c) {
     var done = (c.done || 0) + (c.manual > 0 ? c.manual : 0), booked = c.upcoming || 0, frei = Math.max(0, c.total - done - booked);
@@ -146,6 +146,8 @@
   /* ---------- Profil ---------- */
   var STATUS = { confirmed: 'bestätigt', cancelled: 'storniert', active: 'aktiv', redeemed: 'aufgebraucht', bestaetigt: 'bestätigt', abgesagt: 'abgesagt', verfallen: 'kurzfristig abgesagt (verfallen)' };
   function stat(s) { return STATUS[s] || s || ''; }
+  /* Aktiv = noch Einheiten frei ODER noch Termine offen (Status „aufgebraucht“ gilt schon, wenn alle Einheiten gebucht sind) */
+  function istAktiv(k) { return k.status === 'active' || (k.status === 'redeemed' && (k.kommend || 0) > 0); }
 
   function einheiten(k, termine) {
     var t0 = heute(), jetzt = jetztHM(), units = [], i;
@@ -178,7 +180,7 @@
     var done = units.filter(function (u) { return u.s === 'done' || u.s === 'verf' || u.s === 'manuell'; }).length;
     var booked = units.filter(function (u) { return u.s === 'now' || u.s === 'booked'; }).length;
     var frei = units.filter(function (u) { return u.s === 'free'; }).length;
-    var aktiv = k.status === 'active';
+    var aktiv = istAktiv(k);
     var nr = 0, nextU = units.filter(function (u) { return u.s === 'now'; })[0];
     var big = nextU ? '<div class="kc-big"><b>Nr. ' + (done + 1) + ' von ' + total + '</b><span>ist der n&auml;chste Termin' + (nextU.t ? ' &middot; ' + esc(wd(nextU.t.date)) + ', ' + esc(nextU.t.start) + ' Uhr' : '') + '</span></div>'
       : '<div class="kc-big"><b>' + done + ' von ' + total + '</b><span>absolviert' + (frei ? ' &middot; ' + frei + ' noch nicht gebucht' : '') + '</span></div>';
@@ -206,7 +208,7 @@
     var vergangen = p.termine.filter(function (t) { return t.date < t0; }).sort(function (a, b) { return (b.date + b.start).localeCompare(a.date + a.start); });
     var karten = p.karten.filter(function (k) { return k.kind === 'karte'; });
     var gutscheine = p.karten.filter(function (k) { return k.kind !== 'karte'; });
-    var aktiv = karten.filter(function (k) { return k.status === 'active'; }), frueher = karten.filter(function (k) { return k.status !== 'active'; });
+    var aktiv = karten.filter(istAktiv), frueher = karten.filter(function (k) { return !istAktiv(k); });
 
     function terminKarte(t) {
       var verschoben = t.orig_date && t.orig_date !== t.date;
