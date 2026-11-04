@@ -405,3 +405,26 @@ details.pf-d>.pf-in{padding:0 14px 14px}
 .pf-mandat{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px;padding:10px 14px;border-radius:12px;font-size:13px}
 .pf-mandat.ok{border:1px solid rgba(80,200,120,.35);color:#8fe0a8}
 .pf-mandat.fehlt{border:1px solid rgba(255,190,60,.4);color:#ffcf6b}
+
+/* ---------- Vor Ort bezahlen (QR) ---------- */
+.qr-wrap{text-align:center}
+.qr-sum{font-size:16px;margin:2px 0 14px}
+.qr-sum b{font-weight:700}
+.qr-sum small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.qr-code{width:min(78vw,340px);margin:0 auto 14px;background:#fff;border-radius:16px;padding:10px;line-height:0}
+.qr-code svg{width:100%;height:auto;display:block}
+.qr-code.done{background:rgba(127,209,138,.12);border:2px solid var(--c-gut);display:flex;align-items:center;justify-content:center;aspect-ratio:1/1}
+.qr-tick{font-size:96px;line-height:1;color:var(--c-gut)}
+.qr-state{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:17px;padding:8px 16px;border-radius:999px;border:1px solid var(--line)}
+.qr-state.wait{color:var(--c-karte);border-color:rgba(239,185,46,.45);background:rgba(239,185,46,.07)}
+.qr-state.ok{color:var(--c-gut);border-color:rgba(127,209,138,.5);background:rgba(127,209,138,.1);font-size:20px}
+.qr-dot{width:10px;height:10px;border-radius:50%;background:var(--c-karte);animation:qrp 1.2s ease-in-out infinite}
+@keyframes qrp{0%,100%{opacity:.25;transform:scale(.8)}50%{opacity:1;transform:scale(1.15)}}
+.qr-hint{font-size:13.5px;line-height:1.55;color:var(--muted);margin:12px auto 0;max-width:420px}
+.qr-codeline{display:inline-block;margin-top:8px;color:var(--bone)}
+.qr-share{margin-top:22px;border-top:1px solid var(--line);padding-top:16px}
+@media(prefers-reduced-motion:reduce){.qr-dot{animation:none}}
+.qr-state.ok .qr-dot{display:none}
+.qr-share[hidden],.tm-actions[hidden]{display:none}
+.qr-code.done{width:min(46vw,170px);aspect-ratio:1/1;padding:0;margin-bottom:16px}
+.qr-tick{font-size:72px}
