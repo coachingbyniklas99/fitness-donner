@@ -103,11 +103,12 @@
   }
 
   var ZAHL = {
+    qr: { ic: '&#128241;', t: 'Vor Ort bezahlen (QR)', d: 'Der Kunde scannt den QR-Code und zahlt sofort per Apple Pay, Karte oder Lastschrift.' },
     lastschrift: { ic: '&#127974;', t: 'Lastschrift', d: 'Der Betrag wird in den nächsten Tagen eingezogen.' },
     ueberweisung: { ic: '&#128228;', t: 'Überweisung auf Rechnung', d: 'Der Kunde überweist bis zum Fälligkeitsdatum.' },
     bar: { ic: '&#128182;', t: 'Schon bezahlt (bar / privat)', d: 'Rechnung wird als bezahlt ausgestellt, nichts weiter offen.' }
   };
-  var ZAHL_KURZ = { lastschrift: 'Lastschrift', ueberweisung: 'Überweisung', bar: 'Bar / bezahlt' };
+  var ZAHL_KURZ = { qr: 'Vor Ort (QR)', lastschrift: 'Lastschrift', ueberweisung: 'Überweisung', bar: 'Bar / bezahlt' };
 
   /* ---------- Neue Karte ausstellen ---------- */
   function ausstellen(v, fertig) {
@@ -120,7 +121,7 @@
       return A.api('karte/optionen?email=' + encodeURIComponent(F.email || '')).then(function (d) {
         F.opt = d;
         if (!F.card) F.card = (d.letzte_karte && d.karten[d.letzte_karte]) ? d.letzte_karte : (Object.keys(d.karten)[0] || '');
-        if (!F.zahlart) F.zahlart = d.zahlart || 'ueberweisung';
+        if (!F.zahlart) F.zahlart = d.zahlart || 'qr';
         if (!F.faellig) F.faellig = d.standard_faellig || plusDays(14);
         if (!F.gueltig) F.gueltig = d.gueltig_bis || plusDays(365);
         if (!F.zhd) F.zhd = F.name;
@@ -133,22 +134,34 @@
       var unit = F.preis !== '' && !isNaN(Number(F.preis)) ? Math.round(Number(F.preis) * 100) : k.unitCents;
       return unit * k.sessions;
     }
+    function schritte() {
+      var d = F.opt, k = d.karten[F.card] || {}, mandatFehlt = F.zahlart === 'lastschrift' && !d.mandat, sm = summe();
+      var l = ['Karte mit Code wird angelegt (' + esc(k.label || '') + ', gültig bis ' + esc(fd(F.gueltig)) + ').',
+        F.zahlart === 'bar' ? 'Rechnung über ' + eur(sm) + ' wird erstellt und gleich als bezahlt markiert.' : 'Rechnung über ' + eur(sm) + ' wird erstellt (wie deine bisherigen Rechnungen).'];
+      if (F.zahlart === 'qr') {
+        l.push('Du bekommst sofort einen <b>QR-Code</b>. Der Kunde scannt ihn und bezahlt mit Apple Pay, Karte oder Lastschrift.');
+        l.push(F.mail ? 'Sobald bezahlt wird, geht die Mail an <b>' + esc(F.email || '…') + '</b> raus (Code, Rechnung als PDF, Widerrufsbelehrung).' : 'Keine Mail an den Kunden (du gibst ihm den Code selbst).');
+      } else {
+        if (F.zahlart === 'lastschrift') l.push(mandatFehlt ? '<b>Achtung:</b> Es ist kein Lastschrift-Mandat gespeichert &ndash; siehe Hinweis oben.' : 'Der Betrag wird in den nächsten Tagen per Lastschrift eingezogen.');
+        if (F.zahlart === 'ueberweisung') l.push('Der Kunde soll bis zum <b>' + esc(fd(F.faellig)) + '</b> überweisen.');
+        l.push(F.mail ? 'Mail an <b>' + esc(F.email || '…') + '</b> mit Code, Rechnung (PDF), Zahlungshinweis und Widerrufsbelehrung.' : 'Keine Mail an den Kunden (du gibst ihm den Code selbst).');
+      }
+      return l;
+    }
+    function schritteAktualisieren() {
+      var ol = o.querySelector('.kt-steps ol'); if (ol && F.opt) ol.innerHTML = schritte().map(function (x) { return '<li>' + x + '</li>'; }).join('');
+    }
     function zeigen() {
       var d = F.opt, k = d.karten[F.card] || {}, mandatFehlt = F.zahlart === 'lastschrift' && !d.mandat;
       var kartenHtml = Object.keys(d.karten).map(function (key) {
         var c = d.karten[key];
         return '<button type="button" class="kt-o' + (key === F.card ? ' on' : '') + '" data-card="' + esc(key) + '"><b>' + esc(c.label) + '</b><span class="pr">' + eur(c.unitCents * c.sessions) + '</span><span>' + c.sessions + ' Einheiten &middot; ' + eur(c.unitCents) + ' pro Einheit</span></button>';
       }).join('');
-      var zahlHtml = ['lastschrift', 'ueberweisung', 'bar'].map(function (z) {
+      var zahlHtml = ['qr', 'lastschrift', 'ueberweisung', 'bar'].map(function (z) {
         return '<button type="button" class="kt-o' + (z === F.zahlart ? ' on' : '') + '" data-zahl="' + z + '"><span class="ic">' + ZAHL[z].ic + '</span><div><b>' + ZAHL[z].t + '</b><span>' + ZAHL[z].d + '</span></div>' +
           (z === d.zahlart ? '<em>' + (d.zahlart_hinweis ? 'zuletzt' : 'Standard') + '</em>' : '') + '</button>';
       }).join('');
       var s = summe();
-      var schritte = ['Karte mit Code wird angelegt (' + esc(k.label || '') + ', gültig bis ' + esc(fd(F.gueltig)) + ').',
-        F.zahlart === 'bar' ? 'Rechnung über ' + eur(s) + ' wird erstellt und gleich als bezahlt markiert.' : 'Rechnung über ' + eur(s) + ' wird erstellt (wie deine bisherigen Rechnungen).'];
-      if (F.zahlart === 'lastschrift') schritte.push(mandatFehlt ? '<b>Achtung:</b> Es ist kein Lastschrift-Mandat gespeichert &ndash; siehe Hinweis oben.' : 'Der Betrag wird in den nächsten Tagen per Lastschrift eingezogen.');
-      if (F.zahlart === 'ueberweisung') schritte.push('Der Kunde soll bis zum <b>' + esc(fd(F.faellig)) + '</b> überweisen.');
-      schritte.push(F.mail ? 'Mail an <b>' + esc(F.email || '…') + '</b> mit Code, Rechnung (PDF), Zahlungshinweis und Widerrufsbelehrung.' : 'Keine Mail an den Kunden (du gibst ihm den Code selbst).');
       var body =
         '<div class="kt-sec"><label class="kt-lab" for="ktName">Kunde</label>' +
         '<div class="kt-two"><div class="ad-field" style="margin:0 0 10px"><input type="text" id="ktName" placeholder="Name" autocomplete="off" value="' + esc(F.name) + '"></div>' +
@@ -158,7 +171,7 @@
         '<div class="kt-sec"><span class="kt-lab">Wie bezahlt der Kunde?</span><div class="kt-pay">' + zahlHtml + '</div>' +
         (d.zahlart_hinweis ? '<div class="ad-meta" style="margin-top:8px">' + esc(d.zahlart_hinweis) + '</div>' : '') +
         (mandatFehlt ? '<div class="kt-warn">F&uuml;r diesen Kunden ist kein SEPA-Mandat gespeichert, deshalb kann ich nicht einfach abbuchen. Beim Klick schicke ich ihm stattdessen die Rechnung mit Zahlungslink (dort w&auml;hlt er Lastschrift oder &Uuml;berweisung). Tipp: Im Kundenprofil kannst du ein Mandat anfordern (Knopf &bdquo;Mandat anfordern&ldquo;). Neue Online-K&auml;ufe mit Lastschrift speichern es k&uuml;nftig automatisch.</div>' : '') + '</div>' +
-        (F.zahlart !== 'bar' ? '<div class="kt-sec" id="ktFaellig"' + (F.zahlart === 'lastschrift' && !mandatFehlt ? ' hidden' : '') + '><div class="ad-field" style="margin:0"><label for="ktFael">Zahlung f&auml;llig am</label><input type="date" id="ktFael" min="' + plusDays(0) + '" value="' + esc(F.faellig) + '"></div></div>' : '') +
+        (F.zahlart !== 'bar' && F.zahlart !== 'qr' ? '<div class="kt-sec" id="ktFaellig"' + (F.zahlart === 'lastschrift' && !mandatFehlt ? ' hidden' : '') + '><div class="ad-field" style="margin:0"><label for="ktFael">Zahlung f&auml;llig am</label><input type="date" id="ktFael" min="' + plusDays(0) + '" value="' + esc(F.faellig) + '"></div></div>' : '') +
         '<details class="pf-d" style="margin-bottom:14px"><summary>Rechnung anpassen <span class="ad-meta" style="margin:0">optional</span></summary><div class="pf-in">' +
         '<div class="kt-two"><div class="ad-field"><label for="ktPreis">Preis pro Einheit (&euro;)</label><input type="number" id="ktPreis" min="0" step="0.01" placeholder="' + ((k.unitCents || 0) / 100) + '" value="' + esc(F.preis) + '"></div>' +
         '<div class="ad-field"><label for="ktBis">Gültig bis</label><input type="date" id="ktBis" value="' + esc(F.gueltig) + '"></div></div>' +
@@ -169,9 +182,9 @@
         '</div></details>' +
         '<label class="tm-check" style="margin-top:0"><input type="checkbox" id="ktMailOn"' + (F.mail ? ' checked' : '') + '> Kunden per Mail informieren</label>' +
         '<details class="pf-d" id="ktPrevBox"><summary>So sieht die Mail aus</summary><div class="pf-in"><div id="ktPrev" class="ad-meta">Wird beim &Ouml;ffnen geladen &hellip;</div></div></details>' +
-        '<div class="kt-steps"><h4>Das passiert beim Klick</h4><ol>' + schritte.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ol></div>' +
+        '<div class="kt-steps"><h4>Das passiert beim Klick</h4><ol>' + schritte().map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ol></div>' +
         '<div class="tm-msg" id="ktMsg"></div>' +
-        '<div class="kt-sticky"><button type="button" class="btn btn-blitz" id="ktGo"' + (!F.email || !F.name ? ' disabled' : '') + '>' + (mandatFehlt ? 'Karte ausstellen &amp; Rechnung mit Zahlungslink senden' : F.mail ? 'Karte ausstellen &amp; Rechnung senden' : 'Karte ausstellen (ohne Mail)') + '</button></div>';
+        '<div class="kt-sticky"><button type="button" class="btn btn-blitz" id="ktGo"' + (!F.email || !F.name ? ' disabled' : '') + '>' + (F.zahlart === 'qr' ? 'Karte ausstellen &amp; QR-Code zeigen' : mandatFehlt ? 'Karte ausstellen &amp; Rechnung mit Zahlungslink senden' : F.mail ? 'Karte ausstellen &amp; Rechnung senden' : 'Karte ausstellen (ohne Mail)') + '</button></div>';
       o.querySelector('.tm-box').innerHTML = '<div class="tm-head"><h2>Neue Karte ausstellen</h2><button type="button" class="ad-undo" id="ktZu">Schlie&szlig;en</button></div>' + body;
       verdrahten();
     }
@@ -190,7 +203,7 @@
       var z = o.querySelector('#ktZust'); if (z) F.zustimmung = z.checked;
     }
     function bodyFor(extra) {
-      var b = { name: F.name, email: F.email, card: F.card, zahlart: F.zahlart, faellig: F.zahlart === 'bar' ? '' : F.faellig, gueltig_bis: F.gueltig, mail: F.mail,
+      var b = { name: F.name, email: F.email, card: F.card, zahlart: F.zahlart, faellig: F.zahlart === 'bar' || F.zahlart === 'qr' ? '' : F.faellig, gueltig_bis: F.gueltig, mail: F.mail,
         zustimmung: F.zustimmung, zhd: F.zhd, beschreibung: F.besch, hinweis: F.hinweis };
       if (F.preis !== '' && !isNaN(Number(F.preis))) b.einheitspreis = Number(F.preis);
       if (extra) for (var k in extra) b[k] = extra[k];
@@ -202,7 +215,7 @@
       Array.prototype.forEach.call(o.querySelectorAll('[data-card]'), function (b) { b.onclick = function () { lesen(); F.card = b.getAttribute('data-card'); zeigen(); }; });
       Array.prototype.forEach.call(o.querySelectorAll('[data-zahl]'), function (b) { b.onclick = function () { lesen(); F.zahlart = b.getAttribute('data-zahl'); zeigen(); }; });
       ['ktName', 'ktMail', 'ktPreis', 'ktBis', 'ktFael', 'ktZhd', 'ktBesch', 'ktHinw'].forEach(function (id) {
-        var e = o.querySelector('#' + id); if (e) e.oninput = function () { lesen(); var go = o.querySelector('#ktGo'); if (go) go.disabled = !F.email || !F.name; };
+        var e = o.querySelector('#' + id); if (e) e.oninput = function () { lesen(); schritteAktualisieren(); var go = o.querySelector('#ktGo'); if (go) go.disabled = !F.email || !F.name; };
       });
       Array.prototype.forEach.call(o.querySelectorAll('#ktMailOn,#ktZust'), function (e) { e.onchange = function () { lesen(); zeigen(); }; });
       var mailEl = o.querySelector('#ktMail');
@@ -242,7 +255,7 @@
         A.api('karte/neu', { body: bodyFor(mandatFehlt ? { zahlungslink: true } : null) }).then(function (r) {
           busy = false; laden(true).catch(function () {});
           fertig && fertig(r);
-          erfolg(r);
+          if (r.qr && r.qr.url) qrAnzeigen(r); else erfolg(r);
         }).catch(function (e) {
           busy = false; go.disabled = false; go.innerHTML = 'Nochmal versuchen';
           if (e && e.message === 'abgemeldet') return;
@@ -268,6 +281,93 @@
       o.querySelector('#ktTermin').onclick = function () { zu(); if (window.FDTermine) window.FDTermine.eintragen({ code: r.code, art: 'karte', name: F.name, email: F.email }, function () { document.dispatchEvent(new CustomEvent('fd:neu')); }); };
     }
 
+    /* ---- Vor Ort bezahlen: QR-Code zeigen, auf die Zahlung warten ---- */
+    function qrSvg(url) {
+      if (typeof window.qrcode !== 'function') return '';
+      var q = window.qrcode(0, 'M'); q.addData(url); q.make();
+      return q.createSvgTag({ cellSize: 1, margin: 3, scalable: true });
+    }
+    function kopieren(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(text);
+      return new Promise(function (ok, no) {
+        var t = document.createElement('textarea'); t.value = text; t.style.position = 'fixed'; t.style.opacity = '0'; document.body.appendChild(t); t.select();
+        try { document.execCommand('copy') ? ok() : no(); } catch (e) { no(e); } document.body.removeChild(t);
+      });
+    }
+    function qrAnzeigen(r) {
+      var url = r.qr.url, id = r.qr.id, timer = null, aus = false, laeuft = false, ende = false, start = Date.now(), gesehen = null;
+      var vorname = String(F.name || '').trim().split(/\s+/)[0] || '';
+      var mailAn = r.qr.mail_nach_zahlung !== false;
+      var svg = qrSvg(url);
+      var box = o.querySelector('.tm-box');
+      box.innerHTML = '<div class="tm-head"><h2>Kunde scannt &amp; bezahlt</h2><button type="button" class="ad-undo" id="ktZu">Schlie&szlig;en</button></div>' +
+        '<div class="qr-wrap" id="qrWrap">' +
+        '<div class="qr-sum"><b>' + esc(r.label || '') + '</b> &middot; ' + eur(r.cents || 0) + '<small>' + esc(F.name) + '</small></div>' +
+        '<div class="qr-code" id="qrCode">' + (svg || '<div class="ad-empty">QR-Code konnte nicht erzeugt werden &ndash; nutze unten &bdquo;Link kopieren&ldquo;.</div>') + '</div>' +
+        '<div class="qr-state wait" id="qrState"><span class="qr-dot"></span><span id="qrStateT">Warte auf Zahlung &hellip;</span></div>' +
+        '<p class="qr-hint" id="qrHint">Mit der Handy-Kamera scannen &ndash; die Seite &ouml;ffnet sich, dann Apple&nbsp;Pay, Karte oder Lastschrift w&auml;hlen. ' + (mailAn ? 'Die Mail mit dem Code geht automatisch raus, sobald bezahlt wird.' : 'Es geht keine Mail raus, du gibst den Code selbst weiter.') + '</p>' +
+        '</div>' +
+        '<div class="qr-share" id="qrShare"><div class="kt-lab">Kunde nicht vor Ort? Link schicken</div><div class="tm-actions" style="margin:0">' +
+        '<button type="button" class="ad-mini" id="qrCopy">Link kopieren</button>' +
+        '<button type="button" class="ad-mini" id="qrWa">Per WhatsApp</button>' +
+        '<button type="button" class="ad-mini" id="qrMail">Per Mail an ' + esc(F.email) + '</button></div>' +
+        '<p class="ad-meta" style="margin:10px 0 0">Schlie&szlig;t du das Fenster, bleibt die Rechnung unter Mehr &rarr; Rechnungen offen. Sobald sie bezahlt wird, geht die Mail trotzdem raus.</p></div>' +
+        '<div class="tm-actions" id="qrDone" style="margin-top:14px" hidden></div>';
+
+      function stop() { aus = true; if (timer) clearTimeout(timer); }
+      var obs = null;
+      box.querySelector('#ktZu').onclick = function () { stop(); zu(); };
+      overlay.addEventListener('click', function (e) { if (e.target === overlay) stop(); });
+
+      box.querySelector('#qrCopy').onclick = function () { kopieren(url).then(function () { A.note('Link kopiert.'); }, function () { A.note('Kopieren nicht möglich – bitte den Link von Hand markieren.', true); }); };
+      box.querySelector('#qrWa').onclick = function () {
+        var t = 'Hallo' + (vorname ? ' ' + vorname : '') + ', hier ist der Link zur Zahlung deiner ' + (r.label || 'Karte') + ' (' + eur(r.cents || 0) + '): ' + url;
+        window.open('https://wa.me/?text=' + encodeURIComponent(t), '_blank', 'noopener');
+      };
+      box.querySelector('#qrMail').onclick = function () {
+        var b = this; b.disabled = true; b.textContent = 'Sende …';
+        A.api('rechnung/link-senden', { body: { id: id } }).then(function () { b.textContent = 'Mail gesendet ✓'; A.note('Zahlungslink per Mail gesendet.'); })
+          .catch(function (e) { b.disabled = false; b.textContent = 'Per Mail an ' + F.email; fail(e); });
+      };
+
+      function fertigAnzeige(d) {
+        var st = box.querySelector('#qrState'), tx = box.querySelector('#qrStateT');
+        var proc = d.status === 'processing';
+        st.className = 'qr-state ok'; box.querySelector('#qrWrap').classList.add('bezahlt');
+        tx.innerHTML = proc ? '&#10003; Lastschrift ausgel&ouml;st' : '&#10003; Bezahlt';
+        var hint = box.querySelector('#qrHint');
+        var mailText = !mailAn ? 'Keine Mail verschickt.' : d.mail_fehler ? 'Die Mail ging nicht raus – bitte schick dem Kunden den Code selbst.' : 'Mail mit Code und Rechnung an ' + esc(F.email) + ' ist raus.';
+        hint.innerHTML = (proc ? 'Der Kunde hat die Lastschrift bestätigt, das Geld ist in ein paar Tagen da. Die Karte ist aktiv. ' : 'Danke, die Zahlung ist angekommen. ') + mailText +
+          '<br><span class="qr-codeline">Code: <b>' + esc(r.code) + '</b></span>';
+        box.querySelector('#qrShare').hidden = true;
+        var qc = box.querySelector('#qrCode'); qc.classList.add('done'); qc.innerHTML = '<div class="qr-tick">&#10003;</div>';
+        var dn = box.querySelector('#qrDone'); dn.hidden = false;
+        dn.innerHTML = '<button type="button" class="btn btn-blitz" id="ktTermin">Ersten Termin eintragen</button><button type="button" class="ad-mini" id="ktFertig">Fertig</button>';
+        dn.querySelector('#ktFertig').onclick = function () { zu(); };
+        dn.querySelector('#ktTermin').onclick = function () { zu(); if (window.FDTermine) window.FDTermine.eintragen({ code: r.code, art: 'karte', name: F.name, email: F.email }, function () { document.dispatchEvent(new CustomEvent('fd:neu')); }); };
+        laden(true).catch(function () {});
+        document.dispatchEvent(new CustomEvent('fd:neu'));
+      }
+      function pruefen() {
+        if (aus || ende || !document.body.contains(box)) return;
+        if (Date.now() - start > 45 * 60 * 1000) return;
+        if (laeuft) { timer = setTimeout(pruefen, 2500); return; }
+        laeuft = true;
+        A.api('rechnung/status?id=' + encodeURIComponent(id)).then(function (d) {
+          laeuft = false;
+          if (aus) return;
+          if (d.status === 'paid' || d.status === 'processing') { ende = true; fertigAnzeige(d); return; }
+          if (d.status === 'void') { ende = true; var tx = box.querySelector('#qrStateT'); if (tx) tx.textContent = 'Rechnung wurde storniert.'; return; }
+          timer = setTimeout(pruefen, 2500);
+        }).catch(function (e) {
+          laeuft = false;
+          if (e && e.message === 'abgemeldet') return;
+          timer = setTimeout(pruefen, 4000);
+        });
+      }
+      timer = setTimeout(pruefen, 2500);
+    }
+
     optionen().then(zeigen).catch(function (e) { zu(); fail(e); });
   }
 
@@ -276,7 +376,7 @@
     var cur = p.zahlart || '';
     var o = fenster('Wie bezahlt ' + (p.name || 'der Kunde') + '?',
       '<p class="ad-hint">Das merke ich mir f&uuml;r jede weitere Karte. Du kannst es beim Ausstellen immer noch &auml;ndern.</p><div class="kt-pay">' +
-      ['lastschrift', 'ueberweisung', 'bar'].map(function (z) {
+      ['qr', 'lastschrift', 'ueberweisung', 'bar'].map(function (z) {
         return '<button type="button" class="kt-o' + (z === cur ? ' on' : '') + '" data-z="' + z + '"><span class="ic">' + ZAHL[z].ic + '</span><div><b>' + ZAHL[z].t + '</b><span>' + ZAHL[z].d + '</span></div></button>';
       }).join('') + '</div>');
     Array.prototype.forEach.call(o.querySelectorAll('[data-z]'), function (b) {
@@ -290,7 +390,7 @@
   /* ---------- SEPA-Mandat per Link anfordern ---------- */
   function mandatAnfordern(p, fertig) {
     var o = fenster('Lastschrift-Mandat anfordern',
-      '<p class="ad-hint">' + esc(p.name || p.email) + ' bekommt eine Mail mit einem sicheren Stripe-Link. Dort gibt sie einmal IBAN und Namen ein und best&auml;tigt das Mandat &ndash; das dauert etwa 30 Sekunden. Danach kannst du jede weitere Karte mit einem Klick abbuchen.</p>' +
+      '<p class="ad-hint">' + esc(p.name || p.email) + ' bekommt eine Mail mit einem sicheren Stripe-Link. Dort gibt der Kunde einmal IBAN und Namen ein und best&auml;tigt das Mandat &ndash; das dauert etwa 30 Sekunden. Danach kannst du jede weitere Karte mit einem Klick abbuchen.</p>' +
       '<div class="kt-sec"><div class="ad-meta">Mail geht an: <b>' + esc(p.email) + '</b></div></div>' +
       '<div class="kt-sticky"><button type="button" class="btn btn-blitz" id="ktMandat">Mail mit Mandat-Link senden</button></div>');
     o.querySelector('#ktMandat').onclick = function () {
