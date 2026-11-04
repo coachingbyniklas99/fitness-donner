@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-title" content="FD Verwaltung">
 <meta name="theme-color" content="#15171C">
 <link rel="stylesheet" href="style.css?v=23">
-<link rel="stylesheet" href="admin.css?v=11">
+<link rel="stylesheet" href="admin.css?v=13">
 </head>
 <body class="ad-body">
 
@@ -46,7 +46,7 @@
 
   <nav class="ad-tabs" id="tabs" aria-label="Bereiche">
     <button type="button" class="ad-tab on" data-tab="heute"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><span>Heute</span></button>
-    <button type="button" class="ad-tab" data-tab="termine"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span>Kalender</span></button>
+    <button type="button" class="ad-tab" data-tab="termine"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span>Termine</span></button>
     <button type="button" class="ad-tab" data-tab="kunden"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 20c.8-4 3.7-6 7.5-6s6.7 2 7.5 6"/></svg><span>Kunden</span></button>
     <button type="button" class="ad-tab" data-tab="kurse"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg><span>Kurse</span></button>
     <button type="button" class="ad-tab" data-tab="mehr"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5.5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18.5" cy="12" r="1.6"/></svg><span>Mehr</span></button>
@@ -78,13 +78,15 @@
       <div id="heuteTodo" class="ad-list"></div>
     </section>
 
-    <!-- KALENDER -->
+    <!-- TERMINE -->
     <section class="ad-panel" data-panel="termine" hidden>
       <div class="hd-quick hd-quick-2">
         <button type="button" class="hd-tile" id="terminNeu"><b>+</b><span>Termin eintragen</span></button>
         <button type="button" class="hd-tile" id="tileBlock2"><b>&#9208;</b><span>Zeit blockieren</span></button>
       </div>
       <div id="reservedHint" class="ad-resv-hint" hidden></div>
+      <p class="ad-hint" style="margin-bottom:12px">Tippe einen Termin an, um ihn zu verschieben, abzusagen oder den Kunden zu öffnen. Die farbigen Felder zeigen, <b>die wievielte Einheit</b> der Karte es ist.</p>
+      <div id="legendBox"></div>
       <div id="bookings"></div>
     </section>
 
@@ -101,7 +103,9 @@
     <!-- MEHR -->
     <section class="ad-panel" data-panel="mehr" hidden>
       <div class="mh-group">
-        <button type="button" class="mh-row" data-go="karten"><span class="mh-ico">&#127915;</span><span class="mh-txt"><b>Karten &amp; Gutscheine</b><small>Ausstellen, suchen, Einheiten korrigieren</small></span><span class="hd-chev">&rsaquo;</span></button>
+        <button type="button" class="mh-row" data-go="rechnungen"><span class="mh-ico">&euro;</span><span class="mh-txt"><b>Rechnungen</b><small id="mhRechSub">Offen und bezahlt, als bezahlt markieren</small></span><span class="hd-chev">&rsaquo;</span></button>
+        <button type="button" class="mh-row" data-go="vorlage"><span class="mh-ico">&#128196;</span><span class="mh-txt"><b>Rechnungsvorlage &amp; Mailtexte</b><small>Rechnungstext, Zahlungsfrist, Mail an neue Kartenkunden</small></span><span class="hd-chev">&rsaquo;</span></button>
+        <button type="button" class="mh-row" data-go="karten"><span class="mh-ico">&#127915;</span><span class="mh-txt"><b>Karten &amp; Gutscheine</b><small>Alle Codes suchen, Einheiten korrigieren, Wertgutschein ausstellen</small></span><span class="hd-chev">&rsaquo;</span></button>
         <button type="button" class="mh-row" data-go="blockieren"><span class="mh-ico">&#9208;</span><span class="mh-txt"><b>Zeit blockieren</b><small>Urlaub, Fortbildung, Termin direkt vergeben</small></span><span class="hd-chev">&rsaquo;</span></button>
         <button type="button" class="mh-row" data-go="reserviert"><span class="mh-ico">&#9203;</span><span class="mh-txt"><b>Offene Zahlungen</b><small>Termine, bei denen gerade jemand bezahlt</small></span><span class="hd-chev">&rsaquo;</span></button>
       </div>
@@ -114,6 +118,12 @@
         <button type="button" class="mh-row mh-out" id="logout"><span class="mh-ico">&#10162;</span><span class="mh-txt"><b>Abmelden</b></span></button>
       </div>
     </section>
+
+    <!-- Unterseite: Rechnungen (admin-karte.js) -->
+    <section class="ad-panel" data-panel="rechnungen" hidden><div id="rechApp"></div></section>
+
+    <!-- Unterseite: Rechnungsvorlage (admin-karte.js) -->
+    <section class="ad-panel" data-panel="vorlage" hidden><div id="vorlageApp"></div></section>
 
     <!-- Unterseite: Zeit blockieren -->
     <section class="ad-panel" data-panel="blockieren" hidden>
@@ -337,15 +347,17 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     el('app').hidden = false;
     go('heute');
     load();
+    if (window.FDKarte) window.FDKarte.laden().catch(function () {});
+    rechnungenZaehlen();
     if (window.FDPush) window.FDPush.init();
     if (window.FDKurse) window.FDKurse.open();   // lädt im Hintergrund, damit „Heute“ offene Erstattungen zeigen kann
   }
 
   /* ---------- Bereiche und Unterseiten ---------- */
-  var TITLES = { heute: 'Heute', termine: 'Kalender', kunden: 'Kunden', kurse: 'Kurse', mehr: 'Mehr',
-    blockieren: 'Zeit blockieren', reserviert: 'In Zahlung', karten: 'Karten', preise: 'Preise',
+  var TITLES = { heute: 'Heute', termine: 'Termine', kunden: 'Kunden', kurse: 'Kurse', mehr: 'Mehr',
+    blockieren: 'Zeit blockieren', reserviert: 'In Zahlung', karten: 'Karten & Gutscheine', preise: 'Preise', vorlage: 'Rechnung & Mails', rechnungen: 'Rechnungen',
     erinnerung: 'Erinnerung', mitteilungen: 'Mitteilungen' };
-  var PARENT = { blockieren: 'termine', reserviert: 'termine', karten: 'mehr', preise: 'mehr', erinnerung: 'mehr', mitteilungen: 'mehr' };
+  var PARENT = { blockieren: 'termine', reserviert: 'termine', karten: 'mehr', vorlage: 'mehr', rechnungen: 'mehr', preise: 'mehr', erinnerung: 'mehr', mitteilungen: 'mehr' };
   var current = 'heute', backTo = '';
 
   function go(name, from) {
@@ -368,11 +380,14 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     if (name === 'kunden' && window.FDKunden) window.FDKunden.open();
     if (name === 'kurse' && window.FDKurse) window.FDKurse.open(true);
     if (name === 'erinnerung' && window.FDWiedervorlage) window.FDWiedervorlage.open();
+    if (name === 'rechnungen' && window.FDKarte) window.FDKarte.rechnungen(el('rechApp'));
+    if (name === 'vorlage' && window.FDKarte) window.FDKarte.vorlage(el('vorlageApp'));
     window.scrollTo(0, 0);
   }
   window.FD_ADMIN.go = go;
   window.FD_ADMIN.absagen = function (b, fertig) { openAbsage(b, fertig, false); };
   window.FD_ADMIN.neueKarte = function (v, from) {
+    if (window.FDKarte) { window.FDKarte.ausstellen(v || {}, function () { load(); }); return; }
     go('karten', from || '');
     el('issueBox').hidden = false;
     el('issueName').value = (v && v.name) || '';
@@ -403,7 +418,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
   function neuerTermin() { if (window.FDTermine) window.FDTermine.eintragen({}, function () { load(); }); }
   el('terminNeu').onclick = neuerTermin;
   el('tileTermin').onclick = neuerTermin;
-  el('tileKarte').onclick = function () { go('karten'); el('issueBox').hidden = false; el('issueName').focus(); };
+  el('tileKarte').onclick = function () { window.FD_ADMIN.neueKarte({}); };
   el('tileBlock').onclick = function () { go('blockieren'); };
   el('tileBlock2').onclick = function () { go('blockieren'); };
   el('refresh').onclick = function () {
@@ -422,16 +437,17 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     return dshort(iso);
   }
   function confirmed() {
-    return (state.data ? state.data.bookings : []).filter(function (b) { return b.status === 'confirmed'; })
+    var l = (state.data ? state.data.bookings : []).filter(function (b) { return b.status === 'confirmed'; })
       .sort(function (a, b) { return (a.date + a.start) < (b.date + b.start) ? -1 : 1; });
+    if (window.FDKarte) window.FDKarte.annotate(l);
+    return l;
   }
   function bKey(b) { return b.date + '|' + b.slot_id; }
   function bRow(b, mitTag) {
-    var art = b.card_code ? 'Karte' : b.voucher_code ? 'Gutschein' : '';
-    return '<button type="button" class="hd-row" data-bk="' + esc(bKey(b)) + '">'
+    return '<button type="button" class="hd-row" data-bk="' + esc(bKey(b)) + '" style="align-items:flex-start">'
       + '<span class="hd-time">' + esc(b.start) + '<small>' + esc(b.end) + '</small></span>'
-      + '<span class="hd-main"><b>' + esc(b.name) + '</b><span>' + esc(b.label) + ' &middot; ' + esc(b.city) + (art ? ' &middot; mit ' + art : '') + '</span></span>'
-      + '<span class="hd-chev">&rsaquo;</span></button>';
+      + '<span class="hd-main"><b>' + esc(b.name) + '</b><span>' + esc(b.label) + ' &middot; ' + esc(b.city) + '</span>' + (window.FDKarte ? window.FDKarte.chip(b) : '') + '</span>'
+      + '<span class="hd-chev" style="align-self:center">&rsaquo;</span></button>';
   }
   function wireRows(box) {
     Array.prototype.forEach.call(box.querySelectorAll('[data-bk]'), function (r) {
@@ -443,13 +459,23 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
   }
 
   /* ---------- Heute ---------- */
-  var pushState = '', erstattungenOffen = 0;
+  var pushState = '', erstattungenOffen = 0, rechOffen = 0;
   document.addEventListener('fd:push', function (e) {
     pushState = e.detail || '';
     var sub = el('mhPushSub');
     if (sub) sub.textContent = pushState === 'on' ? 'Ist an' : 'Meldung bei neuer Buchung';
     if (current === 'heute') renderHeute();
   });
+  document.addEventListener('fd:karten', function () { if (state.data) { renderBookings(); renderHeute(); } });
+  document.addEventListener('fd:neu', function () { load(); });
+  function rechnungenZaehlen() {
+    api('rechnung/liste').then(function (d) {
+      rechOffen = (d.rechnungen || []).filter(function (x) { return x.status !== 'paid'; }).length;
+      var sub = el('mhRechSub'); if (sub) sub.textContent = rechOffen ? rechOffen + ' offen' : 'Alles bezahlt';
+      if (current === 'heute') renderHeute();
+    }).catch(function () {});
+  }
+  window.FD_ADMIN.rechnungenZaehlen = rechnungenZaehlen;
   document.addEventListener('fd:kurse', function (e) {
     erstattungenOffen = (e.detail && e.detail.erstattungen) || 0;
     if (current === 'heute') renderHeute();
@@ -474,6 +500,10 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     var pend = state.data.bookings.filter(function (b) { return b.status === 'pending'; }).length;
     var todo = [];
     if (erstattungenOffen) todo.push('<button type="button" class="mh-row" data-todo="kurse"><span class="mh-ico">&euro;</span><span class="mh-txt"><b>' + erstattungenOffen + (erstattungenOffen === 1 ? ' Erstattung' : ' Erstattungen') + ' offen</b><small>Nach Kursabsagen &ndash; im Bereich Kurse ausf&uuml;hren</small></span><span class="hd-chev">&rsaquo;</span></button>');
+    all.filter(function (b) { return b._k && b._k.last; }).slice(0, 3).forEach(function (b) {
+      todo.push('<button type="button" class="mh-row" data-neuekarte="' + esc(b._k.email || b.email) + '|' + esc(b._k.name || b.name) + '"><span class="mh-ico">&#127915;</span><span class="mh-txt"><b>Letzte Einheit: ' + esc(b.name) + ' &middot; ' + esc(dshort(b.date)) + '</b><small>Die Karte ist danach aufgebraucht &ndash; neue Karte ausstellen?</small></span><span class="hd-chev">&rsaquo;</span></button>');
+    });
+    if (rechOffen) todo.push('<button type="button" class="mh-row" data-todo="rechnungen"><span class="mh-ico">&euro;</span><span class="mh-txt"><b>' + rechOffen + (rechOffen === 1 ? ' Rechnung' : ' Rechnungen') + ' offen</b><small>Noch nicht bezahlt &ndash; prüfen und als bezahlt markieren</small></span><span class="hd-chev">&rsaquo;</span></button>');
     if (pend) todo.push('<button type="button" class="mh-row" data-todo="reserviert"><span class="mh-ico">&#9203;</span><span class="mh-txt"><b>' + pend + (pend === 1 ? ' Termin' : ' Termine') + ' in Zahlung</b><small>Gerade reserviert &ndash; werden nach sp&auml;testens 40 Minuten von selbst frei</small></span><span class="hd-chev">&rsaquo;</span></button>');
     el('heuteTodo').innerHTML = todo.length ? '<div class="mh-group">' + todo.join('') + '</div>'
       : '<div class="ad-empty">Alles erledigt. &#10003;</div>';
@@ -485,6 +515,9 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
 
     wireRows(el('heuteList')); wireRows(el('heuteNext'));
     Array.prototype.forEach.call(el('heuteTodo').querySelectorAll('[data-todo]'), function (r) { r.onclick = function () { go(r.getAttribute('data-todo')); }; });
+    Array.prototype.forEach.call(el('heuteTodo').querySelectorAll('[data-neuekarte]'), function (r) {
+      r.onclick = function () { var p = r.getAttribute('data-neuekarte').split('|'); window.FD_ADMIN.neueKarte({ email: p[0], name: p[1] }); };
+    });
     Array.prototype.forEach.call(el('heuteSetup').querySelectorAll('[data-todo]'), function (r) { r.onclick = function () { go(r.getAttribute('data-todo')); }; });
   }
 
@@ -492,6 +525,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
   function renderBookings() {
     var box = el('bookings');
     var list = confirmed();
+    el('legendBox').innerHTML = window.FDKarte ? window.FDKarte.legend() : '';
     if (!list.length) {
       box.innerHTML = '<div class="ad-empty">Keine kommenden Termine. Neue entstehen, wenn jemand auf der Website bucht &ndash; oder du tr&auml;gst einen ein.</div>';
       return;
@@ -535,12 +569,17 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     var s = sheet(dshort(b.date) + ' · ' + b.start + '–' + b.end,
       '<div class="ad-who">' + esc(b.name) + '</div>'
       + '<div class="ad-meta">' + esc(b.label) + ' &middot; ' + esc(b.city) + '</div>'
-      + (art ? '<div class="ad-meta">' + esc(art) + '</div>' : '')
+      + (window.FDKarte ? window.FDKarte.chip(b) : '')
+      + (art ? '<div class="ad-meta" style="margin-top:8px">' + esc(art) + '</div>' : '')
       + (b.phone ? '<a class="ad-link" href="tel:' + esc(b.phone.replace(/\s/g, '')) + '">' + esc(b.phone) + '</a>' : '')
       + '<a class="ad-link" href="mailto:' + esc(b.email) + '">' + esc(b.email) + '</a>'
       + (b.note ? '<div class="ad-note">' + esc(b.note) + '</div>' : '')
       + '<div class="tm-actions" style="margin-top:20px"><button type="button" class="btn btn-blitz" id="shMove">Verschieben</button>'
-      + '<button type="button" class="ad-mini ak-red" id="shCancel">Absagen &hellip;</button></div>');
+      + '<button type="button" class="ad-mini ak-red" id="shCancel">Absagen &hellip;</button></div>'
+      + '<div class="tm-actions" style="margin-top:12px"><button type="button" class="ad-mini" id="shProfil">Kundenprofil &ouml;ffnen</button>'
+      + (b._k && b._k.last ? '<button type="button" class="ad-mini" id="shNeu">Neue Karte ausstellen</button>' : '') + '</div>');
+    s.querySelector('#shProfil').onclick = function () { closeSheet(); go('kunden'); if (window.FDKunden) window.FDKunden.oeffnen(b.email); };
+    if (s.querySelector('#shNeu')) s.querySelector('#shNeu').onclick = function () { closeSheet(); window.FD_ADMIN.neueKarte({ email: b.email, name: b.name }); };
     s.querySelector('#shMove').onclick = function () {
       closeSheet();
       if (window.FDTermine) window.FDTermine.verschieben(b, function () { load(); });
@@ -856,7 +895,8 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
 <script src="admin-kurse.js?v=4"></script>
 <script src="admin-wiedervorlage.js?v=3"></script>
 <script src="admin-termine.js?v=1"></script>
-<script src="admin-kunden.js?v=4"></script>
+<script src="admin-karte.js?v=3"></script>
+<script src="admin-kunden.js?v=6"></script>
 <script src="admin-push.js?v=3"></script>
 </body>
 </html>
