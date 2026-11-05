@@ -1,0 +1,27 @@
+/* Kanal-Kachel: wiederverwendbarer Hinweis auf den WhatsApp-Kanal (Prefix kt-) */
+.kt-sec{padding:44px 0;background:var(--bg)}
+.kt{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:18px 28px;align-items:center;max-width:1000px;margin:0 auto;padding:30px 34px;background:var(--panel);border:1px solid var(--line);border-left:4px solid #25D366;overflow:hidden}
+.kt::before{content:"";position:absolute;right:-70px;top:-70px;width:220px;height:220px;border-radius:50%;background:radial-gradient(closest-side,rgba(37,211,102,.16),transparent);pointer-events:none}
+.kt-ico{width:64px;height:64px;border-radius:50%;background:#25D366;color:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.kt-ico svg{width:34px;height:34px;display:block}
+.kt-txt{position:relative;min-width:0}
+.kt-eye{font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--blitz);margin-bottom:6px}
+.kt-h{font-family:'Anton',sans-serif;font-weight:400;font-size:clamp(24px,3vw,32px);line-height:1.1;letter-spacing:.01em;text-transform:uppercase;color:var(--bone);margin:0 0 8px}
+.kt-s{margin:0;color:var(--muted);font-size:15px;line-height:1.55;max-width:560px}
+.kt-facts{display:flex;flex-wrap:wrap;gap:6px 18px;margin:12px 0 0;padding:0;list-style:none;font-size:13px;color:var(--muted)}
+.kt-facts li::before{content:"\2713";color:var(--blitz);margin-right:7px;font-weight:700}
+.kt-go{position:relative;display:flex;flex-direction:column;align-items:stretch;gap:8px;text-align:center}
+.kt-go .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;white-space:nowrap}
+.kt-go .btn svg{width:18px;height:18px;display:block}
+.kt-go small{font-size:12px;color:var(--muted)}
+.kt-msg{position:relative;margin-top:16px;max-width:430px;padding:10px 14px 8px;background:#1F3A2C;color:#E8F2EC;border-radius:0 12px 12px 12px;font-size:14px;line-height:1.45}
+.kt-msg small{display:block;margin-top:4px;font-size:11px;opacity:.6;text-align:right}
+.kt-msg-cap{display:block;margin-top:14px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.kt-in{padding:0 0 4px;margin-top:26px}
+@media(max-width:760px){
+  .kt{grid-template-columns:auto minmax(0,1fr);padding:24px 20px;gap:16px 16px}
+  .kt-ico{width:52px;height:52px}.kt-ico svg{width:28px;height:28px}
+  .kt-go{grid-column:1/-1}
+  .kt-msg,.kt-msg-cap{display:none}
+}
+@media print{.kt-sec,.kt-in{display:none}}
