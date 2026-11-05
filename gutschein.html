@@ -23,6 +23,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="style.css?v=38">
 <link rel="stylesheet" href="gutschein.css?v=1">
+<link rel="stylesheet" href="gutschein-seite.css?v=1">
 </head>
 <body>
 <div class="newsbar"><a href="https://whatsapp.com/channel/0029Vb9Sacj9xVJgW1Vm7O2Z" target="_blank" rel="noopener"><svg class="wa-ico" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.9L2 22l5.27-1.38A9.9 9.9 0 1 0 12.04 2Zm0 1.8a8.1 8.1 0 1 1-4.13 15.07l-.3-.18-3.13.82.84-3.05-.2-.31A8.1 8.1 0 0 1 12.04 3.8Zm-3.1 4.1c-.17 0-.45.06-.69.32-.23.26-.9.88-.9 2.15s.92 2.5 1.05 2.67c.13.17 1.8 2.86 4.45 3.9 2.2.87 2.65.7 3.13.65.48-.04 1.54-.63 1.76-1.24.22-.6.22-1.13.15-1.24-.06-.1-.23-.17-.49-.3-.26-.13-1.54-.76-1.78-.85-.24-.09-.41-.13-.58.13-.17.26-.67.85-.82 1.02-.15.17-.3.2-.56.07-.26-.13-1.1-.4-2.09-1.29-.77-.69-1.3-1.54-1.45-1.8-.15-.26-.02-.4.11-.53.12-.12.26-.3.39-.46.13-.15.17-.26.26-.43.09-.17.04-.33-.02-.46-.07-.13-.58-1.4-.8-1.92-.2-.5-.42-.43-.58-.44h-.5Z"/></svg><b>Neu</b><span class="nb-long">Kurse in Solingen: Termine &amp; Early-Bird zuerst im WhatsApp-Kanal</span><span class="nb-short">Kurse in Solingen: Early-Bird zuerst im WhatsApp-Kanal</span><span class="newsbar-go">Kanal beitreten &rarr;</span></a></div>
@@ -71,182 +72,175 @@
   </div>
 </nav>
 
-<header class="page-hero">
+<!-- Weihnachtsstreifen: saisonal, im Januar einfach diese Zeile entfernen -->
+<div class="gs-strip"><b>Zu Weihnachten?</b><span>Der Gutschein kommt sofort per Mail &ndash; oder erst an dem Tag, den du aussuchst.</span></div>
+
+<header class="page-hero fade-hero">
+  <figure class="fade-img" style="--pos:62% 32%;--posm:55% 30%"><img src="trainer-highfive.webp" width="1200" height="1220" alt="Abklatschen nach dem Training auf dem Au&szlig;engel&auml;nde" fetchpriority="high"></figure>
   <div class="wrap">
     <div class="eyebrow">Gutscheine</div>
     <h1>Verschenk keine<br>Socken.</h1>
     <p class="hero-sub">Ein Gutschein f&uuml;r Personal Training &ndash; Betrag frei w&auml;hlbar, digital und sofort im Postfach. Einl&ouml;sbar f&uuml;r Training vor Ort in Solingen, Haan, K&ouml;ln und Neuss oder f&uuml;r Online-Coaching.</p>
+    <div class="gs-pills"><span><b>Sofort</b> per E-Mail</span><span><b>3 Jahre</b> g&uuml;ltig</span><span>Keine Versandkosten</span></div>
   </div>
 </header>
 
-<section style="padding-top:52px">
+<section class="gs-cfg-sec">
   <div class="wrap">
-    <form class="gs-form" id="gsForm" novalidate>
+    <form class="gs-cfg" id="gsForm" novalidate>
 
-      <div id="gsError" class="gs-error" hidden></div>
+      <div class="gs-col-f">
+        <div id="gsError" class="gs-error" hidden></div>
 
-      <!-- Betrag -->
-      <h2>Betrag w&auml;hlen</h2>
-      <p class="gs-sub">Frei w&auml;hlbar zwischen 20 &euro; und 1.000 &euro;. Der Gutschein ist auf jedes Angebot anrechenbar &ndash; Training vor Ort, Hyrox-Vorbereitung oder Online-Coaching.</p>
-
-      <div class="gs-chips" id="gsChips">
-        <button type="button" class="gs-chip" data-v="50">50 &euro;</button>
-        <button type="button" class="gs-chip on" data-v="100">100 &euro;</button>
-        <button type="button" class="gs-chip" data-v="150">150 &euro;</button>
-        <button type="button" class="gs-chip" data-v="250">250 &euro;</button>
-      </div>
-
-      <div class="gs-field" style="max-width:320px">
-        <label for="amt">Eigener Betrag</label>
-        <div class="gs-input-wrap">
-          <input id="amt" name="amount" type="text" inputmode="numeric" autocomplete="off" value="100" aria-describedby="amtHint">
-          <span class="cur">&euro;</span>
+        <div class="gs-blk">
+          <div class="gs-bh"><span class="gs-no">1</span><h2>Wof&uuml;r schenkst du?</h2></div>
+          <p class="gs-sub">W&auml;hle einen Anlass &ndash; die Nachricht auf dem Gutschein f&uuml;llt sich von allein und ist frei &auml;nderbar.</p>
+          <div class="gs-opts gs-occ" id="gsOcc">
+            <button type="button" class="gs-opt" data-msg="Alles Gute zum Geburtstag! Zeit, dass wir zusammen schwitzen."><b>Geburtstag</b><span>Zeit zum Schwitzen</span></button>
+            <button type="button" class="gs-opt" data-msg="Frohe Weihnachten! Starte st&auml;rker ins neue Jahr."><b>Weihnachten</b><span>St&auml;rker ins neue Jahr</span></button>
+            <button type="button" class="gs-opt" data-msg="Danke f&uuml;r alles. Jetzt bist du mal dran."><b>Danke sagen</b><span>Jetzt bist du dran</span></button>
+            <button type="button" class="gs-opt" data-msg="Weil du dir eine Stunde nur f&uuml;r dich verdient hast."><b>Einfach so</b><span>Weil du es verdient hast</span></button>
+          </div>
         </div>
-        <div class="small" id="amtHint">Ganze Euro-Betr&auml;ge von 20 bis 1.000</div>
-      </div>
 
-      <!-- Personalisierung -->
-      <h2 style="margin-top:44px">Gutschein personalisieren</h2>
-      <p class="gs-sub">Nur Name und E-Mail sind Pflicht &ndash; der Rest macht den Gutschein pers&ouml;nlicher.</p>
+        <div class="gs-blk">
+          <div class="gs-bh"><span class="gs-no">2</span><h2>Wie viel soll es sein?</h2></div>
+          <p class="gs-sub">Frei w&auml;hlbar von 20 bis 1.000&nbsp;&euro;. Anrechenbar auf jedes Angebot &ndash; Training vor Ort, Hyrox-Vorbereitung oder Online-Coaching.</p>
+          <div class="gs-opts gs-amts" id="gsChips">
+            <button type="button" class="gs-opt gs-chip" data-v="29"><b>29&nbsp;&euro;</b><span>Ein Probetraining</span></button>
+            <button type="button" class="gs-opt gs-chip on" data-v="119"><b>119&nbsp;&euro;</b><span>Eine Einzelstunde</span></button>
+            <button type="button" class="gs-opt gs-chip" data-v="436"><b>436&nbsp;&euro;</b><span>So viel kostet die 4er-Karte</span></button>
+            <button type="button" class="gs-opt gs-chip" data-v="792"><b>792&nbsp;&euro;</b><span>So viel kostet die 8er-Karte</span></button>
+          </div>
+          <div class="gs-field" style="max-width:320px;margin-top:18px">
+            <label for="amt">Oder eigener Betrag</label>
+            <div class="gs-input-wrap">
+              <input id="amt" name="amount" type="text" inputmode="numeric" autocomplete="off" value="119" aria-describedby="amtHint">
+              <span class="cur">&euro;</span>
+            </div>
+            <div class="small" id="amtHint">Ganze Euro-Betr&auml;ge von 20 bis 1.000</div>
+          </div>
+        </div>
 
-      <div class="gs-field">
-        <label>Wohin soll der Gutschein?</label>
-        <div class="gs-toggle" id="gsMode">
-          <button type="button" class="on" data-mode="buyer">An mich zum Verschenken</button>
-          <button type="button" data-mode="gift">Direkt an die beschenkte Person</button>
+        <div class="gs-blk">
+          <div class="gs-bh"><span class="gs-no">3</span><h2>Pers&ouml;nliche Note</h2></div>
+          <p class="gs-sub">Du siehst rechts sofort, wie der Gutschein aussieht. Nur Name und E-Mail sind Pflicht.</p>
+          <div class="gs-row">
+            <div class="gs-field">
+              <label for="recipientName">Name der beschenkten Person</label>
+              <input id="recipientName" type="text" placeholder="Lisa">
+            </div>
+            <div class="gs-field">
+              <label for="buyerName">Dein Name <span class="req">*</span></label>
+              <input id="buyerName" type="text" autocomplete="name" placeholder="Max Mustermann" required>
+            </div>
+          </div>
+          <div class="gs-field">
+            <label for="message">Nachricht auf dem Gutschein</label>
+            <textarea id="message" maxlength="200" placeholder="Alles Gute zum Geburtstag! Zeit, dass wir zusammen schwitzen."></textarea>
+            <div class="small"><span id="msgCount">0</span>/200 Zeichen</div>
+          </div>
+        </div>
+
+        <div class="gs-blk" style="border-bottom:0;padding-bottom:0">
+          <div class="gs-bh"><span class="gs-no">4</span><h2>Wohin soll er?</h2></div>
+          <p class="gs-sub">Gutschein und Rechnung gehen immer an deine E-Mail-Adresse.</p>
+          <div class="gs-toggle" id="gsMode">
+            <button type="button" class="on" data-mode="buyer">An mich &ndash; ich &uuml;berreiche selbst</button>
+            <button type="button" data-mode="gift">Direkt an die beschenkte Person</button>
+          </div>
+          <div class="gs-field" style="margin-top:18px">
+            <label for="buyerEmail">Deine E-Mail <span class="req">*</span></label>
+            <input id="buyerEmail" type="email" autocomplete="email" placeholder="max@beispiel.de" required>
+            <div class="small">Hierhin gehen Gutschein und Rechnung.</div>
+          </div>
+          <div class="gs-row gift-only" hidden>
+            <div class="gs-field">
+              <label for="giftEmail">E-Mail der beschenkten Person <span class="req">*</span></label>
+              <input id="giftEmail" type="email" placeholder="lisa@beispiel.de">
+            </div>
+            <div class="gs-field">
+              <label for="sendDate">Erst an einem bestimmten Tag verschicken</label>
+              <input id="sendDate" type="date">
+            </div>
+          </div>
+          <div class="gift-only" hidden>
+            <button type="button" class="gs-quick" id="gsXmas">Am 24.12. morgens verschicken</button>
+            <div class="small" style="margin-top:8px">Leer lassen = sofort. Der Versand erfolgt morgens am gew&auml;hlten Tag.</div>
+          </div>
+          <div class="gs-check">
+            <input type="checkbox" id="agb">
+            <label for="agb">Ich habe die <a href="gutschein-bedingungen.html">Gutscheinbedingungen</a>, die <a href="gutschein-bedingungen.html#widerruf">Widerrufsbelehrung</a> und die <a href="datenschutz.html">Datenschutzerkl&auml;rung</a> gelesen und stimme zu, dass der Gutschein sofort nach der Zahlung per E-Mail bereitgestellt wird.</label>
+          </div>
         </div>
       </div>
 
-      <div class="gs-row">
-        <div class="gs-field">
-          <label for="buyerName">Dein Name <span class="req">*</span></label>
-          <input id="buyerName" type="text" autocomplete="name" placeholder="Max Mustermann" required>
+      <div class="gs-side">
+        <div class="gs-vwrap">
+          <div class="gs-v" aria-label="Vorschau deines Gutscheins">
+            <img class="gs-v-bg" src="trainer-highfive.webp" alt="" width="1200" height="1220" loading="lazy" decoding="async">
+            <div class="gs-v-shade"></div>
+            <div class="gs-v-top"><span>Geschenkgutschein</span><i>Fitness Donner</i></div>
+            <h3>Personal<br>Training</h3>
+            <div class="gs-v-val" id="vValue">119 &euro;</div>
+            <div class="gs-v-for" id="vFor">F&uuml;r dich</div>
+            <div class="gs-v-msg" id="vMsg"><span class="ph">Deine pers&ouml;nliche Nachricht erscheint hier.</span></div>
+            <div class="gs-v-code">
+              <div><small>Gutschein-Code</small><b>FD-&middot;&middot;&middot;&middot;-&middot;&middot;&middot;&middot;</b></div>
+              <div class="gs-v-meta">G&uuml;ltig bis <span id="vValid">31.12.2029</span><br>fitnessdonner.de</div>
+            </div>
+          </div>
+          <p class="gs-v-note">Vorschau &ndash; den echten Code bekommst du direkt nach der Zahlung.</p>
         </div>
-        <div class="gs-field">
-          <label for="buyerEmail">Deine E-Mail <span class="req">*</span></label>
-          <input id="buyerEmail" type="email" autocomplete="email" placeholder="max@beispiel.de" required>
-          <div class="small">Hierhin gehen Gutschein und Rechnung.</div>
-        </div>
-      </div>
 
-      <div class="gs-row">
-        <div class="gs-field">
-          <label for="recipientName">Name der beschenkten Person</label>
-          <input id="recipientName" type="text" placeholder="Lisa">
-        </div>
-        <div class="gs-field gift-only" hidden>
-          <label for="giftEmail">E-Mail der beschenkten Person <span class="req">*</span></label>
-          <input id="giftEmail" type="email" placeholder="lisa@beispiel.de">
-        </div>
-      </div>
-
-      <div class="gs-row gift-only" hidden>
-        <div class="gs-field">
-          <label for="sendDate">Erst an einem bestimmten Tag verschicken</label>
-          <input id="sendDate" type="date">
-          <div class="small">Leer lassen = sofort. Der Versand erfolgt morgens am gew&auml;hlten Tag.</div>
-        </div>
-        <div></div>
-      </div>
-
-      <div class="gs-field">
-        <label for="message">Pers&ouml;nliche Nachricht auf dem Gutschein</label>
-        <textarea id="message" maxlength="200" placeholder="Alles Gute zum Geburtstag! Zeit, dass wir zusammen schwitzen."></textarea>
-        <div class="small"><span id="msgCount">0</span>/200 Zeichen</div>
-      </div>
-
-      <div class="gs-check">
-        <input type="checkbox" id="agb">
-        <label for="agb">Ich habe die <a href="gutschein-bedingungen.html">Gutscheinbedingungen</a>, die <a href="gutschein-bedingungen.html#widerruf">Widerrufsbelehrung</a> und die <a href="datenschutz.html">Datenschutzerkl&auml;rung</a> gelesen und stimme zu, dass der Gutschein sofort nach der Zahlung per E-Mail bereitgestellt wird.</label>
-      </div>
-
-      <div class="gs-order">
-        <div class="gs-order-title">Deine Bestellung</div>
-        <ul>
-          <li>Wertgutschein f&uuml;r Personal Training bei Fitness Donner</li>
-          <li>Zustellung sofort nach der Zahlung per E-Mail</li>
-          <li>G&uuml;ltig bis zum 31.12. des dritten Jahres nach dem Kauf</li>
-          <li>Keine weiteren Kosten, keine Versandkosten</li>
-        </ul>
-      </div>
-
-      <div class="gs-summary">
-        <div>
-          <div class="gs-sum-label">Gesamtbetrag</div>
-          <div class="gs-sum-value" id="total">100 &euro;</div>
-        </div>
-        <div class="gs-pay">
-          <button type="submit" class="btn btn-blitz" id="payBtn">Zahlungspflichtig kaufen</button>
+        <div class="gs-pay" id="kasse">
+          <div class="gs-order">
+            <div class="gs-order-title">Deine Bestellung</div>
+            <ul>
+              <li>Wertgutschein f&uuml;r Personal Training bei Fitness Donner</li>
+              <li>Zustellung sofort nach der Zahlung per E-Mail</li>
+              <li>G&uuml;ltig bis zum 31.12. des dritten Jahres nach dem Kauf</li>
+              <li>Keine weiteren Kosten, keine Versandkosten</li>
+            </ul>
+          </div>
+          <div class="gs-pay-row">
+            <div>
+              <div class="gs-sum-label">Gesamtbetrag</div>
+              <div class="gs-sum-value js-total" id="total">119 &euro;</div>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-blitz gs-paybtn" id="payBtn">Zahlungspflichtig kaufen</button>
           <div class="secure">&#128274; Sichere Zahlung &uuml;ber Stripe &middot; Kreditkarte, PayPal, Apple&nbsp;Pay, Google&nbsp;Pay</div>
         </div>
       </div>
+
     </form>
-
-    <p style="margin-top:26px;color:var(--muted);font-size:14px;border-left:2px solid var(--blitz);padding-left:16px;max-width:760px">Alle Preise sind Endpreise. Als Kleinunternehmer im Sinne von &sect;&nbsp;19 UStG berechne ich keine Umsatzsteuer, sie wird daher nicht ausgewiesen.</p>
+    <p class="gs-fine">Alle Preise sind Endpreise. Als Kleinunternehmer im Sinne von &sect;&nbsp;19 UStG berechne ich keine Umsatzsteuer, sie wird daher nicht ausgewiesen.</p>
   </div>
 </section>
 
-<section>
-  <div class="wrap">
+<section class="gv" id="ablauf">
+  <figure class="gv-bg"><img src="studio-halle.webp" alt="" width="1200" height="801" loading="lazy" decoding="async"></figure>
+  <div class="gv-word" aria-hidden="true">Schenken</div>
+  <div class="wrap gv-in">
     <div class="eyebrow">So l&auml;uft es ab</div>
-    <h2 class="gs-h2">In zwei Minuten erledigt.</h2>
-    <div class="gs-steps">
-      <div class="gs-step">
-        <div class="n">01</div>
-        <h3>Betrag w&auml;hlen</h3>
-        <p>Wunschbetrag eingeben und den Gutschein mit Namen und pers&ouml;nlicher Nachricht versehen.</p>
-      </div>
-      <div class="gs-step">
-        <div class="n">02</div>
-        <h3>Bezahlen</h3>
-        <p>Sichere Zahlung &uuml;ber Stripe &ndash; Kreditkarte, Apple Pay, Google Pay oder PayPal.</p>
-      </div>
-      <div class="gs-step">
-        <div class="n">03</div>
-        <h3>Sofort im Postfach</h3>
-        <p>Der fertige Gutschein kommt direkt per E-Mail &ndash; zum Ausdrucken oder Weiterleiten.</p>
-      </div>
-      <div class="gs-step">
-        <div class="n">04</div>
-        <h3>Einl&ouml;sen</h3>
-        <p>Die beschenkte Person meldet sich mit dem Code &ndash; wir finden gemeinsam einen Termin.</p>
-      </div>
+    <h2 class="gv-h">In zwei Minuten<br><em>erledigt.</em></h2>
+    <p class="gv-lead">Vom Betrag bis zum Gutschein im Postfach &ndash; und die beschenkte Person l&ouml;st ihn ohne Umwege ein.</p>
+    <div class="gv-track">
+      <div class="gv-line" aria-hidden="true"><i></i></div>
+      <span class="gv-lbl l" aria-hidden="true">Du</span><span class="gv-lbl m" aria-hidden="true">Sofort per Mail</span><span class="gv-lbl r" aria-hidden="true">Beschenkte Person</span>
+      <div class="gv-s" style="--i:0"><span class="num">01</span><h3>Gestalten</h3><p>Betrag w&auml;hlen und den Gutschein mit Namen und pers&ouml;nlicher Nachricht versehen.</p></div>
+      <div class="gv-s" style="--i:1"><span class="num">02</span><h3>Bezahlen</h3><p>Sichere Zahlung &uuml;ber Stripe &ndash; Kreditkarte, Apple Pay, Google Pay oder PayPal.</p></div>
+      <div class="gv-s" style="--i:2"><span class="num">03</span><h3>Im Postfach</h3><p>Der fertige Gutschein kommt direkt per E-Mail &ndash; zum Ausdrucken oder Weiterleiten.</p></div>
+      <div class="gv-s" style="--i:3"><span class="num">04</span><h3>Einl&ouml;sen</h3><p>Die beschenkte Person gibt den Code bei der Terminbuchung ein &ndash; fertig.</p></div>
     </div>
   </div>
 </section>
 
-<section>
-  <div class="wrap">
-    <div class="eyebrow" style="justify-content:center">So sieht er aus</div>
-    <h2 class="gs-h2" style="text-align:center;margin-bottom:34px">Der fertige Gutschein.</h2>
-
-    <div class="voucher">
-      <div class="v-top">
-        <svg width="150" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
-          <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
-          <text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text>
-          <polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"/>
-        </svg>
-        <div class="v-kind">Geschenkgutschein</div>
-      </div>
-      <h3>Personal<br>Training</h3>
-      <div class="v-value">100 &euro;</div>
-      <div class="v-for">F&uuml;r <b>Lisa</b> &middot; von Max Mustermann</div>
-      <div class="v-msg">&bdquo;Alles Gute zum Geburtstag! Zeit, dass wir zusammen schwitzen.&ldquo;</div>
-      <div class="v-code">
-        <div>
-          <div class="lbl">Gutschein-Code</div>
-          <div class="code">FD-7K4M-92XA</div>
-        </div>
-        <div class="v-meta">
-          G&uuml;ltig bis 31.12.2029<br>
-          fitnessdonner.de &middot; 0177 6311404
-        </div>
-      </div>
-    </div>
-    <p style="text-align:center;color:var(--muted);font-size:13px;margin-top:18px">Beispiel &ndash; jeder Gutschein bekommt einen eigenen Code.</p>
-  </div>
-</section>
+<div class="gs-sticky" id="gsSticky" aria-hidden="true">
+  <div><b class="js-total">119 &euro;</b><span>Gutschein &middot; sofort per Mail</span></div>
+  <a class="btn btn-blitz btn-sm" href="#kasse">Zur Kasse</a>
+</div>
 
 <section>
   <div class="wrap">
@@ -314,8 +308,6 @@
 <script>
 /* ---------------------------------------------------------------
    Adresse des Gutschein-Backends (Cloudflare Worker).
-   Nach dem Deploy hier eintragen, z. B.
-   'https://fitnessdonner-gutscheine.DEIN-SUBDOMAIN.workers.dev'
 --------------------------------------------------------------- */
 var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.dev';
 
@@ -323,23 +315,54 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
   var MIN = 20, MAX = 1000;
   var form = document.getElementById('gsForm');
   var amt = document.getElementById('amt');
-  var total = document.getElementById('total');
   var errBox = document.getElementById('gsError');
   var payBtn = document.getElementById('payBtn');
   var msg = document.getElementById('message');
+  var recName = document.getElementById('recipientName');
+  var buyName = document.getElementById('buyerName');
+  var sd = document.getElementById('sendDate');
   var mode = 'buyer';
 
   function value() {
     var n = parseInt(String(amt.value).replace(/[^0-9]/g, ''), 10);
     return isNaN(n) ? 0 : n;
   }
+  function euro(n) { return n > 0 ? n + ' €' : '– €'; }
+
+  /* Vorschau + Summe + Kacheln */
   function render() {
     var v = value();
-    total.textContent = (v || 0) + ' €';
+    document.querySelectorAll('.js-total').forEach(function (el) { el.textContent = euro(v); });
+    document.getElementById('vValue').textContent = euro(v);
     document.querySelectorAll('.gs-chip').forEach(function (c) {
       c.classList.toggle('on', parseInt(c.dataset.v, 10) === v);
     });
+
+    var rn = recName.value.trim(), bn = buyName.value.trim();
+    var vf = document.getElementById('vFor');
+    vf.textContent = '';
+    vf.appendChild(document.createTextNode('Für '));
+    var b = document.createElement('b');
+    b.textContent = rn || 'dich';
+    vf.appendChild(b);
+    if (bn) vf.appendChild(document.createTextNode(' · von ' + bn));
+
+    var vm = document.getElementById('vMsg');
+    var m = msg.value.trim();
+    vm.textContent = '';
+    if (m) { vm.textContent = m; }
+    else {
+      var ph = document.createElement('span');
+      ph.className = 'ph';
+      ph.textContent = 'Deine persönliche Nachricht erscheint hier.';
+      vm.appendChild(ph);
+    }
+    document.getElementById('msgCount').textContent = msg.value.length;
   }
+
+  /* Gueltigkeit: bis 31.12. des dritten Jahres nach dem Kauf */
+  document.getElementById('vValid').textContent = '31.12.' + (new Date().getFullYear() + 3);
+
   document.getElementById('gsChips').addEventListener('click', function (e) {
     var b = e.target.closest('.gs-chip');
     if (!b) return;
@@ -347,25 +370,50 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     render();
   });
   amt.addEventListener('input', render);
+  recName.addEventListener('input', render);
+  buyName.addEventListener('input', render);
 
+  /* Anlass-Kacheln fuellen die Nachricht vor (bleibt frei aenderbar) */
+  var occ = document.getElementById('gsOcc');
+  occ.addEventListener('click', function (e) {
+    var b = e.target.closest('.gs-opt');
+    if (!b) return;
+    occ.querySelectorAll('.gs-opt').forEach(function (x) { x.classList.toggle('on', x === b); });
+    msg.value = b.dataset.msg;
+    render();
+  });
+  msg.addEventListener('input', function () {
+    occ.querySelectorAll('.gs-opt').forEach(function (x) { x.classList.remove('on'); });
+    render();
+  });
+
+  /* An mich / direkt an die beschenkte Person */
+  function setMode(m) {
+    mode = m;
+    document.querySelectorAll('#gsMode button').forEach(function (x) {
+      x.classList.toggle('on', x.dataset.mode === m);
+    });
+    document.querySelectorAll('.gift-only').forEach(function (el) { el.hidden = (m !== 'gift'); });
+  }
   document.getElementById('gsMode').addEventListener('click', function (e) {
     var b = e.target.closest('button');
-    if (!b) return;
-    this.querySelectorAll('button').forEach(function (x) { x.classList.remove('on'); });
-    b.classList.add('on');
-    mode = b.dataset.mode;
-    document.querySelectorAll('.gift-only').forEach(function (el) { el.hidden = (mode !== 'gift'); });
+    if (b) setMode(b.dataset.mode);
   });
 
-  msg.addEventListener('input', function () {
-    document.getElementById('msgCount').textContent = msg.value.length;
-  });
-
-  // Wunsch-Versanddatum: ab morgen, maximal ein Jahr
-  var sd = document.getElementById('sendDate');
+  /* Wunsch-Versanddatum: ab morgen, maximal ein Jahr */
   var t = new Date(Date.now() + 864e5);
   sd.min = t.toISOString().slice(0, 10);
   sd.max = new Date(Date.now() + 364 * 864e5).toISOString().slice(0, 10);
+
+  /* Schnellwahl: 24.12. (dieses Jahr, sonst naechstes) */
+  document.getElementById('gsXmas').addEventListener('click', function () {
+    var d = new Date(), y = d.getFullYear();
+    var cand = y + '-12-24';
+    if (cand < sd.min) cand = (y + 1) + '-12-24';
+    sd.value = cand;
+    if (sd.value > sd.max) sd.value = '';
+    setMode('gift');
+  });
 
   function fail(text) {
     errBox.textContent = text;
@@ -380,7 +428,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     errBox.hidden = true;
 
     var v = value();
-    var buyerName = document.getElementById('buyerName').value.trim();
+    var buyerName = buyName.value.trim();
     var buyerEmail = document.getElementById('buyerEmail').value.trim();
     var giftEmail = document.getElementById('giftEmail').value.trim();
 
@@ -400,7 +448,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
         amount: v,
         buyerName: buyerName,
         buyerEmail: buyerEmail,
-        recipientName: document.getElementById('recipientName').value.trim(),
+        recipientName: recName.value.trim(),
         message: msg.value.trim(),
         delivery: mode,
         giftEmail: mode === 'gift' ? giftEmail : '',
@@ -423,6 +471,28 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
   }
 
   render();
+
+  /* Ablauf-Strecke: Balken fuellt sich einmal, sobald sichtbar */
+  var track = document.querySelector('.gv-track');
+  if (track) {
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (en) {
+        en.forEach(function (x) { if (x.isIntersecting) { track.classList.add('on'); io.disconnect(); } });
+      }, { threshold: 0.4, rootMargin: '0px 0px -6% 0px' });
+      io.observe(track);
+    } else { track.classList.add('on'); }
+  }
+
+  /* Handy-Leiste: sichtbar, solange das Formular im Bild ist und die Kasse noch nicht */
+  var sticky = document.getElementById('gsSticky');
+  var kasse = document.getElementById('kasse');
+  if (sticky && kasse && 'IntersectionObserver' in window) {
+    document.body.classList.add('gs-has-sticky');
+    var inForm = false, inKasse = false;
+    function upd() { sticky.classList.toggle('show', inForm && !inKasse); }
+    new IntersectionObserver(function (en) { inForm = en[0].isIntersecting; upd(); }, { rootMargin: '-80px 0px -80px 0px' }).observe(form);
+    new IntersectionObserver(function (en) { inKasse = en[0].isIntersecting; upd(); }).observe(kasse);
+  }
 })();
 
 (function(){var n=document.getElementById('navLinks'),b=document.querySelector('.menu-btn');
