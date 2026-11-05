@@ -22,104 +22,7 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="style.css?v=38">
-<style>
-/* ---------- Preisumstellung zum 01.01.2027 ---------- */
-.deal{background:var(--blitz);color:#15171C}
-.deal-in{display:flex;align-items:center;justify-content:center;gap:12px 28px;flex-wrap:wrap;padding:15px 24px;max-width:1200px;margin:0 auto}
-.deal-txt{font-family:var(--display);font-size:clamp(16px,2.1vw,22px);text-transform:uppercase;letter-spacing:.03em;line-height:1.15;text-align:center}
-.deal-sub{font-size:13px;font-weight:500;color:rgba(21,23,28,.75);width:100%;text-align:center;margin-top:-2px}
-.cd{display:flex;gap:8px}
-.cd div{background:#15171C;color:var(--blitz);min-width:56px;padding:7px 6px 6px;text-align:center}
-.cd b{display:block;font-family:var(--display);font-size:23px;line-height:1}
-.cd span{display:block;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(236,233,226,.65);margin-top:3px}
-/* ---------- Rabatt sichtbar machen ---------- */
-/* Eckfahne. Kein overflow:hidden auf .price - das wuerde die "Beliebteste Wahl"-Marke abschneiden. */
-.flag{position:absolute;top:0;right:0;background:var(--blitz);color:#15171C;font-size:10.5px;font-weight:700;
-  letter-spacing:.13em;text-transform:uppercase;padding:6px 11px}
-.preiszeile{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-top:24px}
-/* Das Label klebt am alten Preis, nicht ueber der ganzen Zeile - sonst liest man es als Datum fuers Angebot. */
-.altbox{display:flex;flex-direction:column;gap:5px}
-.altbox em{font-style:normal;font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
-.alt{font-family:var(--display);font-size:36px;line-height:1;color:#7c818b;position:relative;white-space:nowrap}
-/* Der Strich liegt schraeg drueber und ist gelb - grau auf grau sieht man auf dem Handy nicht */
-.alt::after{content:"";position:absolute;left:-5px;right:-5px;top:50%;height:3px;background:var(--blitz);transform:rotate(-9deg)}
-.price .amount{margin:0;font-size:56px;color:var(--blitz)}
-.price .per{margin:9px 0 0}
-/* Abstand am Folgeelement, nicht per Geschwister-Selektor: ausgeblendete Boxen zaehlen als Geschwister mit. */
-.price p.desc{margin-top:20px}
-/* Der Inklusiv-Block ist das Verkaufsargument der Karten - er soll sich von der
-   normalen Haekchenliste absetzen, ohne mit der gelben Sparbox zu konkurrieren. */
-.inkl{border:1px solid rgba(239,185,46,.45);background:rgba(239,185,46,.07);padding:15px 16px 14px;margin:22px 0 4px}
-.inkl-kopf{font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--blitz);margin-bottom:11px}
-.price .inkl ul{list-style:none;margin:0;flex:none}
-.price .inkl ul li{padding:0 0 0 20px;border:none;position:relative;font-size:14.5px;color:#c9cbd0;line-height:1.45}
-.price .inkl ul li + li{margin-top:10px}
-.price .inkl ul li::before{content:"";position:absolute;left:0;top:7px;width:7px;height:7px;background:var(--blitz)}
-.price .inkl ul li b{color:var(--bone)}
-.inkl-fuss{margin-top:12px;padding-top:11px;border-top:1px solid rgba(239,185,46,.3);font-size:12.5px;color:var(--muted);line-height:1.5}
-.spar{display:inline-block;align-self:flex-start;background:rgba(239,185,46,.13);border:1px solid rgba(239,185,46,.5);
-  color:var(--blitz);font-size:12.5px;font-weight:700;line-height:1.35;padding:7px 11px;margin:20px 0 0}
-/* Ab Januar gibt es nichts mehr zu vergleichen - dann wieder die ruhige Darstellung. */
-body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
-@media(max-width:640px){.price .amount{font-size:50px}.alt{font-size:32px}}
-.garantie{border-left:3px solid var(--blitz);background:rgba(239,185,46,.07);padding:16px 20px;margin-top:28px}
-.garantie p{color:#c9cbd0;font-size:15px}
-.garantie b{color:var(--bone)}
-#garTitel{color:var(--blitz)}
-/* Pflichtangaben und Randnotizen - bewusst ohne gelben Balken, sonst waere es wieder ein "Punkt". */
-.kleingedruckt{margin-top:22px;max-width:860px;color:#8b9099;font-size:13.5px;line-height:1.6}
-.kleingedruckt a{color:#b9bcc3;text-decoration:underline}
-@media(max-width:600px){.deal-in{gap:10px;padding:14px 18px}.cd div{min-width:48px}.cd b{font-size:20px}.was{flex-wrap:wrap;gap:6px}}
-
-/* Handy: Bild liegt hinter Ueberschrift und Text (nicht darunter), laeuft nach unten in den Seitenhintergrund aus - die Preise folgen direkt */
-@media(max-width:900px){
-  .hero-bg-m{display:block;padding-bottom:0}
-  .hero-bg-m>.fade-img{position:absolute;top:0;left:0;right:0;width:100%;height:300px;margin:0}
-  .hero-bg-m>.fade-img img{object-position:var(--posm,100% 40%)}
-  .hero-bg-m>.fade-img::after{background:linear-gradient(90deg,rgba(21,23,28,.88) 0,rgba(21,23,28,.5) 38%,rgba(21,23,28,0) 72%),linear-gradient(180deg,rgba(21,23,28,.5) 0,rgba(21,23,28,0) 16%,rgba(21,23,28,.05) 32%,var(--bg) 100%)}
-}
-}
-/* ---------- Umschalter Personal Training / Kurse ---------- */
-.ptabs{display:inline-flex;border:1px solid var(--line);background:var(--panel);margin-bottom:26px}
-.ptab{appearance:none;background:none;border:none;cursor:pointer;font-family:var(--body);
-  font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
-  padding:13px 24px;transition:color .15s,background .15s;white-space:nowrap}
-.ptab:hover{color:var(--bone)}
-.ptab.on{background:var(--blitz);color:#15171C}
-.pblock[hidden]{display:none}
-
-/* ---------- Sprungleiste ueber den Karten ---------- */
-.sprung{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:26px}
-.sprung-kopf{font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--muted);margin-right:4px}
-.sprung a{border:1px solid var(--line);background:var(--panel);color:var(--bone);
-  font-size:13.5px;font-weight:600;padding:9px 15px;text-decoration:none;white-space:nowrap;
-  transition:border-color .15s,color .15s,background .15s}
-.sprung a:hover{border-color:var(--blitz);color:var(--blitz);background:var(--panel-2)}
-/* Die klebende Kopfzeile darf das Ziel nicht verdecken. */
-.price h3[id]{scroll-margin-top:96px}
-#preisbereich{scroll-margin-top:90px}
-
-/* ---------- Karten enden, wo ihr Inhalt endet - keine Luecken ---------- */
-.price-grid.four{align-items:start}
-.price-grid.four .price ul{flex:none}
-
-/* ---------- Platzhalter fuer die Kurspreise ---------- */
-.kurse-leer{border:1px dashed rgba(239,185,46,.55);background:rgba(239,185,46,.06);
-  padding:40px 30px;text-align:center}
-.kl-kopf{font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--blitz)}
-.kl-gross{font-family:var(--display);font-size:42px;line-height:1;color:var(--bone);margin:14px 0 0}
-.kl-txt{max-width:460px;margin:14px auto 22px;color:var(--muted);font-size:15px}
-@media(max-width:600px){
-  .ptabs{display:flex;width:100%}
-  .ptab{flex:1;padding:13px 10px;font-size:12.5px;letter-spacing:.04em}
-  .sprung{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .sprung-kopf{grid-column:1 / -1;margin:0 0 2px}
-  .sprung a{font-size:13px;padding:10px 13px;text-align:center}
-  .kl-gross{font-size:34px}
-  .kurse-leer{padding:32px 22px}
-}
-</style>
+<link rel="stylesheet" href="preise.css?v=1">
 </head>
 <body class="nachher">
 <div class="newsbar"><a href="https://whatsapp.com/channel/0029Vb9Sacj9xVJgW1Vm7O2Z" target="_blank" rel="noopener"><svg class="wa-ico" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.9L2 22l5.27-1.38A9.9 9.9 0 1 0 12.04 2Zm0 1.8a8.1 8.1 0 1 1-4.13 15.07l-.3-.18-3.13.82.84-3.05-.2-.31A8.1 8.1 0 0 1 12.04 3.8Zm-3.1 4.1c-.17 0-.45.06-.69.32-.23.26-.9.88-.9 2.15s.92 2.5 1.05 2.67c.13.17 1.8 2.86 4.45 3.9 2.2.87 2.65.7 3.13.65.48-.04 1.54-.63 1.76-1.24.22-.6.22-1.13.15-1.24-.06-.1-.23-.17-.49-.3-.26-.13-1.54-.76-1.78-.85-.24-.09-.41-.13-.58.13-.17.26-.67.85-.82 1.02-.15.17-.3.2-.56.07-.26-.13-1.1-.4-2.09-1.29-.77-.69-1.3-1.54-1.45-1.8-.15-.26-.02-.4.11-.53.12-.12.26-.3.39-.46.13-.15.17-.26.26-.43.09-.17.04-.33-.02-.46-.07-.13-.58-1.4-.8-1.92-.2-.5-.42-.43-.58-.44h-.5Z"/></svg><b>Neu</b><span class="nb-long">Kurse in Solingen: Termine &amp; Early-Bird zuerst im WhatsApp-Kanal</span><span class="nb-short">Kurse in Solingen: Early-Bird zuerst im WhatsApp-Kanal</span><span class="newsbar-go">Kanal beitreten &rarr;</span></a></div>
@@ -167,136 +70,160 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
     <button class="menu-btn" aria-label="Men&uuml; &ouml;ffnen" onclick="document.getElementById('navLinks').classList.toggle('open');this.textContent=this.textContent==='☰'?'✕':'☰'">&#9776;</button>
   </div>
 </nav>
-<header class="page-hero fade-hero hero-bg-m">
+<header class="page-hero fade-hero pz-hero">
   <figure class="fade-img" style="--pos:58% 45%;--posm:30% 42%"><img src="newforge-power.webp" width="1600" height="1000" alt="Wandbild im Forged Studio mit goldener Schrift: Now is the moment of power" fetchpriority="high"></figure>
   <div class="wrap">
     <div class="eyebrow">Preise</div>
-    <h1>Feste Preise.<br>Keine Rätsel.</h1>
-    <div class="hero-ctas" role="tablist" aria-label="Preisbereich">
-      <button class="btn btn-blitz" type="button" data-ziel="pt" role="tab" aria-selected="true">Personal Training buchen</button>
-      <button class="btn btn-ghost" type="button" data-ziel="kurse" role="tab" aria-selected="false">Kurs buchen</button>
+    <h1>Eine Stunde.<br>29 Euro.<br><em>Dann wei&szlig;t du&rsquo;s.</em></h1>
+    <p class="hero-sub">Probetraining: 60 Minuten echtes 1:1-Training im Forged Studio in Solingen-Ohligs. Kein Verkaufsgespr&auml;ch, kein Vertrag &ndash; und die 29&nbsp;&euro; ziehe ich dir vom ersten regul&auml;ren Training wieder ab.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-blitz" href="termin-buchen.html?art=probe">Probetraining buchen</a>
+      <a class="btn btn-ghost" href="#preise">Alle Preise ansehen &darr;</a>
+    </div>
+    <div class="pz-proof">
+      <span><span class="pz-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <b>5,0</b> &middot; 80 Google-Bewertungen</span>
+      <span><b>Keine</b> Vertragsbindung</span>
+      <span>Apple Pay &middot; Karte &middot; Lastschrift</span>
     </div>
   </div>
 </header>
-<section style="padding-top:56px">
+
+<section class="pz-sec" id="preise" style="background:#1B1E25">
   <div class="wrap">
-    <div id="preisbereich"></div>
-
-    <div class="pblock" id="pb-pt">
-      <nav class="sprung" aria-label="Zu einem Angebot springen">
-        <span class="sprung-kopf">Optionen</span>
-        <a href="#k-probe">Probetraining</a>
-        <a href="#k-einzel">Einzelstunde</a>
-        <a href="#k-4er">4er-Karte</a>
-        <a href="#k-8er">8er-Karte</a>
-      </nav>
-      <div class="price-grid four">
-      <div class="price">
-        <h3 id="k-probe">Probetraining</h3>
-        <div class="preiszeile">
-          <span class="amount">29 &euro;</span>
-        </div>
-        <div class="per">einmalig &ndash; wird auf dein erstes Training angerechnet</div>
-        <p class="desc">Einmal komplett mittrainieren, bevor du dich entscheidest. Wenn du danach weitermachst, ziehe ich die 29&nbsp;&euro; wieder ab.</p>
-        <ul>
-          <li>60 Minuten echtes Training</li>
-          <li>Analyse deiner Technik und Belastbarkeit</li>
-          <li>Danach wei&szlig;t du, ob es passt</li>
-        </ul>
-        <a class="btn btn-ghost" href="termin-buchen.html?art=probe">Termin buchen</a>
-      </div>
-      <div class="price">
-        <h3 id="k-einzel">Einzelstunde</h3>
-        <div class="preiszeile">
-          <span class="amount">119 &euro;</span>
-        </div>
-        <div class="per">pro Einheit</div>
-        <p class="desc">F&uuml;r den flexiblen Einstieg, gezielte Technik-Checks oder als Erg&auml;nzung zu deinem eigenen Training.</p>
-        <ul>
-          <li>60 Minuten volles 1:1-Coaching</li>
-          <li>Studio in Ohligs oder drau&szlig;en</li>
-          <li>Keine Vertragsbindung</li>
-        </ul>
-        <a class="btn btn-ghost" href="termin-buchen.html?art=training">Termin buchen</a>
-      </div>
-      <div class="price featured">
-        <div class="pop">Empfohlen</div>
-        <h3 id="k-4er">4er-Karte</h3>
-        <div class="preiszeile">
-          <span class="amount">109 &euro;</span>
-        </div>
-        <div class="per">pro Einheit &middot; 436 &euro; gesamt</div>
-        <p class="desc">Vier Einheiten am St&uuml;ck &ndash; und dazu einen Monat lang das ganze Studio, auch an den Tagen, an denen wir uns nicht sehen.</p>
-        <div class="inkl">
-          <div class="inkl-kopf">Ohne Aufpreis mit dabei</div>
-          <ul>
-            <li><b>1 Monat freies Training im <a href="https://www.google.com/maps/search/?api=1&amp;query=Prinzenstra%C3%9Fe+2a%2C+42697+Solingen" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline dotted;text-underline-offset:3px" title="Adresse in Karten öffnen">Forged Studio</a></b> &ndash; du trainierst dort auch allein, wann du willst</li>
-          </ul>
-          <p class="inkl-fuss">Der Monat startet, sobald du deinen ersten Termin buchst.</p>
-        </div>
-        <ul>
-          <li>Termine einzeln buchen, wann es passt</li>
-          <li>12 Monate einl&ouml;sbar</li>
-        </ul>
-        <a class="btn btn-blitz" href="termin-buchen.html?art=karte4">4er-Karte kaufen</a>
-      </div>
-      <div class="price">
-        <h3 id="k-8er">8er-Karte</h3>
-        <div class="preiszeile">
-          <span class="amount">99 &euro;</span>
-        </div>
-        <div class="per">pro Einheit &middot; 792 &euro; gesamt</div>
-        <p class="desc">Der beste Preis pro Stunde &ndash; und zwei Monate, in denen dir das Studio offensteht, mit mir und ohne mich.</p>
-        <div class="inkl">
-          <div class="inkl-kopf">Ohne Aufpreis mit dabei</div>
-          <ul>
-            <li><b>2 Monate freies Training im <a href="https://www.google.com/maps/search/?api=1&amp;query=Prinzenstra%C3%9Fe+2a%2C+42697+Solingen" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline dotted;text-underline-offset:3px" title="Adresse in Karten öffnen">Forged Studio</a></b> &ndash; du trainierst dort auch allein, wann du willst</li>
-          </ul>
-          <p class="inkl-fuss">Die zwei Monate starten, sobald du deinen ersten Termin buchst.</p>
-        </div>
-        <ul>
-          <li>Termine einzeln buchen, wann es passt</li>
-          <li>12 Monate einl&ouml;sbar</li>
-        </ul>
-        <a class="btn btn-ghost" href="termin-buchen.html?art=karte8">8er-Karte kaufen</a>
-      </div>
+    <div class="pz-head">
+      <div class="eyebrow">Dein Einstieg</div>
+      <h2>Was m&ouml;chtest du machen?</h2>
+    </div>
+    <div class="pz-modes" id="pzModes">
+      <button type="button" class="pz-mode on" data-tab="pt" aria-pressed="true">
+        <img src="studio-balance.webp" alt="" width="900" height="1347" loading="lazy" decoding="async" style="object-position:50% 56%">
+        <span class="pz-mode-t"><b>Personal Training</b><span>1:1 mit mir &ndash; im Studio oder drau&szlig;en</span></span>
+      </button>
+      <button type="button" class="pz-mode" data-tab="kurse" aria-pressed="false">
+        <img src="studio-boxsack.webp" alt="" width="1000" height="668" loading="lazy" decoding="async" style="object-position:50% 60%">
+        <span class="pz-mode-t"><b>Kurse</b><span>Gruppentraining im Forged Studio</span></span>
+      </button>
     </div>
 
-    <div class="garantie" id="garantie">
-      <p>Schon gekaufte 4er- und 8er-Karten behalten ihren Preis &ndash; du l&ouml;st sie einfach wie gewohnt bei der Terminbuchung ein.</p>
-    </div>
+    <h3 class="pz-q" id="pzQ">Wie oft willst du trainieren?</h3>
+    <div class="pz-finder" id="pzFinder"></div>
 
-    <div class="ort-note" style="margin-top:28px"><b>Noch unsicher?</b> Nimm das <a href="termin-buchen.html?art=probe" style="color:var(--blitz)">Probetraining f&uuml;r <span data-preis-probe>29&nbsp;&euro;</span></a> &ndash; eine volle Stunde, kein Verkaufsgespr&auml;ch, und die <span data-preis-probe>29&nbsp;&euro;</span> ziehe ich dir vom ersten regul&auml;ren Training wieder ab. Termin aussuchen und bezahlen geht direkt auf der <a href="termin-buchen.html" style="color:var(--blitz)">Terminseite</a>, einen Gutschein- oder Kartencode l&ouml;st du dabei gleich mit ein. Wenn vorher noch etwas offen ist: <a href="tel:+491776311404" style="color:var(--blitz)">0177 6311404 anrufen</a> oder <a href="https://wa.me/491776311404" style="color:var(--blitz)">per WhatsApp schreiben</a>.</div>
-
-    <p class="kleingedruckt">Bezahlen kannst du per Lastschrift, Kreditkarte, PayPal, Apple&nbsp;Pay oder Google&nbsp;Pay. Online-Coaching gibt es weiterhin auf Anfrage &ndash; <a href="https://wa.me/491776311404">frag einfach per WhatsApp</a>. Alle Preise sind Endpreise; als Kleinunternehmer im Sinne von &sect;&nbsp;19 UStG berechne ich keine Umsatzsteuer, sie wird daher nicht ausgewiesen.</p>
-    </div>
-
-    <div class="pblock" id="pb-kurse" hidden>
-      <p class="kleingedruckt" id="kursStart" style="margin:0 0 22px">Startpreise &ndash; der Kursplan mit den festen Terminen folgt in K&uuml;rze. <a href="kanal.html" style="color:var(--blitz)">Im WhatsApp-Kanal bist du als Erste:r dabei.</a></p>
-      <div class="price-grid" id="kursPreise">
-        <div class="price"><h3>Einzelticket</h3>
-          <div class="preiszeile"><span class="amount">18 &euro;</span></div>
-          <div class="per">ein einzelner Termin</div>
-          <p class="desc">Du kommst zu einem Kurstermin deiner Wahl, solange Pl&auml;tze frei sind.</p>
-          <a class="btn btn-ghost" href="kurse.html">Kurs aussuchen &amp; buchen</a></div>
-        <div class="price"><h3>5er-Karte</h3>
-          <div class="preiszeile"><span class="amount">80 &euro;</span></div>
-          <div class="per">5 Termine in Folge &middot; 16 &euro; pro Termin</div>
-          <p class="desc">Du w&auml;hlst den ersten Termin, die Karte umfasst die 5 Wochentermine ab dann.</p>
-          <a class="btn btn-ghost" href="kurse.html">Kurs aussuchen &amp; buchen</a></div>
-        <div class="price featured"><span class="pop">Empfohlen &middot; bester Preis pro Termin</span><h3>10er-Karte</h3>
-          <div class="preiszeile"><span class="amount">140 &euro;</span></div>
-          <div class="per">10 Termine in Folge &middot; 14 &euro; pro Termin</div>
-          <p class="desc">Du w&auml;hlst den ersten Termin, die Karte umfasst die 10 Wochentermine ab dann.</p>
-          <a class="btn btn-blitz" href="kurse.html">Kurs aussuchen &amp; buchen</a></div>
+    <div class="pz-deal" id="pzDeal" aria-live="polite">
+      <div class="pz-flag" id="pzFlag">Empfohlen</div>
+      <div class="pz-deal-l">
+        <div class="pz-tip">Das passt zu dir</div>
+        <h3 class="pz-deal-h" id="pzName">4er-Karte</h3>
+        <p class="pz-deal-d" id="pzWhy">Bei einmal pro Woche reicht sie f&uuml;r vier Wochen &ndash; und das Forged Studio steht dir einen Monat lang auch allein offen.</p>
+        <ul class="pz-ul" id="pzBullets"><li>Termine einzeln buchen, wann es passt</li><li>12 Monate einl&ouml;sbar</li></ul>
+        <div class="pz-inkl" id="pzInkl"><b>Ohne Aufpreis mit dabei</b><span id="pzInklT">1 Monat freies Training im Forged Studio &ndash; auch allein, wann du willst. Der Monat startet mit deinem ersten Termin.</span></div>
       </div>
-
-
-      <p class="kleingedruckt">Die Kurse finden im <a href="https://www.google.com/maps/search/?api=1&amp;query=Prinzenstra%C3%9Fe+2a%2C+42697+Solingen" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline dotted;text-underline-offset:3px" title="Adresse in Karten öffnen">Forged Studio</a>, Prinzenstra&szlig;e 2a in Solingen-Ohligs statt. Alle Preise sind Endpreise; als Kleinunternehmer im Sinne von &sect;&nbsp;19 UStG berechne ich keine Umsatzsteuer, sie wird daher nicht ausgewiesen.</p>
+      <div class="pz-deal-r">
+        <div class="pz-amt" id="pzAmt">109&nbsp;&euro;</div>
+        <div class="pz-per" id="pzPer">pro Einheit &middot; 436&nbsp;&euro; gesamt</div>
+        <span class="pz-save" id="pzSave">40&nbsp;&euro; gespart gegen&uuml;ber vier Einzelstunden</span>
+        <a class="btn btn-blitz" id="pzCta" href="termin-buchen.html?art=karte4">4er-Karte kaufen</a>
+      </div>
     </div>
-
-</div>
+    <details class="pz-all" id="pzAll">
+      <summary><span class="pz-all-t"><b>Alle Preise im &Uuml;berblick</b><small>Personal Training und Kurse auf einen Blick</small></span></summary>
+      <div class="pz-all-grid" id="pzAllGrid"></div>
+    </details>
+    <p class="pz-note" id="pzNote">Schon gekaufte 4er- und 8er-Karten behalten ihren Preis &ndash; du l&ouml;st sie einfach wie gewohnt bei der Terminbuchung ein. Bezahlen kannst du per Lastschrift, Kreditkarte, PayPal, Apple&nbsp;Pay oder Google&nbsp;Pay. Alle Preise sind Endpreise; als Kleinunternehmer im Sinne von &sect;&nbsp;19 UStG berechne ich keine Umsatzsteuer. Online-Coaching gibt es auf Anfrage &ndash; <a href="https://wa.me/491776311404">frag einfach per WhatsApp</a>.</p>
+  </div>
 </section>
+
+<section class="pz-stage">
+  <figure class="pz-stage-bg"><img src="studio-halle.webp" alt="Der Trainingsbereich im Forged Studio in Solingen-Ohligs" width="1200" height="801" loading="lazy" decoding="async"></figure>
+  <div class="wrap">
+    <div class="eyebrow">Bei 4er- und 8er-Karte inklusive</div>
+    <h2>Das ganze Studio.<br><em>Auch ohne mich.</em></h2>
+    <p>Wer eine Karte kauft, trainiert im Forged Studio in Solingen-Ohligs auch allein &ndash; wann er will. Ohne Aufpreis.</p>
+    <div class="pz-chips">
+      <span><b>1 Monat</b> bei der 4er-Karte</span>
+      <span><b>2 Monate</b> bei der 8er-Karte</span>
+      <span>Start mit deinem ersten Termin</span>
+    </div>
+  </div>
+</section>
+
+<section class="pz-galsec">
+  <div class="wrap pz-gal">
+    <figure><img src="studio-tiger.webp" alt="Wandbild im Forged Studio" width="800" height="1198" loading="lazy" decoding="async" style="object-position:50% 50%"><figcaption>Wandbild</figcaption></figure>
+    <figure><img src="studio-bikes.webp" alt="Air Bikes im Forged Studio" width="800" height="1197" loading="lazy" decoding="async" style="object-position:50% 60%"><figcaption>Air Bikes</figcaption></figure>
+    <figure><img src="studio-racks.webp" alt="Racks und Kabelz&uuml;ge im Forged Studio" width="1200" height="801" loading="lazy" decoding="async" style="object-position:50% 50%"><figcaption>Racks &amp; Kabelz&uuml;ge</figcaption></figure>
+  </div>
+</section>
+
+<section class="pz-vp" id="ablauf">
+  <figure class="pz-vp-bg"><img src="newforge-studio.webp" alt="" loading="lazy" decoding="async"></figure>
+  <div class="pz-vp-word" aria-hidden="true">Starten</div>
+  <div class="wrap pz-vp-in">
+    <div class="eyebrow">So l&auml;uft&rsquo;s ab</div>
+    <h2 class="pz-vp-h">Drei Schritte.<br>Keine <em>H&uuml;rden.</em></h2>
+    <p class="pz-vp-lead">Vom Klick bis zum ersten Training dauert es nicht lange &ndash; und du musst dich zu nichts verpflichten.</p>
+    <div class="pz-track" id="pzTrack">
+      <div class="pz-line" aria-hidden="true"><i></i></div>
+      <span class="pz-lbl l" aria-hidden="true">Jetzt</span><span class="pz-lbl m" aria-hidden="true">Zwei Minuten</span><span class="pz-lbl r" aria-hidden="true">Dein Training</span>
+      <div class="pz-s" style="--i:0"><span class="num">01</span><h3>Termin w&auml;hlen</h3><p>Online, in zwei Minuten. Du suchst dir Tag und Uhrzeit aus &ndash; Probetraining oder Karte buchst du direkt mit.</p></div>
+      <div class="pz-s" style="--i:1"><span class="num">02</span><h3>Bezahlen</h3><p>Apple Pay, Google Pay, Karte, PayPal oder Lastschrift. Einen Gutschein- oder Kartencode l&ouml;st du dabei gleich mit ein.</p></div>
+      <div class="pz-s" style="--i:2"><span class="num">03</span><h3>Trainieren</h3><p>60 Minuten, nur du und ich. Ich schaue mir Technik und Belastbarkeit an &ndash; danach wei&szlig;t du, ob es passt.</p></div>
+    </div>
+    <div class="hero-ctas"><a class="btn btn-blitz" href="termin-buchen.html">Jetzt Termin w&auml;hlen</a></div>
+  </div>
+</section>
+
+<section class="pz-sec" style="background:#1B1E25">
+  <div class="wrap">
+    <div class="eyebrow">Stimmen</div>
+    <h2>Das sagen die, die schon da waren.</h2>
+    <div class="pz-quotes">
+      <div class="pz-score"><div class="pz-score-n">5,0</div><span class="pz-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><small>80 Bewertungen auf Google</small></div>
+      <div class="pz-quote"><p>&bdquo;Ich (kompletter Neuling und Anti-Sportler der Nation) habe mich von der ersten Sekunde an ernst genommen und gut aufgehoben gef&uuml;hlt.&ldquo;</p><small>Sandra K. &middot; Google</small></div>
+      <div class="pz-quote"><p>&bdquo;Man f&uuml;hlt sich einfach gut aufgehoben bei Niklas. Er verk&ouml;rpert Spa&szlig; und die dazu notwendige Ernsthaftigkeit, super Typ!&ldquo;</p><small>Silas K. &middot; Google</small></div>
+    </div>
+  </div>
+</section>
+
+<section class="pz-facts-sec">
+  <div class="wrap">
+    <div class="pz-facts">
+      <div class="pz-fact"><h3>Kein Vertrag</h3><p>Du buchst, wenn du willst. Keine Mitgliedschaft, keine K&uuml;ndigungsfrist.</p></div>
+      <div class="pz-fact"><h3>12 Monate</h3><p>So lange kannst du eine 4er- oder 8er-Karte einl&ouml;sen &ndash; Termin f&uuml;r Termin.</p></div>
+      <div class="pz-fact"><h3>Endpreise</h3><p>Was hier steht, zahlst du. Keine Aufschl&auml;ge, keine versteckten Kosten.</p></div>
+      <div class="pz-fact"><h3>Einfach zahlen</h3><p>Apple Pay, Google Pay, Karte, PayPal oder Lastschrift.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="pz-faq-sec">
+  <div class="wrap">
+    <div class="eyebrow">H&auml;ufige Fragen</div>
+    <h2 style="margin-bottom:30px">Kurz gekl&auml;rt.</h2>
+    <div class="faq-list">
+      <details open>
+        <summary>Was, wenn ich nach dem Probetraining nicht weitermache?</summary>
+        <p>Dann hast du eine Stunde trainiert und wei&szlig;t, wie sich das anf&uuml;hlt &ndash; mehr nicht. Es gibt keinen Vertrag und kein Verkaufsgespr&auml;ch.</p>
+      </details>
+      <details>
+        <summary>Wie funktioniert die Anrechnung der 29&nbsp;&euro;?</summary>
+        <p>Wenn du nach dem Probetraining weitermachst, ziehe ich die 29&nbsp;&euro; vom ersten regul&auml;ren Training wieder ab.</p>
+      </details>
+      <details>
+        <summary>Wie l&ouml;se ich eine Karte ein?</summary>
+        <p>Du buchst die Termine einzeln, wann es dir passt &ndash; deine Karte ist 12 Monate einl&ouml;sbar. Einen Karten- oder Gutscheincode gibst du direkt auf der Terminseite ein.</p>
+      </details>
+      <details>
+        <summary>Wo findet das Training statt?</summary>
+        <p>Im <a href="https://www.google.com/maps/search/?api=1&amp;query=Prinzenstra%C3%9Fe+2a%2C+42697+Solingen" target="_blank" rel="noopener" style="color:var(--blitz)">Forged Studio</a>, Prinzenstra&szlig;e 2a in Solingen-Ohligs, oder drau&szlig;en. Au&szlig;erdem im Iron&amp;Soul in K&ouml;ln und Neuss.</p>
+      </details>
+      <details>
+        <summary>Womit kann ich bezahlen?</summary>
+        <p>Per Lastschrift, Kreditkarte, PayPal, Apple&nbsp;Pay oder Google&nbsp;Pay. Online-Coaching gibt es auf Anfrage &ndash; <a href="https://wa.me/491776311404" style="color:var(--blitz)">frag einfach per WhatsApp</a>.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
 <section class="cta">
   <div class="wrap">
     <div class="eyebrow" style="justify-content:center">Bereit?</div>
@@ -327,79 +254,227 @@ body.nachher .price .amount{color:var(--bone);font-size:46px;margin-top:18px}
     <div>&copy; 2026 Fitness Donner &middot; Solingen, Haan, K&ouml;ln &amp; Neuss</div>
   </div>
 </footer>
+<div class="pz-sticky" id="pzSticky" aria-hidden="true">
+  <div><b>Probetraining &middot; 29&nbsp;&euro;</b><span>wird angerechnet &middot; keine Bindung</span></div>
+  <a class="btn btn-blitz btn-sm" href="termin-buchen.html?art=probe">Buchen</a>
+</div>
 <script>
 (function(){var n=document.getElementById('navLinks'),b=document.querySelector('.menu-btn');
 if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&!a.classList.contains('sub-toggle')){n.classList.remove('open');b.textContent='☰';}});}})();
 </script>
 <script>
-/* Umschalter und Sprungleiste. Beides ohne Bibliothek, damit die Seite
-   auch dann funktioniert, wenn sonst nichts laedt. */
-(function(){
-  var tabs = document.querySelectorAll('[data-ziel]');
-  var pt = document.getElementById('pb-pt'), kurse = document.getElementById('pb-kurse');
-  function zeig(ziel){
-    pt.hidden = (ziel !== 'pt');
-    kurse.hidden = (ziel !== 'kurse');
-    Array.prototype.forEach.call(tabs, function(t){
-      var an = t.dataset.ziel === ziel;
-      t.classList.toggle('btn-blitz', an);
-      t.classList.toggle('btn-ghost', !an);
-      t.setAttribute('aria-selected', an ? 'true' : 'false');
+(function () {
+  var BASE = 'termin-buchen.html?art=';
+  var STUDIO = 'im Forged Studio in Solingen-Ohligs';
+  var KARTE = ['Termine einzeln buchen, wann es passt', '12 Monate einlösbar'];
+  var NBSP = ' ', EUR = NBSP + '€';
+  var NOTE_PT = 'Schon gekaufte 4er- und 8er-Karten behalten ihren Preis – du löst sie einfach wie gewohnt bei der Terminbuchung ein. Bezahlen kannst du per Lastschrift, Kreditkarte, PayPal, Apple Pay oder Google Pay. Alle Preise sind Endpreise; als Kleinunternehmer im Sinne von §' + NBSP + '19 UStG berechne ich keine Umsatzsteuer. Online-Coaching gibt es auf Anfrage – ';
+  var NOTE_K = 'Die Kurse finden im Forged Studio, Prinzenstraße 2a in Solingen-Ohligs statt. Alle Preise sind Endpreise; als Kleinunternehmer im Sinne von §' + NBSP + '19 UStG berechne ich keine Umsatzsteuer.';
+
+  var OPTS = {
+    pt: [
+      { k: 'probe', t: 'Erstmal ausprobieren', s: 'Ich will sehen, wie sich das anfühlt' },
+      { k: 'flex', t: 'Ganz flexibel', s: 'Ich buche, wenn es mir passt' },
+      { k: 'w1', t: '1× pro Woche', s: 'Regelmäßig dranbleiben' },
+      { k: 'w2', t: '2× pro Woche', s: 'Ich will richtig Fortschritt' }
+    ],
+    kurse: [
+      { k: 'k1', t: 'Einmal reinschnuppern', s: 'Ich probiere einen Kurs aus' },
+      { k: 'k5', t: 'Ein paar Wochen', s: 'Fünf Termine in Folge' },
+      { k: 'k10', t: 'Richtig dranbleiben', s: 'Zehn Termine in Folge' }
+    ]
+  };
+  var R = {
+    probe: { name: 'Probetraining', flag: '', price: '29' + EUR, per: 'einmalig – wird auf dein erstes Training angerechnet', cta: 'Probetraining buchen', href: BASE + 'probe',
+      why: 'Eine volle Stunde mittrainieren, bevor du dich festlegst. Wenn du weitermachst, ziehe ich die 29' + NBSP + '€ vom ersten regulären Training wieder ab.',
+      save: 'Kein Risiko: Bei Weitermachen kostet dich das Probetraining nichts extra.',
+      bullets: ['60 Minuten echtes Training', 'Analyse deiner Technik und Belastbarkeit', 'Danach weißt du, ob es passt'], inkl: '' },
+    flex: { name: 'Einzelstunde', flag: '', price: '119' + EUR, per: 'pro Einheit', cta: 'Termin buchen', href: BASE + 'training',
+      why: 'Du buchst genau dann, wenn es passt – ohne Karte und ohne Bindung. Gut für Technik-Checks oder als Ergänzung zu deinem eigenen Training.',
+      save: 'Du willst öfter kommen? Mit der 4er-Karte sparst du 40' + EUR + '.',
+      bullets: ['60 Minuten volles 1:1-Coaching', 'Studio in Ohligs oder draußen', 'Keine Vertragsbindung'], inkl: '' },
+    w1: { name: '4er-Karte', flag: 'Empfohlen', price: '109' + EUR, per: 'pro Einheit · 436' + EUR + ' gesamt', cta: '4er-Karte kaufen', href: BASE + 'karte4',
+      why: 'Bei einmal pro Woche reicht sie für vier Wochen – und das Forged Studio steht dir einen Monat lang auch allein offen.',
+      save: '40' + EUR + ' gespart gegenüber vier Einzelstunden', bullets: KARTE,
+      inkl: '1 Monat freies Training im Forged Studio – auch allein, wann du willst. Der Monat startet mit deinem ersten Termin.' },
+    w2: { name: '8er-Karte', flag: 'Bester Preis pro Stunde', price: '99' + EUR, per: 'pro Einheit · 792' + EUR + ' gesamt', cta: '8er-Karte kaufen', href: BASE + 'karte8',
+      why: 'Bei zweimal pro Woche trägt sie dich durch vier Wochen. Der beste Preis pro Stunde – und zwei Monate Studio inklusive.',
+      save: '160' + EUR + ' gespart gegenüber acht Einzelstunden', bullets: KARTE,
+      inkl: '2 Monate freies Training im Forged Studio – mit mir und ohne mich. Die zwei Monate starten mit deinem ersten Termin.' },
+    k1: { name: 'Einzelticket', flag: '', price: '18' + EUR, per: 'ein einzelner Termin', cta: 'Kurs aussuchen & buchen', href: 'kurse.html#kursplan',
+      why: 'Du kommst zu einem Kurstermin deiner Wahl, solange Plätze frei sind – ideal zum Ausprobieren.',
+      save: 'Gefällt es dir? Mit der Karte sind es nur 16' + EUR + ' oder 14' + EUR + ' pro Termin.',
+      bullets: ['Ein Termin deiner Wahl', 'Solange Plätze frei sind', 'Kurse ' + STUDIO], inkl: '' },
+    k5: { name: '5er-Karte', flag: '', price: '80' + EUR, per: '5 Termine in Folge · 16' + EUR + ' pro Termin', cta: 'Kurs aussuchen & buchen', href: 'kurse.html#kursplan',
+      why: 'Du wählst den ersten Termin, die Karte umfasst die 5 Wochentermine ab dann.',
+      save: '10' + EUR + ' gespart gegenüber fünf Einzeltickets',
+      bullets: ['5 Wochentermine in Folge', 'Du wählst den ersten Termin', 'Kurse ' + STUDIO], inkl: '' },
+    k10: { name: '10er-Karte', flag: 'Bester Preis pro Termin', price: '140' + EUR, per: '10 Termine in Folge · 14' + EUR + ' pro Termin', cta: 'Kurs aussuchen & buchen', href: 'kurse.html#kursplan',
+      why: 'Du wählst den ersten Termin, die Karte umfasst die 10 Wochentermine ab dann.',
+      save: '40' + EUR + ' gespart gegenüber zehn Einzeltickets',
+      bullets: ['10 Wochentermine in Folge', 'Du wählst den ersten Termin', 'Kurse ' + STUDIO], inkl: '' }
+  };
+
+  var st = { tab: 'pt', freq: 'w1', n: 0 };
+  var $ = function (id) { return document.getElementById(id); };
+  var deal = $('pzDeal'), finder = $('pzFinder');
+
+  function renderFinder() {
+    finder.textContent = '';
+    finder.classList.toggle('f3', st.tab === 'kurse');
+    OPTS[st.tab].forEach(function (o) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'pz-fopt' + (st.freq === o.k ? ' on' : '');
+      b.setAttribute('aria-pressed', st.freq === o.k ? 'true' : 'false');
+      var t = document.createElement('b'); t.textContent = o.t;
+      var s = document.createElement('span'); s.textContent = o.s;
+      b.appendChild(t); b.appendChild(s);
+      b.addEventListener('click', function () { pick(o.k); });
+      finder.appendChild(b);
     });
   }
-  Array.prototype.forEach.call(tabs, function(t){
-    t.addEventListener('click', function(){
-      zeig(t.dataset.ziel);
-      history.replaceState(null, '', t.dataset.ziel === 'kurse' ? '#kurse' : location.pathname);
-      document.getElementById('preisbereich').scrollIntoView({behavior:'smooth', block:'start'});
-    });
-  });
-  Array.prototype.forEach.call(document.querySelectorAll('[data-zu-pt]'), function(a){
-    a.addEventListener('click', function(e){
-      e.preventDefault(); zeig('pt');
-      document.getElementById('preisbereich').scrollIntoView({behavior:'smooth', block:'start'});
-    });
-  });
-  if (location.hash === '#kurse') zeig('kurse');
 
-  /* Sanft scrollen, aber nur wenn niemand "weniger Bewegung" eingestellt hat. */
-  var ruhig = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  Array.prototype.forEach.call(document.querySelectorAll('.sprung a'), function(a){
-    a.addEventListener('click', function(e){
-      var ziel = document.querySelector(a.getAttribute('href'));
-      if (!ziel) return;
-      e.preventDefault();
-      ziel.scrollIntoView({behavior: ruhig ? 'auto' : 'smooth', block:'start'});
-      history.replaceState(null, '', a.getAttribute('href'));
+  function renderDeal(animate) {
+    var r = R[st.freq];
+    $('pzQ').textContent = st.tab === 'pt' ? 'Wie oft willst du trainieren?' : 'Wie oft willst du einen Kurs besuchen?';
+    $('pzFlag').textContent = r.flag; $('pzFlag').hidden = !r.flag;
+    $('pzName').textContent = r.name;
+    $('pzWhy').textContent = r.why;
+    var ul = $('pzBullets'); ul.textContent = '';
+    r.bullets.forEach(function (t) { var li = document.createElement('li'); li.textContent = t; ul.appendChild(li); });
+    $('pzInkl').hidden = !r.inkl; $('pzInklT').textContent = r.inkl;
+    $('pzAmt').textContent = r.price;
+    $('pzPer').textContent = r.per;
+    $('pzSave').textContent = r.save; $('pzSave').hidden = !r.save;
+    var cta = $('pzCta'); cta.textContent = r.cta; cta.href = r.href;
+        var note = $('pzNote'); note.textContent = '';
+    if (st.tab === 'pt') {
+      note.appendChild(document.createTextNode(NOTE_PT));
+      var a = document.createElement('a'); a.href = 'https://wa.me/491776311404'; a.textContent = 'frag einfach per WhatsApp';
+      note.appendChild(a); note.appendChild(document.createTextNode('.'));
+    } else { note.textContent = NOTE_K; }
+    if (animate) {
+      st.n++;
+      deal.classList.remove('pa', 'pb');
+      void deal.offsetWidth;
+      deal.classList.add(st.n % 2 ? 'pb' : 'pa');
+    }
+  }
+
+  function pick(k) { st.freq = k; renderFinder(); renderDeal(true); }
+
+  function setTab(tab, freq, animate) {
+    st.tab = tab; st.freq = freq;
+    document.querySelectorAll('#pzModes .pz-mode').forEach(function (m) {
+      var on = m.dataset.tab === tab;
+      m.classList.toggle('on', on); m.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    renderFinder(); renderDeal(animate);
+  }
+
+  document.querySelectorAll('#pzModes .pz-mode').forEach(function (m) {
+    m.addEventListener('click', function () {
+      if (m.dataset.tab === st.tab) return;
+      setTab(m.dataset.tab, m.dataset.tab === 'pt' ? 'w1' : 'k5', true);
     });
   });
-})();
-</script>
-<script>
-/* Kurspreise kommen aus dem Buchungssystem – so stimmt die Seite immer mit dem Checkout überein. */
-(function () {
+
+
+  /* Kachel "Alle Preise im Ueberblick": aus denselben Daten wie die Preiskachel, Klick waehlt den Tarif aus */
+  var GRP = [
+    { t: 'Personal Training', tab: 'pt', keys: ['probe', 'flex', 'w1', 'w2'] },
+    { t: 'Kurse', tab: 'kurse', keys: ['k1', 'k5', 'k10'] }
+  ];
+  function renderAll() {
+    var grid = $('pzAllGrid'); grid.textContent = '';
+    GRP.forEach(function (g) {
+      var col = document.createElement('div'); col.className = 'pz-all-col';
+      var h = document.createElement('div'); h.className = 'pz-all-h'; h.textContent = g.t; col.appendChild(h);
+      g.keys.forEach(function (k) {
+        var r = R[k];
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'pz-all-row';
+        var l = document.createElement('span'); l.className = 'pz-all-l';
+        var n = document.createElement('b'); n.textContent = r.name;
+        var p = document.createElement('small'); p.textContent = r.per;
+        l.appendChild(n); l.appendChild(p);
+        var a = document.createElement('span'); a.className = 'pz-all-a'; a.textContent = r.price;
+        b.appendChild(l); b.appendChild(a);
+        b.addEventListener('click', function () {
+          setTab(g.tab, k, true);
+          var q = $('pzQ'); if (q) q.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        col.appendChild(b);
+      });
+      grid.appendChild(col);
+    });
+  }
+
+  /* Direkteinstieg: #kurse oder Anker der frueheren Karten */
+  var h = location.hash, jump = null;
+  if (h === '#kurse') { setTab('kurse', 'k5', false); jump = true; }
+  else {
+    var map = { '#k-probe': 'probe', '#k-einzel': 'flex', '#k-4er': 'w1', '#k-8er': 'w2' };
+    if (map[h]) { setTab('pt', map[h], false); jump = true; }
+    else { renderFinder(); renderDeal(false); }
+  }
+  renderAll();
+  if (jump) setTimeout(function () { var el = $('preise'); if (el) el.scrollIntoView(); }, 60);
+
+  /* Kurspreise kommen aus dem Buchungssystem – so stimmt die Seite immer mit dem Checkout überein. */
   var API = window.FD_API_BASE || 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.dev';
-  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-  function eur(c) { var v = (c / 100).toFixed(2).replace('.', ','); return (v.slice(-3) === ',00' ? v.slice(0, -3) : v) + ' &euro;'; }
+  function eur(c) { var v = (c / 100).toFixed(2).replace('.', ','); return (v.slice(-3) === ',00' ? v.slice(0, -3) : v) + EUR; }
   fetch(API + '/api/kurse?p=niklas').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
     if (!d || !d.kurse || !d.kurse.length) return;
-    var k = d.kurse[0], box = document.getElementById('kursPreise'), html = [];
-    ['tageskarte', 'karte5', 'karte10'].forEach(function (a) {
-      var p = k.produkte[a];
-      if (!p || !p.aktiv) return;
-      var karte = a !== 'tageskarte';
-      html.push('<div class="price' + (a === 'karte10' ? ' featured' : '') + '">' + (a === 'karte10' ? '<span class="pop">Empfohlen &middot; bester Preis pro Termin</span>' : '') + '<h3>' + esc(p.label) + '</h3>'
-        + '<div class="preiszeile"><span class="amount">' + eur(p.cents) + '</span></div>'
-        + '<div class="per">' + (karte ? p.termine + ' Termine in Folge &middot; ' + eur(Math.round(p.cents / p.termine)) + ' pro Termin' : 'ein einzelner Termin') + '</div>'
-        + '<p class="desc">' + (karte ? 'Du w&auml;hlst den ersten Termin, die Karte umfasst die ' + p.termine + ' Wochentermine ab dann. ' + d.gueltig_monate + ' Monate g&uuml;ltig.'
-          : 'Ab ' + p.freischalt_tage + ' Tagen vor einem Termin f&uuml;r die Pl&auml;tze, die dann noch frei sind.') + '</p>'
-        + '<a class="btn ' + (a === 'karte10' ? 'btn-blitz' : 'btn-ghost') + '" href="kurse.html#kursplan">Kurs aussuchen &amp; buchen</a></div>');
-    });
-    if (!html.length) return;
-    box.innerHTML = html.join('');
-    box.hidden = false;
-    var st = document.getElementById('kursStart'); if (st) st.hidden = true;
+    var p = d.kurse[0].produkte || {};
+    var t = p.tageskarte, k5 = p.karte5, k10 = p.karte10;
+    if (t && t.aktiv) {
+      R.k1.price = eur(t.cents);
+      if (t.freischalt_tage) R.k1.why = 'Ab ' + t.freischalt_tage + ' Tagen vor einem Termin für die Plätze, die dann noch frei sind.';
+    }
+    function karte(key, pr, n, label) {
+      if (!pr || !pr.aktiv) return;
+      var o = R[key];
+      o.price = eur(pr.cents);
+      o.per = pr.termine + ' Termine in Folge · ' + eur(Math.round(pr.cents / pr.termine)) + ' pro Termin';
+      o.why = 'Du wählst den ersten Termin, die Karte umfasst die ' + pr.termine + ' Wochentermine ab dann.' + (d.gueltig_monate ? ' ' + d.gueltig_monate + ' Monate gültig.' : '');
+      o.bullets = [pr.termine + ' Wochentermine in Folge', 'Du wählst den ersten Termin', 'Kurse ' + STUDIO];
+      if (t && t.aktiv) {
+        var sp = t.cents * pr.termine - pr.cents;
+        o.save = sp > 0 ? eur(sp) + ' gespart gegenüber ' + label + ' Einzeltickets' : '';
+        if (key === 'k1') o.save = '';
+      }
+    }
+    karte('k5', k5, 5, 'fünf');
+    karte('k10', k10, 10, 'zehn');
+    if (t && t.aktiv && k5 && k5.aktiv && k10 && k10.aktiv) {
+      R.k1.save = 'Gefällt es dir? Mit der Karte sind es nur ' + eur(Math.round(k5.cents / k5.termine)) + ' oder ' + eur(Math.round(k10.cents / k10.termine)) + ' pro Termin.';
+    }
+    if (st.tab === 'kurse') renderDeal(false);
+    renderAll();
   }).catch(function () {});
+
+  /* Ablauf-Strecke: Balken fuellt sich einmal, sobald sichtbar */
+  var track = $('pzTrack');
+  if (track) {
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (en) {
+        en.forEach(function (x) { if (x.isIntersecting) { track.classList.add('on'); io.disconnect(); } });
+      }, { threshold: 0.4, rootMargin: '0px 0px -6% 0px' });
+      io.observe(track);
+    } else { track.classList.add('on'); }
+  }
+
+  /* Handy-Leiste: erscheint nach dem Kopfbereich, verschwindet bei Abschluss-Aufruf und Fuss */
+  var sticky = $('pzSticky'), hero = document.querySelector('.pz-hero'), cta = document.querySelector('section.cta'), foot = document.querySelector('footer');
+  if (sticky && hero && 'IntersectionObserver' in window) {
+    document.body.classList.add('pz-has-sticky');
+    var heroIn = true, ctaIn = false, footIn = false;
+    var upd = function () { sticky.classList.toggle('show', !heroIn && !ctaIn && !footIn); };
+    new IntersectionObserver(function (e) { heroIn = e[0].isIntersecting; upd(); }).observe(hero);
+    if (cta) new IntersectionObserver(function (e) { ctaIn = e[0].isIntersecting; upd(); }).observe(cta);
+    if (foot) new IntersectionObserver(function (e) { footIn = e[0].isIntersecting; upd(); }).observe(foot);
+  }
 })();
 </script>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "d721903bce9e4bb1b2e31002e9c3d559"}'></script><!-- End Cloudflare Web Analytics -->
