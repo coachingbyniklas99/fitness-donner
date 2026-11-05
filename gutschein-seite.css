@@ -154,3 +154,6 @@ section.gs-cfg-sec{padding:12px 0 110px}
 .btn.btn-tel{padding:0;width:52px;min-width:52px;height:52px;border-radius:999px}
 .btn-tel svg{width:24px;height:24px;display:block}
 @media(max-width:640px){.hero-ctas .btn.btn-tel{flex:0 0 52px;width:52px}}
+/* Betrags-Kacheln: Gruppen-Überschriften */
+.gs-grp{grid-column:1/-1;font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+.gs-grp:first-child{margin-top:0}
