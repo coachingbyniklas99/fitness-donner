@@ -106,7 +106,7 @@
 
         <div class="gs-blk">
           <div class="gs-bh"><span class="gs-no">2</span><h2>Wie viel soll es sein?</h2></div>
-          <p class="gs-sub">Frei w&auml;hlbar von 20 bis 1.000&nbsp;&euro;. Anrechenbar auf jedes Angebot &ndash; Training vor Ort, Hyrox-Vorbereitung, Kurse oder Online-Coaching.</p>
+          <p class="gs-sub">Frei w&auml;hlbar von 15 bis 1.000&nbsp;&euro;. Anrechenbar auf jedes Angebot &ndash; Training vor Ort, Hyrox-Vorbereitung, Kurse oder Online-Coaching.</p>
           <div class="gs-opts gs-amts" id="gsChips">
             <div class="gs-grp">Personal Training</div>
             <button type="button" class="gs-opt gs-chip" data-v="29"><b>29&nbsp;&euro;</b><span>Ein Probetraining</span></button>
@@ -114,7 +114,7 @@
             <button type="button" class="gs-opt gs-chip" data-v="436"><b>436&nbsp;&euro;</b><span>So viel kostet die 4er-Karte</span></button>
             <button type="button" class="gs-opt gs-chip" data-v="792"><b>792&nbsp;&euro;</b><span>So viel kostet die 8er-Karte</span></button>
             <div class="gs-grp">Kurse im Forged Studio</div>
-            <button type="button" class="gs-opt gs-chip" data-v="20"><b>20&nbsp;&euro;</b><span>Ein Kurstermin (18&nbsp;&euro;)</span></button>
+            <button type="button" class="gs-opt gs-chip" data-v="18"><b>18&nbsp;&euro;</b><span>Ein Kurstermin</span></button>
             <button type="button" class="gs-opt gs-chip" data-v="80"><b>80&nbsp;&euro;</b><span>So viel kostet die 5er-Kurskarte</span></button>
             <button type="button" class="gs-opt gs-chip" data-v="140"><b>140&nbsp;&euro;</b><span>So viel kostet die 10er-Kurskarte</span></button>
           </div>
@@ -124,7 +124,7 @@
               <input id="amt" name="amount" type="text" inputmode="numeric" autocomplete="off" value="119" aria-describedby="amtHint">
               <span class="cur">&euro;</span>
             </div>
-            <div class="small" id="amtHint">Ganze Euro-Betr&auml;ge von 20 bis 1.000</div>
+            <div class="small" id="amtHint">Ganze Euro-Betr&auml;ge von 15 bis 1.000</div>
           </div>
         </div>
 
@@ -326,7 +326,7 @@
 var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.dev';
 
 (function () {
-  var MIN = 20, MAX = 1000;
+  var MIN = 15, MAX = 1000;
   var form = document.getElementById('gsForm');
   var amt = document.getElementById('amt');
   var errBox = document.getElementById('gsError');
@@ -446,7 +446,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     var buyerEmail = document.getElementById('buyerEmail').value.trim();
     var giftEmail = document.getElementById('giftEmail').value.trim();
 
-    if (v < MIN || v > MAX) return fail('Bitte einen Betrag zwischen 20 € und 1.000 € eingeben.');
+    if (v < MIN || v > MAX) return fail('Bitte einen Betrag zwischen 15 € und 1.000 € eingeben.');
     if (!buyerName) return fail('Bitte deinen Namen angeben.');
     if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(buyerEmail)) return fail('Bitte eine gültige E-Mail-Adresse angeben.');
     if (mode === 'gift' && !/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(giftEmail)) return fail('Bitte die E-Mail-Adresse der beschenkten Person angeben.');
