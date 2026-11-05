@@ -677,3 +677,49 @@ footer{border-top:1px solid var(--line);padding:44px 0;font-size:13px;color:var(
 .nav-kontakt .nk-wa{flex:0 0 58px;display:flex;align-items:center;justify-content:center;padding:0;color:#25D366}
 .nk-wa svg{width:26px;height:26px;display:block}
 
+
+/* ======================================================================
+   Nov 2026: Menue, Abschluss-Bereich der Standortseiten, Studio-Chips
+   ====================================================================== */
+
+/* Mobiles Menue: Kopfleiste wird beim Oeffnen vollflaechig dunkel und geht ohne Spalt ins Menue ueber */
+@media(max-width:900px){
+  nav:has(.nav-links.open){background:var(--bg);-webkit-backdrop-filter:none;backdrop-filter:none;border-bottom-color:transparent}
+  .nav-links{top:calc(100% - 1px);padding-top:2px}
+  .nav-links .nav-book{margin-top:0}
+}
+
+/* Standortseiten: Abschluss-Bereich "Mach den ersten Schritt" mit Farbfoto statt Schwarz-Weiss */
+section.sct{background:#12141A}
+section.sct .sct-bg{filter:saturate(1.08) contrast(1.03) brightness(.96)}
+section.sct p{text-shadow:0 1px 14px rgba(8,9,12,.65)}
+@media(min-width:901px){
+  section.sct .sct-bg{left:auto;right:0;width:66%;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 40%);mask-image:linear-gradient(90deg,transparent 0,#000 40%)}
+  section.sct::before{background:linear-gradient(90deg,rgba(18,20,26,.4) 0,rgba(18,20,26,.08) 100%),linear-gradient(0deg,rgba(18,20,26,.6) 0,rgba(18,20,26,0) 38%)}
+  section.sct .sct-grid{grid-template-columns:minmax(0,560px);gap:26px;align-items:start}
+  section.sct .sct-bg{width:60%}
+}
+@media(max-width:900px){
+  section.sct{padding:330px 0 72px}
+  section.sct .sct-bg{bottom:auto;height:470px;-webkit-mask-image:linear-gradient(180deg,#000 0,#000 52%,transparent 100%);mask-image:linear-gradient(180deg,#000 0,#000 52%,transparent 100%)}
+  section.sct::before{bottom:auto;height:470px;background:linear-gradient(180deg,rgba(18,20,26,.35) 0,rgba(18,20,26,0) 30%,rgba(18,20,26,.55) 80%,#12141A 100%)}
+}
+
+/* Standortseiten, Handy: Hero-Foto liegt hinter Ueberschrift und Text (Verlauf nach unten in den Seitenhintergrund) */
+@media(max-width:900px){
+  header.sth{position:relative}
+  header.sth .sth-ph{display:contents}
+  header.sth .sth-ph::before{display:none}
+  header.sth .sth-grid{position:static}
+  header.sth .sth-ph img{position:absolute;left:0;right:0;top:0;width:100%;height:720px;z-index:0;object-fit:cover;object-position:50% 38%;filter:saturate(1.08) brightness(.62);-webkit-mask-image:linear-gradient(180deg,#000 0,rgba(0,0,0,.8) 45%,transparent 97%);mask-image:linear-gradient(180deg,#000 0,rgba(0,0,0,.8) 45%,transparent 97%)}
+  header.sth .sth-l,header.sth .sth-tag{position:relative;z-index:2}
+  header.sth .sth-tag{left:auto;bottom:auto;margin:0;justify-self:start;max-width:100%}
+  header.sth .sth-p{color:#ECE9E2;text-shadow:0 1px 12px rgba(8,9,12,.75)}
+  header.sth h1{text-shadow:0 2px 22px rgba(8,9,12,.6)}
+}
+
+/* Studio-Ausstattung (Chips) auf dem Handy: zwei pro Zeile, spart Hoehe */
+@media(max-width:700px){
+  section.sgl .sgl-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:24px}
+  section.sgl .sgl-list li{padding:10px 8px;font-size:13px;line-height:1.3;text-align:center;display:flex;align-items:center;justify-content:center}
+}
