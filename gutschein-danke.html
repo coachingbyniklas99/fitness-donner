@@ -13,6 +13,19 @@
 <link rel="stylesheet" href="style.css?v=23">
 <link rel="stylesheet" href="gutschein.css?v=1">
 <link rel="stylesheet" href="kanal-kachel.css?v=1">
+<style>
+@media screen{
+.voucher.xm-nik,.voucher.xm-xmas{border:2px solid #F5D061;box-shadow:inset 0 0 0 7px transparent,0 0 0 1px rgba(245,208,97,.25)}
+.voucher.xm-nik{background:linear-gradient(160deg,#7E1A22 0%,#4A0F15 100%)}
+.voucher.xm-xmas{background:linear-gradient(160deg,#17402F 0%,#0F2B20 100%)}
+.voucher.xm-nik::before,.voucher.xm-xmas::before{content:"";position:absolute;left:0;right:0;top:0;height:10px;background:repeating-linear-gradient(135deg,#C8323A 0 12px,#F3EEE3 12px 24px)}
+.voucher.xm-nik .v-top,.voucher.xm-xmas .v-top{margin-top:8px}
+.voucher.xm-nik .v-kind,.voucher.xm-xmas .v-kind{color:#F5D061}
+.voucher.xm-nik .v-value,.voucher.xm-xmas .v-value{color:#F5D061}
+.voucher.xm-nik .v-code,.voucher.xm-xmas .v-code{border-top-color:rgba(245,208,97,.6)}
+.voucher.xm-nik .v-msg,.voucher.xm-xmas .v-msg{border-left-color:#F5D061}
+}
+</style>
 </head>
 <body>
 <nav class="no-print">
@@ -148,6 +161,12 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
   function show(v) {
     loading.hidden = true;
     document.getElementById('vValue').textContent = v.amount_formatted;
+    if (v.design === 'nik' || v.design === 'xmas') {
+      var vc = document.querySelector('#voucherBox .voucher');
+      vc.classList.add(v.design === 'nik' ? 'xm-nik' : 'xm-xmas');
+      var vk = vc.querySelector('.v-kind');
+      if (vk) vk.textContent = (v.design === 'nik' ? 'Frohen Nikolaus' : 'Frohe Weihnachten') + ' \u00b7 Geschenkgutschein';
+    }
     document.getElementById('vCode').textContent = v.code;
     document.getElementById('vExpires').textContent = fmtDate(v.expires);
 
