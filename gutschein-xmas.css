@@ -213,3 +213,148 @@ html.xmas .page-hero h1 .xm-stock{display:inline-block;width:.62em;height:.9em;m
 nav .xm-hat{position:absolute;width:42px;height:32px;left:97px;top:-7px;transform:rotate(16deg);pointer-events:none;filter:drop-shadow(0 2px 3px rgba(0,0,0,.4))}
 nav .nav-inner>a:first-child{position:relative}
 @media(prefers-reduced-motion:reduce){html.xmas .page-hero h1 .xm-stock{animation:none}}
+
+/* ======================================================================
+   Einzug des Festtagsdesigns (ca. 3 Sekunden)
+   Das Skript setzt zuerst "xm-pre" (= Seite sieht aus wie im Normalzustand)
+   und nimmt die Klasse nach einem kurzen Moment weg. Dadurch laufen die
+   Uebergaenge von oben nach unten: Leiste, Menue, Streifen, Foto, Lichter,
+   Schnee, Muetze, Socke. Tempo ueber --xs (1 = normal, 0.7 = schneller).
+   Ohne Skript-Klasse "xm-pre" (z. B. bei reduzierter Bewegung) ist alles sofort da.
+   ====================================================================== */
+@property --nA{syntax:'<color>';inherits:false;initial-value:#EFB92E}
+@property --nB{syntax:'<color>';inherits:false;initial-value:#EFB92E}
+@property --vA{syntax:'<color>';inherits:false;initial-value:#15171C}
+@property --vB{syntax:'<color>';inherits:false;initial-value:#15171C}
+@property --sA{syntax:'<color>';inherits:false;initial-value:#EFB92E}
+@property --sB{syntax:'<color>';inherits:false;initial-value:#EFB92E}
+@property --sd{syntax:'<number>';inherits:false;initial-value:0}
+@property --cA{syntax:'<color>';inherits:false;initial-value:#262A33}
+@property --cB{syntax:'<color>';inherits:false;initial-value:#1A1D24}
+@property --cd{syntax:'<number>';inherits:false;initial-value:0}
+@property --tA{syntax:'<color>';inherits:false;initial-value:#15171C}
+@property --tB{syntax:'<color>';inherits:false;initial-value:#15171C}
+html{--xs:1}
+html.xmas{--xe:cubic-bezier(.34,1.6,.5,1)}
+
+/* --- WhatsApp-Leiste (zuerst, 0 s) --- */
+html.xmas .newsbar{
+  --nA:var(--h1);--nB:var(--h2);background:linear-gradient(180deg,var(--nA),var(--nB));
+  transition:--nA calc(var(--xs)*1s) ease,--nB calc(var(--xs)*1s) ease,color calc(var(--xs)*1s) ease
+}
+html.xmas .newsbar b{transition:background-color calc(var(--xs)*1s),color calc(var(--xs)*1s)}
+html.xmas .newsbar .wa-ico,html.xmas .newsbar-go{transition:color calc(var(--xs)*1s)}
+html.xmas.xm-pre .newsbar{--nA:#EFB92E;--nB:#EFB92E;color:#15171C}
+html.xmas.xm-pre .newsbar b{background:#15171C;color:#EFB92E}
+html.xmas.xm-pre .newsbar .wa-ico,html.xmas.xm-pre .newsbar-go{color:#15171C}
+html.xmas .newsbar::before,html.xmas .newsbar::after{transition:opacity calc(var(--xs)*.5s) ease calc(var(--xs)*.7s),translate calc(var(--xs)*.7s) var(--xe) calc(var(--xs)*.7s)}
+html.xmas.xm-pre .newsbar::before,html.xmas.xm-pre .newsbar::after{opacity:0;translate:0 -14px}
+
+/* --- Menue (0,25 s) --- */
+html.xmas nav{
+  --vA:var(--h2);--vB:var(--h3);background:linear-gradient(180deg,var(--vA),var(--vB));border-bottom:1px solid transparent;
+  transition:--vA calc(var(--xs)*1s) ease calc(var(--xs)*.25s),--vB calc(var(--xs)*1s) ease calc(var(--xs)*.25s),border-color calc(var(--xs)*1s) ease calc(var(--xs)*.25s)
+}
+html.xmas.xm-pre nav{--vA:rgba(21,23,28,.9);--vB:rgba(21,23,28,.9);border-bottom-color:var(--line);backdrop-filter:blur(12px)}
+html.xmas nav::after{transition:opacity calc(var(--xs)*1s) ease calc(var(--xs)*.25s)}
+html.xmas.xm-pre nav::after{opacity:0}
+html.xmas nav svg polyline{transition:stroke calc(var(--xs)*1s) ease calc(var(--xs)*.3s)}
+html.xmas.xm-pre nav svg polyline{stroke:#EFB92E}
+html.xmas .nav-links a{transition:color calc(var(--xs)*1s) ease calc(var(--xs)*.3s),box-shadow calc(var(--xs)*.8s) ease calc(var(--xs)*.5s)}
+html.xmas.xm-pre .nav-links a{color:var(--muted)}
+html.xmas.xm-pre .nav-links a.active{color:var(--bone);box-shadow:0 2px 0 rgba(236,233,226,0)}
+html.xmas nav .btn-blitz,html.xmas .nav-links .nav-book{transition:background-color calc(var(--xs)*1s) ease calc(var(--xs)*.35s),color calc(var(--xs)*1s) ease calc(var(--xs)*.35s),box-shadow calc(var(--xs)*1s) ease calc(var(--xs)*.35s)}
+html.xmas.xm-pre nav .btn-blitz,html.xmas.xm-pre .nav-links .nav-book{background:var(--blitz);color:#15171C;box-shadow:0 0 0 1px rgba(243,238,227,0) inset}
+@media(max-width:900px){html.xmas.xm-pre .nav-links a{color:var(--bone)}}
+
+/* --- Streifen (0,5 s) --- */
+html.xmas .gs-strip.gs-auto{
+  --sA:var(--h3);--sB:var(--h4);--sd:.07;
+  background:radial-gradient(circle at 20% 0,rgba(255,255,255,var(--sd)) 0 2px,transparent 3px) 0 0/34px 34px,linear-gradient(180deg,var(--sA),var(--sB));
+  transition:--sA calc(var(--xs)*1s) ease calc(var(--xs)*.5s),--sB calc(var(--xs)*1s) ease calc(var(--xs)*.5s),--sd calc(var(--xs)*1s) ease calc(var(--xs)*.5s),color calc(var(--xs)*1s) ease calc(var(--xs)*.5s)
+}
+html.xmas .gs-strip.gs-nik.gs-auto{--sd:.07}
+html.xmas.xm-pre .gs-strip.gs-auto{--sA:#EFB92E;--sB:#EFB92E;--sd:0;color:#15171C;border-bottom:0}
+html.xmas .gs-strip.gs-auto b{transition:color calc(var(--xs)*1s) ease calc(var(--xs)*.5s)}
+html.xmas.xm-pre .gs-strip.gs-auto b{color:#15171C}
+html.xmas .gs-strip.gs-auto::before,html.xmas .gs-strip.gs-auto::after{transition:opacity calc(var(--xs)*.6s) ease calc(var(--xs)*.9s),translate calc(var(--xs)*.8s) var(--xe) calc(var(--xs)*.9s)}
+html.xmas.xm-pre .gs-strip.gs-auto::before{opacity:0;translate:-24px 0}
+html.xmas.xm-pre .gs-strip.gs-auto::after{opacity:0;translate:24px 0}
+html.xmas .gs-strip .xm-face{transition:scale calc(var(--xs)*.6s) var(--xe) calc(var(--xs)*1.1s),opacity calc(var(--xs)*.3s) ease calc(var(--xs)*1.1s)}
+html.xmas.xm-pre .gs-strip .xm-face{scale:.2;opacity:0}
+.gs-strip b.xm-swap{animation:xmSwap calc(var(--xs)*.55s) ease both}
+@keyframes xmSwap{0%{opacity:0;translate:0 8px}100%{opacity:1;translate:0 0}}
+
+/* --- Kopfbereich: Farbstich, Foto, Schneewehe (0,7 s) --- */
+html.xmas .page-hero.fade-hero::before{transition:opacity calc(var(--xs)*1.6s) ease calc(var(--xs)*.7s)}
+html.xmas.xm-pre .page-hero.fade-hero::before{opacity:0}
+html.xmas .page-hero.fade-hero::after{transition:translate calc(var(--xs)*1.3s) cubic-bezier(.2,.8,.3,1) calc(var(--xs)*1.2s)}
+html.xmas.xm-pre .page-hero.fade-hero::after{translate:0 110%}
+html.xmas .page-hero.fade-hero{transition:padding-bottom calc(var(--xs)*1.2s) ease calc(var(--xs)*.9s)}
+html.xmas .page-hero.fade-hero>.wrap{transition:padding-top calc(var(--xs)*1.2s) ease calc(var(--xs)*.9s)}
+@media(min-width:901px){html.xmas.xm-pre .page-hero.fade-hero{padding-bottom:84px}html.xmas.xm-pre .page-hero.fade-hero>.wrap{padding-top:0}}
+@media(max-width:900px){html.xmas.xm-pre .page-hero.fade-hero{padding-bottom:0}html.xmas.xm-pre .page-hero.fade-hero>.wrap{padding-top:0}}
+.fade-img img.xm-img2{position:absolute;inset:0;transition:opacity calc(var(--xs)*1.5s) ease calc(var(--xs)*.7s)}
+html.xmas.xm-pre .fade-img img.xm-img2{opacity:0}
+
+/* --- Lichterkette faellt herunter und geht Lampe fuer Lampe an (1,0 s) --- */
+.xm-lights .b{animation:xmGlow 2.6s ease-in-out var(--gd,0s) infinite}
+html.xmas .xm-lights{transition:translate calc(var(--xs)*.9s) var(--xe) calc(var(--xs)*1s),opacity calc(var(--xs)*.3s) ease calc(var(--xs)*1s)}
+html.xmas.xm-pre .xm-lights{translate:0 -70px;opacity:0}
+html.xmas:not(.xm-pre) .xm-lights .b{
+  transform-box:fill-box;transform-origin:50% 0;
+  animation:xmBulbOn calc(var(--xs)*.55s) var(--xe) calc(var(--xs)*(1.5s + var(--i,0)*45ms)) backwards,xmGlow 2.6s ease-in-out var(--gd,0s) infinite
+}
+html.xmas.xm-pre .xm-lights .b{animation:none}
+@keyframes xmBulbOn{0%{scale:1;filter:grayscale(1) brightness(.32)}55%{scale:1.35;filter:grayscale(0) brightness(2)}100%{scale:1;filter:none}}
+
+/* --- Schnee, Muetze, Socke, Zaehler (1,3 s bis 2,4 s) --- */
+html.xmas .xm-snow{transition:opacity calc(var(--xs)*1.6s) ease calc(var(--xs)*1.3s)}
+html.xmas.xm-pre .xm-snow{opacity:0}
+nav .xm-hat{transform-origin:30% 100%;transition:scale calc(var(--xs)*.7s) cubic-bezier(.3,1.9,.5,1) calc(var(--xs)*1.7s)}
+html.xmas.xm-pre nav .xm-hat{scale:0}
+html.xmas .page-hero h1 .xm-sock{transition:color calc(var(--xs)*.8s) ease calc(var(--xs)*1.8s),background-size calc(var(--xs)*.9s) ease-out calc(var(--xs)*1.8s)}
+html.xmas.xm-pre .page-hero h1 .xm-sock{color:inherit;background-size:0% 4px}
+html.xmas .page-hero h1 .xm-stock{transition:opacity calc(var(--xs)*.3s) ease calc(var(--xs)*2s),translate calc(var(--xs)*.7s) var(--xe) calc(var(--xs)*2s)}
+html.xmas.xm-pre .page-hero h1 .xm-stock{opacity:0;translate:0 -26px}
+html.xmas .gs-pills .xm-count{transition:scale calc(var(--xs)*.6s) var(--xe) calc(var(--xs)*2.2s),opacity calc(var(--xs)*.3s) ease calc(var(--xs)*2.2s)}
+html.xmas.xm-pre .gs-pills .xm-count{scale:.3;opacity:0}
+
+/* --- Unterer Teil: erscheint, sobald man hinscrollt (Klasse xm-in setzt das Skript) --- */
+html.xmas .xm-w .xm-ribbon{clip-path:inset(-80px -12px -4px -12px);transition:clip-path calc(var(--xs)*1s) cubic-bezier(.3,.7,.3,1) calc(var(--xs)*.1s)}
+html.xmas .xm-w:not(.xm-in) .xm-ribbon{clip-path:inset(-80px -12px 101% -12px)}
+html.xmas .xm-w .xm-bow{transition:scale calc(var(--xs)*.7s) cubic-bezier(.3,1.9,.5,1) calc(var(--xs)*.7s)}
+html.xmas .xm-w:not(.xm-in) .xm-bow{scale:0}
+.xm-bow{transform-origin:50% 90%}
+html.xmas .gs-v.xm-w:not(.xm-plain){
+  --cA:var(--x-acc);--cB:var(--x-acc-d);--cd:1;
+  background:
+    radial-gradient(circle at 20% 0,rgba(255,255,255,calc(.08*var(--cd))) 0 1.5px,transparent 2.5px) 0 0/34px 34px,
+    radial-gradient(circle at 70% 55%,rgba(245,208,97,calc(.1*var(--cd))) 0 1.2px,transparent 2.4px) 0 0/23px 23px,
+    linear-gradient(160deg,var(--cA) 0%,var(--cB) 100%);
+  transition:--cA calc(var(--xs)*1s) ease,--cB calc(var(--xs)*1s) ease,--cd calc(var(--xs)*1s) ease,border-color calc(var(--xs)*1s) ease
+}
+html.xmas .gs-v.xm-w:not(.xm-plain):not(.xm-in){--cA:#262A33;--cB:#1A1D24;--cd:0;border-color:var(--blitz)}
+html.xmas .gs-v.xm-w:not(.xm-plain)::before,html.xmas .gs-v.xm-w:not(.xm-plain)::after{transition:opacity calc(var(--xs)*.8s) ease calc(var(--xs)*.5s)}
+html.xmas .gs-v.xm-w:not(.xm-in)::before,html.xmas .gs-v.xm-w:not(.xm-in)::after{opacity:0}
+/* Zuckerstangen-Streifen laufen von links ein */
+html.xmas .xm-w.xm-cs::before,html.xmas .xm-w.xm-cs>.xm-candy{transition:clip-path calc(var(--xs)*1s) cubic-bezier(.3,.7,.3,1)}
+html.xmas .xm-w.xm-cs:not(.xm-in)::before{clip-path:inset(0 100% 0 0)}
+html.xmas .xm-w.xm-cs.xm-in::before{clip-path:inset(0 0 0 0)}
+/* Ablauf- und Abschlussbereich faerben sich ein */
+html.xmas section.gv.xm-w{transition:background-color calc(var(--xs)*1.2s) ease}
+html.xmas section.gv.xm-w:not(.xm-in){background-color:#101216}
+html.xmas .gv.xm-w .gv-bg::before{transition:opacity calc(var(--xs)*1.4s) ease}
+html.xmas .gv.xm-w:not(.xm-in) .gv-bg::before{opacity:0}
+html.xmas section.cta.xm-w{
+  --tA:var(--x-acc-d);--tB:#101216;background:linear-gradient(180deg,var(--tA),var(--tB) 75%);
+  transition:--tA calc(var(--xs)*1.2s) ease
+}
+html.xmas section.cta.xm-w:not(.xm-in){--tA:#15171C;--tB:#15171C}
+
+/* Erster Schritt der Wiedergabe in der Vorschau: alles sofort auf "vorher" */
+html.xm-now *,html.xm-now *::before,html.xm-now *::after{transition:none!important;animation:none!important}
+
+@media(prefers-reduced-motion:reduce){
+  html.xmas *,html.xmas *::before,html.xmas *::after{transition:none!important}
+}
