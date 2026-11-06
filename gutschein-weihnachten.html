@@ -175,6 +175,14 @@
             <button type="button" class="gs-quick" id="gsXmas">Am 24.12. morgens verschicken</button>
             <div class="small" style="margin-top:8px">Leer lassen = sofort. Der Versand erfolgt morgens am gew&auml;hlten Tag.</div>
           </div>
+          <div class="buyer-only" id="gsBuyerOpts" style="margin:22px 0 6px;padding:16px 18px;border:1px solid #2E323B">
+            <div style="font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px">Wie m&ouml;chtest du ihn bekommen?</div>
+            <div class="gs-check" style="margin-top:0">
+              <input type="checkbox" id="optPdf">
+              <label for="optPdf"><b style="color:#ECE9E2">Zus&auml;tzlich als PDF-Datei</b> &ndash; h&auml;ngt als Anhang an der Mail, zum Speichern, Ausdrucken oder Weiterleiten.</label>
+            </div>
+            <div id="gsBuyerExtra"></div>
+          </div>
           <div class="gs-check">
             <input type="checkbox" id="agb">
             <label for="agb">Ich habe die <a href="gutschein-bedingungen.html">Gutscheinbedingungen</a>, die <a href="gutschein-bedingungen.html#widerruf">Widerrufsbelehrung</a> und die <a href="datenschutz.html">Datenschutzerkl&auml;rung</a> gelesen und stimme zu, dass der Gutschein sofort nach der Zahlung per E-Mail bereitgestellt wird.</label>
@@ -409,6 +417,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
       x.classList.toggle('on', x.dataset.mode === m);
     });
     document.querySelectorAll('.gift-only').forEach(function (el) { el.hidden = (m !== 'gift'); });
+    document.querySelectorAll('.buyer-only').forEach(function (el) { el.hidden = (m === 'gift'); });
   }
   document.getElementById('gsMode').addEventListener('click', function (e) {
     var b = e.target.closest('button');
@@ -468,6 +477,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
         delivery: mode,
         giftEmail: mode === 'gift' ? giftEmail : '',
         sendDate: mode === 'gift' ? sd.value : '',
+        pdf: (mode === 'buyer' && document.getElementById('optPdf').checked) ? 1 : 0,
         design: (window.fdDesign ? window.fdDesign() : '')
       })
     })
