@@ -121,7 +121,7 @@ html.xmas .gs-v:not(.xm-plain)::before{
 }
 .xm-rt{writing-mode:vertical-rl;font:400 15px/1 var(--display);letter-spacing:.3em;text-transform:uppercase;color:rgba(21,23,28,.8);white-space:nowrap}
 .xm-bow{position:absolute;left:50%;top:-58px;width:156px;margin-left:-78px;height:auto;filter:drop-shadow(0 5px 6px rgba(0,0,0,.45))}
-html.xmas .gs-v.xm-plain .xm-ribbon{display:none}
+html.xmas .gs-v.xm-plain>.xm-ribbon:not(.xa):not(.xb):not(.xc){display:none}
 @media(max-width:520px){
   html.xmas .gs-v:not(.xm-plain){padding-right:84px}
   .gs-v>.xm-ribbon:not(.xa):not(.xb):not(.xc){width:36px;right:20px}
