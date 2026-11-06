@@ -20,6 +20,12 @@
   if (mode === 'nik') root.classList.add('nik');
   var NIK = mode === 'nik';
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* Einzug: Die Seite startet im Normalzustand (xm-pre) und wechselt nach kurzer Pause in ca. 3 Sekunden ins Festtagsdesign.
+     Abschalten: ?xmintro=off oder window.XM_INTRO = false. Tempo: window.XM_SPEED (1 = normal, kleiner = schneller). */
+  var intro = !reduce && window.XM_INTRO !== false && !/[?&]xmintro=off/.test(location.search);
+  if (window.XM_SPEED) root.style.setProperty('--xs', window.XM_SPEED);
+  if (intro) root.classList.add('xm-pre', 'xm-now');
+  var xs = parseFloat(getComputedStyle(root).getPropertyValue('--xs')) || 1;
 
   function ready(fn) { if (document.readyState !== 'loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
 
@@ -32,13 +38,23 @@
   ready(function () {
     var hero = document.querySelector('.page-hero');
     var strip = document.querySelector('.gs-strip.gs-auto');
+    var stripFx = null;
 
     /* Streifen: Farbe und Text nach Datum */
     if (strip) {
       strip.classList.remove('gs-xmas', 'gs-nik');
       strip.classList.add(NIK ? 'gs-nik' : 'gs-xmas');
       var b = strip.querySelector('b');
-      if (b) b.textContent = NIK ? 'Frohen Nikolaus am 6. Dezember' : 'Zu Weihnachten schenken';
+      var stripTxt = NIK ? 'Frohen Nikolaus am 6. Dezember' : 'Zu Weihnachten schenken';
+      if (b) {
+        if (intro) {
+          var stripOrig = b.textContent;
+          stripFx = {
+            reset: function () { b.textContent = stripOrig; b.classList.remove('xm-swap'); },
+            run: function () { var k = parseFloat(getComputedStyle(root).getPropertyValue('--xs')) || 1; setTimeout(function () { b.textContent = stripTxt; b.classList.remove('xm-swap'); void b.offsetWidth; b.classList.add('xm-swap'); }, 900 * k); }
+          };
+        } else b.textContent = stripTxt;
+      }
     }
 
     /* Figuren: Weihnachtsmann (Nikolaus mit Bischofsmuetze), Muetze am Logo, Socke an der Ueberschrift */
@@ -109,10 +125,19 @@
     /* Foto: das Aussenfoto hat blauen Sommerhimmel, im Winterdesign kommt das Studio */
     var himg = hero && hero.querySelector('.fade-img img');
     if (himg) {
-      himg.src = window.XM_HERO || 'newforge-studio.webp';
-      himg.alt = 'Das Forged Studio in Solingen-Ohligs';
+      var heroSrc = window.XM_HERO || 'newforge-studio.webp';
       var fig = himg.closest('.fade-img');
-      if (fig) { fig.style.setProperty('--pos', '58% 50%'); fig.style.setProperty('--posm', '52% 50%'); }
+      if (intro && fig) {
+        /* zweites Bild liegt darueber und blendet ein, das Aussenfoto bleibt darunter */
+        var im2 = new Image();
+        im2.className = 'xm-img2'; im2.alt = 'Das Forged Studio in Solingen-Ohligs'; im2.decoding = 'async';
+        im2.style.setProperty('--pos', '58% 50%'); im2.style.setProperty('--posm', '52% 50%');
+        im2.src = heroSrc; fig.appendChild(im2);
+      } else {
+        himg.src = heroSrc;
+        himg.alt = 'Das Forged Studio in Solingen-Ohligs';
+        if (fig) { fig.style.setProperty('--pos', '58% 50%'); fig.style.setProperty('--posm', '52% 50%'); }
+      }
     }
 
     /* Auswahl: Gutschein im Nikolaus-Design (nur bis 6.12. 18 Uhr), im Weihnachts-Design oder ohne Saison-Design */
@@ -179,7 +204,7 @@
       for (i = 0; i < n; i++) {
         var cx = i * step, col = palette[i % palette.length];
         var cy = 4 + sag + 6;
-        bulbs += '<g class="b" style="animation-delay:' + (-(i * 0.37 % 2.6)).toFixed(2) + 's">' +
+        bulbs += '<g class="b" style="--i:' + i + ';--gd:' + (-(i * 0.37 % 2.6)).toFixed(2) + 's">' +
           '<rect x="' + (cx - 2.5) + '" y="' + (cy - 14) + '" width="5" height="6" fill="#2A2D33"/>' +
           '<ellipse cx="' + cx + '" cy="' + (cy + 2) + '" rx="5.5" ry="8" fill="' + col + '"/>' +
           '<ellipse cx="' + cx + '" cy="' + (cy + 2) + '" rx="12" ry="14" fill="' + col + '" opacity=".18"/></g>';
@@ -196,6 +221,31 @@
     var gv = document.querySelector('section.gv'); if (gv) hosts.push(gv);
     if (cta) hosts.push(cta);
     hosts.forEach(snow);
+
+    /* Einzug starten: kurze Pause im Normalzustand, dann gestaffelter Wechsel. Unterer Teil folgt beim Hinscrollen. */
+    var waits = [];
+    if (intro) {
+      [card, document.querySelector('.gs-cfg .gs-pay'), document.querySelector('section.gv'), cta].forEach(function (e) {
+        if (!e) return;
+        e.classList.add('xm-w');
+        if (e !== card) { e.classList.add('xm-cs'); }
+        waits.push(e);
+      });
+      var io = 'IntersectionObserver' in window ? new IntersectionObserver(function (es) {
+        es.forEach(function (en) { if (en.isIntersecting && !root.classList.contains('xm-pre')) { en.target.classList.add('xm-in'); io.unobserve(en.target); } });
+      }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }) : null;
+      var arm = function () { waits.forEach(function (e) { if (io) io.observe(e); else e.classList.add('xm-in'); }); };
+      var go = function () { root.classList.remove('xm-pre'); if (stripFx) stripFx.run(); arm(); };
+      window.fdXmReplay = function () {
+        clearTimeout(window.__xmT);
+        waits.forEach(function (e) { e.classList.remove('xm-in'); if (io) io.unobserve(e); });
+        if (stripFx) stripFx.reset(); root.classList.add('xm-pre', 'xm-now'); void root.offsetWidth; root.classList.remove('xm-now');
+        window.scrollTo(0, 0);
+        window.__xmT = setTimeout(go, 700);
+      };
+      var kick = function () { requestAnimationFrame(function () { requestAnimationFrame(function () { root.classList.remove('xm-now'); window.__xmT = setTimeout(go, 600); }); }); };
+      if (document.readyState === 'complete') kick(); else window.addEventListener('load', kick);
+    }
 
     function snow(host) {
       var cv = document.createElement('canvas'); cv.className = 'xm-snow'; cv.setAttribute('aria-hidden', 'true');
