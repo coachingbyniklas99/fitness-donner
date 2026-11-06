@@ -1,0 +1,215 @@
+/* ======================================================================
+   Gutscheinseite: Nikolaus- und Weihnachtsdesign (Vorlage)
+   Aktiv nur, wenn gutschein-xmas.js die Klasse "xmas" auf <html> setzt
+   (1. Nov. bis 24. Dez.). Vom 6.12. an wechselt "nik" auf Weihnachten.
+   Danach ist die Seite von selbst wieder im Normalzustand.
+   ====================================================================== */
+
+html.xmas{
+  --x-green:#17402F;--x-green-d:#0F2B20;--x-red:#C8323A;--x-red-d:#8C1822;--x-gold:#F5D061;--x-snow:#F3EEE3;
+  --x-acc:var(--x-green);--x-acc-d:var(--x-green-d);
+}
+html.xmas.nik{--x-acc:#7E1A22;--x-acc-d:#4A0F15}
+
+/* Zuckerstangen-Streifen als Trennlinie */
+html.xmas .xm-candy,
+html.xmas .gs-pay::before,
+html.xmas section.gv::before,
+html.xmas section.cta::before{
+  content:"";display:block;height:7px;
+  background:repeating-linear-gradient(-45deg,var(--x-red) 0 10px,var(--x-snow) 10px 20px)
+}
+
+/* ---------- Kopfbereich ---------- */
+html.xmas .page-hero.fade-hero::before{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 70% at 92% 0,rgba(200,50,58,.34),transparent 70%),
+    radial-gradient(ellipse 70% 80% at 0 100%,var(--x-acc),transparent 72%),
+    radial-gradient(ellipse 40% 40% at 50% 0,rgba(245,208,97,.16),transparent 70%)
+}
+html.xmas .page-hero .fade-img{z-index:0}
+html.xmas .page-hero h1 .xm-sock{
+  color:var(--x-gold);
+  background:repeating-linear-gradient(90deg,var(--x-gold) 0 9px,transparent 9px 15px) 0 100%/100% 4px no-repeat;
+  padding-bottom:6px
+}
+html.xmas .gs-pills .xm-count{
+  border-color:var(--x-gold);background:linear-gradient(90deg,var(--x-red-d),var(--x-red));color:#fff;
+  box-shadow:0 0 0 3px rgba(245,208,97,.18)
+}
+html.xmas .gs-pills .xm-count b{color:var(--x-gold)}
+
+/* Schneewehe unter dem Kopfbereich */
+html.xmas .page-hero.fade-hero::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:26px;z-index:3;pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 26' preserveAspectRatio='none'%3E%3Cpath d='M0 26V15C20 5 38 5 60 13S100 21 120 12 160 3 180 11 222 21 240 13V26Z' fill='%23F3EEE3'/%3E%3C/svg%3E") 0 100%/240px 26px repeat-x
+}
+html.xmas .page-hero.fade-hero{padding-bottom:104px}
+@media(max-width:900px){html.xmas .page-hero.fade-hero{padding-bottom:40px}html.xmas .page-hero.fade-hero::after{height:20px;background-size:180px 20px}}
+
+/* ---------- Schnee ---------- */
+.xm-snow{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none}
+
+/* ---------- Lichterkette ---------- */
+.xm-lights{position:absolute;left:0;right:0;top:0;height:58px;z-index:4;pointer-events:none;overflow:hidden}
+.xm-lights svg{display:block;width:100%;height:100%;overflow:visible}
+.xm-lights .b{animation:xmGlow 2.6s ease-in-out infinite}
+@keyframes xmGlow{0%,100%{opacity:1}50%{opacity:.38}}
+html.xmas .page-hero.fade-hero>.wrap{padding-top:22px}
+
+/* ---------- Streifen oben ---------- */
+html.xmas .gs-strip{border-bottom:0}
+html.xmas .gs-strip::after{z-index:0}
+html.xmas .gs-strip.gs-xmas,html.xmas .gs-strip.gs-nik{position:relative}
+
+/* ---------- Konfigurator ---------- */
+html.xmas section.gs-cfg-sec{
+  background:
+    radial-gradient(circle at 20% 0,rgba(255,255,255,.055) 0 1.5px,transparent 2.5px) 0 0/46px 46px,
+    radial-gradient(circle at 70% 60%,rgba(255,255,255,.04) 0 1px,transparent 2px) 0 0/31px 31px,
+    linear-gradient(180deg,#171C1B 0,var(--bg) 360px)
+}
+html.xmas .gs-no{
+  position:relative;color:#fff;border-color:var(--x-gold);
+  background:radial-gradient(circle at 35% 30%,#EE646B,var(--x-red) 55%,var(--x-red-d))
+}
+html.xmas .gs-no::before{
+  content:"";position:absolute;left:50%;top:-8px;width:12px;height:7px;margin-left:-6px;
+  background:linear-gradient(90deg,#C9A23A,var(--x-gold),#C9A23A);border-radius:2px 2px 0 0
+}
+html.xmas .gs-cfg .gs-opt.on{
+  border-color:var(--x-gold);box-shadow:inset 0 0 0 1px var(--x-gold);
+  background:linear-gradient(135deg,var(--x-acc),rgba(21,23,28,.4))
+}
+html.xmas .gs-cfg .gs-opt:hover{border-color:var(--x-gold)}
+html.xmas .gs-quick{border-color:var(--x-gold);color:var(--x-gold)}
+html.xmas .gs-quick+.gs-quick,html.xmas .gs-quick.xm-nikbtn{margin-right:8px}
+html.xmas .gs-cfg .gs-toggle button.on{background:var(--x-gold)}
+
+/* ---------- Gutschein-Vorschau: Geschenkpaket mit goldener Schleife ---------- */
+html.xmas .gs-vwrap::before{background:radial-gradient(closest-side,rgba(245,208,97,.2),rgba(200,50,58,.16) 55%,transparent)}
+html.xmas .gs-vwrap{padding-top:56px;overflow-x:clip}
+html.xmas .gs-v:not(.xm-plain){
+  overflow:visible;border:2px solid var(--x-gold);padding-right:118px;
+  background:
+    radial-gradient(circle at 20% 0,rgba(255,255,255,.08) 0 1.5px,transparent 2.5px) 0 0/34px 34px,
+    radial-gradient(circle at 70% 55%,rgba(245,208,97,.1) 0 1.2px,transparent 2.4px) 0 0/23px 23px,
+    linear-gradient(160deg,var(--x-acc) 0%,var(--x-acc-d) 100%);
+  box-shadow:0 34px 80px rgba(0,0,0,.55),0 0 60px rgba(245,208,97,.1)
+}
+html.xmas .gs-v:not(.xm-plain) .gs-v-bg{
+  inset:0 0 auto 0;width:100%;height:68%;object-fit:cover;object-position:50% 38%;opacity:.9;filter:saturate(.95) brightness(.92);
+  -webkit-mask-image:linear-gradient(180deg,#000 0,#000 28%,transparent 100%);mask-image:linear-gradient(180deg,#000 0,#000 28%,transparent 100%)
+}
+html.xmas .gs-v:not(.xm-plain) .gs-v-shade{
+  inset:0 0 auto 0;height:68%;
+  background:linear-gradient(180deg,rgba(14,16,20,.35) 0,rgba(14,16,20,0) 60%),linear-gradient(180deg,var(--x-acc) 0,transparent 100%);opacity:.7
+}
+html.xmas .gs-v:not(.xm-plain)::after{content:"";position:absolute;inset:9px;border:1px solid rgba(245,208,97,.4);pointer-events:none;z-index:2}
+html.xmas .gs-v:not(.xm-plain) .gs-v-val{text-shadow:0 4px 18px rgba(0,0,0,.4)}
+html.xmas .gs-v:not(.xm-plain) .gs-v-code{border-top-color:rgba(245,208,97,.55);flex-wrap:wrap}
+html.xmas .gs-v:not(.xm-plain) .gs-v-meta{text-align:left}
+html.xmas .gs-v:not(.xm-plain)::before{
+  content:"";position:absolute;left:-5px;right:-5px;top:-5px;height:22px;z-index:3;pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 22' preserveAspectRatio='none'%3E%3Cpath d='M0 0H160V9C150 18 140 18 130 10S110 2 100 10 80 21 70 12 50 3 40 11 20 20 10 12 4 8 0 9Z' fill='%23F3EEE3'/%3E%3C/svg%3E") 0 0/160px 22px repeat-x
+}
+.gs-v>.xm-ribbon:not(.xa):not(.xb):not(.xc){
+  position:absolute;top:-5px;bottom:-2px;right:34px;width:48px;z-index:4;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(90deg,#B8902B 0,#F5D061 24%,#FBE59A 50%,#F5D061 76%,#B8902B 100%);
+  box-shadow:0 0 0 1px rgba(0,0,0,.3),0 0 22px rgba(0,0,0,.4)
+}
+.xm-rt{writing-mode:vertical-rl;font:400 15px/1 var(--display);letter-spacing:.3em;text-transform:uppercase;color:rgba(21,23,28,.8);white-space:nowrap}
+.xm-bow{position:absolute;left:50%;top:-58px;width:156px;margin-left:-78px;height:auto;filter:drop-shadow(0 5px 6px rgba(0,0,0,.45))}
+html.xmas .gs-v.xm-plain .xm-ribbon{display:none}
+@media(max-width:520px){
+  html.xmas .gs-v:not(.xm-plain){padding-right:84px}
+  .gs-v>.xm-ribbon:not(.xa):not(.xb):not(.xc){width:36px;right:20px}
+  .xm-rt{font-size:12px}
+  .xm-bow{width:118px;margin-left:-59px;top:-44px}
+  html.xmas .gs-v:not(.xm-plain) .gs-v-top i{display:none}
+}
+
+/* ---------- Design-Auswahl ---------- */
+.xm-design{margin-top:22px}
+.xm-design .gs-lab{display:block;font-size:14px;font-weight:600;color:#D5D6DA;margin-bottom:9px}
+.xm-design .gs-opts{grid-template-columns:repeat(2,minmax(0,1fr))}
+.xm-design .gs-opts.xm-three{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:620px){.xm-design .gs-opts.xm-three{grid-template-columns:1fr}}
+.xm-design .gs-opt[data-d="nik"].on{background:linear-gradient(135deg,#7E1A22,rgba(21,23,28,.4))}
+.xm-design .gs-opt[data-d="xmas"].on{background:linear-gradient(135deg,#17402F,rgba(21,23,28,.4))}
+html.xmas .gs-v.xm-v-nik{--x-acc:#7E1A22;--x-acc-d:#4A0F15}
+html.xmas .gs-v.xm-v-xmas{--x-acc:var(--x-green);--x-acc-d:var(--x-green-d)}
+
+/* ---------- Kasse ---------- */
+html.xmas .gs-cfg .gs-pay{border-color:rgba(245,208,97,.4);position:relative;padding-top:33px}
+html.xmas .gs-cfg .gs-pay::before{position:absolute;left:-1px;right:-1px;top:-1px}
+html.xmas .gs-paybtn{box-shadow:0 0 0 3px rgba(200,50,58,.9),0 10px 30px rgba(200,50,58,.35)}
+
+/* ---------- Ablauf ---------- */
+html.xmas section.gv{background:var(--x-acc-d)}
+html.xmas .gv-bg img{filter:grayscale(1) brightness(.62) contrast(1.1)}
+html.xmas .gv-bg::before{content:"";position:absolute;inset:0;z-index:1;background:radial-gradient(ellipse 80% 70% at 12% 100%,var(--x-acc),transparent 70%),radial-gradient(ellipse 60% 60% at 92% 10%,rgba(200,50,58,.4),transparent 70%);mix-blend-mode:normal;opacity:.9}
+html.xmas .gv-bg::after{z-index:2}
+html.xmas section.gv::before{position:absolute;left:0;right:0;top:0;z-index:3}
+html.xmas .gv-s::before{border-color:var(--x-gold)}
+html.xmas .gv-track.on .gv-s::before{background:var(--x-red);border-color:var(--x-gold)}
+html.xmas .gv-line i{background:linear-gradient(90deg,var(--x-red),var(--x-gold))}
+html.xmas .gv-lbl.r{color:var(--x-gold)}
+
+/* ---------- Abschluss ---------- */
+html.xmas section.cta{position:relative;background:linear-gradient(180deg,var(--x-acc-d),#101216 75%);overflow:hidden}
+html.xmas section.cta::before{position:absolute;left:0;right:0;top:0}
+html.xmas section.cta .wrap{position:relative;z-index:2}
+
+@media(prefers-reduced-motion:reduce){.xm-lights .b{animation:none}}
+
+/* ======================================================================
+   Kopfbereich aus einem Guss: WhatsApp-Leiste, Menue und Streifen laufen
+   farblich ineinander. Weihnachten = Gruen, Nikolaus = Rot. Kein Gelb.
+   ====================================================================== */
+html.xmas{--h1:#1F5C43;--h2:#17402F;--h3:#122F23;--h4:#0F2B20;--btn:#C8323A;--btn-h:#DC4049}
+html.xmas.nik{--h1:#B5222C;--h2:#8C1822;--h3:#6E141C;--h4:#561018;--btn:#1F7A55;--btn-h:#27936A}
+
+html.xmas .newsbar{position:relative;color:#F3EEE3;background:linear-gradient(180deg,var(--h1),var(--h2))}
+html.xmas .newsbar a{position:relative;z-index:1}
+html.xmas .newsbar b{background:#F3EEE3;color:var(--h3)}
+html.xmas .newsbar .wa-ico,html.xmas .newsbar-go{color:#fff}
+html.xmas .newsbar-go{text-decoration:underline;text-underline-offset:3px}
+html.xmas .newsbar::before,html.xmas .newsbar::after{
+  content:"";position:absolute;top:50%;width:44px;height:38px;margin-top:-19px;pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 44'%3E%3Cpath d='M20 2l12 16h-6l9 12H27l7 10H6l7-10H5l9-12H8Z' fill='%232E8B5E'/%3E%3Crect x='17' y='38' width='6' height='6' fill='%236B4A2B'/%3E%3Cpath d='M20 0l1.8 4 4.2.4-3.2 2.8 1 4.1-3.8-2.2-3.8 2.2 1-4.1L14 4.4l4.2-.4Z' fill='%23F5D061'/%3E%3Ccircle cx='17' cy='20' r='1.8' fill='%23C8323A'/%3E%3Ccircle cx='24' cy='28' r='1.8' fill='%23F5D061'/%3E%3Ccircle cx='15' cy='34' r='1.8' fill='%23F5D061'/%3E%3Ccircle cx='26' cy='36' r='1.6' fill='%23C8323A'/%3E%3C/svg%3E") center/auto 100% no-repeat
+}
+html.xmas .newsbar::before{left:max(16px,calc(50% - 620px))}
+html.xmas .newsbar::after{right:max(16px,calc(50% - 620px));background-position:center;transform:scaleX(-1)}
+@media(max-width:1100px){html.xmas .newsbar::before,html.xmas .newsbar::after{display:none}}
+
+/* Menue: gleiche Farbfamilie, direkt anschliessend */
+html.xmas nav{background:linear-gradient(180deg,var(--h2),var(--h3));backdrop-filter:none;border-bottom:0}
+html.xmas nav::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:rgba(243,238,227,.22)}
+html.xmas nav svg polyline{stroke:#F3EEE3}
+html.xmas .nav-links a{color:rgba(243,238,227,.78)}
+html.xmas .nav-links a:hover,html.xmas .nav-links a.active{color:#fff}
+html.xmas .nav-links a.active{box-shadow:0 2px 0 #F3EEE3}
+html.xmas nav .btn-blitz,html.xmas .nav-links .nav-book{background:var(--btn);color:#fff;box-shadow:0 0 0 1px rgba(243,238,227,.55) inset}
+html.xmas nav .btn-blitz:hover{background:var(--btn-h)}
+html.xmas .nav-links .nav-book .nb-s{color:rgba(255,255,255,.85)}
+@media(min-width:901px){html.xmas .nav-links a{white-space:nowrap}html.xmas .nav-links{gap:clamp(14px,2.2vw,30px)}html.xmas nav .btn-blitz{white-space:nowrap}}
+@media(max-width:900px){html.xmas nav:has(.nav-links.open){background:var(--h3)}html.xmas .nav-links{background:var(--h3)}}
+
+/* Streifen laeuft aus dem Menue weiter, gleiche Farbfamilie */
+html.xmas .gs-strip.gs-xmas,html.xmas .gs-strip.gs-nik{
+  background:radial-gradient(circle at 20% 0,rgba(255,255,255,.07) 0 2px,transparent 3px) 0 0/34px 34px,linear-gradient(180deg,var(--h3),var(--h4));
+  border-bottom:0
+}
+html.xmas .gs-strip b{color:#fff}
+@media(max-width:1300px) and (min-width:901px){html.xmas .gs-strip{padding-left:132px;padding-right:132px}}
+html.xmas .gs-strip{border-top:0}
+html.xmas .gs-strip .xm-face{display:inline-block;vertical-align:middle;width:36px;height:36px;margin:-6px 4px -6px 0;flex:0 0 auto}
+
+/* Nikolaus-Stiefel/Socke an der Ueberschrift und Weihnachtsmuetze am Logo */
+html.xmas .page-hero h1 .xm-stock{display:inline-block;width:.62em;height:.9em;margin-left:.14em;vertical-align:-.08em;transform-origin:50% 0;animation:xmSwing 3.6s ease-in-out infinite}
+@keyframes xmSwing{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
+nav .xm-hat{position:absolute;width:42px;height:32px;left:97px;top:-7px;transform:rotate(16deg);pointer-events:none;filter:drop-shadow(0 2px 3px rgba(0,0,0,.4))}
+nav .nav-inner>a:first-child{position:relative}
+@media(prefers-reduced-motion:reduce){html.xmas .page-hero h1 .xm-stock{animation:none}}
