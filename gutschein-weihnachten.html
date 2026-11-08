@@ -478,6 +478,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
         giftEmail: mode === 'gift' ? giftEmail : '',
         sendDate: mode === 'gift' ? sd.value : '',
         pdf: (mode === 'buyer' && document.getElementById('optPdf').checked) ? 1 : 0,
+        bastel: (mode === 'buyer' && document.getElementById('optBastel') && document.getElementById('optBastel').checked && window.fdDesign && window.fdDesign()) ? 1 : 0,
         design: (window.fdDesign ? window.fdDesign() : '')
       })
     })
@@ -527,6 +528,6 @@ if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "d721903bce9e4bb1b2e31002e9c3d559"}'></script><!-- End Cloudflare Web Analytics -->
 <script>(function(){var b=document.querySelector("#gsOcc .gs-opt");if(b)b.click();})();</script>
 <script>window.XM_PREF="xmas";</script>
-<script src="gutschein-xmas.js?v=2"></script>
+<script src="gutschein-xmas.js?v=4"></script>
 </body>
 </html>

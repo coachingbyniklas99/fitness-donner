@@ -156,6 +156,16 @@
       if (ci && ci.dataset.orig) ci.src = (k === 'std') ? ci.dataset.orig : imgOf(k);
     }
     window.fdDesign = function () { return cur === 'std' ? '' : cur; };
+    /* Bastelkarte: Klappkarte zum Selbstausdrucken, nur im Fest-Design und nur bei "An mich" (Feld liegt im Käufer-Bereich) */
+    (function () {
+      var ex = document.getElementById('gsBuyerExtra'); if (!ex) return;
+      var row = document.createElement('div'); row.className = 'gs-check'; row.id = 'bastelRow'; row.style.marginTop = '12px';
+      row.innerHTML = '<input type="checkbox" id="optBastel"><label for="optBastel"><b style="color:#ECE9E2">Zus&auml;tzlich als Bastelkarte</b> &ndash; eine festliche Klappkarte zum Selbstausdrucken (PDF im Anhang). Auf A4 quer beidseitig drucken, in der Mitte falten, fertig.</label>';
+      ex.appendChild(row);
+      var cb = row.querySelector('input');
+      window.fdSyncBastel = function () { var off = !window.fdDesign || !window.fdDesign(); row.hidden = off; if (off) cb.checked = false; };
+      window.fdSyncBastel();
+    })();
     if (occ && card) {
       var dw = document.createElement('div'); dw.className = 'xm-design';
       var opts = '';
@@ -167,7 +177,7 @@
       dw.addEventListener('click', function (e) {
         var b = e.target.closest('button'); if (!b) return;
         dw.querySelectorAll('.gs-opt').forEach(function (x) { x.classList.toggle('on', x === b); });
-        setDesign(b.dataset.d);
+        setDesign(b.dataset.d); if (window.fdSyncBastel) window.fdSyncBastel();
       });
       setDesign(cur);
     }
@@ -245,6 +255,29 @@
       };
       var kick = function () { requestAnimationFrame(function () { requestAnimationFrame(function () { root.classList.remove('xm-now'); window.__xmT = setTimeout(go, 600); }); }); };
       if (document.readyState === 'complete') kick(); else window.addEventListener('load', kick);
+    }
+
+    /* Rueckweg: Beim Verlassen der Gutschein-Seite wechselt das Festtagsdesign sanft (ca. 1 Sekunde) zurueck in den Normalzustand, danach geht es zur Zielseite. */
+    if (!reduce && window.XM_OUTRO !== false) {
+      var leaving = false;
+      document.addEventListener('click', function (e) {
+        if (leaving || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        var a = e.target.closest && e.target.closest('a[href]');
+        if (!a || a.target === '_blank' || a.hasAttribute('download')) return;
+        var u; try { u = new URL(a.href, location.href); } catch (x) { return; }
+        if (u.origin !== location.origin || !/^https?:$/.test(u.protocol)) return;
+        var f = u.pathname.split('/').pop();
+        if (/^gutschein/.test(f)) return;
+        if (u.pathname === location.pathname && u.search === location.search) return;
+        e.preventDefault(); leaving = true;
+        clearTimeout(window.__xmT);
+        root.style.setProperty('--xs', '0.3');
+        root.classList.remove('xm-now'); root.classList.add('xm-pre');
+        setTimeout(function () { location.href = a.href; }, window.XM_OUTRO_MS || 1200);
+      });
+      window.addEventListener('pageshow', function (e) {
+        if (e.persisted && leaving) { leaving = false; root.style.setProperty('--xs', String(xs)); root.classList.add('xm-now'); root.classList.remove('xm-pre'); void root.offsetWidth; root.classList.remove('xm-now'); }
+      });
     }
 
     function snow(host) {
