@@ -2109,7 +2109,7 @@ async function sendBuyerMail(v, env) {
   const cfg = config(env);
   const selbst = v.delivery === 'buyer';
   const intro = selbst
-    ? `<p>vielen Dank für deinen Kauf! Dein Gutschein ist unten – du kannst ihn ausdrucken oder einfach weiterleiten.${v.pdf ? ' Als PDF-Datei h&auml;ngt er au&szlig;erdem an dieser Mail.' : ''}${v.bastel ? ' Die Bastelkarte zum Selbstdrucken findest du ebenfalls im Anhang: auf A4 quer beidseitig drucken (&bdquo;an der kurzen Kante wenden&ldquo;), in der Mitte falten &ndash; fertig.' : ''}</p>`
+    ? `<p>vielen Dank für deinen Kauf! Dein Gutschein ist unten – du kannst ihn ausdrucken oder einfach weiterleiten.${v.pdf ? ' Als PDF-Datei h&auml;ngt er au&szlig;erdem an dieser Mail.' : ''}${v.bastel ? ' Die Bastelkarte zum Selbstdrucken findest du ebenfalls im Anhang (1 Blatt, 2 Seiten). Im Druckdialog &bdquo;Seiten 1&ndash;2&ldquo;, A4 quer, beidseitig und &bdquo;an der kurzen Kante wenden&ldquo; w&auml;hlen, dann in der Mitte falten. Ohne Duplex-Druck: erst Seite 1 drucken, das Blatt wenden und wieder einlegen, dann Seite 2 drucken.' : ''}</p>`
     : `<p>vielen Dank für deinen Kauf! Der Gutschein geht ${v.send_date
         ? `am <b>${fmtDate(v.send_date)}</b>`
         : `<b>gleich</b>`} an <b>${esc(v.gift_email)}</b>. Hier ist deine Kopie:</p>`;
