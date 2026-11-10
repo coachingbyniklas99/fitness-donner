@@ -290,10 +290,12 @@ html.xmas .page-hero.fade-hero::before{transition:opacity calc(var(--xs)*1.6s) e
 html.xmas.xm-pre .page-hero.fade-hero::before{opacity:0}
 html.xmas .page-hero.fade-hero::after{transition:translate calc(var(--xs)*1.3s) cubic-bezier(.2,.8,.3,1) calc(var(--xs)*1.2s)}
 html.xmas.xm-pre .page-hero.fade-hero::after{translate:0 110%}
-html.xmas .page-hero.fade-hero{transition:padding-bottom calc(var(--xs)*1.2s) ease calc(var(--xs)*.9s)}
-html.xmas .page-hero.fade-hero>.wrap{transition:padding-top calc(var(--xs)*1.2s) ease calc(var(--xs)*.9s)}
-@media(min-width:901px){html.xmas.xm-pre .page-hero.fade-hero{padding-bottom:84px}html.xmas.xm-pre .page-hero.fade-hero>.wrap{padding-top:0}}
-@media(max-width:900px){html.xmas.xm-pre .page-hero.fade-hero{padding-bottom:0}html.xmas.xm-pre .page-hero.fade-hero>.wrap{padding-top:0}}
+/* Ruckelfrei: Abstaende werden nicht mehr animiert (das rechnet die ganze Seite jedes Bild neu).
+   Der Kopfbereich hat von Anfang an das Endmass; im Normalzustand (xm-pre) ist der Inhalt per translate nach oben geschoben und gleitet beim Einzug auf die Endposition. */
+html.xmas .page-hero.fade-hero>.wrap,html.xmas .page-hero.fade-hero>.fade-img{transition:translate calc(var(--xs)*1.2s) ease calc(var(--xs)*.9s)}
+@media(min-width:901px){html.xmas.xm-pre .page-hero.fade-hero>.wrap{translate:0 -22px}}
+@media(min-width:701px) and (max-width:900px){html.xmas.xm-pre .page-hero.fade-hero>.wrap,html.xmas.xm-pre .page-hero.fade-hero>.fade-img{translate:0 -22px}}
+@media(max-width:700px){html.xmas.xm-pre .page-hero.fade-hero>.wrap{translate:0 -22px}}   /* hero-top-m: das Foto liegt oben fest, nur der Text wandert */
 .fade-img img.xm-img2{position:absolute;inset:0;transition:opacity calc(var(--xs)*1.5s) ease calc(var(--xs)*.7s)}
 html.xmas.xm-pre .fade-img img.xm-img2{opacity:0}
 

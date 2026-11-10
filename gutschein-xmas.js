@@ -133,6 +133,8 @@
         im2.className = 'xm-img2'; im2.alt = 'Das Forged Studio in Solingen-Ohligs'; im2.decoding = 'async';
         im2.style.setProperty('--pos', '58% 50%'); im2.style.setProperty('--posm', '52% 50%');
         im2.src = heroSrc; fig.appendChild(im2);
+        /* Foto vorab dekodieren, damit das Einblenden nicht beim ersten Bild stockt */
+        window.__xmDecode = im2.decode ? im2.decode().catch(function () {}) : null;
       } else {
         himg.src = heroSrc;
         himg.alt = 'Das Forged Studio in Solingen-Ohligs';
@@ -253,7 +255,10 @@
         window.scrollTo(0, 0);
         window.__xmT = setTimeout(go, 700);
       };
-      var kick = function () { requestAnimationFrame(function () { requestAnimationFrame(function () { root.classList.remove('xm-now'); window.__xmT = setTimeout(go, 600); }); }); };
+      var kick = function () {
+        var dec = window.__xmDecode ? Promise.race([window.__xmDecode, new Promise(function (r) { setTimeout(r, 1500); })]) : Promise.resolve();
+        dec.then(function () { requestAnimationFrame(function () { requestAnimationFrame(function () { root.classList.remove('xm-now'); window.__xmT = setTimeout(go, 600); }); }); });
+      };
       if (document.readyState === 'complete') kick(); else window.addEventListener('load', kick);
     }
 
@@ -289,16 +294,22 @@
         cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         var n = Math.min(110, Math.round(W * H / (W < 600 ? 12000 : 9000)));
         flakes = [];
-        for (var i = 0; i < n; i++) flakes.push({ x: Math.random() * W, y: Math.random() * H, r: .8 + Math.random() * 2.4, v: .25 + Math.random() * .8, p: Math.random() * 6.28, s: .004 + Math.random() * .012 });
+        for (var i = 0; i < n; i++) { var r = .8 + Math.random() * 2.4; flakes.push({ x: Math.random() * W, y: Math.random() * H, r: r, b: Math.min(3, Math.floor((r - .8) / .6)), v: .25 + Math.random() * .8, p: Math.random() * 6.28, s: .004 + Math.random() * .012 }); }
         if (reduce) draw();
       }
       function draw() {
         ctx.clearRect(0, 0, W, H);
-        for (var i = 0; i < flakes.length; i++) {
-          var f = flakes[i];
-          ctx.globalAlpha = Math.min(.95, .35 + f.r * .22);
-          ctx.fillStyle = '#FFFFFF';
-          ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, 6.2832); ctx.fill();
+        /* Flocken in vier Helligkeitsgruppen: vier Zeichenaufrufe statt einer pro Flocke (ruhiger, gleiche Optik) */
+        ctx.fillStyle = '#FFFFFF';
+        for (var b = 0; b < 4; b++) {
+          ctx.globalAlpha = Math.min(.95, .35 + (.8 + (b + .5) * .6) * .22);
+          ctx.beginPath();
+          for (var i = 0; i < flakes.length; i++) {
+            var f = flakes[i];
+            if (f.b !== b) continue;
+            ctx.moveTo(f.x + f.r, f.y); ctx.arc(f.x, f.y, f.r, 0, 6.2832);
+          }
+          ctx.fill();
         }
       }
       function tick() {
