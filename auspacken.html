@@ -105,6 +105,7 @@ html,body{overflow-x:clip}
 .ap-cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
 .ap-cta .btn{flex:1 1 200px;width:auto}
 .ap-gift.instant *{transition:none!important}
+.embed nav,.embed footer{display:none}
 .ap-small{margin-top:16px;font-size:13.5px;line-height:1.6;color:var(--muted)}
 .ap-small a{color:var(--bone);text-decoration:underline;text-underline-offset:3px}
 .ap-toast{position:fixed;left:50%;bottom:28px;z-index:60;max-width:min(92vw,420px);padding:11px 16px;background:var(--bone);color:#15171C;font-size:14px;font-weight:600;text-align:center;opacity:0;transform:translate(-50%,20px);transition:opacity .25s,transform .25s;pointer-events:none}
@@ -231,6 +232,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var qs = new URLSearchParams(location.search);
   var code = (qs.get('code') || '').toUpperCase().trim(), token = qs.get('t') || '', demo = qs.get('demo');
+  if (demo && qs.get('embed')) document.documentElement.classList.add('embed');   /* Vorschau im Fenster der Gutscheinseite: ohne Navigation und Fußzeile */
 
   /* Geschenkpapier: kleine Donner-Blitze als Maske, die Farbe kommt vom Design */
   ap.style.setProperty('--pat', "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cg fill='none' stroke='%23000' stroke-width='2.2' stroke-linejoin='round'%3E%3Cpolyline points='5,15 14,15 18,11 22,19 26,13 34,15'/%3E%3Cpolyline points='31,45 40,45 44,41 48,49 52,43 60,45'/%3E%3Cpolyline points='-29,45 -20,45 -16,41 -12,49 -8,43 0,45'/%3E%3C/g%3E%3C/svg%3E\")");
@@ -279,8 +281,11 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
   }
 
   if (demo) {
-    show({ code: 'FD-7K2M-9QXA', token: 'demo', amount_formatted: '119 €', buyer_name: 'Niklas', recipient_name: 'Lisa', expires: (new Date().getFullYear() + 3) + '-12-31',
-      message: demo === 'std' ? 'Dieses Mal keine Socken. Dafür eine Stunde, die nur dir gehört.' : (demo === 'xmas' ? 'Frohe Weihnachten! Dieses Jahr keine Socken. Dafür eine Stunde, die nur dir gehört.' : 'Frohen Nikolaus! Dieses Jahr keine Socken. Dafür eine Stunde, die nur dir gehört.'),
+    /* Vorschau auf der Gutscheinseite: Name, Betrag und Nachricht kommen aus dem Formular (?to=&from=&amt=&msg=) */
+    var cut = function (k, n) { return String(qs.get(k) || '').trim().slice(0, n); };
+    var stdMsg = demo === 'std' ? 'Dieses Mal keine Socken. Dafür eine Stunde, die nur dir gehört.' : (demo === 'xmas' ? 'Frohe Weihnachten! Dieses Jahr keine Socken. Dafür eine Stunde, die nur dir gehört.' : 'Frohen Nikolaus! Dieses Jahr keine Socken. Dafür eine Stunde, die nur dir gehört.');
+    show({ code: 'FD-7K2M-9QXA', token: 'demo', amount_formatted: cut('amt', 12) || '119 €', buyer_name: cut('from', 40) || 'Niklas', recipient_name: cut('to', 40) || 'Lisa', expires: (new Date().getFullYear() + 3) + '-12-31',
+      message: qs.has('msg') ? cut('msg', 200) : stdMsg,
       design: demo === 'nik' || demo === 'xmas' ? demo : '' });
   } else if (!code || !token) {
     fail('Der Link ist unvollständig. Öffne ihn am besten noch einmal direkt über den Button in deiner E-Mail.');
