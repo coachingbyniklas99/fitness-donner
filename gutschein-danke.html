@@ -184,7 +184,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     var hint = document.getElementById('hint');
     if (v.delivery === 'gift') {
       hint.textContent = v.send_date
-        ? 'Der Gutschein wird am ' + fmtDate(v.send_date) + ' automatisch an die beschenkte Person verschickt.'
+        ? 'Der Gutschein wird am ' + fmtDate(v.send_date) + (v.send_time ? ' um ' + v.send_time + ' Uhr' : '') + ' automatisch an die beschenkte Person verschickt.'
         : 'Der Gutschein wurde bereits an die beschenkte Person verschickt.';
     } else {
       hint.textContent = 'Eine Kopie ist per E-Mail unterwegs. Kein Mail dabei? Schau kurz im Spam-Ordner nach.';

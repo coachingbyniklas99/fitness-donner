@@ -180,3 +180,39 @@ section.gs-cfg-sec{padding:12px 0 110px}
 }
 @media(max-width:420px){.gs-strip{padding:12px 54px;font-size:14px}.gs-strip::before,.gs-strip::after{width:46px}}
 .btn.btn-call svg{width:20px;height:20px;display:block;flex:none}
+
+/* ---------- Versand an die beschenkte Person: Tag und Uhrzeit (gutschein-termin.js) ---------- */
+.gs-row.gs-row-solo{grid-template-columns:minmax(0,1fr)}
+.gs-when{margin:2px 0 18px}
+.gs-when-lab{display:block;font-size:14px;font-weight:600;color:#D5D6DA;margin-bottom:9px}
+.gs-when-pick{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:24px;margin-top:14px;padding:18px;background:#1B1E25;border:1px solid rgba(236,233,226,.14)}
+.gs-cal-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.gs-cal-head b{font:400 19px/1 var(--display);letter-spacing:.04em;text-transform:uppercase;color:var(--bone)}
+.gs-cal-nav{width:42px;height:42px;background:transparent;border:1px solid rgba(236,233,226,.22);color:var(--bone);font:400 22px/1 var(--body);cursor:pointer}
+.gs-cal-nav:hover:not(:disabled){border-color:var(--blitz);color:var(--blitz)}
+.gs-cal-nav:disabled{opacity:.3;cursor:default}
+.gs-cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.gs-cal-wd{padding:4px 0 6px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:center}
+.gs-day{position:relative;aspect-ratio:1;min-width:0;padding:0;background:transparent;border:1px solid transparent;color:var(--bone);font:600 15px/1 var(--body);cursor:pointer}
+.gs-day:hover:not(:disabled){border-color:rgba(239,185,46,.6)}
+.gs-day:disabled{color:#565B66;cursor:default}
+.gs-day.is-today{border-color:rgba(236,233,226,.3)}
+.gs-day.is-fest.nik{background:rgba(200,50,58,.26);border-color:rgba(200,50,58,.7)}
+.gs-day.is-fest.xmas{background:rgba(46,139,94,.26);border-color:rgba(46,139,94,.75)}
+.gs-day.on,.gs-day.is-fest.on{background:var(--blitz);border-color:var(--blitz);color:#15171C}
+.gs-day-ico{position:absolute;right:-5px;top:-9px;width:22px;height:22px;pointer-events:none;filter:drop-shadow(0 1px 2px rgba(0,0,0,.5))}
+.gs-day-ico svg{display:block;width:100%;height:100%}
+.gs-day:disabled .gs-day-ico{opacity:.45}
+.gs-when-side{display:flex;flex-direction:column;gap:14px;min-width:0}
+.gs-fest{display:flex;flex-wrap:wrap;gap:8px}
+.gs-fest button{display:inline-flex;align-items:center;gap:8px;min-height:46px;padding:0 14px 0 9px;background:transparent;border:1px dashed rgba(239,185,46,.7);color:var(--blitz);font:700 13.5px/1 var(--body);letter-spacing:.02em;cursor:pointer}
+.gs-fest button:hover{background:rgba(239,185,46,.08)}
+.gs-fest button.on{border-style:solid;background:rgba(239,185,46,.12)}
+.gs-fest svg{display:block;width:26px;height:26px;flex:0 0 auto}
+.gs-time label{display:block;font-size:14px;font-weight:600;color:#D5D6DA;margin-bottom:7px}
+.gs-time select{width:100%;min-height:52px;padding:0 14px;background:#15171C;border:1px solid rgba(236,233,226,.22);border-radius:0;color:var(--bone);font:600 16px/1 var(--body)}
+.gs-time select:focus{outline:2px solid var(--blitz);outline-offset:1px;border-color:var(--blitz)}
+.gs-when-sum{margin:0;font-size:15px;line-height:1.5;color:#D5D6DA}
+.gs-when-sum b{color:var(--bone)}
+.gs-when-hint{margin:0;font-size:12.5px;line-height:1.5;color:var(--muted)}
+@media(max-width:760px){.gs-when-pick{grid-template-columns:minmax(0,1fr);gap:18px;padding:14px}}

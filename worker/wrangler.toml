@@ -2,9 +2,11 @@ name = "fitnessdonner-gutscheine"
 main = "src/index.js"
 compatibility_date = "2026-09-01"
 
-# Täglicher Versand geplanter Gutscheine (07:10 UTC = 09:10 deutscher Sommerzeit)
+# Zwei Zeitpläne:
+#   10 7 * * *    täglicher Morgenlauf (07:10 UTC), holt Liegengebliebenes nach
+#   */15 * * * *  Viertelstunden-Takt: verschickt Gutscheine zur gewählten Uhrzeit (ab worker-code-25)
 [triggers]
-crons = ["10 7 * * *"]
+crons = ["10 7 * * *", "*/15 * * * *"]
 
 # KV-Namespace für die Gutscheine.
 # id nach dem Anlegen im Cloudflare-Dashboard hier eintragen:
