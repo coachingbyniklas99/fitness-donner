@@ -106,6 +106,8 @@ html,body{overflow-x:clip}
 .ap-cta .btn{flex:1 1 200px;width:auto}
 .ap-gift.instant *{transition:none!important}
 .embed nav,.embed footer{display:none}
+html.embed,html.embed body{scrollbar-width:none;-ms-overflow-style:none}
+html.embed::-webkit-scrollbar,html.embed body::-webkit-scrollbar{display:none;width:0;height:0}
 .ap-small{margin-top:16px;font-size:13.5px;line-height:1.6;color:var(--muted)}
 .ap-small a{color:var(--bone);text-decoration:underline;text-underline-offset:3px}
 .ap-toast{position:fixed;left:50%;bottom:28px;z-index:60;max-width:min(92vw,420px);padding:11px 16px;background:var(--bone);color:#15171C;font-size:14px;font-weight:600;text-align:center;opacity:0;transform:translate(-50%,20px);transition:opacity .25s,transform .25s;pointer-events:none}
