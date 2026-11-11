@@ -59,6 +59,98 @@
   function body(html) { q('#akBody').innerHTML = html; }
 
 
+
+  /* ---------- Bildauswahl für Kurse ---------- */
+  var BILDER = { site: null, up: null };
+  function bildSrc(v) { return /^https?:/.test(v) ? v : (v ? v : ''); }
+  function bildLaden() {
+    var a = BILDER.site ? Promise.resolve() : fetch('kurs-bilder.json?v=1').then(function (r) { return r.json(); }).then(function (j) { BILDER.site = j; }).catch(function () { BILDER.site = []; });
+    var b = A.api('kurse/bilder?p=' + encodeURIComponent(S.p)).then(function (d) { BILDER.up = d.bilder || []; }).catch(function () { BILDER.up = []; });
+    return Promise.all([a, b]);
+  }
+  function bildAbbild(file, maxW) {
+    return new Promise(function (res, rej) {
+      var img = new Image(), u = URL.createObjectURL(file);
+      img.onload = function () {
+        var sc = Math.min(1, maxW / img.naturalWidth), w = Math.round(img.naturalWidth * sc), h = Math.round(img.naturalHeight * sc);
+        var c = document.createElement('canvas'); c.width = w; c.height = h; c.getContext('2d').drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(u);
+        c.toBlob(function (bl) {
+          if (bl && bl.type === 'image/webp') return res({ blob: bl, w: w, h: h });
+          c.toBlob(function (b2) { b2 ? res({ blob: b2, w: w, h: h }) : rej(new Error('Das Bild ließ sich nicht umwandeln.')); }, 'image/jpeg', 0.88);
+        }, 'image/webp', 0.86);
+      };
+      img.onerror = function () { URL.revokeObjectURL(u); rej(new Error('Dieses Bild kann ich nicht lesen. Bitte JPG, PNG oder WebP nehmen.')); };
+      img.src = u;
+    });
+  }
+  function bildWahl(f) {
+    var inp = f.elements.bild, prev = q('#akBildPrev'), nm = q('#akBildName'), panel = q('#akBildPanel');
+    var tab = 'site';
+    function titelZu(v) {
+      if (!v) return 'Kein Bild – es wird die Farbfläche gezeigt.';
+      var s = (BILDER.site || []).filter(function (x) { return x.datei === v; })[0];
+      if (s) return s.titel;
+      var u = (BILDER.up || []).filter(function (x) { return x.url === v; })[0];
+      return u ? 'Eigenes Bild: ' + u.titel : v;
+    }
+    function zeige() {
+      var v = inp.value.trim();
+      prev.innerHTML = v ? '<img src="' + esc(bildSrc(v)) + '" alt="">' : '<span>kein Bild</span>';
+      nm.textContent = titelZu(v);
+      q('#akBildOpen').textContent = v ? 'Anderes Bild wählen' : 'Bild wählen';
+      q('#akBildWeg').hidden = !v;
+    }
+    function waehle(v) { inp.value = v; panel.hidden = true; zeige(); }
+    function kachel(src, titel, v, extra, del) {
+      return '<div class="ak-kachel' + (inp.value === v ? ' ak-on' : '') + '"><button type="button" class="ak-kb" data-wahl="' + esc(v) + '"><img src="' + esc(src) + '" alt="" loading="lazy"><span class="ak-kt">' + esc(titel) + '</span>' + (extra || '') + '</button>' + (del || '') + '</div>';
+    }
+    function zeichne() {
+      var h = '<div class="ak-btabs"><button type="button" class="ad-chip' + (tab === 'site' ? ' ak-on' : '') + '" data-tab="site">Auf der Website</button><button type="button" class="ad-chip' + (tab === 'up' ? ' ak-on' : '') + '" data-tab="up">Meine Uploads' + (BILDER.up && BILDER.up.length ? ' (' + BILDER.up.length + ')' : '') + '</button></div>';
+      h += '<div class="ad-actions" style="margin:10px 0"><label class="ad-mini ak-upl">Vom Computer hochladen<input type="file" accept="image/*" id="akBildFile" hidden></label><span class="ad-meta" id="akBildMsg"></span></div>';
+      if (tab === 'site') {
+        var gr = {}, order = [];
+        (BILDER.site || []).forEach(function (x) { if (!gr[x.gruppe]) { gr[x.gruppe] = []; order.push(x.gruppe); } gr[x.gruppe].push(x); });
+        order.forEach(function (g) {
+          h += '<h4 class="ak-bgr">' + esc(g) + '</h4><div class="ak-bgrid">' + gr[g].map(function (x) {
+            return kachel('kurs-bilder-vorschau/' + x.datei, x.titel, x.datei, (x.hoch ? '<em>Hochformat, wird zugeschnitten</em>' : '') + (x.hinweis ? '<em class="ak-bw" title="' + esc(x.hinweis) + '">Hyrox-Logo sichtbar</em>' : ''));
+          }).join('') + '</div>';
+        });
+      } else {
+        h += (BILDER.up && BILDER.up.length) ? '<div class="ak-bgrid">' + BILDER.up.map(function (x) {
+          return kachel(x.url, x.titel, x.url, '', '<button type="button" class="ak-bdel" data-del="' + esc(x.id) + '" aria-label="Bild löschen">&times;</button>');
+        }).join('') + '</div>' : '<div class="ad-empty">Noch keine eigenen Bilder. Lade oben eins vom Computer hoch.</div>';
+      }
+      panel.innerHTML = h;
+      Array.prototype.forEach.call(panel.querySelectorAll('[data-tab]'), function (b) { b.onclick = function () { tab = b.getAttribute('data-tab'); zeichne(); }; });
+      Array.prototype.forEach.call(panel.querySelectorAll('[data-wahl]'), function (b) { b.onclick = function () { waehle(b.getAttribute('data-wahl')); }; });
+      Array.prototype.forEach.call(panel.querySelectorAll('[data-del]'), function (b) {
+        b.onclick = function () {
+          if (!armed(b, 'Löschen?')) return;
+          post('bild-loeschen', { id: b.getAttribute('data-del') }).then(function () { A.note('Bild gelöscht.'); return bildLaden(); }).then(zeichne).catch(function (e) { A.note(e.message, true); });
+        };
+      });
+      q('#akBildFile').onchange = function () {
+        var fl = this.files && this.files[0]; if (!fl) return;
+        var msg = q('#akBildMsg'); msg.textContent = 'Wird hochgeladen …';
+        bildAbbild(fl, 1600).then(function (r) {
+          return new Promise(function (res) { var fr = new FileReader(); fr.onload = function () { res({ d: fr.result, r: r }); }; fr.readAsDataURL(r.blob); });
+        }).then(function (x) {
+          return post('bild-hochladen', { name: fl.name, daten: x.d, w: x.r.w, h: x.r.h });
+        }).then(function (j) { return bildLaden().then(function () { waehle(j.url); A.note('Bild hochgeladen und ausgewählt.'); }); })
+          .catch(function (e) { var m = q('#akBildMsg'); if (m) m.textContent = ''; A.note(e.message, true); });
+      };
+    }
+    q('#akBildOpen').onclick = function () {
+      if (!panel.hidden) { panel.hidden = true; return; }
+      panel.hidden = false; panel.innerHTML = '<div class="ad-empty">Lädt …</div>';
+      bildLaden().then(function () { var v = inp.value.trim(); tab = /^https?:/.test(v) ? 'up' : 'site'; zeichne(); zeige(); });
+    };
+    q('#akBildWeg').onclick = function () { waehle(''); };
+    zeige();
+    bildLaden().then(zeige);
+  }
+
   /* ---------- Pause (Zeitraum, in dem ein Kurs ausfällt) ---------- */
   function pausenListe(k) {
     var heute = new Date().toISOString().slice(0, 10);
@@ -368,7 +460,10 @@
       + '<div class="ad-field"><label>Art (z. B. Fitness, Mobility)</label><input name="kategorie" value="' + esc(k.kategorie || '') + '" maxlength="40"></div>'
       + '<div class="ad-field"><label>Farbe Platzhalterbild</label><input type="color" name="farbe" value="' + esc(k.farbe || '#7a5c12') + '" style="height:50px;padding:4px"></div>'
       + '</div>'
-      + '<div class="ad-field"><label>Bild (Dateiname auf der Website, leer = Platzhalter)</label><input name="bild" value="' + esc(k.bild || '') + '" placeholder="z. B. newforge-kursraum.webp"></div>'
+      + '<div class="ad-field"><label>Bild</label><input type="hidden" name="bild" value="' + esc(k.bild || '') + '">'
+      + '<div class="ak-bildwahl"><div class="ak-bild-prev" id="akBildPrev"></div><div class="ak-bild-side"><div class="ad-meta" id="akBildName"></div>'
+      + '<div class="ad-actions"><button type="button" class="ad-mini" id="akBildOpen">Bild w&auml;hlen</button><button type="button" class="ad-mini" id="akBildWeg">Kein Bild</button></div></div></div>'
+      + '<div id="akBildPanel" class="ak-bildpanel" hidden></div></div>'
       + '<h2 style="margin-top:22px">Freischaltung &amp; USC</h2><div class="ak-grid">'
       + '<div class="ad-field"><label>Tageskarten X Tage vorher (leer = ' + s.freischalt_tage + ')</label><input type="number" name="freischalt_tage" value="' + esc(k.freischalt_tage == null ? '' : k.freischalt_tage) + '" min="0" max="60"></div>'
       + '<div class="ad-field"><label>USC-Plätze</label><select name="usc_gemeinsam"><option value="">Standard (' + (s.usc_gemeinsam ? 'gemeinsam' : 'zusätzlich') + ')</option><option value="true"' + (k.usc_gemeinsam === true ? ' selected' : '') + '>vom selben Restkontingent</option><option value="false"' + (k.usc_gemeinsam === false ? ' selected' : '') + '>zusätzlich zur Kapazität</option></select></div>'
@@ -388,6 +483,7 @@
     body(html);
     q('#akAbbr').onclick = function () { S.edit = null; render(); };
     var f = q('#akKursForm');
+    bildWahl(f);
     var senden = function (force) {
       var e = f.elements;
       var num = function (v) { return v === '' ? null : Number(v); };

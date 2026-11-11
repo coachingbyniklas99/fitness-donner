@@ -1,0 +1,310 @@
+[
+ {
+  "datei": "newforge-kursraum.webp",
+  "titel": "Kursraum New Forge: Holzboden, Spiegel, Gymnastikbälle",
+  "gruppe": "Studio New Forge",
+  "w": 1600,
+  "h": 1000,
+  "hoch": false
+ },
+ {
+  "datei": "newforge-power.webp",
+  "titel": "Wandbild „Now is the moment of Power“ mit Rudergeräten",
+  "gruppe": "Studio New Forge",
+  "w": 1600,
+  "h": 1000,
+  "hoch": false
+ },
+ {
+  "datei": "newforge-sprint.webp",
+  "titel": "Sprintbahn (Kunstrasen) und Gerätefläche",
+  "gruppe": "Studio New Forge",
+  "w": 1600,
+  "h": 1000,
+  "hoch": false
+ },
+ {
+  "datei": "newforge-rack.webp",
+  "titel": "Rack-Bereich mit Hanteln und Hantelbank",
+  "gruppe": "Studio New Forge",
+  "w": 1600,
+  "h": 1000,
+  "hoch": false
+ },
+ {
+  "datei": "newforge-studio.webp",
+  "titel": "Gerätefläche mit Hantelbank und Rack",
+  "gruppe": "Studio New Forge",
+  "w": 1600,
+  "h": 1000,
+  "hoch": false
+ },
+ {
+  "datei": "studio-halle.webp",
+  "titel": "Halle mit Laufbändern und Racks",
+  "gruppe": "Studio New Forge",
+  "w": 1200,
+  "h": 801,
+  "hoch": false
+ },
+ {
+  "datei": "studio-racks.webp",
+  "titel": "Rack mit Langhantel und Balance-Ball",
+  "gruppe": "Studio New Forge",
+  "w": 1200,
+  "h": 801,
+  "hoch": false
+ },
+ {
+  "datei": "studio-boxsack.webp",
+  "titel": "Freie Fläche mit Boxsack und Gymnastikbällen",
+  "gruppe": "Studio New Forge",
+  "w": 1000,
+  "h": 668,
+  "hoch": false
+ },
+ {
+  "datei": "studio-bikes.webp",
+  "titel": "Air-Bikes und Sprintbahn",
+  "gruppe": "Studio New Forge",
+  "w": 800,
+  "h": 1197,
+  "hoch": true
+ },
+ {
+  "datei": "studio-tiger.webp",
+  "titel": "Sprintbahn mit Tiger-Wandbild",
+  "gruppe": "Studio New Forge",
+  "w": 800,
+  "h": 1198,
+  "hoch": true
+ },
+ {
+  "datei": "studio-balance.webp",
+  "titel": "Training auf dem Balance-Pad am Rack",
+  "gruppe": "Studio New Forge",
+  "w": 900,
+  "h": 1347,
+  "hoch": true
+ },
+ {
+  "datei": "studio-neuss.webp",
+  "titel": "Halle mit Air-Bikes und Laufbahn (Neuss)",
+  "gruppe": "Studio New Forge",
+  "w": 1400,
+  "h": 1050,
+  "hoch": false
+ },
+ {
+  "datei": "hero-studio.webp",
+  "titel": "Mobility-Training zu zweit auf der Matte",
+  "gruppe": "Training & Trainer",
+  "w": 1600,
+  "h": 1068,
+  "hoch": false
+ },
+ {
+  "datei": "coaching-sled.webp",
+  "titel": "Schlitten-Training draußen",
+  "gruppe": "Training & Trainer",
+  "w": 1050,
+  "h": 921,
+  "hoch": false
+ },
+ {
+  "datei": "trainer-highfive-hd.webp",
+  "titel": "High-Five am Schlitten, draußen",
+  "gruppe": "Training & Trainer",
+  "w": 1540,
+  "h": 1500,
+  "hoch": false
+ },
+ {
+  "datei": "coaching-mobility.webp",
+  "titel": "Mobility-Übung draußen mit Trainer",
+  "gruppe": "Training & Trainer",
+  "w": 720,
+  "h": 926,
+  "hoch": true
+ },
+ {
+  "datei": "coaching-bike.webp",
+  "titel": "Trainer vor dem Air-Bike, draußen",
+  "gruppe": "Training & Trainer",
+  "w": 720,
+  "h": 974,
+  "hoch": true
+ },
+ {
+  "datei": "hero-niklas.webp",
+  "titel": "Porträt Niklas, Arme verschränkt",
+  "gruppe": "Training & Trainer",
+  "w": 1600,
+  "h": 2405,
+  "hoch": true
+ },
+ {
+  "datei": "ueber-mich-poster.webp",
+  "titel": "Niklas sitzend auf der Trainingsfläche",
+  "gruppe": "Training & Trainer",
+  "w": 720,
+  "h": 1280,
+  "hoch": true
+ },
+ {
+  "datei": "beschwerde-gelenke.webp",
+  "titel": "Dehnübung im Studio (Ausfallschritt)",
+  "gruppe": "Training & Trainer",
+  "w": 900,
+  "h": 600,
+  "hoch": false
+ },
+ {
+  "datei": "hyrox-burpees.webp",
+  "titel": "Burpee Broad Jumps auf blauer Bahn",
+  "gruppe": "Hyrox & Läufe",
+  "w": 1200,
+  "h": 675,
+  "hoch": false,
+  "hinweis": "Event-Foto mit Hyrox-Logo oder Fotografen-Wasserzeichen. Für einen eigenen Kurs lieber nicht nehmen."
+ },
+ {
+  "datei": "hyrox-skierg.webp",
+  "titel": "SkiErg",
+  "gruppe": "Hyrox & Läufe",
+  "w": 900,
+  "h": 677,
+  "hoch": false,
+  "hinweis": "Event-Foto mit Hyrox-Logo oder Fotografen-Wasserzeichen. Für einen eigenen Kurs lieber nicht nehmen."
+ },
+ {
+  "datei": "hyrox-sled-push.webp",
+  "titel": "Sled Push",
+  "gruppe": "Hyrox & Läufe",
+  "w": 900,
+  "h": 922,
+  "hoch": false,
+  "hinweis": "Event-Foto mit Hyrox-Logo oder Fotografen-Wasserzeichen. Für einen eigenen Kurs lieber nicht nehmen."
+ },
+ {
+  "datei": "hyrox-sled-pull.webp",
+  "titel": "Sled Pull",
+  "gruppe": "Hyrox & Läufe",
+  "w": 700,
+  "h": 1663,
+  "hoch": true,
+  "hinweis": "Event-Foto mit Hyrox-Logo oder Fotografen-Wasserzeichen. Für einen eigenen Kurs lieber nicht nehmen."
+ },
+ {
+  "datei": "hyrox-row.webp",
+  "titel": "Rudern",
+  "gruppe": "Hyrox & Läufe",
+  "w": 700,
+  "h": 1051,
+  "hoch": true,
+  "hinweis": "Event-Foto mit Hyrox-Logo oder Fotografen-Wasserzeichen. Für einen eigenen Kurs lieber nicht nehmen."
+ },
+ {
+  "datei": "hyrox-farmers-carry.webp",
+  "titel": "Farmers Carry in der Halle",
+  "gruppe": "Hyrox & Läufe",
+  "w": 900,
+  "h": 600,
+  "hoch": false,
+  "hinweis": "Event-Foto mit Hyrox-Logo oder Fotografen-Wasserzeichen. Für einen eigenen Kurs lieber nicht nehmen."
+ },
+ {
+  "datei": "hyrox-lunges.webp",
+  "titel": "Sandbag Lunges",
+  "gruppe": "Hyrox & Läufe",
+  "w": 700,
+  "h": 1050,
+  "hoch": true,
+  "hinweis": "Event-Foto mit Hyrox-Logo oder Fotografen-Wasserzeichen. Für einen eigenen Kurs lieber nicht nehmen."
+ },
+ {
+  "datei": "hyrox-wallballs.webp",
+  "titel": "Wall Balls",
+  "gruppe": "Hyrox & Läufe",
+  "w": 700,
+  "h": 1051,
+  "hoch": true,
+  "hinweis": "Event-Foto mit Hyrox-Logo oder Fotografen-Wasserzeichen. Für einen eigenen Kurs lieber nicht nehmen."
+ },
+ {
+  "datei": "hyrox-run.webp",
+  "titel": "Zieleinlauf, Hyrox-Tor",
+  "gruppe": "Hyrox & Läufe",
+  "w": 1200,
+  "h": 800,
+  "hoch": false,
+  "hinweis": "Event-Foto mit Hyrox-Logo oder Fotografen-Wasserzeichen. Für einen eigenen Kurs lieber nicht nehmen."
+ },
+ {
+  "datei": "hyrox-finish.webp",
+  "titel": "Zielfoto mit Zeitanzeige",
+  "gruppe": "Hyrox & Läufe",
+  "w": 1200,
+  "h": 800,
+  "hoch": false,
+  "hinweis": "Event-Foto mit Hyrox-Logo oder Fotografen-Wasserzeichen. Für einen eigenen Kurs lieber nicht nehmen."
+ },
+ {
+  "datei": "online-coaching.webp",
+  "titel": "Lauf-Event in Köln, Niklas im Zieleinlauf",
+  "gruppe": "Hyrox & Läufe",
+  "w": 1000,
+  "h": 666,
+  "hoch": false,
+  "hinweis": "Event-Foto mit Hyrox-Logo oder Fotografen-Wasserzeichen. Für einen eigenen Kurs lieber nicht nehmen."
+ },
+ {
+  "datei": "run-cgn.webp",
+  "titel": "Niklas beim Lauf in Köln",
+  "gruppe": "Hyrox & Läufe",
+  "w": 799,
+  "h": 1200,
+  "hoch": true,
+  "hinweis": "Event-Foto mit Hyrox-Logo oder Fotografen-Wasserzeichen. Für einen eigenen Kurs lieber nicht nehmen."
+ },
+ {
+  "datei": "beschwerde-knie.webp",
+  "titel": "Knie einer sitzenden Frau",
+  "gruppe": "Themenbilder",
+  "w": 900,
+  "h": 600,
+  "hoch": false
+ },
+ {
+  "datei": "beschwerde-ruecken.webp",
+  "titel": "Nacken und Rücken, rot hervorgehoben",
+  "gruppe": "Themenbilder",
+  "w": 900,
+  "h": 600,
+  "hoch": false
+ },
+ {
+  "datei": "beschwerde-schulter.webp",
+  "titel": "Schulter und Rücken, schwarz-weiß",
+  "gruppe": "Themenbilder",
+  "w": 900,
+  "h": 720,
+  "hoch": false
+ },
+ {
+  "datei": "beschwerde-stoffwechsel.webp",
+  "titel": "Beine am Rudergerät, von oben",
+  "gruppe": "Themenbilder",
+  "w": 900,
+  "h": 675,
+  "hoch": false
+ },
+ {
+  "datei": "beschwerde-verletzung.webp",
+  "titel": "Bandage am Knie",
+  "gruppe": "Themenbilder",
+  "w": 900,
+  "h": 600,
+  "hoch": false
+ }
+]
