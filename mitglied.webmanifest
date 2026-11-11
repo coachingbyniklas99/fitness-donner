@@ -1,0 +1,16 @@
+{
+  "id": "/mitglied.html",
+  "name": "Fitness Donner Kurse",
+  "short_name": "FD Kurse",
+  "description": "Kurse buchen und absagen mit deiner Kurskarte",
+  "lang": "de",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "theme_color": "#15171C",
+  "background_color": "#15171C",
+  "display": "standalone",
+  "start_url": "/mitglied.html?p=niklas",
+  "scope": "/mitglied.html"
+}
