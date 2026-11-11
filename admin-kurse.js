@@ -7,7 +7,7 @@
   var box = document.getElementById('kurseApp');
   var WD = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
   var WDL = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
-  var S = { p: 'niklas', view: 'home', kurs: '', data: null, offen: {}, edit: null, best: null };
+  var S = { p: 'niklas', view: 'home', kurs: '', data: null, offen: {}, edit: null, best: null, pause: '' };
   function esc(x) { return String(x == null ? '' : x).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
   function eur(c) { return A.eur(c || 0); }
   function dk(iso) { var d = new Date(iso + 'T12:00:00Z'); return WD[d.getUTCDay()] + ', ' + d.getUTCDate() + '.' + (d.getUTCMonth() + 1) + '.'; }
@@ -57,6 +57,63 @@
   }
   function kursTitel(id) { var k = (S.data.kurse || []).filter(function (x) { return x.id === id; })[0]; return k ? k.titel : ''; }
   function body(html) { q('#akBody').innerHTML = html; }
+
+
+  /* ---------- Pause (Zeitraum, in dem ein Kurs ausfällt) ---------- */
+  function pausenListe(k) {
+    var heute = new Date().toISOString().slice(0, 10);
+    var gr = {}, out = [];
+    (k.ausfall || []).forEach(function (a) {
+      if (!a.pause || a.datum < heute) return;
+      var key = a.at || '';
+      if (!gr[key]) { gr[key] = { von: a.datum, bis: a.datum, n: 0, grund: a.grund || '' }; out.push(gr[key]); }
+      if (a.datum < gr[key].von) gr[key].von = a.datum;
+      if (a.datum > gr[key].bis) gr[key].bis = a.datum;
+      gr[key].n++;
+    });
+    return out.sort(function (a, b) { return a.von.localeCompare(b.von); });
+  }
+  function pauseBox(k) {
+    var liste = pausenListe(k);
+    var h = '<div class="ak-pause">';
+    liste.forEach(function (x) {
+      h += '<div class="ad-meta ak-pz"><b>Pause ' + esc(dk(x.von)) + (x.bis !== x.von ? ' bis ' + esc(dk(x.bis)) : '') + '</b> &middot; ' + x.n + (x.n === 1 ? ' Termin' : ' Termine') + (x.grund && x.grund !== 'Pause' ? ' &middot; ' + esc(x.grund) : '')
+        + ' <button type="button" class="ad-mini" data-pauf="' + esc(k.id) + '|' + esc(x.von) + '|' + esc(x.bis) + '">Aufheben</button></div>';
+    });
+    if (S.pause === k.id) {
+      var heute = new Date().toISOString().slice(0, 10);
+      h += '<form class="ad-issue ak-form" data-pauseform="' + esc(k.id) + '"><p class="ad-hint">Alle Termine in diesem Zeitraum fallen aus (z.&nbsp;B. Ferien, Urlaub, Feiertage). Es geht keine Mail raus &ndash; gibt es dort schon Buchungen, sagst du diese Termine bitte einzeln ab.</p>'
+        + '<div class="ak-grid"><div class="ad-field"><label>Von</label><input type="date" name="von" value="' + heute + '" required></div>'
+        + '<div class="ad-field"><label>Bis (einschlie&szlig;lich)</label><input type="date" name="bis" required></div></div>'
+        + '<div class="ad-field"><label>Grund (nur f&uuml;r dich, z.&nbsp;B. Sommerpause)</label><input name="grund" maxlength="200" placeholder="Pause"></div>'
+        + '<label class="ak-check"><input type="checkbox" name="ptfrei"> Zeit f&uuml;rs Personal Training freigeben</label>'
+        + '<div class="ad-actions"><button type="submit" class="ad-danger">Pause eintragen</button><button type="button" class="ad-mini" data-pauseclose="1">Abbrechen</button></div></form>';
+    }
+    return h + '</div>';
+  }
+  function pauseBind() {
+    on('[data-pause]', function (b) { S.pause = S.pause === b.getAttribute('data-pause') ? '' : b.getAttribute('data-pause'); render(); });
+    on('[data-pauseclose]', function () { S.pause = ''; render(); });
+    on('[data-pauf]', function (b) {
+      if (!armed(b, 'Wirklich aufheben?')) return;
+      var x = b.getAttribute('data-pauf').split('|');
+      b.disabled = true;
+      post('pause-aufheben', { kurs: x[0], von: x[1], bis: x[2] })
+        .then(function (r) { A.note('Pause aufgehoben: ' + r.zurueck + (r.zurueck === 1 ? ' Termin findet' : ' Termine finden') + ' wieder statt.'); return laden(); })
+        .catch(function (e) { b.disabled = false; A.note(e.message, true); });
+    });
+    Array.prototype.forEach.call(qa('form[data-pauseform]'), function (f) {
+      f.onsubmit = function (e) {
+        e.preventDefault();
+        var btn = f.querySelector('button[type=submit]');
+        if (!armed(btn, 'Wirklich alle Termine absagen?')) return;
+        btn.disabled = true;
+        post('pause', { kurs: f.getAttribute('data-pauseform'), von: f.elements.von.value, bis: f.elements.bis.value, grund: f.elements.grund.value, pt_frei: f.elements.ptfrei.checked })
+          .then(function (r) { S.pause = ''; A.note(r.abgesagt ? 'Pause eingetragen: ' + r.abgesagt + (r.abgesagt === 1 ? ' Termin fällt' : ' Termine fallen') + ' aus.' : 'In diesem Zeitraum gab es keinen Termin mehr.'); return laden(); })
+          .catch(function (err) { btn.disabled = false; A.note(err.message, true); });
+      };
+    });
+  }
 
   /* ---------- Termine ---------- */
   function belegtText(t) {
@@ -264,7 +321,8 @@
           + '<div class="ad-meta">' + (next ? 'N&auml;chster Termin: ' + esc(dk(next.datum)) + ' &middot; <b>' + bel + ' / ' + next.belegung.kap + ' belegt</b>' : 'Kein kommender Termin') + '</div>'
           + '<div class="ad-actions"><button type="button" class="ad-mini" data-view="termine" data-kurs="' + esc(k.id) + '">Termine &amp; Teilnehmende</button>'
           + '<button type="button" class="ad-mini" data-view="bestellungen" data-kurs="' + esc(k.id) + '">Bestellungen</button>'
-          + '<button type="button" class="ad-mini" data-ed="' + esc(k.id) + '">Bearbeiten</button></div></div>';
+          + '<button type="button" class="ad-mini" data-ed="' + esc(k.id) + '">Bearbeiten</button>'
+          + '<button type="button" class="ad-mini" data-pause="' + esc(k.id) + '">Pause</button></div>' + pauseBox(k) + '</div>';
       }).join('') + '</div>' : '<div class="ad-empty"><b>Noch kein Kurs.</b><br>So legst du den ersten an: 1) &bdquo;+ Neuer Kurs&ldquo; tippen, 2) Wochentag, Uhrzeit und Pl&auml;tze eintragen, 3) &bdquo;aktiv&ldquo; setzen und speichern.</div>')
       + '<h3 class="hd-h">Weiteres</h3><div class="mh-group">'
       + zeile('karten', '&#127903;', 'Kurskarten', '5er- und 10er-Karten: Stand, Ausnahmen gutschreiben')
@@ -275,6 +333,7 @@
       + zeile('usc', '&#9889;', 'Urban Sports', 'Freie Pl&auml;tze melden') + '</div>';
     body(html);
     on('[data-view]', gehe);
+    pauseBind();
     q('#akNeu').onclick = function () { S.edit = { neu: true }; S.view = 'kurse'; render(); window.scrollTo(0, 0); };
     on('[data-ed]', function (b) { S.edit = S.data.kurse.filter(function (k) { return k.id === b.getAttribute('data-ed'); })[0]; S.view = 'kurse'; render(); window.scrollTo(0, 0); });
   }
@@ -304,7 +363,7 @@
       + '<div class="ad-field"><label>Mindestteilnehmer (nur Info)</label><input type="number" name="min_teilnehmer" value="' + esc(k.min_teilnehmer || '') + '" min="1"></div>'
       + '<div class="ad-field"><label>Puffer fürs PT (Min.)</label><input type="number" name="puffer_min" value="' + esc(k.puffer_min || 0) + '" min="0" max="120"></div>'
       + '</div>'
-      + '<div class="ad-field"><label>Beschreibung (öffentlich)</label><input name="beschreibung" value="' + esc(k.beschreibung || '') + '" maxlength="400"></div>'
+      + '<div class="ad-field"><label>Beschreibung (öffentlich)</label><input name="beschreibung" value="' + esc(k.beschreibung || '') + '" maxlength="700"></div>'
       + '<div class="ak-grid">'
       + '<div class="ad-field"><label>Art (z. B. Fitness, Mobility)</label><input name="kategorie" value="' + esc(k.kategorie || '') + '" maxlength="40"></div>'
       + '<div class="ad-field"><label>Farbe Platzhalterbild</label><input type="color" name="farbe" value="' + esc(k.farbe || '#7a5c12') + '" style="height:50px;padding:4px"></div>'
