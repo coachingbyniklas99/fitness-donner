@@ -35,6 +35,10 @@
 .kp-name b{display:block;font-size:20px;line-height:1.25;color:var(--bone)}
 .kp-name span{color:var(--muted);font-size:15px}
 .kp-ort{font-size:12.5px;color:var(--muted);min-width:0}
+.kp-kurz{margin:8px 0 0;font-size:14.5px;line-height:1.45;color:var(--muted);max-width:56ch}
+.kp-mehr-btn{background:none;border:0;padding:6px 0 0;margin:0;font:inherit;font-size:13.5px;font-weight:600;color:var(--blitz);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.kp-mehr{grid-column:1/-1;border-top:1px solid var(--line);padding:16px 22px 18px;color:var(--muted);font-size:15px;line-height:1.55}
+.kp-mehr p{margin:0 0 8px;max-width:75ch}.kp-mehr .kp-info{font-size:13.5px;color:var(--bone);margin:6px 0 0}
 .kp-ort b{display:block;font-size:15px;color:var(--bone);font-weight:500;margin-top:2px}
 .kp-aktion{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
 .kp-pill{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 9px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
@@ -58,6 +62,8 @@
   .kp-bild{width:104px;grid-row:span 3;min-height:0;height:100%}
   .kp-platzhalter b{font-size:15px;padding:0 8px 8px}
   .kp-zeit{font-size:15.5px}
+  .kp-kurz{font-size:13.5px}
+  .kp-mehr{padding:14px 14px 16px}
   .kp-name b{font-size:17px}
   .kp-aktion{grid-column:1/-1;grid-row:auto;flex-direction:row;justify-content:space-between;align-items:center;padding:10px 0 12px 14px;border-top:1px solid var(--line)}
   .kp-tag{padding:12px 10px 10px;font-size:14px}

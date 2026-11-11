@@ -55,6 +55,28 @@
     if (t.frei <= 3) return '<span class="kp-pill knapp">Noch ' + t.frei + (t.frei === 1 ? ' Platz' : ' Plätze') + '</span>';
     return '<span class="kp-pill gut">' + t.frei + ' Plätze frei</span>';
   }
+  /** Kurzbeschreibung: eigenes Feld, sonst die ersten Sätze der langen Beschreibung */
+  function kurzText(k) {
+    if (k.kurz) return k.kurz;
+    var b = String(k.beschreibung || '').trim();
+    if (!b) return '';
+    var teile = b.match(/[^.!?]+[.!?]+(\s|$)/g) || [b], out = '';
+    for (var i = 0; i < teile.length && (out + teile[i]).length <= 170; i++) out += teile[i];
+    return (out || teile[0]).trim();
+  }
+  function ortText(k) {
+    var o = String(k.ort || '').trim() || 'Forged Studio Solingen';
+    return /ohligs/i.test(o) ? o : o + ' – Ohligs';
+  }
+  /** Aufgeklappter Bereich: ganze Beschreibung und die wichtigsten Angaben */
+  function mehrBox(k) {
+    var b = String(k.beschreibung || '').trim(), kz = kurzText(k);
+    var rest = b && b !== kz ? b : '';
+    if (rest && !k.kurz && b.indexOf(kz) === 0) rest = b.slice(kz.length).trim();
+    var info = [k.minuten ? k.minuten + ' Minuten' : '', k.kapazitaet ? 'bis zu ' + k.kapazitaet + ' Teilnehmende' : '', k.adresse || ''].filter(Boolean).join(' · ');
+    return '<div class="kp-mehr">' + (rest ? '<p>' + esc(rest) + '</p>' : '') + (info ? '<p class="kp-info">' + esc(info) + '</p>' : '') + '</div>';
+  }
+
   function bild(k) {
     if (k.bild) return '<div class="kp-bild"><img src="' + esc(k.bild) + '" alt="' + esc(k.titel) + '" loading="lazy"></div>';
     var f = /^#[0-9a-f]{6}$/i.test(k.farbe || '') ? k.farbe : '#7a5c12';
@@ -75,7 +97,7 @@
       var x = termine.filter(function (y) { return y.t.datum >= ab && !y.t.abgesagt; }).map(function (y) { return y.t.datum; }).sort()[0];
       return x || '';
     }
-    var S = { tag: opts.tag || '', ab: 0 };
+    var S = { tag: opts.tag || '', ab: 0, offen: '' };
     if (!S.tag) S.tag = am(HEUTE).length ? HEUTE : (naechster(HEUTE) || HEUTE);
     function setzeTag(d) {
       S.tag = d;
@@ -111,10 +133,13 @@
           var k = x.k, t = x.t, tags = opts.karte ? [] : moeglich(k, t);
           return '<div class="kp-zeile' + (t.abgesagt ? ' aus' : '') + '">' + bild(k)
             + '<div class="kp-zeit-box"><div class="kp-zeit">' + esc(t.start) + ' – ' + esc(t.ende) + '</div>'
-            + ((tags.length || (!opts.karte && gesperrt(k, t))) ? '<div class="kp-tags">' + tags.map(function (g) { return '<span>' + esc(g) + '</span>'; }).join('') + (opts.karte ? '' : gesperrt(k, t)) + '</div>' : '') + '</div>'
-            + '<div class="kp-name"><b>' + esc(k.titel) + '</b><span>' + esc(k.kategorie ? k.kategorie + ' · ' : '') + 'mit ' + esc(k.anbieterin) + '</span></div>'
-            + '<div class="kp-ort">Solingen-Ohligs<b>' + esc(k.ort) + '</b></div>'
-            + '<div class="kp-aktion">' + pill(t) + (t.abgesagt ? '' : '<button type="button" class="btn btn-blitz btn-sm" data-kp-buchen="' + esc(k.id + '|' + t.datum) + '">' + (opts.karte ? 'Mit Karte buchen' : 'Kurs buchen') + '</button>') + '</div></div>';
+            + '</div>'
+            + '<div class="kp-name"><b>' + esc(k.titel) + '</b><span>' + esc(k.kategorie ? k.kategorie + ' · ' : '') + 'mit ' + esc(k.anbieterin) + '</span>'
+            + (kurzText(k) ? '<p class="kp-kurz">' + esc(kurzText(k)) + '</p>' : '')
+            + '<button type="button" class="kp-mehr-btn" data-kp-mehr="' + esc(k.id + '|' + t.datum) + '" aria-expanded="' + (S.offen === k.id + '|' + t.datum) + '">' + (S.offen === k.id + '|' + t.datum ? 'Weniger' : 'Mehr erfahren') + '</button></div>'
+            + '<div class="kp-ort"><b>' + esc(ortText(k)) + '</b></div>'
+            + '<div class="kp-aktion">' + pill(t) + (t.abgesagt ? '' : '<button type="button" class="btn btn-blitz btn-sm" data-kp-buchen="' + esc(k.id + '|' + t.datum) + '">' + (opts.karte ? 'Mit Karte buchen' : 'Kurs buchen') + '</button>') + '</div>'
+            + (S.offen === k.id + '|' + t.datum ? mehrBox(k) : '') + '</div>';
         }).join('') + '</div>';
       }
       box.innerHTML = html;
@@ -125,6 +150,11 @@
       var z = box.querySelector('[data-kp="zurueck"]'), w = box.querySelector('[data-kp="weiter"]');
       if (z) z.onclick = function () { S.ab = Math.max(0, S.ab - 7); S.tag = plus(HEUTE, S.ab); render(); };
       if (w) w.onclick = function () { S.ab += 7; S.tag = plus(HEUTE, S.ab); render(); };
+      Array.prototype.forEach.call(box.querySelectorAll('[data-kp-mehr]'), function (b) {
+        var auf = function () { var key = b.getAttribute('data-kp-mehr'); S.offen = S.offen === key ? '' : key; render(); };
+        b.onclick = auf;
+        var n = b.parentNode.querySelector('b'); if (n) { n.style.cursor = 'pointer'; n.onclick = auf; }
+      });
       Array.prototype.forEach.call(box.querySelectorAll('[data-kp-buchen]'), function (b) {
         b.onclick = function () {
           var p = b.getAttribute('data-kp-buchen').split('|');

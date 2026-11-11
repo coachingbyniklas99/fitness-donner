@@ -455,7 +455,8 @@
       + '<div class="ad-field"><label>Mindestteilnehmer (nur Info)</label><input type="number" name="min_teilnehmer" value="' + esc(k.min_teilnehmer || '') + '" min="1"></div>'
       + '<div class="ad-field"><label>Puffer fürs PT (Min.)</label><input type="number" name="puffer_min" value="' + esc(k.puffer_min || 0) + '" min="0" max="120"></div>'
       + '</div>'
-      + '<div class="ad-field"><label>Beschreibung (öffentlich)</label><input name="beschreibung" value="' + esc(k.beschreibung || '') + '" maxlength="700"></div>'
+      + '<div class="ad-field"><label>Kurzbeschreibung (1–2 Sätze, steht in der Kursübersicht; leer = erster Satz der Beschreibung)</label><textarea name="kurz" rows="2" maxlength="220">' + esc(k.kurz || '') + '</textarea></div>'
+      + '<div class="ad-field"><label>Beschreibung (öffentlich, erscheint beim Aufklappen)</label><textarea name="beschreibung" rows="6" maxlength="700">' + esc(k.beschreibung || '') + '</textarea></div>'
       + '<div class="ak-grid">'
       + '<div class="ad-field"><label>Art (z. B. Fitness, Mobility)</label><input name="kategorie" value="' + esc(k.kategorie || '') + '" maxlength="40"></div>'
       + '<div class="ad-field"><label>Farbe Platzhalterbild</label><input type="color" name="farbe" value="' + esc(k.farbe || '#7a5c12') + '" style="height:50px;padding:4px"></div>'
@@ -492,7 +493,7 @@
         id: S.edit.neu ? undefined : S.edit.id, titel: e.titel.value, wochentag: Number(e.wochentag.value), start: e.start.value,
         minuten: Number(e.minuten.value), kapazitaet: Number(e.kapazitaet.value), start_datum: e.start_datum.value, end_datum: e.end_datum.value,
         ort: e.ort.value, adresse: e.adresse.value, min_teilnehmer: num(e.min_teilnehmer.value), puffer_min: num(e.puffer_min.value),
-        beschreibung: e.beschreibung.value, freischalt_tage: num(e.freischalt_tage.value),
+        beschreibung: e.beschreibung.value, kurz: e.kurz.value, freischalt_tage: num(e.freischalt_tage.value),
         kategorie: e.kategorie.value, farbe: e.farbe.value, bild: e.bild.value.trim(),
         usc_gemeinsam: e.usc_gemeinsam.value === '' ? null : e.usc_gemeinsam.value === 'true',
         preise: { tageskarte_cents: euro(e.tk.value), karte5_cents: euro(e.k5.value), karte10_cents: euro(e.k10.value) },
