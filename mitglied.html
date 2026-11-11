@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#15171C">
+<title>Mitgliederbereich | Fitness Donner</title>
+<meta name="description" content="Dein Mitgliederbereich bei Fitness Donner: Kurse mit deiner Karte buchen und absagen.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="style.css?v=38">
+<link rel="stylesheet" href="gutschein.css?v=2">
+<link rel="stylesheet" href="termin.css?v=9">
+
+<link rel="stylesheet" href="kurs.css?v=3">
+<link rel="stylesheet" href="kursplan.css?v=2">
+<link rel="stylesheet" href="mitglied.css?v=1">
+</head>
+<body>
+<nav>
+  <div class="wrap nav-inner">
+    <a href="index.html" aria-label="Fitness Donner - Startseite"><svg width="140" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
+  <text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text>
+  <polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"/>
+</svg></a>
+    <div class="nav-links" id="navLinks">
+      <div class="has-sub">
+        <a href="#" class="sub-toggle" onclick="event.preventDefault();this.parentElement.classList.toggle('sub-open')">Personal Training</a>
+        <div class="sub">
+          <div class="sub-group">Vor Ort</div>
+          <a href="personal-training-solingen.html">Solingen &amp; Haan<span class="loc">Forged Studio Ohligs oder drau&szlig;en</span></a>
+          <a href="personal-training-koeln.html">K&ouml;ln<span class="loc">Iron&amp;Soul Zollstock</span></a>
+          <a href="personal-training-neuss.html">Neuss<span class="loc">Iron&amp;Soul R&ouml;merstra&szlig;e</span></a>
+          <div class="sub-group">Ortsunabh&auml;ngig</div>
+          <a href="online.html">Online-Coaching<span class="loc">von &uuml;berall</span></a>
+        </div>
+      </div>
+      <a href="kurse.html" class="nav-solo">Kurse</a>
+      <div class="has-sub">
+        <a href="#" class="sub-toggle" onclick="event.preventDefault();this.parentElement.classList.toggle('sub-open')">Schwerpunkte</a>
+        <div class="sub">
+          <a href="hyrox.html">Hyrox</a>
+          <a href="personal-training-rueckenschmerzen.html">Gesundheitstraining</a>
+        </div>
+      </div>
+      <a href="preise.html" class="nav-solo">Preise</a>
+      <a href="gutschein.html" class="nav-solo">Gutscheine</a>
+      <a href="ueber-mich.html">&Uuml;ber mich</a>
+      <a href="faq.html">FAQ</a>
+      <a class="nav-book" href="termin-buchen.html">
+        <span class="nb-t">Termin buchen</span>
+        <span class="nb-s">Probetraining: 60 Minuten f&uuml;r <span data-preis-probe>29&nbsp;&euro;</span> &middot; wird angerechnet</span>
+      </a>
+      <div class="nav-kontakt">
+        <a href="tel:+491776311404">Anrufen</a>
+        <a class="nk-wa" href="https://wa.me/491776311404" target="_blank" rel="noopener" aria-label="Per WhatsApp schreiben" title="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.9L2 22l5.27-1.38A9.9 9.9 0 1 0 12.04 2Zm0 1.8a8.1 8.1 0 1 1-4.13 15.07l-.3-.18-3.13.82.84-3.05-.2-.31A8.1 8.1 0 0 1 12.04 3.8Zm-3.1 4.1c-.17 0-.45.06-.69.32-.23.26-.9.88-.9 2.15s.92 2.5 1.05 2.67c.13.17 1.8 2.86 4.45 3.9 2.2.87 2.65.7 3.13.65.48-.04 1.54-.63 1.76-1.24.22-.6.22-1.13.15-1.24-.06-.1-.23-.17-.49-.3-.26-.13-1.54-.76-1.78-.85-.24-.09-.41-.13-.58.13-.17.26-.67.85-.82 1.02-.15.17-.3.2-.56.07-.26-.13-1.1-.4-2.09-1.29-.77-.69-1.3-1.54-1.45-1.8-.15-.26-.02-.4.11-.53.12-.12.26-.3.39-.46.13-.15.17-.26.26-.43.09-.17.04-.33-.02-.46-.07-.13-.58-1.4-.8-1.92-.2-.5-.42-.43-.58-.44h-.5Z"/></svg></a>
+      </div>
+    </div>
+    <a class="btn btn-blitz btn-sm nav-cta" href="termin-buchen.html">Termin buchen</a>
+    <button class="menu-btn" aria-label="Men&uuml; &ouml;ffnen" onclick="document.getElementById('navLinks').classList.toggle('open');this.textContent=this.textContent==='☰'?'✕':'☰'">&#9776;</button>
+  </div>
+</nav>
+
+<header class="page-hero tk-hero">
+  <div class="wrap">
+    <div class="eyebrow">Mitgliederbereich</div>
+    <h1>Deine<br>Kurskarte.</h1>
+  </div>
+</header>
+
+<section class="tk-section">
+  <div class="wrap">
+    <div id="error" class="gs-error" hidden></div>
+
+    <form class="gs-form" id="loginForm" autocomplete="on">
+      <h2>Anmelden</h2>
+      <p class="gs-sub">Mit deinem Kartencode und der E-Mail-Adresse, mit der du die Karte gekauft hast. Beides steht in deiner Best&auml;tigungsmail.</p>
+      <div class="gs-field"><label for="code">Kartencode</label><input id="code" name="code" type="text" placeholder="KK-XXXX-XXXX" autocapitalize="characters" autocomplete="off" required></div>
+      <div class="gs-field"><label for="email">E-Mail-Adresse</label><input id="email" name="email" type="email" autocomplete="email" required></div>
+      <label class="mg-merk"><input type="checkbox" id="merken"> Auf diesem Ger&auml;t angemeldet bleiben</label>
+      <button type="submit" class="btn btn-blitz" id="loginBtn">Anmelden</button>
+      <p class="small" style="color:var(--muted);margin-top:16px">Noch keine Karte? Du findest die 5er- und 10er-Karte bei den <a href="kurse.html#kurspreise" style="color:var(--blitz)">Kursen</a>.</p>
+    </form>
+
+    <div id="portal" hidden>
+      <div class="mg-karte" id="mKarte"></div>
+      <div class="ku-box" id="mHinweis" hidden></div>
+      <div class="ku-ok" id="mOk" hidden></div>
+
+      <h2 class="mg-h">Kurs buchen</h2>
+      <p class="gs-sub">W&auml;hl einen Tag und tipp beim Kurs auf &bdquo;Mit Karte buchen&ldquo;. Karten haben Vorrang vor Einzeltickets.</p>
+      <div class="mg-confirm" id="mConfirm" hidden></div>
+      <div id="mPlan"></div>
+
+      <h2 class="mg-h">Meine Buchungen</h2>
+      <ul class="ku-termine" id="mListe"></ul>
+      <details class="mg-alt" id="mAltBox" hidden><summary>Vergangene und abgesagte Termine</summary><ul class="ku-termine" id="mAlt"></ul></details>
+
+      <div class="ku-box" style="margin-top:28px"><b>Absagen:</b> Bis 24&nbsp;Stunden vor Kursbeginn wird die Einheit gutgeschrieben. Bei sp&auml;terer Absage verf&auml;llt sie. In begr&uuml;ndeten F&auml;llen sind Ausnahmen nach Absprache m&ouml;glich &ndash; schreib mir einfach.</div>
+      <div class="ku-box"><b>Personal Training?</b> Termine f&uuml;r das Personal Training buchst du weiterhin <a href="termin-buchen.html" style="color:var(--blitz);text-decoration:underline">hier</a>.</div>
+      <p style="margin-top:22px"><button type="button" class="btn btn-ghost btn-sm" id="logout">Abmelden</button></p>
+    </div>
+  </div>
+</section>
+<script src="kursplan.js?v=5"></script>
+<script>
+var API_BASE = window.FD_API_BASE || 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.dev';
+(function () {
+  var Q = new URLSearchParams(location.search);
+  var P = Q.get('p') || 'niklas';
+  var el = function (id) { return document.getElementById(id); };
+  var WD = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+  var S = { code: '', email: '', card: null, daten: null };
+  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function dl(iso) { var d = new Date(iso + 'T12:00:00Z'); return WD[d.getUTCDay()] + ', ' + ('0' + d.getUTCDate()).slice(-2) + '.' + ('0' + (d.getUTCMonth() + 1)).slice(-2) + '.' + iso.slice(0, 4); }
+  function fail(t) { var e = el('error'); e.textContent = t; e.hidden = false; e.scrollIntoView({ block: 'center', behavior: 'smooth' }); }
+  function clear() { el('error').hidden = true; el('mOk').hidden = true; }
+  function ls(fn) { try { return fn(window.localStorage); } catch (e) { return null; } }
+  function api(path, body) {
+    return fetch(API_BASE + '/api/kurse' + path, body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : undefined)
+      .then(function (r) { return r.json().then(function (d) { return { s: r.status, d: d }; }); });
+  }
+
+  /* ---------- Anmeldung ---------- */
+  var gespeichert = ls(function (l) { return JSON.parse(l.getItem('fd_mitglied') || 'null'); });
+  if (Q.get('code')) el('code').value = Q.get('code');
+  else if (gespeichert) el('code').value = gespeichert.code;
+  if (gespeichert) { el('email').value = gespeichert.email; el('merken').checked = true; }
+  el('loginForm').onsubmit = function (e) {
+    e.preventDefault(); clear();
+    var btn = el('loginBtn'); btn.disabled = true; btn.textContent = 'Moment …';
+    S.code = el('code').value.trim(); S.email = el('email').value.trim();
+    api('/karte', { p: P, code: S.code, email: S.email }).then(function (r) {
+      btn.disabled = false; btn.textContent = 'Anmelden';
+      if (r.s !== 200) { fail(r.d.error || 'Das hat nicht geklappt.'); return; }
+      ls(function (l) { if (el('merken').checked) l.setItem('fd_mitglied', JSON.stringify({ code: S.code, email: S.email })); else l.removeItem('fd_mitglied'); });
+      S.code = r.d.code;
+      start(r.d);
+    }).catch(function () { btn.disabled = false; btn.textContent = 'Anmelden'; fail('Keine Verbindung.'); });
+  };
+  el('logout').onclick = function () {
+    ls(function (l) { l.removeItem('fd_mitglied'); });
+    location.href = 'mitglied.html?p=' + encodeURIComponent(P);
+  };
+
+  function start(card) {
+    el('loginForm').hidden = true;
+    el('portal').hidden = false;
+    zeigeKarte(card);
+    if (S.daten) { plan(); return; }
+    fetch(API_BASE + '/api/kurse?p=' + encodeURIComponent(P)).then(function (r) { return r.json(); }).then(function (d) {
+      S.daten = d; plan();
+      var k = Q.get('k'), dd = Q.get('d');
+      if (k && dd) { var kk = (d.kurse || []).filter(function (x) { return x.id === k; })[0]; var t = kk && (kk.termine || []).filter(function (x) { return x.datum === dd; })[0]; if (kk && t) bestaetigen(kk, t); }
+    }).catch(function () { el('mPlan').innerHTML = '<div class="kp-leer">Der Kursplan l&auml;sst sich gerade nicht laden.</div>'; });
+  }
+
+  /* ---------- Karte und Buchungen ---------- */
+  function zeigeKarte(c) {
+    S.card = c;
+    var punkte = '';
+    for (var i = 0; i < c.anzahl; i++) punkte += '<i class="' + (i < c.genutzt ? 'voll' : '') + '"></i>';
+    el('mKarte').innerHTML = '<div class="mg-k-eb">' + esc(c.label) + ' &middot; ' + esc(c.code) + '</div>'
+      + '<div class="mg-k-zahl"><b>' + c.frei + '</b> von ' + c.anzahl + ' Einheiten frei</div>'
+      + '<div class="mg-punkte" aria-hidden="true">' + punkte + '</div>'
+      + '<div class="mg-k-info">G&uuml;ltig bis ' + esc(dl(c.bis)) + ' &middot; ' + esc(c.name) + '</div>';
+    var h = el('mHinweis');
+    if (c.abgelaufen) { h.innerHTML = '<b>Deine Karte ist abgelaufen.</b> Neue Buchungen sind nicht mehr m&ouml;glich.'; h.hidden = false; }
+    else if (c.frei < 1) { h.innerHTML = '<b>Alle Einheiten sind gebucht.</b> Wird ein Platz rechtzeitig abgesagt, steht die Einheit wieder zur Verf&uuml;gung.'; h.hidden = false; }
+    else h.hidden = true;
+    var kommend = c.buchungen.filter(function (b) { return b.status === 'gebucht' && !b.vorbei; });
+    var rest = c.buchungen.filter(function (b) { return !(b.status === 'gebucht' && !b.vorbei); }).reverse();
+    el('mListe').innerHTML = kommend.length ? kommend.map(zeile).join('') : '<li><div class="z">Noch nichts gebucht. W&auml;hl oben einen Kurs aus.</div></li>';
+    el('mAlt').innerHTML = rest.map(zeile).join('');
+    el('mAltBox').hidden = !rest.length;
+    Array.prototype.forEach.call(el('mListe').querySelectorAll('[data-abs]'), function (b) { b.onclick = function () { absagen(b); }; });
+  }
+  var STATUS = { gebucht: ['gebucht', 'ok'], freigegeben: ['abgesagt · Einheit zurück', ''], verfallen: ['abgesagt · Einheit verfallen', 'aus'], gutgeschrieben: ['verfallen · gutgeschrieben', ''] };
+  function zeile(b) {
+    var st = STATUS[b.status] || [b.status, ''];
+    var badge = b.status === 'gebucht' && b.vorbei ? '<span class="ku-badge">vorbei</span>' : '<span class="ku-badge ' + st[1] + '">' + esc(st[0]) + '</span>';
+    var act = b.absagen ? '<div class="ku-act" style="flex-basis:100%"><button type="button" class="btn btn-ghost" data-abs="' + esc(b.bestellung) + '" data-gut="' + (b.mit_gutschrift ? '1' : '0') + '">Absagen</button></div>' : '';
+    var link = b.token ? ' <a class="ku-glink" href="kurs-buchung.html?p=' + encodeURIComponent(P) + '&o=' + encodeURIComponent(b.bestellung) + '&t=' + encodeURIComponent(b.token) + '">Details</a>' : '';
+    return '<li><div><div class="d">' + esc(b.kurs_titel) + '</div><div class="z">' + esc(dl(b.datum)) + ', ' + esc(b.start) + '–' + esc(b.ende) + ' Uhr' + link + '</div></div><div>' + badge + '</div>' + act + '</li>';
+  }
+  function absagen(b) {
+    if (b.getAttribute('data-armed') !== '1') {
+      b.setAttribute('data-armed', '1');
+      b.textContent = b.getAttribute('data-gut') === '1' ? 'Wirklich absagen? Einheit wird gutgeschrieben' : 'Wirklich absagen? Unter 24 h: Einheit verfällt';
+      setTimeout(function () { b.removeAttribute('data-armed'); b.textContent = 'Absagen'; }, 6000);
+      return;
+    }
+    clear(); b.disabled = true;
+    api('/karte-absagen', { p: P, code: S.code, email: S.email, bestellung: b.getAttribute('data-abs') }).then(function (r) {
+      if (r.s !== 200) { b.disabled = false; fail(r.d.error || 'Das hat nicht geklappt.'); return; }
+      zeigeKarte(r.d); plan();
+      note(r.d.einheit_zurueck ? '<b>Abgesagt.</b> Deine Einheit wurde gutgeschrieben.' : '<b>Abgesagt.</b> Weil weniger als 24 Stunden bis zum Kurs waren, ist die Einheit verfallen. Bei einem besonderen Grund schreib mir kurz.');
+    }).catch(function () { b.disabled = false; fail('Keine Verbindung.'); });
+  }
+  function note(html) { var o = el('mOk'); o.innerHTML = html; o.hidden = false; o.scrollIntoView({ block: 'center', behavior: 'smooth' }); }
+
+  /* ---------- Kursplan und Buchen ---------- */
+  function plan(tag) {
+    if (!S.daten) return;
+    window.FDKursplan.start(el('mPlan'), { daten: S.daten, karte: true, tag: tag || '', onBuchen: function (k, t) { bestaetigen(k, t); } });
+  }
+  function bestaetigen(k, t) {
+    clear();
+    var c = S.card, box = el('mConfirm');
+    if (c.abgelaufen || c.frei < 1) { box.hidden = false; box.innerHTML = c.abgelaufen ? 'Deine Karte ist abgelaufen.' : 'Alle Einheiten sind gebucht. Sag einen Kurs ab, um eine Einheit zur&uuml;ckzubekommen.'; box.scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
+    if (t.frei < 1) { box.hidden = false; box.innerHTML = '<b>' + esc(k.titel) + '</b> am ' + esc(dl(t.datum)) + ' ist ausgebucht. Auf die <a href="kurs-buchen.html?p=' + encodeURIComponent(P) + '&k=' + encodeURIComponent(k.id) + '&d=' + encodeURIComponent(t.datum) + '" style="color:var(--blitz);text-decoration:underline">Warteliste</a> kommst du &uuml;ber die Kursbuchung.'; box.scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
+    box.hidden = false;
+    box.innerHTML = '<div class="mg-c-t">' + esc(k.titel) + '</div><div class="mg-c-d">' + esc(dl(t.datum)) + ', ' + esc(t.start) + '–' + esc(t.ende) + ' Uhr &middot; ' + esc(k.ort) + '</div>'
+      + '<p class="small" style="color:var(--muted);margin:8px 0 14px">Das kostet 1 deiner ' + c.frei + ' freien Einheiten. Absagen kannst du bis 24&nbsp;Stunden vorher, dann bekommst du die Einheit zur&uuml;ck.</p>'
+      + '<div class="ku-act"><button type="button" class="btn btn-blitz" id="cYes">Jetzt buchen</button><button type="button" class="btn btn-ghost" id="cNo">Abbrechen</button></div>';
+    box.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    el('cNo').onclick = function () { box.hidden = true; };
+    el('cYes').onclick = function () {
+      var y = el('cYes'); y.disabled = true; y.textContent = 'Moment …';
+      api('/karte-buchen', { p: P, code: S.code, email: S.email, kurs: k.id, datum: t.datum }).then(function (r) {
+        if (r.s !== 200) { y.disabled = false; y.textContent = 'Jetzt buchen'; fail(r.d.error || 'Das hat nicht geklappt.'); return; }
+        box.hidden = true; zeigeKarte(r.d);
+        if (S.daten) { /* Plätze neu holen */ fetch(API_BASE + '/api/kurse?p=' + encodeURIComponent(P)).then(function (x) { return x.json(); }).then(function (d) { S.daten = d; plan(t.datum); }).catch(function () {}); }
+        note('<b>Gebucht.</b> ' + esc(k.titel) + ', ' + esc(dl(t.datum)) + ', ' + esc(t.start) + ' Uhr. Die Best&auml;tigung mit Kalenderdatei ist per Mail unterwegs.');
+      }).catch(function () { y.disabled = false; y.textContent = 'Jetzt buchen'; fail('Keine Verbindung.'); });
+    };
+  }
+
+  // Direkt anmelden, wenn Code und E-Mail gespeichert sind
+  if (gespeichert && (!Q.get('code') || Q.get('code') === gespeichert.code)) { el('loginForm').requestSubmit ? el('loginForm').requestSubmit() : el('loginForm').dispatchEvent(new Event('submit', { cancelable: true })); }
+})();
+</script>
+
+<footer>
+  <div class="wrap foot">
+    <svg width="120" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
+  <text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text>
+  <polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"/>
+</svg>
+    <div class="legal">
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
+      <a href="buchungsbedingungen.html">Buchungsbedingungen</a>
+      <a href="gutschein-bedingungen.html">Gutscheinbedingungen</a>
+      <a href="karriere.html">Trainer:in gesucht</a>
+      <a href="widerruf.html" class="legal-widerruf" style="color:var(--blitz);font-weight:600">Vertrag widerrufen</a>
+    </div>
+    <div>&copy; 2026 Fitness Donner &middot; Solingen, Haan, K&ouml;ln &amp; Neuss</div>
+  </div>
+</footer>
+<script>
+(function(){var n=document.getElementById('navLinks'),b=document.querySelector('.menu-btn');
+if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&!a.classList.contains('sub-toggle')){n.classList.remove('open');b.textContent='☰';}});}})();
+</script>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "d721903bce9e4bb1b2e31002e9c3d559"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

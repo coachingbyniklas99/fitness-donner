@@ -43,12 +43,12 @@
     var anb = d.anbieterinnen.length > 1 ? '<div class="ad-chips ak-anb">' + d.anbieterinnen.map(function (a) {
       return '<button type="button" class="ad-chip' + (a.id === S.p ? ' ak-on' : '') + '" data-anb="' + esc(a.id) + '">' + esc(a.name) + '<span>' + (a.aktiv ? (a.zahlung_bereit ? 'aktiv' : 'Stripe fehlt') : 'vorbereitet, inaktiv') + '</span></button>';
     }).join('') + '</div>' : '';
-    var TITEL = { termine: 'Termine', usc: 'Urban Sports', erstattungen: 'Erstattungen', bestellungen: 'Bestellungen', einstellungen: 'Preise & Regeln', kurse: S.edit && S.edit.neu ? 'Neuer Kurs' : 'Kurs bearbeiten' };
+    var TITEL = { termine: 'Termine', usc: 'Urban Sports', erstattungen: 'Erstattungen', bestellungen: 'Bestellungen', karten: 'Kurskarten', einstellungen: 'Preise & Regeln', kurse: S.edit && S.edit.neu ? 'Neuer Kurs' : 'Kurs bearbeiten' };
     var kopf = S.view === 'home' ? '' : '<div class="ak-nav"><button type="button" class="ak-back" data-view="home">&lsaquo; Kurse</button><span class="ak-nav-t">' + esc(TITEL[S.view] || '') + (S.kurs && (S.view === 'termine' || S.view === 'bestellungen') ? ' &middot; ' + esc(kursTitel(S.kurs)) : '') + '</span></div>';
     box.innerHTML = anb + kopf + '<div id="akBody"></div>';
     on('[data-anb]', function (b) { S.p = b.getAttribute('data-anb'); S.data = null; S.view = 'home'; S.kurs = ''; S.edit = null; laden(); });
     on('[data-view]', gehe);
-    ({ home: vHome, termine: vTermine, usc: vUsc, erstattungen: vErstattungen, kurse: vKurse, bestellungen: vBestellungen, einstellungen: vEinstellungen })[S.view]();
+    ({ home: vHome, termine: vTermine, usc: vUsc, erstattungen: vErstattungen, kurse: vKurse, bestellungen: vBestellungen, karten: vKarten, einstellungen: vEinstellungen })[S.view]();
   }
   function gehe(b) {
     S.view = b.getAttribute('data-view'); S.edit = null;
@@ -267,6 +267,7 @@
           + '<button type="button" class="ad-mini" data-ed="' + esc(k.id) + '">Bearbeiten</button></div></div>';
       }).join('') + '</div>' : '<div class="ad-empty"><b>Noch kein Kurs.</b><br>So legst du den ersten an: 1) &bdquo;+ Neuer Kurs&ldquo; tippen, 2) Wochentag, Uhrzeit und Pl&auml;tze eintragen, 3) &bdquo;aktiv&ldquo; setzen und speichern.</div>')
       + '<h3 class="hd-h">Weiteres</h3><div class="mh-group">'
+      + zeile('karten', '&#127903;', 'Kurskarten', '5er- und 10er-Karten: Stand, Ausnahmen gutschreiben')
       + zeile('bestellungen', '&#128269;', 'Alle Bestellungen', 'Suchen nach Name, E-Mail oder Code')
       + zeile('einstellungen', '&#9881;', 'Preise &amp; Regeln', 'Tageskarte, Karten und Fristen f&uuml;r Kurse')
       + (d.erstattungen.length ? '' : zeile('erstattungen', '&euro;', 'Erstattungen', 'Keine offenen &ndash; hier siehst du die erledigten'))
@@ -376,6 +377,36 @@
       }).catch(function (e) { A.note(e.message, true); });
     }
     liste();
+  }
+
+  /* ---------- Kurskarten (ohne feste Termine) ---------- */
+  var KST = { gebucht: 'gebucht', freigegeben: 'abgesagt · zurück', verfallen: 'verfallen', gutgeschrieben: 'gutgeschrieben' };
+  function vKarten() {
+    body('<h2>Kurskarten</h2><p class="ad-hint">Karten ohne feste Termine. Zu sp&auml;t abgesagte Eins&auml;tze (unter 24&nbsp;Stunden) verfallen &ndash; f&uuml;r Ausnahmen kannst du sie hier gutschreiben.</p><input type="search" class="ad-search" id="akKs" placeholder="Name, E-Mail oder Kartencode" value="' + esc(S.kq || '') + '"><div id="akKl" class="ad-list"><div class="ad-empty">L&auml;dt …</div></div>');
+    q('#akKs').oninput = function () { S.kq = this.value; zeige(); };
+    var daten = [];
+    function zeige() {
+      var f = String(S.kq || '').toLowerCase();
+      var l = daten.filter(function (c) { return !f || (c.name + ' ' + c.email + ' ' + c.code).toLowerCase().indexOf(f) !== -1; });
+      q('#akKl').innerHTML = l.length ? l.map(function (c) {
+        return '<div class="ad-card"><div class="ad-card-top"><span class="ad-code">' + esc(c.code) + '</span><span class="ad-tagline">' + esc(c.label) + '</span></div>'
+          + '<div class="ad-who">' + esc(c.name) + '</div><div class="ad-meta">' + esc(c.email) + '</div>'
+          + '<div class="ad-meta"><b>' + c.frei + ' von ' + (c.anzahl + c.korrektur) + ' frei</b> · g&uuml;ltig bis ' + esc(c.bis.split('-').reverse().join('.')) + (c.korrektur ? ' · Korrektur ' + (c.korrektur > 0 ? '+' : '') + c.korrektur : '') + '</div>'
+          + (c.buchungen.length ? '<div class="ad-meta">' + c.buchungen.map(function (b) {
+              return esc(dk(b.datum)) + ' ' + esc(b.start) + ' ' + esc(b.kurs_titel) + ' (' + esc(KST[b.status] || b.status) + ')'
+                + (b.status === 'verfallen' ? ' <button type="button" class="ad-mini" data-gut="' + esc(c.code) + '|' + esc(b.bestellung) + '">gutschreiben</button>' : '');
+            }).join('<br>') + '</div>' : '')
+          + '<div class="ad-actions"><button type="button" class="ad-mini" data-plus="' + esc(c.code) + '">+1 Einheit</button>'
+          + '<button type="button" class="ad-mini" data-minus="' + esc(c.code) + '">&minus;1 Einheit</button>'
+          + '<button type="button" class="ad-mini" data-verl="' + esc(c.code) + '">+1 Monat g&uuml;ltig</button></div></div>';
+      }).join('') : '<div class="ad-empty">Noch keine Karte verkauft.</div>';
+      on('[data-gut]', function (b) { var x = b.getAttribute('data-gut').split('|'); if (!armed(b, 'Wirklich gutschreiben?')) return; aktion({ code: x[0], aktion: 'eintrag-gutschreiben', bestellung: x[1] }); });
+      on('[data-plus]', function (b) { if (!armed(b, 'Wirklich +1?')) return; aktion({ code: b.getAttribute('data-plus'), aktion: 'gutschreiben' }); });
+      on('[data-minus]', function (b) { if (!armed(b, 'Wirklich −1?')) return; aktion({ code: b.getAttribute('data-minus'), aktion: 'abziehen' }); });
+      on('[data-verl]', function (b) { if (!armed(b, 'Wirklich verlängern?')) return; aktion({ code: b.getAttribute('data-verl'), aktion: 'verlaengern', monate: 1 }); });
+    }
+    function aktion(b) { post('karte-aktion', b).then(function (d) { daten = d.karten; zeige(); A.note('Gespeichert.'); }).catch(function (e) { A.note(e.message, true); }); }
+    A.api('kurse/karten?p=' + encodeURIComponent(S.p)).then(function (d) { daten = d.karten; zeige(); }).catch(function (e) { A.note(e.message, true); });
   }
 
   /* ---------- Preise & Regeln ---------- */

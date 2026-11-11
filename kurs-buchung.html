@@ -126,6 +126,8 @@ var API_BASE = window.FD_API_BASE || 'https://fitnessdonner-gutscheine.coaching-
   function eur(c) { var v = (c / 100).toFixed(2).replace('.', ','); return (v.slice(-3) === ',00' ? v.slice(0, -3) : v) + ' €'; }
   function dl(iso) { var d = new Date(iso + 'T12:00:00Z'); return WD[d.getUTCDay()] + ', ' + ('0' + d.getUTCDate()).slice(-2) + '.' + ('0' + (d.getUTCMonth() + 1)).slice(-2) + '.' + iso.slice(0, 4); }
   function fail(t) { el('error').textContent = t; el('error').hidden = false; el('loading').hidden = true; }
+  var DRAFT = null;
+  try { DRAFT = JSON.parse(sessionStorage.getItem('fd_kurs') || 'null'); } catch (e) {}
   try { sessionStorage.removeItem('fd_kurs'); } catch (e) {}
 
   if (Q.get('w')) {
@@ -153,8 +155,32 @@ var API_BASE = window.FD_API_BASE || 'https://fitnessdonner-gutscheine.coaching-
       }
       if (r.s !== 200 || r.d.status !== 'confirmed') { fail(r.d.error || 'Diese Buchung habe ich nicht gefunden.'); return; }
       if (Q.get('session_id')) history.replaceState(null, '', 'kurs-buchung.html?p=' + encodeURIComponent(P) + '&o=' + r.d.o + '&t=' + r.d.t);
-      zeigen(r.d);
+      if (r.d.flex) zeigenKarte(r.d); else zeigen(r.d);
     }).catch(function () { fail('Keine Verbindung. Bitte lade die Seite neu.'); });
+  }
+
+  /* Karte ohne feste Termine: Code zeigen und zum Buchen schicken */
+  function zeigenKarte(d) {
+    cur = d;
+    el('loading').hidden = true;
+    el('view').hidden = false;
+    el('vEyebrow').textContent = 'Deine Karte';
+    el('vTitel').textContent = d.label;
+    el('vMeta').innerHTML = esc(d.anzahl) + ' Kurse nach freier Wahl &middot; g&uuml;ltig bis ' + esc(dl(d.gueltig_bis)) + ' &middot; ' + esc(d.anbieterin.name);
+    var link = d.portal + (DRAFT && DRAFT.k && DRAFT.d ? '&k=' + encodeURIComponent(DRAFT.k) + '&d=' + encodeURIComponent(DRAFT.d) : '');
+    el('vKal').hidden = true;
+    el('vTermine').innerHTML = '<li style="display:block"><div class="z" style="letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:var(--muted)">Dein Kartencode</div>'
+      + '<div class="d" style="font-family:var(--display);font-size:34px;letter-spacing:.08em;color:var(--blitz);margin:6px 0 4px">' + esc(d.code) + '</div>'
+      + '<div class="z">Den Code und deine E-Mail-Adresse brauchst du zum Buchen. Beides steht auch in deiner Best&auml;tigungsmail.</div>'
+      + '<div class="ku-act" style="margin-top:16px"><a class="btn btn-blitz" href="' + esc(link) + '">' + (DRAFT && DRAFT.d ? 'Gew&auml;hlten Kurs jetzt buchen' : 'Jetzt Kurse buchen') + '</a></div></li>';
+    el('vInfo').innerHTML = [
+      'Karte: ' + esc(d.label) + ' (' + esc(d.anzahl) + ' Einheiten)',
+      'Preis: ' + eur(d.preis_cents) + (d.gutschein ? ' · davon Gutschein ' + esc(d.gutschein.code) + ' ' + eur(d.gutschein.cents) : '') + ' · bezahlt ' + eur(d.offen_cents),
+      'G&uuml;ltig bis ' + esc(dl(d.gueltig_bis)),
+      'Du kannst die Karte innerhalb von 14 Tagen widerrufen (siehe Widerrufsbelehrung in deiner Mail). Bereits genutzte Kurse werden anteilig berechnet.'
+    ].map(function (x) { return '<li>' + x + '</li>'; }).join('');
+    el('vRegeln').innerHTML = '<b>So l&auml;uft es</b><ul><li>Du buchst Kurse im Mitgliederbereich, wann es dir passt. Karten haben Vorrang vor Einzeltickets.</li>'
+      + '<li>Absage bis 24&nbsp;Stunden vor Kursbeginn: Die Einheit wird gutgeschrieben. Danach verf&auml;llt sie. Ausnahmen sind nach Absprache m&ouml;glich.</li></ul>';
   }
 
   function zeigen(d) {
@@ -169,7 +195,7 @@ var API_BASE = window.FD_API_BASE || 'https://fitnessdonner-gutscheine.coaching-
       else if (t.status === 'freigegeben') badge = '<span class="ku-badge">freigegeben</span>';
       else if (t.status === 'abgesagt') badge = '<span class="ku-badge aus">fällt aus</span>';
       else badge = '<span class="ku-badge">' + esc(t.status) + '</span>';
-      if (t.freigeben_moeglich) act = '<button type="button" class="btn btn-ghost" data-a="freigeben" data-d="' + t.datum + '">Ich kann nicht – Platz freigeben</button>';
+      if (t.freigeben_moeglich) act = '<button type="button" class="btn btn-ghost" data-a="freigeben" data-d="' + t.datum + '"' + (d.karte_code ? ' data-karte="1" data-gut="' + (t.gutschrift ? '1' : '0') + '"' : '') + '>' + (d.karte_code ? 'Ich kann nicht – absagen' : 'Ich kann nicht – Platz freigeben') + '</button>';
       if (t.status === 'abgesagt') {
         if (t.ersatz) {
           var ant = t.ersatz.antwort === 'angenommen' ? 'Du hast den Ersatztermin angenommen.' : t.ersatz.antwort === 'erstattung' ? 'Du hast die Erstattung gewählt.' : 'Dein Platz ist reserviert – passt dir der Termin?';
@@ -188,7 +214,7 @@ var API_BASE = window.FD_API_BASE || 'https://fitnessdonner-gutscheine.coaching-
         + (g ? '<a class="ku-glink" href="' + esc(g.google) + '" target="_blank" rel="noopener">+ Google</a>' : '') + '</div></div>'
         + '<div>' + badge + '</div>' + extra + (act ? '<div class="ku-act" style="flex-basis:100%">' + act + '</div>' : '') + '</li>';
     }).join('');
-    var info = [
+    var info = d.karte_code ? ['Anbieterin: ' + esc(d.anbieterin.name), 'Ort: ' + esc(d.kurs.ort), 'Gebucht mit Karte ' + esc(d.karte_code)] : [
       'Anbieterin: ' + esc(d.anbieterin.name) + (d.anbieterin.email ? ' · ' + esc(d.anbieterin.email) : ''),
       'Ort: ' + esc(d.kurs.ort) + (d.kurs.adresse ? ', ' + esc(d.kurs.adresse) : ''),
       'Preis: ' + eur(d.preis_cents) + (d.gutschein ? ' · davon Gutschein ' + esc(d.gutschein.code) + ' ' + eur(d.gutschein.cents) : '') + ' · bezahlt ' + eur(d.offen_cents)
@@ -225,14 +251,16 @@ var API_BASE = window.FD_API_BASE || 'https://fitnessdonner-gutscheine.coaching-
     var a = b.getAttribute('data-a');
     if (a === 'freigeben' && b.getAttribute('data-armed') !== '1') {
       b.setAttribute('data-armed', '1');
-      b.textContent = 'Wirklich freigeben? (keine Erstattung)';
-      setTimeout(function () { b.removeAttribute('data-armed'); b.textContent = 'Ich kann nicht – Platz freigeben'; }, 5000);
+      var orig = b.textContent;
+      b.textContent = b.getAttribute('data-karte') ? (b.getAttribute('data-gut') === '1' ? 'Wirklich absagen? Einheit wird gutgeschrieben' : 'Wirklich absagen? Unter 24 h: Einheit verfällt') : 'Wirklich freigeben? (keine Erstattung)';
+      setTimeout(function () { b.removeAttribute('data-armed'); b.textContent = orig; }, 5000);
       return;
     }
     b.disabled = true;
     fetch(API_BASE + '/api/kurse/aktion', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ p: P, o: cur.o, t: cur.t, aktion: a, datum: b.getAttribute('data-d') }) })
       .then(function (r) { return r.json().then(function (d) { return { s: r.status, d: d }; }); })
-      .then(function (r) { if (r.s !== 200) { b.disabled = false; fail(r.d.error); return; } el('error').hidden = true; zeigen(r.d); })
+      .then(function (r) { if (r.s !== 200) { b.disabled = false; fail(r.d.error); return; } el('error').hidden = true; zeigen(r.d);
+        if (r.d.karte_code && typeof r.d.einheit_zurueck === 'boolean') { var f = el('vFrage'); f.innerHTML = r.d.einheit_zurueck ? '<b>Abgesagt.</b> Deine Einheit wurde gutgeschrieben, du kannst einen neuen Kurs buchen.' : '<b>Abgesagt.</b> Weil weniger als 24 Stunden bis zum Kurs waren, ist die Einheit verfallen. Wenn es einen besonderen Grund gibt, schreib mir kurz.'; f.hidden = false; } })
       .catch(function () { b.disabled = false; fail('Keine Verbindung.'); });
   }
 

@@ -290,8 +290,8 @@ if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a
     ],
     kurse: [
       { k: 'k1', t: 'Einmal reinschnuppern', s: 'Ich probiere einen Kurs aus' },
-      { k: 'k5', t: 'Ein paar Wochen', s: 'Fünf Termine in Folge' },
-      { k: 'k10', t: 'Richtig dranbleiben', s: 'Zehn Termine in Folge' }
+      { k: 'k5', t: 'Ein paar Wochen', s: 'Fünf Kurse nach Wahl' },
+      { k: 'k10', t: 'Richtig dranbleiben', s: 'Zehn Kurse nach Wahl' }
     ]
   };
   var R = {
@@ -315,14 +315,14 @@ if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a
       why: 'Du kommst zu einem Kurstermin deiner Wahl, solange Plätze frei sind – ideal zum Ausprobieren.',
       save: 'Gefällt es dir? Mit der Karte sind es nur 16' + EUR + ' oder 14' + EUR + ' pro Termin.',
       bullets: ['Ein Termin deiner Wahl', 'Solange Plätze frei sind', 'Kurse ' + STUDIO], inkl: '' },
-    k5: { name: '5er-Karte', flag: '', price: '80' + EUR, per: '5 Termine in Folge · 16' + EUR + ' pro Termin', cta: 'Kurs aussuchen & buchen', href: 'kurse.html#kursplan',
-      why: 'Du wählst den ersten Termin, die Karte umfasst die 5 Wochentermine ab dann.',
+    k5: { name: '5er-Karte', flag: '', price: '80' + EUR, per: '5 Kurse nach Wahl · 16' + EUR + ' pro Kurs', cta: 'Karte kaufen', href: 'kurs-buchen.html',
+      why: 'Keine festen Termine: Du buchst deine Kurse, wann es dir passt. Karten haben Vorrang vor Tageskarten.',
       save: '10' + EUR + ' gespart gegenüber fünf Einzeltickets',
-      bullets: ['5 Wochentermine in Folge', 'Du wählst den ersten Termin', 'Kurse ' + STUDIO], inkl: '' },
-    k10: { name: '10er-Karte', flag: 'Bester Preis pro Termin', price: '140' + EUR, per: '10 Termine in Folge · 14' + EUR + ' pro Termin', cta: 'Kurs aussuchen & buchen', href: 'kurse.html#kursplan',
-      why: 'Du wählst den ersten Termin, die Karte umfasst die 10 Wochentermine ab dann.',
+      bullets: ['5 Kurse nach freier Wahl', 'Ohne feste Termine', 'Kurse ' + STUDIO], inkl: '' },
+    k10: { name: '10er-Karte', flag: 'Bester Preis pro Termin', price: '140' + EUR, per: '10 Kurse nach Wahl · 14' + EUR + ' pro Kurs', cta: 'Karte kaufen', href: 'kurs-buchen.html',
+      why: 'Keine festen Termine: Du buchst deine Kurse, wann es dir passt. Karten haben Vorrang vor Tageskarten.',
       save: '40' + EUR + ' gespart gegenüber zehn Einzeltickets',
-      bullets: ['10 Wochentermine in Folge', 'Du wählst den ersten Termin', 'Kurse ' + STUDIO], inkl: '' }
+      bullets: ['10 Kurse nach freier Wahl', 'Ohne feste Termine', 'Kurse ' + STUDIO], inkl: '' }
   };
 
   var st = { tab: 'pt', freq: 'w1', n: 0 };
@@ -446,9 +446,9 @@ if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a
       if (!pr || !pr.aktiv) return;
       var o = R[key];
       o.price = eur(pr.cents);
-      o.per = pr.termine + ' Termine in Folge · ' + eur(Math.round(pr.cents / pr.termine)) + ' pro Termin';
-      o.why = 'Du wählst den ersten Termin, die Karte umfasst die ' + pr.termine + ' Wochentermine ab dann.' + (d.gueltig_monate ? ' ' + d.gueltig_monate + ' Monate gültig.' : '');
-      o.bullets = [pr.termine + ' Wochentermine in Folge', 'Du wählst den ersten Termin', 'Kurse ' + STUDIO];
+      o.per = pr.termine + ' Kurse nach Wahl · ' + eur(Math.round(pr.cents / pr.termine)) + ' pro Kurs';
+      o.why = 'Keine festen Termine: Du buchst deine Kurse, wann es dir passt. Karten haben Vorrang vor Tageskarten.' + (d.gueltig_monate ? ' ' + d.gueltig_monate + ' Monate gültig.' : '');
+      o.bullets = [pr.termine + ' Kurse nach freier Wahl', 'Ohne feste Termine', 'Kurse ' + STUDIO];
       if (t && t.aktiv) {
         var sp = t.cents * pr.termine - pr.cents;
         o.save = sp > 0 ? eur(sp) + ' gespart gegenüber ' + label + ' Einzeltickets' : '';

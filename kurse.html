@@ -106,13 +106,15 @@
   <div class="wrap">
     <div class="eyebrow">Kursplan</div>
     <h2 style="margin-top:16px">Die Termine.</h2>
-    <p class="hero-sub" style="margin-top:14px;max-width:640px">W&auml;hl einen Tag und tipp beim passenden Kurs auf &bdquo;Kurs buchen&ldquo;. Dann siehst du, was f&uuml;r genau diesen Termin geht: 10er- oder 5er-Karte mit festen Terminen oder ein Einzelticket.</p>
+    <p class="hero-sub" style="margin-top:14px;max-width:640px">W&auml;hl einen Tag und tipp beim passenden Kurs auf &bdquo;Kurs buchen&ldquo;. Dann siehst du, was f&uuml;r genau diesen Termin geht: 10er- oder 5er-Karte ohne feste Termine oder ein Einzelticket.</p>
     <div id="kursplanApp" style="margin-top:26px">
       <div class="kp-bald"><div class="kp-bald-titel">Der Kursplan steht bald.</div>
         <p>Die festen Kurszeiten im <a href="https://www.google.com/maps/search/?api=1&amp;query=Prinzenstra%C3%9Fe+2a%2C+42697+Solingen" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline dotted;text-underline-offset:3px" title="Adresse in Karten öffnen">Forged Studio</a> stimme ich gerade ab. Sobald sie stehen, findest du hier jeden Tag die Kurse mit freien Pl&auml;tzen &ndash; direkt buchbar.</p></div>
     </div>
 
     <div class="ort-note" style="margin-top:24px"><b>Kurse und Personal Training sind getrennte Angebote.</b> Deine 4er- oder 8er-Karte gilt f&uuml;rs Personal Training. Kurse buchst du hier mit einem Einzelticket oder einer 5er- bzw. 10er-Karte.</div>
+
+    <div class="ort-note" style="margin-top:14px"><b>Du hast schon eine Karte?</b> Im <a href="mitglied.html" style="color:var(--blitz);text-decoration:underline">Mitgliederbereich</a> buchst und sagst du deine Kurse ab.</div>
 
     <div class="ort-note" style="margin-top:14px"><b>Lieber allein?</b> Im <a href="personal-training-solingen.html" style="color:var(--blitz);text-decoration:underline">Personal Training</a> bekommst du dieselbe Betreuung 1:1 &ndash; mit einem Plan, der nur auf dich zugeschnitten ist. Die Preise daf&uuml;r stehen auf der <a href="preise.html" style="color:var(--blitz);text-decoration:underline">Preisseite</a>.</div>
   </div>
@@ -122,7 +124,7 @@
   <div class="wrap">
     <div class="eyebrow">Preise</div>
     <h2 style="margin-top:16px">Einzeln oder<br>als Karte.</h2>
-    <p class="hero-sub" style="margin-top:14px;max-width:640px">Mit einer Karte bist du an 5 oder 10 Terminen in Folge fest dabei &ndash; dein Platz ist an jedem Termin sicher. Karten haben Vorrang: Einzeltickets werden erst 2 Tage vor Kursbeginn freigeschaltet, falls noch Restpl&auml;tze da sind.</p>
+    <p class="hero-sub" style="margin-top:14px;max-width:640px">Mit einer Karte buchst du 5 oder 10 Kurse nach freier Wahl &ndash; ohne feste Termine, bei allen Kursen. Karten haben Vorrang: Einzeltickets werden erst 2 Tage vor Kursbeginn freigeschaltet, falls noch Restpl&auml;tze da sind.</p>
     <div class="price-grid" id="kursPreise" style="margin-top:30px"></div>
     <p style="margin-top:22px;max-width:860px;color:#8b9099;font-size:13.5px;line-height:1.6">Alle Preise sind Endpreise; als Kleinunternehmer im Sinne von &sect;&nbsp;19 UStG berechne ich keine Umsatzsteuer. Gutscheine von Fitness Donner kannst du beim Kauf einl&ouml;sen.</p>
   </div>
@@ -193,7 +195,7 @@
       </details>
       <details>
         <summary>Karte oder Einzelticket &ndash; was ist der Unterschied?</summary>
-        <p>Mit einer 5er- oder 10er-Karte buchst du die n&auml;chsten 5 bzw. 10 Wochentermine eines Kurses ab deinem Wunschtermin &ndash; auch mitten in der laufenden Reihe. Welche Termine das genau sind, siehst du vor dem Kauf, und dein Platz ist an jedem davon sicher. Karten haben Vorrang vor Einzeltickets: Einzeltickets werden erst 2 Tage vor Kursbeginn freigeschaltet, falls dann noch Restpl&auml;tze frei sind.</p>
+        <p>Mit einer 5er- oder 10er-Karte hast du keine festen Termine: Du buchst die Kurse einzeln, wann es dir passt, bei allen Kursen von Niklas. Dazu bekommst du einen Kartencode und meldest dich im <a href="mitglied.html" style="color:var(--blitz);text-decoration:underline">Mitgliederbereich</a> an. Karten haben Vorrang vor Einzeltickets: Einzeltickets werden erst 2 Tage vor Kursbeginn freigeschaltet, falls dann noch Restpl&auml;tze frei sind.</p>
       </details>
       <details>
         <summary>Was ist, wenn ich mal nicht kann?</summary>
@@ -270,9 +272,9 @@ if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a
       var karte = a !== 'tageskarte';
       html.push('<div class="price' + (a === 'karte10' ? ' featured' : '') + '">' + (a === 'karte10' ? '<span class="pop">Empfohlen &middot; bester Preis pro Termin</span>' : '')
         + '<h3>' + esc(p.label) + '</h3><div class="amount">' + eur(p.cents) + '</div>'
-        + '<div class="per">' + (karte ? p.termine + ' feste Termine &middot; ' + eur(Math.round(p.cents / p.termine)) + ' pro Termin' : 'ein einzelner Termin') + '</div>'
-        + '<p class="desc">' + (karte ? 'Ab deinem Wunschtermin, auch mitten in der laufenden Reihe. ' + d.gueltig_monate + ' Monate g&uuml;ltig.' : 'Wird ' + p.freischalt_tage + (Number(p.freischalt_tage) === 1 ? ' Tag' : ' Tage') + ' vor Kursbeginn freigeschaltet, falls noch Restpl&auml;tze da sind.') + '</p>'
-        + '<a class="btn ' + (a === 'karte10' ? 'btn-blitz' : 'btn-ghost') + '" href="kurs-buchen.html">Termin aussuchen</a></div>');
+        + '<div class="per">' + (karte ? p.termine + ' Kurse nach freier Wahl &middot; ' + eur(Math.round(p.cents / p.termine)) + ' pro Kurs' : 'ein einzelner Termin') + '</div>'
+        + '<p class="desc">' + (karte ? 'Ohne feste Termine, mit Vorrang vor Tageskarten. ' + d.gueltig_monate + ' Monate g&uuml;ltig.' : 'Wird ' + p.freischalt_tage + (Number(p.freischalt_tage) === 1 ? ' Tag' : ' Tage') + ' vor Kursbeginn freigeschaltet, falls noch Restpl&auml;tze da sind.') + '</p>'
+        + '<a class="btn ' + (a === 'karte10' ? 'btn-blitz' : 'btn-ghost') + '" href="kurs-buchen.html">' + (karte ? 'Karte kaufen' : 'Termin aussuchen') + '</a></div>');
     });
     document.getElementById('kursPreise').innerHTML = html.join('');
     document.getElementById('kurspreise').hidden = false;

@@ -4954,6 +4954,7 @@ async function kursListe(url, env) {
     buchungsschluss_min: first.s.buchungsschluss_min,
     warteliste_stunden: first.s.warteliste_stunden,
     gueltig_monate: first.s.gueltig_monate,
+    absage_stunden: KARTE_ABSAGE_H,
     inklusiv,
     kurse: out,
   });

@@ -96,23 +96,15 @@ var API_BASE = window.FD_API_BASE || 'https://fitnessdonner-gutscheine.coaching-
       + (o.hinweis ? '<div class="ku-ang-info" hidden>' + o.hinweis + '</div>' : '') + '</div>';
   }
   function kartenAngebot(art) {
-    var k = S.kurs, t = S.termin, pr = k.produkte[art];
+    var k = S.kurs, pr = k.produkte[art];
     if (!pr || !pr.aktiv) return '';
-    var n = pr.termine, sd = startdatum(t.datum), r = sd && sd[art];
-    var proT = eur(Math.round(pr.cents / n)) + ' pro Termin';
-    if (r && r.ok) {
-      return karte({ name: pr.label + ' ab diesem Termin', cents: pr.cents, einheit: proT, erstes: art === 'karte10',
-        flag: art === 'karte10' ? 'Empfohlen · bester Preis pro Termin' : '',
-        text: 'Du bist an <b>' + n + ' festen Terminen</b> dabei: ' + dk(r.termine[0]) + ' bis ' + dk(r.bis) + '<br>Dein Platz ist an jedem dieser Termine sicher. ' + S.data.gueltig_monate + ' Monate gültig.'
-          + '<span class="ku-vorrang"><b>Vorrang vor Tageskarten:</b> Kartenplätze sind für dich reserviert, noch bevor Tageskarten freigeschaltet werden.</span>',
-        aktion: '<button type="button" class="btn ' + (art === 'karte10' ? 'btn-blitz' : 'btn-ghost') + '" data-art="' + art + '">' + esc(pr.label) + ' wählen</button>',
-        extra: '<ol class="ku-ang-termine">' + r.termine.map(function (d) { return '<li>' + dk(d) + '</li>'; }).join('') + '</ol>' });
-    }
-    var alt = (S.kurs.startdaten || []).filter(function (x) { return x.datum > t.datum && x[art] && x[art].ok; })[0];
-    var grund = r ? r.grund : 'Karten ab diesem Termin lassen sich noch nicht buchen.';
-    return karte({ name: pr.label + ' ab diesem Termin', cents: pr.cents, einheit: proT, zu: true,
-      text: '<span class="ku-grund">' + esc(grund) + '</span>' + (alt ? '<br>Frühestmöglicher Start: <b>' + dl(alt.datum) + '</b>' : ''),
-      aktion: alt ? '<button type="button" class="btn btn-ghost btn-sm" data-start="' + alt.datum + '">Ab ' + dk(alt.datum) + ' ansehen</button>' : '' });
+    var n = pr.termine;
+    return karte({ name: pr.label + ' · ohne feste Termine', cents: pr.cents, einheit: eur(Math.round(pr.cents / n)) + ' pro Kurs', erstes: art === 'karte10',
+      flag: art === 'karte10' ? 'Empfohlen · bester Preis pro Kurs' : '',
+      text: '<b>' + n + ' Kurse nach freier Wahl</b> &ndash; du buchst, wann es dir passt, bei allen Kursen von ' + esc(k.anbieterin) + '. ' + S.data.gueltig_monate + ' Monate gültig.'
+        + '<span class="ku-vorrang"><b>Vorrang vor Tageskarten:</b> Mit der Karte buchst du jeden Kurs, solange Plätze frei sind. Einzeltickets gibt es erst kurz vor Kursbeginn.</span>'
+        + '<span class="ku-vorrang">Absage bis ' + (S.data.absage_stunden || 24) + ' Stunden vorher: Die Einheit wird gutgeschrieben.</span>',
+      aktion: '<button type="button" class="btn ' + (art === 'karte10' ? 'btn-blitz' : 'btn-ghost') + '" data-art="' + art + '">' + esc(pr.label) + ' wählen</button>' });
   }
   function einzelAngebot() {
     var k = S.kurs, t = S.termin, pr = k.produkte.tageskarte;
@@ -194,27 +186,32 @@ var API_BASE = window.FD_API_BASE || 'https://fitnessdonner-gutscheine.coaching-
 
   /* ---------- Schritt 3: Daten ---------- */
   function termineDerWahl() {
-    if (S.art === 'tageskarte') return [S.termin.datum];
-    var r = startdatum(S.termin.datum);
-    return r && r[S.art] && r[S.art].ok ? r[S.art].termine : [];
+    return S.art === 'tageskarte' ? [S.termin.datum] : [];
   }
   function produkt() { return S.kurs.produkte[S.art]; }
   function rabatt() { return S.gutschein ? S.gutschein.discount_cents : 0; }
   function renderDaten() {
     var k = S.kurs, ts = termineDerWahl(), p = produkt();
-    el('s3Sub').innerHTML = esc(k.titel) + ' · ' + esc(p.label) + ' · ' + (ts.length > 1 ? ts.length + ' Termine ab ' + esc(dl(ts[0])) : esc(dl(ts[0])));
-    var items = [
+    var istKarte = S.art !== 'tageskarte';
+    el('s3Sub').innerHTML = istKarte ? esc(p.label) + ' · ' + p.termine + ' Kurse nach freier Wahl · alle Kurse von ' + esc(k.anbieterin)
+      : esc(k.titel) + ' · ' + esc(p.label) + ' · ' + esc(dl(ts[0]));
+    var items = istKarte ? [
+      '<b style="color:var(--bone)">' + esc(p.label) + '</b> · ' + eur(p.cents),
+      p.termine + ' Kurse nach freier Wahl, ohne feste Termine – du buchst nach dem Kauf im Mitgliederbereich',
+      'Gilt für alle Kurse von ' + esc(k.anbieterin),
+      'Gültig ' + S.data.gueltig_monate + ' Monate',
+      'Absage bis ' + (S.data.absage_stunden || 24) + ' Stunden vor Kursbeginn: Einheit wird gutgeschrieben, danach verfällt sie'
+    ] : [
       '<b style="color:var(--bone)">' + esc(k.titel) + '</b>, ' + esc(k.wochentag_name) + 's ' + esc(k.start) + '–' + esc(k.ende) + ' Uhr',
       'Ort: ' + esc(k.ort) + (k.adresse ? ', ' + esc(k.adresse) : ''),
       'Anbieterin: ' + esc(k.anbieterin),
       esc(p.label) + ' · ' + eur(p.cents),
-      (ts.length > 1 ? 'Termine: ' : 'Termin: ') + ts.map(dl).join(', ')
+      'Termin: ' + ts.map(dl).join(', ')
     ];
-    if (S.art !== 'tageskarte') items.push('Karte gültig ' + S.data.gueltig_monate + ' Monate (Rahmen für Ersatztermine)');
     if (rabatt()) items.push('Gutschein ' + esc(S.gutschein.code) + ': −' + eur(rabatt()));
     el('orderList').innerHTML = items.map(function (x) { return '<li>' + x + '</li>'; }).join('');
     el('regeln').innerHTML = '<b>So läuft es</b><ul>' + S.data.texte.regeln.map(function (r) { return '<li>' + esc(r) + '</li>'; }).join('') + '</ul>';
-    var aus = p.widerruf_ausgeschlossen;
+    var aus = istKarte ? false : p.widerruf_ausgeschlossen;
     el('widerrufText').textContent = aus ? S.data.texte.widerruf_aus_vorher : '';
     el('widerrufText').hidden = !aus;
     el('widerrufLabel').textContent = aus ? S.data.texte.widerruf_aus_check : S.data.texte.widerruf_an_check;
@@ -252,10 +249,10 @@ var API_BASE = window.FD_API_BASE || 'https://fitnessdonner-gutscheine.coaching-
     saveDraft();
     var p = produkt();
     var body = { p: P, kurs: S.kurs.id, art: S.art, name: el('name').value, email: el('email').value, phone: el('phone').value, hold: HOLD };
-    if (S.art === 'tageskarte') body.datum = S.termin.datum; else body.start = S.termin.datum;
+    if (S.art === 'tageskarte') body.datum = S.termin.datum;
     if (S.gutschein) body.gutschein = S.gutschein.code;
     if (S.angebot) body.angebot = S.angebot;
-    if (p.widerruf_ausgeschlossen) body.widerruf_ok = true; else body.vorzeitig = true;
+    if (S.art !== 'tageskarte' || !p.widerruf_ausgeschlossen) body.vorzeitig = true; else body.widerruf_ok = true;
     api('/checkout', body).then(function (r) {
       if (r.s === 200 && r.d.status === 'payment' && r.d.url) {
         try { (EMBED ? window.top : window).location.href = r.d.url; } catch (err) { window.open(r.d.url, '_blank'); }

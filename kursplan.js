@@ -31,8 +31,7 @@
     var out = [];
     if (t.abgesagt || !t.buchbar) return out;
     if (k.produkte.tageskarte.aktiv && t.frei > 0 && t.tageskarte_offen) out.push(k.produkte.tageskarte.label);
-    var sd = (k.startdaten || []).filter(function (x) { return x.datum === t.datum; })[0];
-    ['karte5', 'karte10'].forEach(function (a) { if (sd && sd[a] && sd[a].ok && k.produkte[a].aktiv) out.push(k.produkte[a].label); });
+    ['karte5', 'karte10'].forEach(function (a) { if (t.frei > 0 && k.produkte[a].aktiv) out.push(k.produkte[a].label); });
     return out;
   }
   /** ISO-Zeitpunkt → Datum in Berlin (Freischaltung gilt ab 00:00 Uhr deutscher Zeit) */
@@ -109,13 +108,13 @@
         html += '<div class="kp-leer">An diesem Tag gibt es keine Kurse.' + (n ? '<br><button type="button" class="btn btn-ghost btn-sm" data-kp-tag="' + n + '">Nächster Kurstag: ' + kurz(n) + '</button>' : '') + '</div>';
       } else {
         html += '<div class="kp-zeilen">' + liste.map(function (x) {
-          var k = x.k, t = x.t, tags = moeglich(k, t);
+          var k = x.k, t = x.t, tags = opts.karte ? [] : moeglich(k, t);
           return '<div class="kp-zeile' + (t.abgesagt ? ' aus' : '') + '">' + bild(k)
             + '<div class="kp-zeit-box"><div class="kp-zeit">' + esc(t.start) + ' – ' + esc(t.ende) + '</div>'
-            + ((tags.length || gesperrt(k, t)) ? '<div class="kp-tags">' + tags.map(function (g) { return '<span>' + esc(g) + '</span>'; }).join('') + gesperrt(k, t) + '</div>' : '') + '</div>'
+            + ((tags.length || (!opts.karte && gesperrt(k, t))) ? '<div class="kp-tags">' + tags.map(function (g) { return '<span>' + esc(g) + '</span>'; }).join('') + (opts.karte ? '' : gesperrt(k, t)) + '</div>' : '') + '</div>'
             + '<div class="kp-name"><b>' + esc(k.titel) + '</b><span>' + esc(k.kategorie ? k.kategorie + ' · ' : '') + 'mit ' + esc(k.anbieterin) + '</span></div>'
             + '<div class="kp-ort">Solingen-Ohligs<b>' + esc(k.ort) + '</b></div>'
-            + '<div class="kp-aktion">' + pill(t) + (t.abgesagt ? '' : '<button type="button" class="btn btn-blitz btn-sm" data-kp-buchen="' + esc(k.id + '|' + t.datum) + '">Kurs buchen</button>') + '</div></div>';
+            + '<div class="kp-aktion">' + pill(t) + (t.abgesagt ? '' : '<button type="button" class="btn btn-blitz btn-sm" data-kp-buchen="' + esc(k.id + '|' + t.datum) + '">' + (opts.karte ? 'Mit Karte buchen' : 'Kurs buchen') + '</button>') + '</div></div>';
         }).join('') + '</div>';
       }
       box.innerHTML = html;
