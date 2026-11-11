@@ -1,3 +1,4 @@
+/* worker-code-25 – worker-code-24 plus Gutschein-Versand zur Wunsch-Uhrzeit (sendDate "JJJJ-MM-TTTHH:MM", deutsche Zeit, Viertelstunden-Cron), neue Mail an Beschenkte (eingepacktes Geschenk, Link auf auspacken.html, Bilder /mailbilder/geschenk-*.jpg, ohne Code, Fragen nur per WhatsApp), Auspack-Link in der Käufer-Mail, PDF-Download /api/voucher-pdf. Stand: 2026-11-10 */
 /* worker-code-22 – worker-code-21 plus Gutschein-Titel 'Personal Training und Kurse' (Mail, PDF). Stand: 2026-11-06 */
 /* worker-code-21 – worker-code-20 plus Gutschein-Texte 'Personal Training und Fitnesskurse'. Stand: 2026-11-06 */
 /* worker-code-24 – wie 23, aber Mailbilder werden vom Worker selbst geladen und als Inline-Anhang (base64) mitgeschickt; schlaegt das fehl, bleibt die normale Bild-URL stehen. Stand: 2026-11-09 */
@@ -203,6 +204,9 @@ export default {
       if (url.pathname === '/api/voucher' && request.method === 'GET') {
         return cors(await handleVoucherLookup(url, env), request);
       }
+      if (url.pathname === '/api/voucher-pdf' && request.method === 'GET') {
+        return cors(await handleVoucherPdf(url, env), request);
+      }
       if (url.pathname === '/api/slots' && request.method === 'GET') {
         return cors(await handleSlots(env), request);
       }
@@ -249,6 +253,11 @@ export default {
 
   // Täglicher Cron: Gutscheine mit Wunsch-Versanddatum verschicken
   async scheduled(event, env, ctx) {
+    // GS-ZEIT: der Viertelstunden-Cron verschickt nur Gutscheine, deren Wunsch-Uhrzeit erreicht ist
+    if (event && event.cron === GS_CRON) {
+      ctx.waitUntil(sendScheduledVouchers(env, { takt: true }).catch((e) => console.error('Gutschein-Cron', e)));
+      return;
+    }
     // KURSE-HOOK: der stündliche Kurs-Cron (falls in Cloudflare eingerichtet) macht nur Kurssachen
     if (event && event.cron === KURS_CRON) {
       ctx.waitUntil(kursCron(env).catch((e) => console.error('Kurs-Cron', e)));
@@ -288,14 +297,21 @@ async function handleCheckout(request, env) {
     return json({ error: 'Bitte die E-Mail-Adresse der beschenkten Person angeben.' }, 400);
   }
 
-  // Wunsch-Versanddatum: heute bis 1 Jahr in der Zukunft
-  let sendDate = '';
+  // Wunsch-Versand: Tag (bis 1 Jahr voraus) und optional Uhrzeit im Viertelstundentakt, deutsche Zeit.
+  // Format vom Formular: "JJJJ-MM-TT" oder "JJJJ-MM-TTTHH:MM". Liegt der Zeitpunkt schon in der
+  // Vergangenheit, bleibt beides leer und der Gutschein geht sofort raus.
+  let sendDate = '', sendTime = '';
   if (delivery === 'gift' && body.sendDate) {
-    const d = String(body.sendDate).slice(0, 10);
+    const roh = String(body.sendDate);
+    const d = roh.slice(0, 10);
+    const zm = /^T([01]\d|2[0-3]):(00|15|30|45)$/.exec(roh.slice(10, 16));
     if (/^\d{4}-\d{2}-\d{2}$/.test(d)) {
-      const today = isoDate(new Date());
+      const jetzt = gsBerlinNow();
       const max = isoDate(new Date(Date.now() + 365 * 864e5));
-      if (d > today && d <= max) sendDate = d;
+      if (zm) {
+        const t = zm[1] + ':' + zm[2];
+        if ((d > jetzt.date || (d === jetzt.date && t > jetzt.time)) && d <= max) { sendDate = d; sendTime = t; }
+      } else if (d > jetzt.date && d <= max) sendDate = d;
     }
   }
 
@@ -338,7 +354,7 @@ async function handleCheckout(request, env) {
   params.set('metadata[message]', clean(body.message, 200));
   params.set('metadata[delivery]', delivery);
   params.set('metadata[gift_email]', delivery === 'gift' ? giftEmail : '');
-  params.set('metadata[send_date]', sendDate); params.set('metadata[design]', xmDesign(body.design)); params.set('metadata[pdf]', delivery === 'buyer' && body.pdf ? '1' : ''); params.set('metadata[bastel]', delivery === 'buyer' && body.bastel && xmDesign(body.design) ? '1' : '');
+  params.set('metadata[send_date]', sendDate); params.set('metadata[send_time]', sendTime); params.set('metadata[design]', xmDesign(body.design)); params.set('metadata[pdf]', delivery === 'buyer' && body.pdf ? '1' : ''); params.set('metadata[bastel]', delivery === 'buyer' && body.bastel && xmDesign(body.design) ? '1' : '');
 
   const session = await createCheckoutSession(env, params, PAY_TYPES_GIFT);
   if (!session || !session.url) {
@@ -1984,7 +2000,7 @@ async function createVoucherFromSession(session, env) {
     message: m.message || '',
     delivery: m.delivery || 'buyer',
     gift_email: m.gift_email || '',
-    send_date: m.send_date || '', design: m.design || '', pdf: m.pdf || '', bastel: m.bastel || '',
+    send_date: m.send_date || '', send_time: m.send_time || '', design: m.design || '', pdf: m.pdf || '', bastel: m.bastel || '',
     created: now.toISOString(),
     expires: expiryDate(now, cfg.validYears),
     status: 'active',
@@ -2003,7 +2019,7 @@ async function createVoucherFromSession(session, env) {
   if (voucher.delivery === 'gift') {
     if (voucher.send_date) {
       // Für den Wunschtag vormerken – der Cron verschickt ihn dann
-      await env.VOUCHERS.put(`pending:${voucher.send_date}:${code}`, code);
+      await env.VOUCHERS.put(gsPendingKey(voucher), code);
     } else {
       await sendGiftMail(voucher, env);
       voucher.sent = true;
@@ -2068,18 +2084,74 @@ async function handleVoucherLookup(url, env) {
     created: v.created,
     expires: v.expires,
     delivery: v.delivery,
-    send_date: v.send_date, design: v.design || '',
+    send_date: v.send_date, send_time: v.send_time || '', design: v.design || '',
   });
+}
+
+/* Gutschein als PDF zum Herunterladen: /api/voucher-pdf?code=FD-XXXX-XXXX&t=TOKEN
+   Gleiche Prüfung wie beim Abruf (Code + Token), dasselbe PDF wie der Mail-Anhang. */
+async function handleVoucherPdf(url, env) {
+  const code = (url.searchParams.get('code') || '').toUpperCase();
+  const token = url.searchParams.get('t') || '';
+  if (!code || !token) return json({ error: 'Fehlende Parameter.' }, 400);
+  const raw = await env.VOUCHERS.get(`voucher:${code}`);
+  if (!raw) return json({ error: 'Gutschein nicht gefunden.' }, 404);
+  const v = JSON.parse(raw);
+  if (v.token !== token) return json({ error: 'Kein Zugriff.' }, 403);
+  if (v.kind === 'karte') return json({ error: 'Für Karten gibt es kein PDF.' }, 400);
+  let pdf;
+  try { pdf = await xmPdf(v, env); } catch (e) { console.error('PDF fehlgeschlagen', e); return json({ error: 'Das PDF konnte gerade nicht erstellt werden.' }, 500); }
+  let body = pdf;
+  if (typeof pdf === 'string') { const bin = atob(pdf); const a = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i); body = a; }
+  return new Response(body, { status: 200, headers: {
+    'Content-Type': 'application/pdf',
+    'Content-Disposition': `attachment; filename="Gutschein-Fitness-Donner-${v.code}.pdf"`,
+    'Cache-Control': 'private, no-store',
+  } });
 }
 
 /* ------------------------------------------------------------------ */
 /* 4. Geplanter Versand (Cron)                                         */
 /* ------------------------------------------------------------------ */
 
-async function sendScheduledVouchers(env) {
-  const today = isoDate(new Date());
-  const list = await env.VOUCHERS.list({ prefix: `pending:${today}:` });
+/* GS-ZEIT: Vormerkungen liegen unter pending:JJJJ-MM-TT[THH:MM]:CODE. Ältere Einträge ohne
+   Uhrzeit gelten als 08:00. Verschickt wird alles, dessen Zeitpunkt (deutsche Zeit) erreicht
+   oder überschritten ist – auch Liegengebliebenes von Vortagen. */
+const GS_STANDARDZEIT = '08:00';
+
+function gsBerlinNow(ms) {
+  const s = new Intl.DateTimeFormat('sv-SE', {
+    timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
+  }).format(new Date(ms == null ? Date.now() : ms));
+  return { date: s.slice(0, 10), time: s.slice(11, 16) };
+}
+
+function gsPendingKey(v) {
+  return `pending:${v.send_date}${v.send_time ? 'T' + v.send_time : ''}:${v.code}`;
+}
+
+/* Merkt sich, dass der Viertelstunden-Cron läuft (höchstens alle 6 Stunden ein Schreibvorgang). */
+async function gsTaktMerken(env) {
+  try {
+    const alt = Number(await env.VOUCHERS.get('gs:takt')) || 0;
+    if (Date.now() - alt > 6 * 3600e3) await env.VOUCHERS.put('gs:takt', String(Date.now()));
+  } catch (e) { /* nur ein Merker */ }
+}
+async function gsTaktAktiv(env) {
+  try { return Date.now() - (Number(await env.VOUCHERS.get('gs:takt')) || 0) < 13 * 3600e3; } catch (e) { return true; }
+}
+
+async function sendScheduledVouchers(env, opts) {
+  const jetzt = gsBerlinNow();
+  if (opts && opts.takt) await gsTaktMerken(env);
+  const list = await env.VOUCHERS.list({ prefix: 'pending:' });
   for (const key of list.keys) {
+    const rest = key.name.slice(8);
+    const date = rest.slice(0, 10);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) continue;
+    const time = rest[10] === 'T' ? rest.slice(11, 16) : GS_STANDARDZEIT;
+    if (date > jetzt.date || (date === jetzt.date && time > jetzt.time)) continue;   // noch nicht fällig
     const code = await env.VOUCHERS.get(key.name);
     if (!code) continue;
     const raw = await env.VOUCHERS.get(`voucher:${code}`);
@@ -2106,21 +2178,29 @@ function voucherLink(v, env) {
   return `${cfg.siteOrigin}/gutschein-danke.html?code=${encodeURIComponent(v.code)}&t=${encodeURIComponent(v.token)}`;
 }
 
+function auspackLink(v, env) {
+  const cfg = config(env);
+  return `${cfg.siteOrigin}/auspacken.html?code=${encodeURIComponent(v.code)}&t=${encodeURIComponent(v.token)}`;
+}
+
 async function sendBuyerMail(v, env) {
   const cfg = config(env);
   const selbst = v.delivery === 'buyer';
   const intro = selbst
     ? `<p>vielen Dank für deinen Kauf! Dein Gutschein ist unten – du kannst ihn ausdrucken oder einfach weiterleiten.${v.pdf ? ' Als PDF-Datei h&auml;ngt er au&szlig;erdem an dieser Mail.' : ''}${v.bastel ? ' Die Bastelkarte zum Selbstdrucken findest du ebenfalls im Anhang (1 Blatt, 2 Seiten). Im Druckdialog &bdquo;Seiten 1&ndash;2&ldquo;, A4 quer, beidseitig und &bdquo;an der kurzen Kante wenden&ldquo; w&auml;hlen, dann in der Mitte falten. Ohne Duplex-Druck: erst Seite 1 drucken, das Blatt wenden und wieder einlegen, dann Seite 2 drucken.' : ''}</p>`
     : `<p>vielen Dank für deinen Kauf! Der Gutschein geht ${v.send_date
-        ? `am <b>${fmtDate(v.send_date)}</b>`
+        ? `am <b>${fmtDate(v.send_date)}</b>${v.send_time ? ` um <b>${esc(v.send_time)} Uhr</b>` : ''}`
         : `<b>gleich</b>`} an <b>${esc(v.gift_email)}</b>. Hier ist deine Kopie:</p>`;
+  const auspackTipp = selbst
+    ? `<p style="font-size:14px;color:#C9CCD3">Zum &Uuml;berreichen: Schick der beschenkten Person diesen Link, dann packt sie den Gutschein am Bildschirm selbst aus: <a href="${esc(auspackLink(v, env))}" style="color:#EFB92E">Geschenk auspacken</a></p>`
+    : '';
 
   await sendMail(env, {
     to: v.buyer_email,
     attachments: await xmAtt(v, env), subject: `Dein Gutschein über ${fmtEur(v.amount_cents)} – ${cfg.siteName}`,
     html: mailShell(
       `Hallo ${esc(firstName(v.buyer_name))},`,
-      intro + voucherCardHtml(v, env) + buyerFooterHtml(v, env),
+      intro + voucherCardHtml(v, env) + auspackTipp + buyerFooterHtml(v, env),
       env
     ),
   });
@@ -2128,20 +2208,24 @@ async function sendBuyerMail(v, env) {
 
 async function sendGiftMail(v, env) {
   const cfg = config(env);
-  const an = firstName(v.recipient_name) || 'du';
+  const an = firstName(v.recipient_name);
+  const von = firstName(v.buyer_name);
+  const papier = v.design === 'nik' ? 'nik' : (v.design === 'xmas' ? 'xmas' : 'std');
+  const link = auspackLink(v, env);
   await sendMail(env, {
     to: v.gift_email,
-    subject: `Du hast einen Gutschein geschenkt bekommen – ${cfg.siteName}`,
+    subject: `${von || 'Jemand'} hat dir etwas eingepackt`,
     html: mailShell(
-      `Hallo ${esc(an)},`,
-      `<p><b>${esc(v.buyer_name)}</b> hat dir einen Gutschein für Personal Training und Fitnesskurse geschenkt.</p>` +
-        voucherCardHtml(v, env) +
-        `<p style="margin-top:26px">Zum Einlösen tippst du auf den Button. Dort suchst du dir Ort und Uhrzeit aus, dein Gutschein-Code ist schon eingetragen.</p>
-         <p><a href="${esc(cfg.siteOrigin + '/termin-buchen.html?art=training&code=' + encodeURIComponent(v.code))}" style="display:inline-block;background:#EFB92E;color:#15171C;font-weight:700;text-decoration:none;padding:14px 26px;letter-spacing:.06em;text-transform:uppercase;font-size:13px">Gutschein einlösen</a></p>
-         <p style="margin-top:22px;font-size:14px;color:#C9CCD3">Was dich beim Personal Training und in den Kursen genau erwartet, kannst du in Ruhe auf <a href="${esc(cfg.siteOrigin)}" style="color:#EFB92E">fitnessdonner.de</a> nachlesen.</p>
-         ${whatsappBlockHtml(null, env, { text: `Hallo ${firstName(cfg.ownerName) || 'Niklas'}, ich habe einen Gutschein bekommen (Code ${v.code}) und eine Frage`, intro: 'Noch Fragen? Schreib mir einfach direkt:' })}
-         <p>Ich freue mich auf dich!<br>${esc(cfg.ownerName)}</p>`,
-      env
+      an ? `${esc(an)}, da ist etwas für dich.` : 'Da ist etwas für dich.',
+      `<p><b>${esc(v.buyer_name || 'Jemand')}</b> hat dir etwas eingepackt. Es sind keine Socken.</p>
+       <table role="presentation" width="548" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:548px;margin:22px 0 10px;border-collapse:collapse"><tr><td style="padding:0;font-size:0;line-height:0"><a href="${esc(link)}" style="text-decoration:none"><img src="${esc(cfg.siteOrigin)}/mailbilder/geschenk-${papier}.jpg" width="548" alt="Ein eingepacktes Geschenk mit goldener Schleife" style="display:block;width:100%;max-width:548px;height:auto;border:0"></a></td></tr></table>
+       <p><a href="${esc(link)}" style="display:inline-block;background:#EFB92E;color:#15171C;font-weight:700;text-decoration:none;padding:14px 26px;letter-spacing:.06em;text-transform:uppercase;font-size:13px">Geschenk auspacken</a></p>
+       <p style="font-size:14px;color:#C9CCD3">Der Button &ouml;ffnet dein Geschenk im Browser. Dort ${v.message ? `warten dein Gutschein und eine Nachricht${von ? ' von ' + esc(von) : ''}` : 'wartet dein Gutschein'}, und du kannst direkt einen Termin buchen.</p>
+       ${whatsappBlockHtml(null, env, { text: `Hallo ${firstName(cfg.ownerName) || 'Niklas'}, ich habe einen Gutschein bekommen (Code ${v.code}) und eine Frage`, intro: 'Bei Fragen oder Problemen schreib mir einfach direkt per WhatsApp:' })}
+       <p>Ich freue mich auf dich!<br>${esc(cfg.ownerName)}</p>`,
+      env,
+      'Es sind keine Socken. Versprochen.',
+      { ohneFragen: true }
     ),
   });
 }
@@ -2372,6 +2456,7 @@ async function sendBookingOwnerMail(b, env) {
 
 async function sendOwnerMail(v, env) {
   const cfg = config(env);
+  const taktFehlt = v.delivery === 'gift' && v.send_time && !(await gsTaktAktiv(env));
   await sendMail(env, {
     to: cfg.ownerEmail,
     subject: `Gutschein verkauft: ${fmtEur(v.amount_cents)} (${v.code})`,
@@ -2382,10 +2467,11 @@ async function sendOwnerMail(v, env) {
         ${row('Code', v.code)}
         ${row('Käufer', `${esc(v.buyer_name)} &lt;${esc(v.buyer_email)}&gt;`)}
         ${row('Beschenkt', esc(v.recipient_name) || '–')}
-        ${row('Versand', v.delivery === 'gift' ? `direkt an ${esc(v.gift_email)}${v.send_date ? ` am ${fmtDate(v.send_date)}` : ' (sofort)'}` : 'an den Käufer')}
+        ${row('Versand', v.delivery === 'gift' ? `direkt an ${esc(v.gift_email)}${v.send_date ? ` am ${fmtDate(v.send_date)}${v.send_time ? ` um ${esc(v.send_time)} Uhr` : ''}` : ' (sofort)'}` : 'an den Käufer')}
         ${row('Nachricht', esc(v.message) || '–')}
         ${row('Gültig bis', fmtDate(v.expires))}
       </table>
+      ${taktFehlt ? '<p style="margin-top:20px;padding:12px 14px;border:1px solid #EFB92E;color:#EFB92E;font-size:14px">Achtung: Der Viertelstunden-Zeitplan (Cron */15 * * * *) ist in Cloudflare nicht aktiv. Ohne ihn geht dieser Gutschein nicht zur gew&auml;hlten Uhrzeit raus, sondern erst mit dem n&auml;chsten Morgenlauf.</p>' : ''}
       <p style="margin-top:20px"><a href="${voucherLink(v, env)}" style="color:#EFB92E">Gutschein ansehen</a></p>`,
       env
     ),
@@ -2437,7 +2523,7 @@ function xmDesign(d) { d = String(d || ''); if (d !== 'nik' && d !== 'xmas') ret
   <p><a href="${voucherLink(v, env)}" style="display:inline-block;background:#EFB92E;color:#15171C;font-weight:700;text-decoration:none;padding:14px 26px;letter-spacing:.06em;text-transform:uppercase;font-size:13px">Gutschein öffnen &amp; drucken</a></p>`;
 }
 
-function mailShell(headline, inner, env, vorschau) {
+function mailShell(headline, inner, env, vorschau, opt) {
   const cfg = config(env);
   const host = cfg.siteOrigin.replace('https://', '');
   /* Fuer E-Mail-Clients gelten andere Regeln als fuers Web:
@@ -2478,10 +2564,10 @@ function mailShell(headline, inner, env, vorschau) {
         ${inner}
       </td></tr>
 
-      <tr><td style="padding:22px 26px 0;color:#9AA0AB;font-size:13px;line-height:1.7">
+      ${opt && opt.ohneFragen ? '' : `<tr><td style="padding:22px 26px 0;color:#9AA0AB;font-size:13px;line-height:1.7">
         Fragen? Ruf einfach an: <a href="tel:+491776311404" style="color:#EFB92E;text-decoration:none">${esc(cfg.ownerPhone)}</a>
         &nbsp;oder antworte direkt auf diese Mail.
-      </td></tr>
+      </td></tr>`}
 
       <tr><td style="padding:20px 26px 0">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -3596,6 +3682,7 @@ export const __test = { slotsForDate, overlapsAny, AVAILABILITY, LOCATIONS, toMi
 
 /** Stündlicher Cron. In Cloudflare unter Einstellungen → Trigger zusätzlich eintragen (optional). */
 const KURS_CRON = '17 * * * *';
+const GS_CRON = '*/15 * * * *';   // GS-ZEIT: Gutscheine zur Wunsch-Uhrzeit
 
 /** Welche Anbieterin besitzt die Personal-Training-Slots dieses Workers? Nur ihre Kurse blockieren sie. */
 const KURS_PT_PROVIDER = 'niklas';
@@ -3667,7 +3754,6 @@ const KURS_LABEL = {
   karte10: '10er-Karte',
   tageskarte: 'Einzelticket',
   inklusiv: 'Inklusive (Personal-Training-Karte)',
-  kartebuchung: 'Buchung mit Kurskarte',
   manuell: 'Manuell eingetragen',
   ersatz: 'Ersatztermin',
   warteliste: 'Warteliste',
@@ -3687,8 +3773,6 @@ const K = {
   kundePrefix: (p) => `kurs:${p}:kunde:`,
   offen: (p) => `kurs:${p}:offen`,
   inklusiv: (p, code) => `kurs:${p}:inklusiv:${code}`,
-  kurskarte: (p, norm) => `kurs:${p}:kurskarte:${norm}`,
-  kurskartePrefix: (p) => `kurs:${p}:kurskarte:`,
   sperre: (p, kurs) => `kurs:${p}:sperre:${kurs}`,
   warte: (p, token) => `kurs:${p}:angebot:${token}`,
   hold: (h) => `kurs:hold:${h}`,
@@ -3813,7 +3897,6 @@ const KURS_TEXTE = {
     'Sagst du selbst ab, gibt es keine Erstattung. Du kannst deinen Platz aber freigeben, damit jemand von der Warteliste nachrücken kann.',
     'Fällt ein Termin von Seiten der Trainerin aus (z. B. Krankheit), bekommst du einen Ersatztermin oder den anteiligen Preis zurück. Passt dir der Ersatztermin nicht, kannst du stattdessen die Erstattung wählen.',
     'Karten gelten 12 Monate ab Kauf. In diesem Zeitraum liegen auch mögliche Ersatztermine.',
-    'Mit einer 5er- oder 10er-Karte buchst du Kurse frei nach Wahl. Sagst du bis 24 Stunden vor Kursbeginn ab, wird die Einheit gutgeschrieben, danach verfällt sie. Ausnahmen sind nach Absprache möglich.',
   ],
 
   warteliste_info:
@@ -4314,7 +4397,7 @@ async function kursMailBestaetigung(env, p, kurs, o) {
     row('Ort', esc(kurs.ort + (kurs.adresse ? ', ' + kurs.adresse : ''))) +
     row('Gebucht', esc(o.label || KURS_LABEL[o.art] || o.art)) +
     (o.gutschein && o.gutschein.cents ? row('Gutschein', `${esc(o.gutschein.code)} &middot; ${fmtEur(o.gutschein.cents)} angerechnet`) : '') +
-    row('Bezahlt', o.offen_cents > 0 ? fmtEur(o.offen_cents) : (o.art === 'inklusiv' ? 'inklusive (Personal-Training-Karte)' : o.art === 'kartebuchung' ? 'mit deiner Karte ' + esc(o.karte_code) : 'bereits beglichen')) +
+    row('Bezahlt', o.offen_cents > 0 ? fmtEur(o.offen_cents) : (o.art === 'inklusiv' ? 'inklusive (Personal-Training-Karte)' : 'bereits beglichen')) +
     (karte ? row('Gültig bis', fmtDate(o.gueltig_bis)) : '');
 
   const inner = `
@@ -4324,7 +4407,7 @@ async function kursMailBestaetigung(env, p, kurs, o) {
     <table style="width:100%;border-collapse:collapse;margin-bottom:22px">${rows}</table>
     <p style="margin:0 0 22px;text-align:center"><a href="${esc(kursLink(p, o))}" style="${KM_BTN}">Meine Kursbuchung</a></p>
     <p style="${KM_KLEIN}"><b style="color:#ECE9E2">In deinen Kalender:</b> Alle Termine hängen als Kalenderdatei an dieser Mail – einmal antippen, dann stehen sie im iPhone-, Android- oder Outlook-Kalender. Für Google Kalender tippst du neben einem Termin auf „+ Google“ oder holst dir unter „Meine Kursbuchung“ alle auf einmal.</p>
-    <p style="${KM_KLEIN}">Am Tag vor jedem Termin bekommst du eine kurze Erinnerung. ${o.art === 'kartebuchung' ? 'Kannst du nicht? Über „Meine Kursbuchung“ oder im Mitgliederbereich sagst du ab. Bis ' + KARTE_ABSAGE_H + ' Stunden vor Kursbeginn wird die Einheit gutgeschrieben, danach verfällt sie.' : 'Kannst du an einem Termin nicht? Über „Meine Kursbuchung“ gibst du deinen Platz frei – eine Erstattung gibt es dafür nicht, aber jemand von der Warteliste freut sich.'}</p>
+    <p style="${KM_KLEIN}">Am Tag vor jedem Termin bekommst du eine kurze Erinnerung. Kannst du an einem Termin nicht? Über „Meine Kursbuchung“ gibst du deinen Platz frei – eine Erstattung gibt es dafür nicht, aber jemand von der Warteliste freut sich.</p>
     ${kursRegelnHtml()}
     ${kursWiderrufHtml(env, p, o)}`;
 
@@ -4871,7 +4954,6 @@ async function kursListe(url, env) {
     buchungsschluss_min: first.s.buchungsschluss_min,
     warteliste_stunden: first.s.warteliste_stunden,
     gueltig_monate: first.s.gueltig_monate,
-    absage_stunden: KARTE_ABSAGE_H,
     inklusiv,
     kurse: out,
   });
@@ -4973,7 +5055,6 @@ async function kursCheckoutHandler(request, env, ctx) {
   if (!p) return kursFehler('Unbekannte Anbieterin.', 404);
   if (!kursZahlungBereit(p)) return kursFehler('Online-Buchung ist bei dieser Anbieterin noch nicht möglich.', 503);
 
-  if (body.art === 'karte5' || body.art === 'karte10') return kursKarteCheckout(env, p, body);
   const kurs = await kursFind(env, p.id, clean(body.kurs, 40));
   if (!kurs || !kurs.aktiv) return kursFehler('Diesen Kurs gibt es nicht (mehr).', 404);
   const art = String(body.art || '');
@@ -5184,7 +5265,6 @@ async function kursConfirmFromSession(session, env) {
   const o = await kursGetBestellung(env, p.id, m.order);
   if (!o) { console.error('Kurs-Webhook: Bestellung fehlt', m.order); return; }
   if (o.status === 'bestaetigt') return;
-  if (o.flex) return kursKarteBezahlt(env, p, o, session);
   const kurs = await kursFind(env, p.id, o.kurs);
   if (!kurs) { console.error('Kurs-Webhook: Kurs fehlt', o.kurs); return; }
   const s = await kursSettings(env, p.id);
@@ -5388,7 +5468,6 @@ async function kursBestellungAnsehen(url, env) {
     if (!o) return kursFehler('Diese Buchung habe ich nicht gefunden. Bitte nutz den Link aus deiner Mail.', 404);
   }
   if (o.status !== 'bestaetigt') return json({ status: o.status === 'reserviert' ? 'pending' : o.status }, o.status === 'reserviert' ? 202 : 200);
-  if (o.flex) return json(kursKarteBestellSicht(p, o));
   return json(await kursBestellungSicht(env, p, o));
 }
 
@@ -5406,7 +5485,6 @@ async function kursBestellungSicht(env, p, o) {
       datum: d, start: t.start, ende: t.ende, status: seat.status || 'unbekannt',
       vorbei: kursStartMs(t) < now,
       freigeben_moeglich: seat.status === 'gebucht' && kurs ? kursBuchbar(t, s.buchungsschluss_min, now) : false,
-      gutschrift: o.art === 'kartebuchung' && seat.status === 'gebucht' && kurs ? kursStartMs(t) - now >= KARTE_ABSAGE_H * 3600e3 : false,
     };
     if (seat.status === 'abgesagt') {
       z.absage = { grund: (doc.absage && doc.absage.grund) || '', modus: (doc.absage && doc.absage.modus) || '' };
@@ -5445,7 +5523,6 @@ async function kursBestellungSicht(env, p, o) {
     preis_cents: o.preis_cents, offen_cents: o.offen_cents,
     gutschein: o.gutschein ? { code: o.gutschein.code, cents: o.gutschein.cents } : null,
     gueltig_bis: o.gueltig_bis,
-    karte_code: o.karte_code || '',
     widerruf_ausgeschlossen: !!o.widerruf_ausgeschlossen,
     termine: zeilen,
     regeln: KURS_TEXTE.regeln,
@@ -5460,11 +5537,6 @@ async function kursAktion(request, env, ctx) {
   if (!o || o.status !== 'bestaetigt') return kursFehler('Diese Buchung habe ich nicht gefunden.', 404);
   const kurs = await kursFind(env, p.id, o.kurs);
   if (!kurs) return kursFehler('Diesen Kurs gibt es nicht mehr.', 404);
-  if (o.art === 'kartebuchung' && String(body.aktion || '') === 'freigeben') {
-    const a = await kursKarteAbsagenIntern(env, p, kursKarteNorm(o.karte_code), o.id, ctx);
-    if (a.fehler) return kursFehler(a.fehler, a.status || 409);
-    return json({ ...(await kursBestellungSicht(env, p, o)), einheit_zurueck: a.mitGutschrift });
-  }
   const datum = String(body.datum || '').slice(0, 10);
   if (o.termine.indexOf(datum) === -1) return kursFehler('Dieser Termin gehört nicht zu deiner Buchung.');
   const s = await kursSettings(env, p.id);
@@ -5705,8 +5777,6 @@ async function kursAdmin(path, url, request, env, body) {
       case 'teilnehmer-entfernen': return await kursAdminEntfernen(env, p, body);
       case 'warteliste-entfernen': return await kursAdminWarteRaus(env, p, body);
       case 'bestellungen':       return await kursAdminBestellungen(env, p, url);
-      case 'karten':             return await kursAdminKarten(env, p);
-      case 'karte-aktion':       return await kursAdminKarteAktion(env, p, body);
       default:                   return kursErr('Unbekannte Aktion.', 404);
     }
   } catch (err) {
@@ -6407,459 +6477,6 @@ function kursCors(res, request, env) {
   return new Response(res.body, { status: res.status, headers: h });
 }
 
-/* ================================================================== */
-/* Kurskarte ohne feste Termine (5er/10er) + Mitgliederbereich          */
-/* (neu in worker-code-25)                                              */
-/* ================================================================== */
-/*
- * Eine 5er- oder 10er-Karte hat keinen festen Termin mehr. Sie gilt für alle Kurse der
- * Anbieterin. Der Kunde bekommt einen Code (KK-XXXX-XXXX) und bucht seine Kurse einzeln
- * im Mitgliederbereich (mitglied.html) mit Code + E-Mail.
- *
- * KV: kurs:<p>:kurskarte:<XXXXXXXX>  →  { code, art, label, anzahl, korrektur, bis, kunde, order, created, genutzt: [] }
- *   genutzt[]: { bestellung, kurs, kurs_titel, datum, start, ende, at, status, ende_at }
- *   status: gebucht | freigegeben (Einheit zurück) | verfallen (zu spät abgesagt) | gutgeschrieben (Ausnahme)
- * Eine Einheit ist verbraucht bei "gebucht" und "verfallen".
- *
- * Absage: mehr als 24 Stunden vor Beginn → Einheit zurück. Später → Einheit verfällt.
- * In beiden Fällen wird der Platz frei (Warteliste rückt nach). Ausnahmen trägt der Admin ein.
- */
-
-const KARTE_ABSAGE_H = 24;
-const KARTE_FEHLER = 'Code und E-Mail-Adresse passen nicht zusammen. Bitte prüfe beides noch einmal.';
-
-function kursKarteNorm(code) {
-  return String(code || '').toUpperCase().replace(/[^A-Z0-9]/g, '').replace(/^KK/, '').slice(0, 8);
-}
-function kursKarteAnzeige(norm) { return 'KK-' + norm.slice(0, 4) + '-' + norm.slice(4, 8); }
-
-function kursKarteStand(card) {
-  const genutzt = (card.genutzt || []).filter((g) => g.status === 'gebucht' || g.status === 'verfallen').length;
-  const gesamt = Number(card.anzahl || 0) + Number(card.korrektur || 0);
-  return { gesamt, genutzt, frei: Math.max(0, gesamt - genutzt) };
-}
-
-async function kursKarteLesen(env, p, norm) {
-  if (!norm || norm.length !== 8) return null;
-  const raw = await env.VOUCHERS.get(K.kurskarte(p.id, norm));
-  return raw ? JSON.parse(raw) : null;
-}
-async function kursKarteSpeichern(env, p, card) {
-  await kursPut(env, K.kurskarte(p.id, card.norm), JSON.stringify(card));
-}
-
-/** Zu viele falsche Versuche von einer Adresse? (Schutz gegen Raten) */
-async function kursKarteBremse(env, request, p, falsch) {
-  const ip = (request && request.headers.get('CF-Connecting-IP')) || 'x';
-  const key = `kurs:${p.id}:kkfehl:${ip}`;
-  let n = 0;
-  try { n = Number(await env.VOUCHERS.get(key)) || 0; } catch (e) { /* egal */ }
-  if (!falsch) return n >= 15;
-  try { await kursPut(env, key, String(n + 1), { expirationTtl: 900 }); } catch (e) { /* egal */ }
-  return n + 1 >= 15;
-}
-
-/** Karte per Code + E-Mail öffnen. */
-async function kursKarteOeffnen(env, request, p, body) {
-  if (await kursKarteBremse(env, request, p, false)) return { error: 'Zu viele Versuche. Bitte warte ein paar Minuten.', status: 429 };
-  const norm = kursKarteNorm(body.code);
-  const email = String(body.email || '').trim().toLowerCase();
-  const card = await kursKarteLesen(env, p, norm);
-  if (!card || !email || String(card.kunde.email).toLowerCase() !== email) {
-    await kursKarteBremse(env, request, p, true);
-    return { error: KARTE_FEHLER, status: 401 };
-  }
-  return { card };
-}
-
-async function kursKarteSicht(env, p, card) {
-  const now = Date.now();
-  const st = kursKarteStand(card);
-  const buchungen = [];
-  for (const g of (card.genutzt || []).slice().sort((a, b) => (a.datum + a.start).localeCompare(b.datum + b.start))) {
-    const startMs = berlinToUtc(g.datum, g.start || '00:00').getTime();
-    const aktiv = g.status === 'gebucht';
-    const o = await kursGetBestellung(env, p.id, g.bestellung);
-    buchungen.push({
-      bestellung: g.bestellung, token: o ? o.token : '', kurs: g.kurs, kurs_titel: g.kurs_titel, datum: g.datum, start: g.start, ende: g.ende,
-      status: g.status, vorbei: startMs <= now,
-      absagen: aktiv && startMs > now,
-      mit_gutschrift: aktiv && startMs - now >= KARTE_ABSAGE_H * 3600e3,
-    });
-  }
-  return {
-    ok: true, code: card.code, art: card.art, label: card.label, anzahl: st.gesamt, genutzt: st.genutzt, frei: st.frei,
-    bis: card.bis, name: card.kunde.name, abgelaufen: card.bis < kursHeute(now),
-    absage_stunden: KARTE_ABSAGE_H, buchungen,
-  };
-}
-
-/* ---------------- Kauf ---------------- */
-
-async function kursKarteCheckout(env, p, body) {
-  const art = String(body.art || '');
-  const person = kursPerson(body);
-  if (person.error) return kursFehler(person.error);
-  if (body.vorzeitig !== true) return kursFehler('Bitte bestätige, dass die Leistung schon vor Ablauf der Widerrufsfrist beginnen darf.');
-  const s = await kursSettings(env, p.id);
-  const c = s.karten[art];
-  if (!c) return kursFehler('Diese Karte gibt es nicht.');
-  const now = Date.now();
-  const stamp = new Date(now).toISOString();
-  const preis = c.cents;
-
-  let gutschein = null;
-  if (body.gutschein) {
-    const g = await kursGutscheinPruefen(env, p, body.gutschein, preis);
-    if (g.error) return kursFehler(g.error);
-    if (g.cents > 0) gutschein = { code: g.code, cents: g.cents };
-  }
-  const offen = preis - (gutschein ? gutschein.cents : 0);
-  const o = {
-    id: randomToken(16), token: randomToken(24), provider: p.id, art, label: c.label, flex: true, anzahl: c.termine,
-    kurs: '', kurs_titel: 'Alle Kurse', termine: [],
-    preis_cents: preis, gutschein, offen_cents: offen,
-    status: offen > 0 ? 'reserviert' : 'bestaetigt',
-    kunde: person, created: stamp,
-    gueltig_bis: addMonths(kursHeute(now), s.gueltig_monate),
-    widerruf_ausgeschlossen: false, vorzeitig_at: stamp, texte_version: KURS_TEXTE.version, hold: '', erstattungen: [],
-  };
-
-  if (offen <= 0) {
-    await kursPutBestellung(env, p.id, o);
-    await kursKarteBezahlt(env, p, o, null);
-    return json({ status: 'confirmed', o: o.id, t: o.token });
-  }
-  await kursPutBestellung(env, p.id, o);
-  const session = await kursCheckout(env, p, kursStripeParamsKarte(p, o, s), PAY_TYPES);
-  if (!session || !session.url) {
-    o.status = 'abgebrochen';
-    await kursPutBestellung(env, p.id, o);
-    return kursFehler('Die Zahlung konnte nicht gestartet werden. Bitte später erneut versuchen.', 502);
-  }
-  o.stripe_session = session.id;
-  await kursPutBestellung(env, p.id, o);
-  return json({ status: 'payment', url: session.url });
-}
-
-function kursStripeParamsKarte(p, o, s) {
-  const q = new URLSearchParams();
-  q.set('mode', 'payment');
-  q.set('locale', 'de');
-  q.set('submit_type', 'book');
-  q.set('customer_email', o.kunde.email);
-  q.set('success_url', `${p.site}/kurs-buchung.html?p=${p.id}&session_id={CHECKOUT_SESSION_ID}`);
-  q.set('cancel_url', `${p.site}/kurs-buchen.html?p=${p.id}&abgebrochen=1`);
-  q.set('line_items[0][quantity]', '1');
-  q.set('line_items[0][price_data][currency]', 'eur');
-  q.set('line_items[0][price_data][unit_amount]', String(o.offen_cents));
-  q.set('line_items[0][price_data][product_data][name]', `${o.label} für Kurse · ${p.name}`);
-  q.set('line_items[0][price_data][product_data][description]',
-    (`${o.anzahl} Kurstermine nach freier Wahl, ${s.gueltig_monate} Monate gültig` +
-      (o.gutschein ? ` · Gutschein ${o.gutschein.code} über ${fmtEur(o.gutschein.cents)} angerechnet` : '')).slice(0, 900));
-  q.set('payment_intent_data[description]', `Kurskarte ${o.label} (${p.name})`);
-  if (p.kontoauszug) q.set('payment_intent_data[statement_descriptor_suffix]', p.kontoauszug.slice(0, 22));
-  q.set('payment_intent_data[metadata][kind]', 'kurs');
-  q.set('payment_intent_data[metadata][anbieterin]', p.id);
-  q.set('invoice_creation[enabled]', 'true');
-  q.set('customer_creation', 'always');
-  q.set('billing_address_collection', 'required');
-  q.set('invoice_creation[invoice_data][description]',
-    `${o.label} – ${o.anzahl} Kurstermine nach freier Wahl. Anbieterin: ${p.name}.`.slice(0, 1500));
-  if (p.rechnung_fuss) q.set('invoice_creation[invoice_data][footer]', p.rechnung_fuss);
-  q.set('invoice_creation[invoice_data][custom_fields][0][name]', 'Anbieterin');
-  q.set('invoice_creation[invoice_data][custom_fields][0][value]', `${p.name}${p.marke ? ' – ' + p.marke : ''}`.slice(0, 140));
-  q.set('invoice_creation[invoice_data][custom_fields][1][name]', 'Karte gültig bis');
-  q.set('invoice_creation[invoice_data][custom_fields][1][value]', fmtDate(o.gueltig_bis));
-  q.set('metadata[kind]', 'kurs');
-  q.set('metadata[provider]', p.id);
-  q.set('metadata[order]', o.id);
-  q.set('metadata[kurs]', '');
-  q.set('metadata[buyer_name]', o.kunde.name);
-  q.set('expires_at', String(Math.floor(Date.now() / 1000) + CHECKOUT_MINUTES * 60));
-  return q;
-}
-
-/** Nach Zahlung (Webhook) oder Vollzahlung mit Gutschein: Karte anlegen, Mails. */
-async function kursKarteBezahlt(env, p, o, session) {
-  if (o.karte_code && o.status === 'bestaetigt') return;
-  let norm = '';
-  for (let i = 0; i < 5 && !norm; i++) {
-    const cand = randomChars(8);
-    if (!(await kursKarteLesen(env, p, cand))) norm = cand;
-  }
-  if (!norm) throw new Error('Kartencode konnte nicht erzeugt werden');
-  const card = {
-    norm, code: kursKarteAnzeige(norm), art: o.art, label: o.label, anzahl: o.anzahl, korrektur: 0,
-    bis: o.gueltig_bis, kunde: o.kunde, order: o.id, created: new Date().toISOString(), genutzt: [],
-  };
-  await kursKarteSpeichern(env, p, card);
-  o.status = 'bestaetigt';
-  o.bezahlt_at = new Date().toISOString();
-  o.karte_code = card.code;
-  if (session) {
-    o.stripe_session = session.id;
-    o.payment_intent = session.payment_intent || '';
-    o.pay_status = session.payment_status || 'paid';
-  }
-  await kursPutBestellung(env, p.id, o);
-  if (session) await kursPut(env, K.session(p.id, session.id), o.id, { expirationTtl: 60 * 60 * 24 * 90 });
-  try {
-    const g = await kursGutscheinBelasten(env, o);
-    if (!g.ok) { o.gutschein_problem = `Auf dem Gutschein waren nur noch ${fmtEur(g.cents)} statt ${fmtEur(o.gutschein.cents)}.`; await kursPutBestellung(env, p.id, o); }
-  } catch (err) { console.error('Gutschein belasten', err); }
-  try { await kursKundeMerken(env, p.id, o.kunde, o.id); } catch (err) { console.error('Kundenprofil', err); }
-  try { await kursMailKarte(env, p, o, card); } catch (err) { console.error('Karten-Mail', err); }
-  try { await kursMailKarteInhaber(env, p, o, card); } catch (err) { console.error('Karten-Inhabermail', err); }
-}
-
-function kursPortalLink(p, card) {
-  return `${p.site}/mitglied.html?p=${p.id}&code=${encodeURIComponent(card.code)}`;
-}
-
-async function kursMailKarte(env, p, o, card) {
-  const rows =
-    row('Karte', esc(o.label)) +
-    row('Einheiten', String(card.anzahl)) +
-    row('Gültig bis', fmtDate(card.bis)) +
-    (o.gutschein && o.gutschein.cents ? row('Gutschein', `${esc(o.gutschein.code)} &middot; ${fmtEur(o.gutschein.cents)} angerechnet`) : '') +
-    row('Bezahlt', o.offen_cents > 0 ? fmtEur(o.offen_cents) : 'bereits beglichen');
-  const inner = `
-    <p style="margin:0 0 18px">Hallo ${esc(firstName(o.kunde.name))},</p>
-    <p style="margin:0 0 20px">deine ${esc(o.label)} ist da. Du hast keine festen Termine: Du suchst dir die Kurse aus, wann es dir passt.</p>
-    <div style="border:1px solid #EFB92E;background:#1B1D24;padding:18px;text-align:center;margin:0 0 22px">
-      <div style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#9AA0AB;margin-bottom:6px">Dein Kartencode</div>
-      <div style="font-size:28px;font-weight:700;letter-spacing:.08em;color:#EFB92E">${esc(card.code)}</div>
-    </div>
-    <table style="width:100%;border-collapse:collapse;margin-bottom:22px">${rows}</table>
-    <p style="margin:0 0 22px;text-align:center"><a href="${esc(kursPortalLink(p, card))}" style="${KM_BTN}">Jetzt Kurse buchen</a></p>
-    <p style="${KM_KLEIN}"><b style="color:#ECE9E2">So geht es:</b> Im Mitgliederbereich meldest du dich mit deinem Code und dieser E-Mail-Adresse an und buchst die Kurse, die du magst. Karten haben Vorrang vor Einzeltickets: Du kannst jeden Kurs buchen, solange Plätze frei sind, auch bevor Einzeltickets freigeschaltet werden.</p>
-    <p style="${KM_KLEIN}"><b style="color:#ECE9E2">Absagen:</b> Sagst du bis ${KARTE_ABSAGE_H} Stunden vor Kursbeginn ab, wird die Einheit wieder auf deine Karte gutgeschrieben. Bei späterer Absage oder wenn du nicht kommst, verfällt sie. Ausnahmen sind nach Absprache möglich.</p>
-    <p style="${KM_KLEIN}">Bewahre diese Mail auf, sie enthält deinen Code.</p>
-    ${kursWiderrufHtml(env, p, o)}`;
-  await kursSendMail(env, p, {
-    to: o.kunde.email,
-    subject: `Deine ${o.label} – Code ${card.code}`,
-    html: kursShell(env, p, 'Deine Kurskarte', inner, `${o.label} · Code ${card.code}`),
-  });
-}
-
-async function kursMailKarteInhaber(env, p, o, card) {
-  const rows =
-    row('Karte', esc(o.label)) + row('Code', esc(card.code)) + row('Name', esc(o.kunde.name)) + row('E-Mail', esc(o.kunde.email)) +
-    (o.kunde.phone ? row('Telefon', esc(o.kunde.phone)) : '') +
-    row('Bezahlt', o.offen_cents > 0 ? fmtEur(o.offen_cents) + (o.pay_status === 'unpaid' ? ' · Lastschrift läuft' : '') : '0 €') +
-    (o.gutschein && o.gutschein.cents ? row('Gutschein', `${esc(o.gutschein.code)} · ${fmtEur(o.gutschein.cents)}`) : '') +
-    row('Gültig bis', fmtDate(card.bis));
-  await kursSendMail(env, p, {
-    to: p.email || config(env).ownerEmail,
-    subject: `Kurskarte verkauft: ${o.label} – ${o.kunde.name}`,
-    html: kursShell(env, p, 'Kurskarte verkauft', `<table style="width:100%;border-collapse:collapse">${rows}</table>`),
-  });
-}
-
-/* ---------------- Buchen mit Karte ---------------- */
-
-async function kursKarteStatusRoute(request, env) {
-  const body = await request.json().catch(() => ({}));
-  const p = kursProviderAus(body.p);
-  if (!p) return kursFehler('Unbekannte Anbieterin.', 404);
-  const r = await kursKarteOeffnen(env, request, p, body);
-  if (r.error) return kursFehler(r.error, r.status);
-  return json(await kursKarteSicht(env, p, r.card));
-}
-
-async function kursKarteBuchen(request, env, ctx) {
-  const body = await request.json().catch(() => ({}));
-  const p = kursProviderAus(body.p);
-  if (!p) return kursFehler('Unbekannte Anbieterin.', 404);
-  const r = await kursKarteOeffnen(env, request, p, body);
-  if (r.error) return kursFehler(r.error, r.status);
-  const norm = r.card.norm;
-  const s = await kursSettings(env, p.id);
-  const kurs = await kursFind(env, p.id, clean(body.kurs, 40));
-  if (!kurs || !kurs.aktiv) return kursFehler('Diesen Kurs gibt es nicht (mehr).', 404);
-  const eff = kursEffektiv(kurs, s);
-  const datum = String(body.datum || '').slice(0, 10);
-  const t = kursTerminAm(kurs, datum);
-  if (!t || t.ausfall || !kursBuchbar(t, s.buchungsschluss_min)) return kursFehler('Diesen Termin kann man nicht (mehr) buchen.');
-
-  let ergebnis;
-  try {
-    ergebnis = await kursMitSperre(env, p.id, 'kk-' + norm, async () => {
-      const card = await kursKarteLesen(env, p, norm);
-      const st = kursKarteStand(card);
-      if (card.bis < kursHeute()) return { fehler: `Deine ${card.label} ist am ${fmtDate(card.bis)} abgelaufen.` };
-      if (datum > card.bis) return { fehler: `Deine ${card.label} gilt bis ${fmtDate(card.bis)}. Dieser Termin liegt danach.` };
-      if (st.frei < 1) return { fehler: `Alle Einheiten deiner ${card.label} sind verbraucht.` };
-      if ((card.genutzt || []).some((g) => g.kurs === kurs.id && g.datum === datum && g.status === 'gebucht')) {
-        return { fehler: 'Für diesen Termin hast du schon einen Platz.' };
-      }
-      const person = card.kunde;
-      const now = new Date().toISOString();
-      const o = {
-        id: randomToken(16), token: randomToken(24), provider: p.id, art: 'kartebuchung', label: `Karte ${card.code}`,
-        kurs: kurs.id, kurs_titel: kurs.titel, termine: [datum], preis_cents: 0, gutschein: null, offen_cents: 0,
-        status: 'bestaetigt', kunde: person, created: now, bezahlt_at: now, gueltig_bis: card.bis,
-        karte_code: card.code, widerruf_ausgeschlossen: false, erstattungen: [],
-      };
-      let res;
-      try {
-        res = await kursPlaetzeReservieren(env, p, kurs, eff, [t], [{
-          order: o.id, quelle: 'karte', status: 'gebucht', bis: 0, name: person.name, email: person.email, phone: person.phone,
-          wert_cents: 0, wert_gutschein_cents: 0, karte_code: card.code,
-        }], {});
-      } catch (err) { return { fehler: err.message, status: err.status || 500 }; }
-      if (res.error) return { fehler: res.voll ? 'Dieser Termin ist leider ausgebucht. Du kannst dich auf die Warteliste setzen.' : res.error, status: 409, voll: !!res.voll };
-      card.genutzt = card.genutzt || [];
-      card.genutzt.push({ bestellung: o.id, kurs: kurs.id, kurs_titel: kurs.titel, datum, start: t.start, ende: t.ende, at: now, status: 'gebucht' });
-      await kursKarteSpeichern(env, p, card);
-      await kursPutBestellung(env, p.id, o);
-      return { o, card };
-    });
-  } catch (err) { return kursFehler(err.message, err.status || 500); }
-  if (ergebnis.fehler) return kursFehler(ergebnis.fehler, ergebnis.status || 400);
-  ctx.waitUntil(kursNachKauf(env, p, kurs, ergebnis.o).catch((e) => console.error('Karten-Nachkauf', e)));
-  return json(await kursKarteSicht(env, p, ergebnis.card));
-}
-
-/* ---------------- Absagen mit Karte ---------------- */
-
-/**
- * Platz einer Kartenbuchung freigeben. Mehr als 24 h vor Beginn: Einheit zurück. Sonst: verfällt.
- * Der Platz selbst wird in beiden Fällen frei.
- */
-async function kursKarteAbsagenIntern(env, p, norm, bestellId, ctx) {
-  const kurs0 = await (async () => {
-    const o = await kursGetBestellung(env, p.id, bestellId);
-    return o ? kursFind(env, p.id, o.kurs) : null;
-  })();
-  if (!kurs0) return { fehler: 'Diesen Kurs gibt es nicht mehr.', status: 404 };
-  const s = await kursSettings(env, p.id);
-  const eff = kursEffektiv(kurs0, s);
-  let datum = '';
-  let ausgang;
-  try {
-    ausgang = await kursMitSperre(env, p.id, 'kk-' + norm, async () => {
-      const card = await kursKarteLesen(env, p, norm);
-      const g = (card.genutzt || []).find((x) => x.bestellung === bestellId);
-      if (!g || g.status !== 'gebucht') return { fehler: 'Dieser Platz ist nicht (mehr) gebucht.', status: 409 };
-      const t = kursTerminAm(kurs0, g.datum) || { datum: g.datum, start: g.start, ende: g.ende };
-      const startMs = kursStartMs(t);
-      const now = Date.now();
-      if (startMs <= now) return { fehler: 'Der Kurs hat schon begonnen.', status: 409 };
-      const mitGutschrift = startMs - now >= KARTE_ABSAGE_H * 3600e3;
-      datum = g.datum;
-      await kursMitSperre(env, p.id, kurs0.id, async () => {
-        const doc = await kursGetTermin(env, p.id, kurs0.id, g.datum);
-        const seat = kursSitzDerBestellung(doc, bestellId, false);
-        if (seat && seat.status === 'gebucht') {
-          seat.status = 'freigegeben';
-          seat.freigegeben_at = new Date(now).toISOString();
-          await kursPutTermin(env, p.id, doc);
-        }
-      });
-      g.status = mitGutschrift ? 'freigegeben' : 'verfallen';
-      g.ende_at = new Date(now).toISOString();
-      await kursKarteSpeichern(env, p, card);
-      return { card, g, mitGutschrift };
-    });
-  } catch (err) { return { fehler: err.message, status: err.status || 500 }; }
-  if (ausgang.fehler) return ausgang;
-  if (ctx) ctx.waitUntil(kursNachruecken(env, p, kurs0, eff, s, datum).catch((e) => console.error(e)));
-  try { await kursMailKarteAbsage(env, p, ausgang.card, ausgang.g, ausgang.mitGutschrift); } catch (err) { console.error('Absage-Mail', err); }
-  return ausgang;
-}
-
-async function kursKarteAbsagenRoute(request, env, ctx) {
-  const body = await request.json().catch(() => ({}));
-  const p = kursProviderAus(body.p);
-  if (!p) return kursFehler('Unbekannte Anbieterin.', 404);
-  const r = await kursKarteOeffnen(env, request, p, body);
-  if (r.error) return kursFehler(r.error, r.status);
-  const a = await kursKarteAbsagenIntern(env, p, r.card.norm, clean(body.bestellung, 40), ctx);
-  if (a.fehler) return kursFehler(a.fehler, a.status || 400);
-  return json({ ...(await kursKarteSicht(env, p, a.card)), einheit_zurueck: a.mitGutschrift });
-}
-
-async function kursMailKarteAbsage(env, p, card, g, mitGutschrift) {
-  const st = kursKarteStand(card);
-  const inner = `
-    <p style="margin:0 0 18px">Hallo ${esc(firstName(card.kunde.name))},</p>
-    <p style="margin:0 0 20px">dein Platz bei <b>${esc(g.kurs_titel)}</b> am ${esc(kursDatumLang(g.datum))}, ${esc(g.start)} Uhr, ist freigegeben.</p>
-    <p style="margin:0 0 20px">${mitGutschrift
-      ? `Du hast rechtzeitig abgesagt, die Einheit steht wieder auf deiner Karte. Es sind jetzt <b>${st.frei}</b> von ${st.gesamt} Einheiten frei.`
-      : `Die Absage kam weniger als ${KARTE_ABSAGE_H} Stunden vor Kursbeginn, deshalb verfällt die Einheit. Es sind noch <b>${st.frei}</b> von ${st.gesamt} Einheiten frei. Wenn es einen besonderen Grund gibt, schreib mir kurz, dann finden wir eine Lösung.`}</p>
-    <p style="margin:0 0 22px;text-align:center"><a href="${esc(kursPortalLink(p, card))}" style="${KM_BTN}">Neuen Kurs buchen</a></p>`;
-  await kursSendMail(env, p, {
-    to: card.kunde.email,
-    subject: mitGutschrift ? 'Platz freigegeben – Einheit gutgeschrieben' : 'Platz freigegeben – Einheit verfallen',
-    html: kursShell(env, p, 'Platz freigegeben', inner, `${g.kurs_titel} · ${g.datum}`),
-  });
-}
-
-/* ---------------- Ansicht nach dem Kauf ---------------- */
-
-function kursKarteBestellSicht(p, o) {
-  return {
-    status: 'confirmed', flex: true, o: o.id, t: o.token, code: o.karte_code, art: o.art, label: o.label, anzahl: o.anzahl,
-    name: o.kunde.name, preis_cents: o.preis_cents, offen_cents: o.offen_cents,
-    gutschein: o.gutschein ? { code: o.gutschein.code, cents: o.gutschein.cents } : null,
-    gueltig_bis: o.gueltig_bis, widerruf_ausgeschlossen: false, anbieterin: kursProviderPublic(p),
-    portal: `${p.site}/mitglied.html?p=${p.id}&code=${encodeURIComponent(o.karte_code || '')}`,
-  };
-}
-
-/* ---------------- Verwaltung ---------------- */
-
-async function kursAdminKarten(env, p) {
-  const out = [];
-  let cursor;
-  do {
-    const l = await env.VOUCHERS.list({ prefix: K.kurskartePrefix(p.id), cursor });
-    for (const k of l.keys) {
-      const raw = await env.VOUCHERS.get(k.name);
-      if (!raw) continue;
-      const c = JSON.parse(raw);
-      const st = kursKarteStand(c);
-      out.push({
-        code: c.code, label: c.label, name: c.kunde.name, email: c.kunde.email, anzahl: c.anzahl, korrektur: c.korrektur || 0,
-        frei: st.frei, genutzt: st.genutzt, bis: c.bis, created: c.created,
-        buchungen: (c.genutzt || []).map((g) => ({ bestellung: g.bestellung, kurs_titel: g.kurs_titel, datum: g.datum, start: g.start, status: g.status })),
-      });
-    }
-    cursor = l.list_complete ? undefined : l.cursor;
-  } while (cursor);
-  out.sort((a, b) => String(b.created).localeCompare(String(a.created)));
-  return json({ karten: out });
-}
-
-/** Ausnahmen: Einheit gutschreiben/abziehen, verfallene Buchung gutschreiben, Laufzeit verlängern. */
-async function kursAdminKarteAktion(env, p, body) {
-  const norm = kursKarteNorm(body.code);
-  const aktion = String(body.aktion || '');
-  let fehler = '';
-  await kursMitSperre(env, p.id, 'kk-' + norm, async () => {
-    const card = await kursKarteLesen(env, p, norm);
-    if (!card) { fehler = 'Diese Karte gibt es nicht.'; return; }
-    if (aktion === 'gutschreiben') card.korrektur = Number(card.korrektur || 0) + 1;
-    else if (aktion === 'abziehen') card.korrektur = Number(card.korrektur || 0) - 1;
-    else if (aktion === 'eintrag-gutschreiben') {
-      const g = (card.genutzt || []).find((x) => x.bestellung === clean(body.bestellung, 40));
-      if (!g || g.status !== 'verfallen') { fehler = 'Dieser Eintrag ist nicht verfallen.'; return; }
-      g.status = 'gutgeschrieben';
-      g.ende_at = new Date().toISOString();
-    } else if (aktion === 'verlaengern') {
-      const monate = Math.max(1, Math.min(24, Number(body.monate) || 1));
-      card.bis = addMonths(card.bis, monate);
-    } else { fehler = 'Unbekannte Aktion.'; return; }
-    card.notizen = (card.notizen || []).concat([{ at: new Date().toISOString(), aktion, notiz: clean(body.notiz, 200) }]).slice(-30);
-    await kursKarteSpeichern(env, p, card);
-  });
-  if (fehler) return kursErr(fehler, 400);
-  return kursAdminKarten(env, p);
-}
-
 async function kursRoute(url, request, env, ctx) {
   const pfad = url.pathname.replace(/^\/api\/kurse\/?/, '');
   const m = request.method;
@@ -6875,9 +6492,6 @@ async function kursRoute(url, request, env, ctx) {
     else if (pfad === 'aktion' && m === 'POST') res = await kursAktion(request, env, ctx);
     else if (pfad === 'inklusiv-check' && m === 'POST') res = await kursInklusivCheck(request, env);
     else if (pfad === 'inklusiv' && m === 'POST') res = await kursInklusivBuchen(request, env);
-    else if (pfad === 'karte' && m === 'POST') res = await kursKarteStatusRoute(request, env);
-    else if (pfad === 'karte-buchen' && m === 'POST') res = await kursKarteBuchen(request, env, ctx);
-    else if (pfad === 'karte-absagen' && m === 'POST') res = await kursKarteAbsagenRoute(request, env, ctx);
     else if (pfad === 'kalender.ics' && m === 'GET') return await kursKalenderAbo(url, env);
     else if (pfad === 'bestellung.ics' && m === 'GET') return kursCors(await kursBestellungIcs(url, env), request, env);
     else res = json({ error: 'Not found' }, 404);
