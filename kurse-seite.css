@@ -1,0 +1,98 @@
+/* Kurse-Seite (Neuaufbau): kompakter Einstieg mit Termin-Vorschau, schlanker WhatsApp-Hinweis, Fotokarten. Prefix kh-/kw-/kf-/kk- */
+.kh{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+.kh-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:60% 50%;filter:saturate(.9)}
+.kh::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(21,23,28,.96) 0%,rgba(21,23,28,.86) 38%,rgba(21,23,28,.45) 70%,rgba(21,23,28,.7) 100%),linear-gradient(180deg,rgba(21,23,28,0) 60%,var(--bg) 100%)}
+.kh-in{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:48px;align-items:center;padding-top:72px;padding-bottom:72px}
+.kh h1{font-size:clamp(46px,7.4vw,96px);line-height:.95;margin-top:20px}
+.kh h1 em{font-style:normal;color:var(--blitz)}
+.kh .hero-sub{margin-top:22px;max-width:520px}
+.kh-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.kh-facts{list-style:none;display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:26px;font-size:13.5px;color:#c9cbd0}
+.kh-facts li{display:block}
+.kh-facts li::before{content:"";display:inline-block;width:6px;height:6px;background:var(--blitz);margin-right:9px;vertical-align:middle}
+.kh-facts b{color:var(--bone);font-weight:600}
+
+/* Karte „Als Nächstes“ im Einstieg */
+.kn{background:rgba(28,31,38,.92);border:1px solid var(--line);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 24px 60px rgba(0,0,0,.35)}
+.kn-h{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 22px;border-bottom:1px solid var(--line);font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--blitz)}
+.kn-h span{color:var(--muted);letter-spacing:.08em;font-weight:500;text-transform:none;font-size:12.5px}
+.kn-row{display:grid;grid-template-columns:100px minmax(0,1fr) auto;gap:16px;align-items:center;padding:16px 22px;border-bottom:1px solid var(--line);color:inherit;transition:background .15s}
+.kn-row:hover{background:rgba(239,185,46,.07)}
+.kn-d{white-space:nowrap;font-family:var(--display);text-transform:uppercase;font-size:24px;line-height:1;color:var(--bone)}
+.kn-d small{display:block;font-family:var(--body);font-size:11.5px;letter-spacing:.12em;color:var(--muted);margin-top:5px;font-weight:600}
+.kn-t b{display:block;font-size:16.5px;line-height:1.3;color:var(--bone)}
+.kn-t span{font-size:13.5px;color:var(--muted)}
+.kn-go{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#8fd49a;border:1px solid rgba(143,212,154,.45);padding:5px 9px;white-space:nowrap}
+.kn-go.knapp{color:var(--blitz);border-color:rgba(239,185,46,.55)}
+.kn-f{padding:15px 22px;font-size:14px}
+.kn-f a{color:var(--blitz);font-weight:600;border-bottom:1px solid rgba(239,185,46,.45)}
+.kn-leer{padding:26px 24px}
+.kn-leer p{color:var(--muted);font-size:15px;margin:0 0 18px}
+
+/* Schlanker WhatsApp-Hinweis direkt unter dem Einstieg */
+.kw{background:linear-gradient(90deg,rgba(239,185,46,.13),rgba(239,185,46,.05));border-bottom:1px solid rgba(239,185,46,.28)}
+.kw-in{display:flex;align-items:center;gap:20px;padding-top:16px;padding-bottom:16px}
+.kw-ico{width:40px;height:40px;border-radius:50%;background:#25D366;color:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.kw-ico svg{width:22px;height:22px}
+.kw p{flex:1;min-width:0;font-size:15px;line-height:1.45;color:#d6d8dc}
+.kw p b{color:var(--bone)}
+.kw p span{color:var(--muted);font-size:13.5px;display:block}
+
+/* Plan-Abschnitt näher an den Einstieg */
+#kursplan{padding-top:64px}
+
+/* Fotokarten „So läuft eine Kursstunde“ */
+.kf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:38px}
+.kf{background:var(--panel);border:1px solid var(--line);display:flex;flex-direction:column}
+.kf-img{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--panel-2)}
+.kf-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.kf-img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(21,23,28,0) 55%,rgba(28,31,38,.95))}
+.kf-n{position:absolute;left:18px;bottom:10px;z-index:1;font-family:var(--display);font-size:46px;line-height:1;color:var(--blitz)}
+.kf-b{padding:20px 24px 26px}
+.kf-b h3{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:23px;letter-spacing:.03em;margin-bottom:8px}
+.kf-b p{color:var(--muted);font-size:15px}
+
+/* WhatsApp-Kanal – großer Abschluss */
+.kk{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);border:1px solid rgba(239,185,46,.35);background:var(--panel);overflow:hidden}
+.kk-media{position:relative;min-height:380px}
+.kk-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%}
+.kk-media::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(28,31,38,0) 55%,var(--panel))}
+.kk-body{padding:44px 46px}
+.kk-body h2{font-size:clamp(32px,4.4vw,52px);margin-top:16px}
+.kk-body > p{color:var(--muted);margin-top:16px;max-width:520px;font-size:16px}
+.kk-list{list-style:none;margin:22px 0 0;display:grid;gap:10px}
+.kk-list li{display:flex;gap:12px;font-size:15.5px;color:#d6d8dc}
+.kk-list li::before{content:"\2713";color:var(--blitz);font-weight:700}
+.kk-list b{color:var(--bone)}
+.kk-cta{display:flex;align-items:center;gap:28px;flex-wrap:wrap;margin-top:30px}
+.kk-small{margin-top:18px;font-size:13px;color:var(--muted)}
+.kk-tel{text-align:center;margin-top:26px;color:var(--muted);font-size:14.5px}
+.kk-tel a{color:var(--bone);font-weight:600;border-bottom:1px solid rgba(236,233,226,.32)}
+
+@media(max-width:980px){
+  .kh-in{grid-template-columns:1fr;gap:34px;padding-top:44px;padding-bottom:44px}
+  .kh::after{background:linear-gradient(180deg,rgba(21,23,28,.9) 0%,rgba(21,23,28,.8) 60%,var(--bg) 100%)}
+  .kf-grid{grid-template-columns:1fr}
+  .kf{flex-direction:row}
+  .kf-img{aspect-ratio:auto;flex:0 0 40%;min-height:170px}
+  .kk{grid-template-columns:1fr}
+  .kk-media{min-height:220px}
+  .kk-media::after{background:linear-gradient(180deg,rgba(28,31,38,0) 55%,var(--panel))}
+  .kk-body{padding:30px 24px 34px}
+}
+@media(max-width:700px){
+  .kw-in{flex-wrap:wrap;gap:12px 14px}
+  .kw p{flex:1 1 calc(100% - 60px)}
+  .kw .btn{width:100%}
+  .kn-row{grid-template-columns:86px minmax(0,1fr) auto;gap:12px;padding:14px 16px}
+  .kn-d{font-size:21px}
+  .kn-t b{font-size:15px}
+  .kn-t span{display:none}
+  .kn-h,.kn-f{padding-left:16px;padding-right:16px}
+  .kf{flex-direction:column}
+  .kf-img{flex:none;aspect-ratio:16/10}
+  .kh-ctas{flex-wrap:nowrap}
+  .kh-ctas .btn{flex:1 1 0;padding-left:12px;padding-right:12px;font-size:13px}
+  .kh-in{padding-top:36px;padding-bottom:36px;gap:28px}
+  .kh .hero-sub{font-size:16px}
+}
