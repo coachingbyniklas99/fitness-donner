@@ -60,9 +60,10 @@
     if (k.kurz) return k.kurz;
     var b = String(k.beschreibung || '').trim();
     if (!b) return '';
-    var teile = b.match(/[^.!?]+[.!?]+(\s|$)/g) || [b], out = '';
-    for (var i = 0; i < teile.length && (out + teile[i]).length <= 170; i++) out += teile[i];
-    return (out || teile[0]).trim();
+    var dp = b.indexOf(':');
+    if (dp > 3 && dp <= 50) return b.slice(0, dp).trim();           // „Kraft trifft Ausdauer: …“ -> „Kraft trifft Ausdauer“
+    var s = (b.match(/^[^.!?]+[.!?]?/) || [b])[0].trim();
+    return s.length <= 110 ? s : s.slice(0, 107).replace(/\s+\S*$/, '') + ' …';
   }
   function ortText(k) {
     var o = String(k.ort || '').trim() || 'Forged Studio Solingen';
@@ -72,7 +73,7 @@
   function mehrBox(k) {
     var b = String(k.beschreibung || '').trim(), kz = kurzText(k);
     var rest = b && b !== kz ? b : '';
-    if (rest && !k.kurz && b.indexOf(kz) === 0) rest = b.slice(kz.length).trim();
+    if (rest && !k.kurz && b.indexOf(kz) === 0) rest = b.slice(kz.length).replace(/^[:.!?\s]+/, '').trim();
     var info = [k.minuten ? k.minuten + ' Minuten' : '', k.kapazitaet ? 'bis zu ' + k.kapazitaet + ' Teilnehmende' : '', k.adresse || ''].filter(Boolean).join(' · ');
     return '<div class="kp-mehr">' + (rest ? '<p>' + esc(rest) + '</p>' : '') + (info ? '<p class="kp-info">' + esc(info) + '</p>' : '') + '</div>';
   }

@@ -101,7 +101,7 @@
       q('#akBildOpen').textContent = v ? 'Anderes Bild wählen' : 'Bild wählen';
       q('#akBildWeg').hidden = !v;
     }
-    function waehle(v) { inp.value = v; panel.hidden = true; zeige(); }
+    function waehle(v) { inp.value = v; panel.hidden = true; zeige(); f.dispatchEvent(new Event('input', { bubbles: true })); }
     function kachel(src, titel, v, extra, del) {
       return '<div class="ak-kachel' + (inp.value === v ? ' ak-on' : '') + '"><button type="button" class="ak-kb" data-wahl="' + esc(v) + '"><img src="' + esc(src) + '" alt="" loading="lazy"><span class="ak-kt">' + esc(titel) + '</span>' + (extra || '') + '</button>' + (del || '') + '</div>';
     }
@@ -149,6 +149,58 @@
     q('#akBildWeg').onclick = function () { waehle(''); };
     zeige();
     bildLaden().then(zeige);
+  }
+
+
+  /* ---------- Vorschau: Kurs-Karte wie auf der Website, am Computer und am Handy ---------- */
+  function vorschau(f) {
+    var rahmen = [
+      { box: q('#akVpD'), breite: 1100 },
+      { box: q('#akVpM'), breite: 390 }
+    ];
+    function minZuHm(s, m) { var p = String(s || '17:30').split(':'), t = (+p[0]) * 60 + (+p[1] || 0) + (+m || 60); return ('0' + Math.floor(t / 60) % 24).slice(-2) + ':' + ('0' + t % 60).slice(-2); }
+    function daten() {
+      var e = f.elements, st = e.start.value || '18:00', min = Number(e.minuten.value) || 60, kap = Number(e.kapazitaet.value) || 12;
+      var morgen = new Date(Date.now() + 864e5).toISOString().slice(0, 10);
+      var kurs = {
+        id: 'v', anbieterin: 'Niklas Donner', anbieterin_id: 'niklas', titel: e.titel.value || 'Kursname', kategorie: e.kategorie.value, bild: e.bild.value.trim(), farbe: e.farbe.value,
+        ort: e.ort.value, adresse: e.adresse.value, minuten: min, kapazitaet: kap, kurz: e.kurz.value, beschreibung: e.beschreibung.value,
+        produkte: { tageskarte: { aktiv: true, label: 'Einzelticket', freischalt_tage: 2 }, karte5: { aktiv: true, label: '5er-Karte' }, karte10: { aktiv: true, label: '10er-Karte' } },
+        termine: [{ datum: morgen, start: st, ende: minZuHm(st, min), extra: false, abgesagt: false, buchbar: true, frei: kap, tageskarte_offen: true, tageskarte_ab: morgen + 'T00:00:00Z' }]
+      };
+      return { daten: { kurse: [kurs] }, tag: morgen };
+    }
+    function passe(r) {
+      var fr = r.fr; if (!fr || !fr.contentDocument || !fr.contentDocument.body) return;
+      var h = Math.ceil(fr.contentDocument.body.getBoundingClientRect().height);
+      var verf = r.box.clientWidth || r.breite, s = Math.min(1, verf / r.breite);
+      fr.style.width = r.breite + 'px'; fr.style.height = h + 'px';
+      fr.style.transform = 'scale(' + s + ')'; fr.style.transformOrigin = '0 0';
+      r.box.style.height = Math.ceil(h * s) + 'px';
+    }
+    function fuelle(r) {
+      var w = r.fr.contentWindow;
+      if (!w || !w.FDKursplan) return;
+      var d = daten(), box = r.fr.contentDocument.getElementById('b');
+      w.FDKursplan.start(box, { daten: d.daten, tag: d.tag, onBuchen: function () {} });
+      Array.prototype.forEach.call(r.fr.contentDocument.querySelectorAll('img'), function (im) { im.loading = 'eager'; im.onload = function () { passe(r); }; });
+      passe(r); setTimeout(function () { passe(r); }, 300); setTimeout(function () { passe(r); }, 1200);
+    }
+    rahmen.forEach(function (r) {
+      var fr = document.createElement('iframe');
+      fr.className = 'ak-vf'; fr.setAttribute('title', 'Vorschau');
+      fr.srcdoc = '<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="kursplan.css">'
+        + '<style>html,body{background:#15171C;margin:0}body{padding:14px;min-height:0}</style></head><body><div id="b"></div><script src="kursplan.js"><\/script></body></html>';
+      fr.onload = function () {
+        fuelle(r);
+        try { new fr.contentWindow.ResizeObserver(function () { passe(r); }).observe(fr.contentDocument.body); } catch (e) { /* alter Browser */ }
+      };
+      r.fr = fr; r.box.appendChild(fr);
+    });
+    var t;
+    f.addEventListener('input', function () { clearTimeout(t); t = setTimeout(function () { rahmen.forEach(fuelle); }, 200); });
+    f.addEventListener('change', function () { clearTimeout(t); t = setTimeout(function () { rahmen.forEach(fuelle); }, 200); });
+    window.addEventListener('resize', function () { rahmen.forEach(passe); });
   }
 
   /* ---------- Pause (Zeitraum, in dem ein Kurs ausfällt) ---------- */
@@ -465,6 +517,8 @@
       + '<div class="ak-bildwahl"><div class="ak-bild-prev" id="akBildPrev"></div><div class="ak-bild-side"><div class="ad-meta" id="akBildName"></div>'
       + '<div class="ad-actions"><button type="button" class="ad-mini" id="akBildOpen">Bild w&auml;hlen</button><button type="button" class="ad-mini" id="akBildWeg">Kein Bild</button></div></div></div>'
       + '<div id="akBildPanel" class="ak-bildpanel" hidden></div></div>'
+      + '<h2 style="margin-top:22px">Vorschau</h2><p class="ad-hint">So erscheint der Kurs in der \u00dcbersicht auf der Website. Die Vorschau aktualisiert sich beim Tippen und beim Bild-W\u00e4hlen. Tipp in der Vorschau auf \u201eMehr erfahren\u201c, um die ganze Beschreibung zu sehen.</p>'
+      + '<div class="ak-vorschau"><div class="ak-vl">Am Computer</div><div class="ak-vp" id="akVpD"></div><div class="ak-vl">Am Handy</div><div class="ak-vp ak-vpm" id="akVpM"></div></div>'
       + '<h2 style="margin-top:22px">Freischaltung &amp; USC</h2><div class="ak-grid">'
       + '<div class="ad-field"><label>Tageskarten X Tage vorher (leer = ' + s.freischalt_tage + ')</label><input type="number" name="freischalt_tage" value="' + esc(k.freischalt_tage == null ? '' : k.freischalt_tage) + '" min="0" max="60"></div>'
       + '<div class="ad-field"><label>USC-Plätze</label><select name="usc_gemeinsam"><option value="">Standard (' + (s.usc_gemeinsam ? 'gemeinsam' : 'zusätzlich') + ')</option><option value="true"' + (k.usc_gemeinsam === true ? ' selected' : '') + '>vom selben Restkontingent</option><option value="false"' + (k.usc_gemeinsam === false ? ' selected' : '') + '>zusätzlich zur Kapazität</option></select></div>'
@@ -485,6 +539,7 @@
     q('#akAbbr').onclick = function () { S.edit = null; render(); };
     var f = q('#akKursForm');
     bildWahl(f);
+    vorschau(f);
     var senden = function (force) {
       var e = f.elements;
       var num = function (v) { return v === '' ? null : Number(v); };
