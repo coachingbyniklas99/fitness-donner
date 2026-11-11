@@ -1,0 +1,83 @@
+/* Early-Bird-Seite (nur per Link aus dem WhatsApp-Kanal). Prefix eb- */
+.eb-alle{font-size:13px;font-weight:600;letter-spacing:.06em;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:2px}
+.eb-alle:hover{color:var(--blitz)}
+nav .nav-inner{justify-content:space-between}
+
+.eb-hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+.eb-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:60% 50%;filter:saturate(.9)}
+.eb-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(21,23,28,.96) 0%,rgba(21,23,28,.86) 40%,rgba(21,23,28,.55) 75%,rgba(21,23,28,.75) 100%),linear-gradient(180deg,rgba(21,23,28,0) 65%,var(--bg) 100%)}
+.eb-in{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,520px);gap:56px;align-items:center;padding-top:64px;padding-bottom:64px}
+.eb-text h1{font-size:clamp(48px,7.6vw,104px);line-height:.95;margin-top:20px}
+.eb-text h1 em{font-style:normal;color:var(--blitz)}
+.eb-text .hero-sub{margin-top:22px;max-width:480px}
+.eb-facts{list-style:none;display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:26px;font-size:13.5px;color:#c9cbd0}
+.eb-facts li::before{content:"";display:inline-block;width:6px;height:6px;background:var(--blitz);margin-right:9px;vertical-align:middle}
+.eb-facts b{color:var(--bone);font-weight:600}
+
+/* Buchungskarte */
+.eb-card{background:rgba(28,31,38,.95);border:1px solid var(--line);box-shadow:0 24px 60px rgba(0,0,0,.4);padding:28px 30px 30px}
+.eb-lade{color:var(--muted);padding:30px 0;text-align:center}
+.eb-aus-t{font-family:var(--display);text-transform:uppercase;font-size:30px;line-height:1.05;margin-bottom:12px}
+#ebAus p{color:var(--muted);margin-bottom:22px}
+.eb-banner{background:rgba(239,185,46,.12);border:1px solid rgba(239,185,46,.4);padding:12px 14px;font-size:14px;margin-bottom:18px}
+.eb-kopf{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.eb-preis{display:flex;align-items:baseline;gap:14px}
+.eb-neu{font-family:var(--display);font-size:64px;line-height:1;color:var(--blitz)}
+.eb-alt{font-size:22px;color:var(--muted);text-decoration:line-through;text-decoration-thickness:2px}
+.eb-spar{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#15171C;background:var(--blitz);padding:6px 11px;white-space:nowrap}
+.eb-kurs{padding:18px 0 4px}
+.eb-kurs b{display:block;font-size:20px;line-height:1.25}
+.eb-kurs span{display:block;color:var(--muted);font-size:14px;margin-top:4px}
+.eb-termine{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0 22px}
+.eb-termine li{border:1px solid var(--line);background:var(--panel-2);padding:12px 8px 11px;text-align:center}
+.eb-termine .d{display:block;font-family:var(--display);font-size:30px;line-height:1;text-transform:uppercase}
+.eb-termine .w{display:block;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:6px;font-weight:600}
+.eb-termine .z{display:block;font-size:13px;color:var(--bone);margin-top:6px}
+.eb-termine .gratis{display:inline-block;margin-top:8px;font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#15171C;background:#8fd49a;padding:2px 7px}
+.eb-termine .knapp{display:block;font-size:12px;color:var(--blitz);margin-top:6px;font-weight:600}
+
+.eb-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.eb-field{margin-bottom:14px}
+.eb-field label{display:block;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.eb-field label span{color:var(--blitz)}
+.eb-field input{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--bone);font:inherit;font-size:16px;padding:12px 13px;border-radius:0}
+.eb-field input:focus{outline:none;border-color:var(--blitz)}
+.eb-field small{display:block;color:var(--muted);font-size:12.5px;margin-top:5px}
+.eb-wr{background:var(--bg);border:1px solid var(--line);padding:14px 15px;margin:4px 0 16px}
+.eb-wr p{font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:12px}
+.eb-check{display:flex;gap:11px;align-items:flex-start;font-size:14px;line-height:1.5;cursor:pointer}
+.eb-check input{margin-top:4px;width:18px;height:18px;flex:0 0 auto;accent-color:var(--blitz)}
+.eb-err{background:rgba(224,86,86,.12);border:1px solid rgba(224,86,86,.5);padding:11px 13px;font-size:14px;margin-bottom:14px}
+.eb-btn{width:100%;justify-content:center;padding-top:17px;padding-bottom:17px;font-size:16px}
+.eb-btn[disabled]{opacity:.6;cursor:wait}
+.eb-klein{font-size:12.5px;color:var(--muted);margin-top:14px;line-height:1.55}
+.eb-klein a,.eb-mehr a{color:var(--blitz);border-bottom:1px solid rgba(239,185,46,.45)}
+
+/* Unterer Teil */
+.eb-info{padding:72px 0 88px}
+.eb-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.eb-step{background:var(--panel);border:1px solid var(--line);padding:26px 26px 28px}
+.eb-step span{font-family:var(--display);font-size:46px;line-height:1;color:var(--blitz)}
+.eb-step h3{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:23px;letter-spacing:.03em;margin:10px 0 8px}
+.eb-step p{color:var(--muted);font-size:15px}
+.eb-gut{margin-top:54px;max-width:760px}
+.eb-gut h2{font-size:clamp(30px,4vw,44px);margin-bottom:20px}
+.eb-gut ul{list-style:none;display:grid;gap:12px}
+.eb-gut li{position:relative;padding-left:22px;color:#d6d8dc;font-size:15.5px}
+.eb-gut li::before{content:"";position:absolute;left:0;top:.65em;width:7px;height:7px;background:var(--blitz)}
+.eb-gut li b{color:var(--bone)}
+.eb-mehr{margin-top:26px;color:var(--muted);font-size:15px}
+
+@media(max-width:980px){
+  .eb-in{grid-template-columns:1fr;gap:30px;padding-top:40px;padding-bottom:40px}
+  .eb-hero::after{background:linear-gradient(180deg,rgba(21,23,28,.9) 0%,rgba(21,23,28,.82) 60%,var(--bg) 100%)}
+  .eb-steps{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .eb-card{padding:22px 18px 24px}
+  .eb-row{grid-template-columns:1fr}
+  .eb-neu{font-size:54px}
+  .eb-termine{gap:8px}
+  .eb-termine .d{font-size:26px}
+  .eb-info{padding:48px 0 64px}
+}

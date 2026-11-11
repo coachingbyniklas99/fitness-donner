@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#15171C">
+<title>Early-Bird: 3 Termine, 2 bezahlen | Fitness Donner</title>
+<meta name="description" content="Early-Bird für den WhatsApp-Kanal: Pulse &amp; Power im Forged Studio Solingen an drei Terminen, du zahlst nur zwei.">
+<link rel="stylesheet" href="style.css?v=38">
+<link rel="stylesheet" href="early-bird.css?v=1">
+</head>
+<body>
+<nav>
+  <div class="wrap nav-inner">
+    <a href="index.html" aria-label="Fitness Donner - Startseite"><svg width="140" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
+  <text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text>
+  <polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"/>
+</svg></a>
+    <a class="eb-alle" href="kurse.html">Alle Kurse ansehen &rarr;</a>
+  </div>
+</nav>
+
+<main>
+<header class="eb-hero">
+  <img class="eb-bg" id="ebBg" src="newforge-kursraum.webp" width="1600" height="1000" alt="" fetchpriority="high">
+  <div class="wrap eb-in">
+    <div class="eb-text">
+      <div class="eyebrow">Nur f&uuml;r den WhatsApp-Kanal</div>
+      <h1>3 Termine.<br><em>2 bezahlen.</em></h1>
+      <p class="hero-sub" id="ebSub">Dein Early-Bird-Start in die Kurse im Forged Studio Solingen. Ein Termin geht aufs Haus.</p>
+      <ul class="eb-facts" id="ebFacts" hidden></ul>
+    </div>
+
+    <div class="eb-card" id="ebCard" aria-live="polite">
+      <div class="eb-lade" id="ebLade">Das Angebot wird geladen &hellip;</div>
+
+      <div id="ebAus" hidden>
+        <div class="eb-aus-t" id="ebAusT"></div>
+        <p id="ebAusP"></p>
+        <a class="btn btn-blitz" href="kurse.html">Alle Kurse ansehen</a>
+      </div>
+
+      <div id="ebAn" hidden>
+        <div class="eb-banner" id="ebAbbr" hidden>Die Zahlung wurde abgebrochen. Dein Platz war kurz f&uuml;r dich reserviert &ndash; du kannst es jetzt noch einmal versuchen.</div>
+        <div class="eb-kopf">
+          <div class="eb-preis">
+            <span class="eb-alt" id="ebAlt"></span>
+            <span class="eb-neu" id="ebNeu"></span>
+          </div>
+          <div class="eb-spar" id="ebSpar"></div>
+        </div>
+        <div class="eb-kurs">
+          <b id="ebTitel"></b>
+          <span id="ebMeta"></span>
+        </div>
+        <ol class="eb-termine" id="ebTermine"></ol>
+        <form id="ebForm" novalidate>
+          <div class="eb-row">
+            <div class="eb-field"><label for="ebName">Name <span>*</span></label><input type="text" id="ebName" autocomplete="name" required></div>
+            <div class="eb-field"><label for="ebMail">E-Mail <span>*</span></label><input type="email" id="ebMail" autocomplete="email" required></div>
+          </div>
+          <div class="eb-field"><label for="ebTel">Telefon <span>*</span></label><input type="tel" id="ebTel" autocomplete="tel" required><small>Falls ein Termin kurzfristig ausf&auml;llt.</small></div>
+          <div class="eb-wr">
+            <p id="ebWrText"></p>
+            <label class="eb-check"><input type="checkbox" id="ebWr"><span id="ebWrLabel"></span></label>
+          </div>
+          <div class="eb-err" id="ebErr" hidden></div>
+          <button type="submit" class="btn btn-blitz eb-btn" id="ebBtn">Early-Bird sichern</button>
+          <p class="eb-klein">Zahlung &uuml;ber Stripe: Lastschrift, Karte, PayPal, Apple&nbsp;Pay, Google&nbsp;Pay. Es gelten die <a href="buchungsbedingungen.html" target="_blank" rel="noopener">Buchungsbedingungen</a> und die <a href="datenschutz.html" target="_blank" rel="noopener">Datenschutzhinweise</a>.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="eb-info">
+  <div class="wrap">
+    <div class="eb-steps">
+      <div class="eb-step"><span>1</span><h3>Platz sichern</h3><p>Du buchst alle drei Termine auf einmal. Die Pl&auml;tze sind sofort f&uuml;r dich reserviert.</p></div>
+      <div class="eb-step"><span>2</span><h3>Mail mit Kalenderdatei</h3><p>Nach der Zahlung bekommst du die Best&auml;tigung mit allen Terminen zum Antippen in deinen Kalender.</p></div>
+      <div class="eb-step"><span>3</span><h3>Losgehen</h3><p>Komm in bequemer Kleidung, mit Wasser und Handtuch. Einsteiger sind genauso willkommen wie Ge&uuml;bte.</p></div>
+    </div>
+    <div class="eb-gut">
+      <h2>Gut zu wissen</h2>
+      <ul>
+        <li><b>Feste Termine.</b> Das Paket gilt f&uuml;r genau diese drei Termine. Verpasste Termine verfallen.</li>
+        <li><b>F&auml;llt ein Termin aus?</b> Sagt die Trainerin einen Termin ab, bekommst du einen Ersatztermin oder den anteiligen Preis zur&uuml;ck.</li>
+        <li><b>Du kannst nicht?</b> &Uuml;ber &bdquo;Meine Kursbuchung&ldquo; gibst du deinen Platz frei, damit jemand von der Warteliste nachr&uuml;cken kann. Eine Erstattung gibt es daf&uuml;r nicht.</li>
+        <li><b>Kleine Gruppe.</b> H&ouml;chstens 12 Pl&auml;tze pro Termin. Ist das Paket ausgebucht, steht es hier.</li>
+      </ul>
+      <p class="eb-mehr">Mehr zu den Kursen, zum Studio und zu allen weiteren Terminen findest du auf der <a href="kurse.html">Kursseite</a>.</p>
+    </div>
+  </div>
+</section>
+</main>
+<footer>
+  <div class="wrap foot">
+    <svg width="120" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
+  <text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text>
+  <polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"/>
+</svg>
+    <div class="legal">
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
+      <a href="buchungsbedingungen.html">Buchungsbedingungen</a>
+      <a href="gutschein-bedingungen.html">Gutscheinbedingungen</a>
+      <a href="karriere.html">Trainer:in gesucht</a>
+      <a href="widerruf.html" class="legal-widerruf" style="color:var(--blitz);font-weight:600">Vertrag widerrufen</a>
+    </div>
+    <div>&copy; 2026 Fitness Donner &middot; Solingen, Haan, K&ouml;ln &amp; Neuss</div>
+  </div>
+</footer>
+<script src="early-bird.js?v=1"></script>
+</body>
+</html>
