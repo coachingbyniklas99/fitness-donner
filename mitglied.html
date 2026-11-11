@@ -20,7 +20,7 @@
 
 <link rel="stylesheet" href="kurs.css?v=3">
 <link rel="stylesheet" href="kursplan.css?v=2">
-<link rel="stylesheet" href="mitglied.css?v=1">
+<link rel="stylesheet" href="mitglied.css?v=2">
 </head>
 <body>
 <nav>
@@ -89,6 +89,13 @@
       <p class="small" style="color:var(--muted);margin-top:16px">Noch keine Karte? Du findest die 5er- und 10er-Karte bei den <a href="kurse.html#kurspreise" style="color:var(--blitz)">Kursen</a>.</p>
     </form>
 
+    <div class="mg-lock" id="lockBox" hidden>
+      <h2>Gesperrt</h2>
+      <p class="gs-sub">Dein Mitgliederbereich ist mit Face&nbsp;ID oder Fingerabdruck gesch&uuml;tzt.</p>
+      <button type="button" class="btn btn-blitz" id="unlockBtn">Entsperren</button>
+      <p class="small" style="margin-top:16px;color:var(--muted)"><button type="button" class="mg-link" id="unlockCode">Stattdessen mit Code anmelden</button></p>
+    </div>
+
     <div id="portal" hidden>
       <div class="mg-karte" id="mKarte"></div>
       <div class="ku-box" id="mHinweis" hidden></div>
@@ -105,6 +112,31 @@
 
       <div class="ku-box" style="margin-top:28px"><b>Absagen:</b> Bis 24&nbsp;Stunden vor Kursbeginn wird die Einheit gutgeschrieben. Bei sp&auml;terer Absage verf&auml;llt sie. In begr&uuml;ndeten F&auml;llen sind Ausnahmen nach Absprache m&ouml;glich &ndash; schreib mir einfach.</div>
       <div class="ku-box"><b>Personal Training?</b> Termine f&uuml;r das Personal Training buchst du weiterhin <a href="termin-buchen.html" style="color:var(--blitz);text-decoration:underline">hier</a>.</div>
+      <h2 class="mg-h">Meine Daten</h2>
+      <form class="gs-form mg-form" id="datenForm" autocomplete="on">
+        <div class="gs-field"><label for="dName">Name</label><input id="dName" type="text" readonly></div>
+        <div class="gs-field"><label for="dMail">E-Mail-Adresse</label><input id="dMail" type="text" readonly></div>
+        <div class="gs-field"><label for="dTel">Telefon</label><input id="dTel" type="tel" autocomplete="tel" required></div>
+        <div class="gs-field"><label for="dStr">Stra&szlig;e und Hausnummer</label><input id="dStr" type="text" autocomplete="street-address"></div>
+        <div class="mg-zwei">
+          <div class="gs-field"><label for="dPlz">PLZ</label><input id="dPlz" type="text" inputmode="numeric" autocomplete="postal-code"></div>
+          <div class="gs-field"><label for="dOrt">Ort</label><input id="dOrt" type="text" autocomplete="address-level2"></div>
+        </div>
+        <button type="submit" class="btn btn-blitz" id="dBtn">Speichern</button>
+        <div class="ku-ok" id="dOk" hidden style="margin-top:14px"></div>
+        <p class="small mg-note">Name oder E-Mail-Adresse &auml;ndern? Schreib mir kurz an <a href="mailto:info@fitnessdonner.de" style="color:var(--blitz)">info@fitnessdonner.de</a>, denn die E-Mail-Adresse geh&ouml;rt zu deiner Karte.</p>
+        <details class="mg-alt"><summary>Bankverbindung &auml;ndern</summary>
+          <p class="small mg-note" style="margin-top:8px">Bei mir ist keine Bankverbindung f&uuml;r deine Kurskarte gespeichert: Du bezahlst jede Karte beim Kauf direkt &uuml;ber den Zahlungsdienst Stripe. Hast du mir f&uuml;r das Personal Training ein Lastschrift-Mandat erteilt und deine Bankverbindung hat sich ge&auml;ndert, schreib mir kurz. Ich schicke dir dann einen sicheren Link, &uuml;ber den du sie selbst eintr&auml;gst.</p>
+        </details>
+      </form>
+
+      <div class="mg-sec">
+        <h2 class="mg-h">App &amp; Sicherheit</h2>
+        <div class="ku-box" id="aInstall" hidden></div>
+        <div class="ku-box" id="aPush" hidden></div>
+        <div class="ku-box" id="aLock" hidden></div>
+      </div>
+
       <p style="margin-top:22px"><button type="button" class="btn btn-ghost btn-sm" id="logout">Abmelden</button></p>
     </div>
   </div>
@@ -130,9 +162,11 @@ var API_BASE = window.FD_API_BASE || 'https://fitnessdonner-gutscheine.coaching-
 
   /* ---------- Anmeldung ---------- */
   var gespeichert = ls(function (l) { return JSON.parse(l.getItem('fd_mitglied') || 'null'); });
+  var webauthn = !!(window.PublicKeyCredential && navigator.credentials && navigator.credentials.create);
+  var SPERRE = webauthn && ls(function (l) { return l.getItem('fd_mitglied_lock'); });
   if (Q.get('code')) el('code').value = Q.get('code');
-  else if (gespeichert) el('code').value = gespeichert.code;
-  if (gespeichert) { el('email').value = gespeichert.email; el('merken').checked = true; }
+  else if (gespeichert && !SPERRE) el('code').value = gespeichert.code;
+  if (gespeichert && !SPERRE) { el('email').value = gespeichert.email; el('merken').checked = true; }
   el('loginForm').onsubmit = function (e) {
     e.preventDefault(); clear();
     var btn = el('loginBtn'); btn.disabled = true; btn.textContent = 'Moment …';
@@ -146,7 +180,7 @@ var API_BASE = window.FD_API_BASE || 'https://fitnessdonner-gutscheine.coaching-
     }).catch(function () { btn.disabled = false; btn.textContent = 'Anmelden'; fail('Keine Verbindung.'); });
   };
   el('logout').onclick = function () {
-    ls(function (l) { l.removeItem('fd_mitglied'); });
+    ls(function (l) { l.removeItem('fd_mitglied'); l.removeItem('fd_mitglied_lock'); });
     location.href = 'mitglied.html?p=' + encodeURIComponent(P);
   };
 
@@ -154,6 +188,7 @@ var API_BASE = window.FD_API_BASE || 'https://fitnessdonner-gutscheine.coaching-
     el('loginForm').hidden = true;
     el('portal').hidden = false;
     zeigeKarte(card);
+    if (!S.gestartet) { S.gestartet = true; zeigeDaten(card); renderInstall(); renderPush(); renderLock(); }
     if (S.daten) { plan(); return; }
     fetch(API_BASE + '/api/kurse?p=' + encodeURIComponent(P)).then(function (r) { return r.json(); }).then(function (d) {
       S.daten = d; plan();
@@ -233,8 +268,146 @@ var API_BASE = window.FD_API_BASE || 'https://fitnessdonner-gutscheine.coaching-
     };
   }
 
-  // Direkt anmelden, wenn Code und E-Mail gespeichert sind
-  if (gespeichert && (!Q.get('code') || Q.get('code') === gespeichert.code)) { el('loginForm').requestSubmit ? el('loginForm').requestSubmit() : el('loginForm').dispatchEvent(new Event('submit', { cancelable: true })); }
+  /* ---------- Meine Daten ---------- */
+  function zeigeDaten(c) {
+    var p = c.profil || {};
+    el('dName').value = p.name || c.name || ''; el('dMail').value = p.email || S.email || '';
+    el('dTel').value = p.phone || ''; el('dStr').value = p.strasse || ''; el('dPlz').value = p.plz || ''; el('dOrt').value = p.ort || '';
+  }
+  el('datenForm').onsubmit = function (e) {
+    e.preventDefault(); clear(); el('dOk').hidden = true;
+    var b = el('dBtn'); b.disabled = true; b.textContent = 'Moment …';
+    api('/karte-profil', { p: P, code: S.code, email: S.email, phone: el('dTel').value, strasse: el('dStr').value, plz: el('dPlz').value, ort: el('dOrt').value }).then(function (r) {
+      b.disabled = false; b.textContent = 'Speichern';
+      if (r.s !== 200) { fail(r.d.error || 'Das hat nicht geklappt.'); return; }
+      S.card.profil = r.d.profil; zeigeDaten(S.card);
+      var o = el('dOk'); o.innerHTML = r.d.geaendert.length ? '<b>Gespeichert.</b> Deine Daten sind aktualisiert, ich habe Bescheid bekommen.' : 'Es hat sich nichts ge&auml;ndert.'; o.hidden = false;
+    }).catch(function () { b.disabled = false; b.textContent = 'Speichern'; fail('Keine Verbindung.'); });
+  };
+
+  /* ---------- App installieren ---------- */
+  var UA = navigator.userAgent || '';
+  var IOS = /iPad|iPhone|iPod/.test(UA) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var CHROME_IOS = IOS && /CriOS/.test(UA);
+  var ANDROID = /Android/.test(UA);
+  var STANDALONE = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+  var installEvt = null;
+  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); installEvt = e; if (S.gestartet) renderInstall(); });
+  function renderInstall() {
+    var b = el('aInstall');
+    if (STANDALONE) { b.hidden = false; b.innerHTML = '<b>Als App geöffnet</b><span class="small" style="color:var(--muted)">Du nutzt den Mitgliederbereich schon als App auf deinem Startbildschirm.</span>'; return; }
+    var h = '<b>Als App auf den Startbildschirm</b><span class="small" style="color:var(--muted)">Dann ist dein Mitgliederbereich mit einem Tipp offen, ohne Code und Adresse.</span>';
+    if (installEvt) h += '<button type="button" class="btn btn-blitz" id="aInstBtn">App installieren</button>';
+    else if (CHROME_IOS) h += '<ol><li>Tippe auf das Teilen-Symbol neben der Adresszeile.</li><li>Wähle &bdquo;Zum Startbildschirm hinzuf&uuml;gen&ldquo;.</li><li>Tippe auf &bdquo;Hinzuf&uuml;gen&ldquo;. F&uuml;r Mitteilungen ist Safari zuverl&auml;ssiger.</li></ol>';
+    else if (IOS) h += '<ol><li>Tippe unten auf das Teilen-Symbol (Quadrat mit Pfeil nach oben).</li><li>Scrolle und w&auml;hle &bdquo;Zum Home-Bildschirm&ldquo;.</li><li>Tippe oben rechts auf &bdquo;Hinzuf&uuml;gen&ldquo; und &ouml;ffne den Mitgliederbereich danach vom Startbildschirm.</li></ol>';
+    else if (ANDROID) h += '<ol><li>Tippe oben rechts in Chrome auf die drei Punkte.</li><li>W&auml;hle &bdquo;App installieren&ldquo; (manchmal hei&szlig;t es &bdquo;Zum Startbildschirm hinzuf&uuml;gen&ldquo;).</li><li>Best&auml;tige mit &bdquo;Installieren&ldquo;.</li></ol>';
+    else h += '<span class="small" style="color:var(--muted);display:block;margin-top:6px">Am Handy: &Ouml;ffne diese Seite in Safari (iPhone) oder Chrome (Android) und f&uuml;ge sie zum Startbildschirm hinzu.</span>';
+    b.hidden = false; b.innerHTML = h;
+    if (el('aInstBtn')) el('aInstBtn').onclick = function () { installEvt.prompt(); installEvt.userChoice.then(function () { installEvt = null; renderInstall(); }); };
+  }
+
+  /* ---------- Mitteilungen ---------- */
+  function b64uBytes(s) { s = String(s).replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '='; var bin = atob(s), o = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) o[i] = bin.charCodeAt(i); return o; }
+  function bytesB64u(buf) { var u = new Uint8Array(buf), s = ''; for (var i = 0; i < u.length; i++) s += String.fromCharCode(u[i]); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
+  function pushOk() { return 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window; }
+  function swReg() { return navigator.serviceWorker.register('/mitglied-sw.js', { scope: '/mitglied.html' }).then(function () { return navigator.serviceWorker.ready; }); }
+  function pushBox(html) { var b = el('aPush'); b.hidden = false; b.innerHTML = '<b>Mitteilungen</b>' + html; }
+  function renderPush() {
+    if (!pushOk()) {
+      pushBox('<span class="small" style="color:var(--muted)">' + (IOS && !STANDALONE ? 'Auf dem iPhone funktionieren Mitteilungen erst, wenn du den Mitgliederbereich zum Home-Bildschirm hinzugef&uuml;gt hast (siehe oben). &Ouml;ffne ihn danach von dort.' : 'Dieses Ger&auml;t oder dieser Browser unterst&uuml;tzt keine Mitteilungen.') + '</span>');
+      return;
+    }
+    if (Notification.permission === 'denied') { pushBox('<span class="small" style="color:var(--muted)">Mitteilungen sind in den Einstellungen deines Handys f&uuml;r diese Seite ausgeschaltet. Dort kannst du sie wieder erlauben.</span>'); return; }
+    swReg().then(function (reg) { return reg.pushManager.getSubscription(); }).then(function (sub) {
+      if (sub && Notification.permission === 'granted') {
+        pushBox('<span class="small" style="color:var(--muted)">Mitteilungen sind eingeschaltet. Du erf&auml;hrst, wenn ein Kurs ausf&auml;llt oder Pl&auml;tze frei werden.</span><button type="button" class="btn btn-ghost" id="pOff">Ausschalten</button>');
+        api('/karte-push', { p: P, code: S.code, email: S.email, subscription: sub.toJSON(), ua: UA.slice(0, 120) });
+        el('pOff').onclick = function () {
+          var ep = sub.endpoint;
+          sub.unsubscribe().then(function () { return api('/karte-push', { p: P, code: S.code, email: S.email, aktion: 'aus', endpoint: ep }); }).then(renderPush);
+        };
+      } else {
+        pushBox('<span class="small" style="color:var(--muted)">Ich schicke dir eine kurze Nachricht, wenn ein Kurs ausf&auml;llt oder noch Pl&auml;tze frei sind, zum Beispiel bei Specials.</span><button type="button" class="btn btn-blitz" id="pOn">Mitteilungen einschalten</button>');
+        el('pOn').onclick = pushAn;
+      }
+    }).catch(function () { pushBox('<span class="small" style="color:var(--muted)">Mitteilungen lassen sich gerade nicht einrichten.</span>'); });
+  }
+  function pushAn() {
+    clear(); var b = el('pOn'); b.disabled = true;
+    Notification.requestPermission().then(function (perm) {
+      if (perm !== 'granted') { renderPush(); return; }
+      return Promise.all([swReg(), api('/push-key')]).then(function (x) {
+        if (!x[1].d.key) throw new Error('key');
+        return x[0].pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64uBytes(x[1].d.key) });
+      }).then(function (sub) {
+        return api('/karte-push', { p: P, code: S.code, email: S.email, subscription: sub.toJSON(), ua: UA.slice(0, 120) });
+      }).then(function (r) {
+        if (r.s !== 200) throw new Error(r.d.error || 'x');
+        renderPush();
+        note('<b>Mitteilungen sind an.</b> Du hörst von mir, wenn ein Kurs ausf&auml;llt oder Pl&auml;tze frei werden.');
+      });
+    }).catch(function () { b.disabled = false; fail('Mitteilungen konnten nicht eingeschaltet werden. Auf dem iPhone geht das nur, wenn der Mitgliederbereich vom Home-Bildschirm ge&ouml;ffnet wurde.'); });
+  }
+
+  /* ---------- Sperre mit Face ID / Fingerabdruck ---------- */
+  function lockId() { return ls(function (l) { return l.getItem('fd_mitglied_lock'); }); }
+  function rnd(n) { var a = new Uint8Array(n); crypto.getRandomValues(a); return a; }
+  function renderLock() {
+    if (!webauthn || !PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) return;
+    PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(function (ok) {
+      var b = el('aLock'); if (!ok) { b.hidden = true; return; }
+      b.hidden = false;
+      if (lockId()) {
+        b.innerHTML = '<b>Sperre mit Face&nbsp;ID oder Fingerabdruck</b><span class="small" style="color:var(--muted)">Ist eingeschaltet. Beim &Ouml;ffnen der App fragt dein Handy nach Face&nbsp;ID oder Fingerabdruck.</span><button type="button" class="btn btn-ghost" id="lOff">Sperre ausschalten</button>';
+        el('lOff').onclick = function () { ls(function (l) { l.removeItem('fd_mitglied_lock'); }); renderLock(); };
+      } else {
+        b.innerHTML = '<b>Sperre mit Face&nbsp;ID oder Fingerabdruck</b><span class="small" style="color:var(--muted)">Dann &ouml;ffnet sich der Mitgliederbereich auf diesem Handy nur mit Face&nbsp;ID oder Fingerabdruck. Code und E-Mail bleiben auf dem Ger&auml;t gespeichert.</span><button type="button" class="btn btn-blitz" id="lOn">Sperre einschalten</button>';
+        el('lOn').onclick = lockAn;
+      }
+    }).catch(function () {});
+  }
+  function lockAn() {
+    clear(); var b = el('lOn'); b.disabled = true;
+    navigator.credentials.create({ publicKey: {
+      challenge: rnd(32), rp: { name: 'Fitness Donner', id: location.hostname },
+      user: { id: rnd(16), name: S.email, displayName: S.card ? S.card.name : S.email },
+      pubKeyCredParams: [{ type: 'public-key', alg: -7 }, { type: 'public-key', alg: -257 }],
+      authenticatorSelection: { authenticatorAttachment: 'platform', userVerification: 'required', residentKey: 'discouraged' },
+      timeout: 60000, attestation: 'none'
+    } }).then(function (cred) {
+      ls(function (l) { l.setItem('fd_mitglied', JSON.stringify({ code: S.code, email: S.email })); l.setItem('fd_mitglied_lock', bytesB64u(cred.rawId)); });
+      renderLock(); note('<b>Sperre ist an.</b> Beim n&auml;chsten &Ouml;ffnen entsperrst du mit Face&nbsp;ID oder Fingerabdruck.');
+    }).catch(function () { b.disabled = false; fail('Die Sperre konnte nicht eingerichtet werden.'); });
+  }
+  function entsperren() {
+    var id = lockId(); if (!id) return Promise.reject();
+    return navigator.credentials.get({ publicKey: { challenge: rnd(32), rpId: location.hostname, allowCredentials: [{ type: 'public-key', id: b64uBytes(id), transports: ['internal'] }], userVerification: 'required', timeout: 60000 } });
+  }
+  function sperrbild() { el('portal').hidden = true; el('loginForm').hidden = true; el('lockBox').hidden = false; }
+  function freigeben() {
+    el('lockBox').hidden = true;
+    if (S.card) { el('portal').hidden = false; return; }
+    if (gespeichert) { el('code').value = gespeichert.code; el('email').value = gespeichert.email; el('merken').checked = true; }
+    autoLogin();
+  }
+  function versuchEntsperren() {
+    el('unlockBtn').disabled = true;
+    entsperren().then(function () { el('unlockBtn').disabled = false; freigeben(); }).catch(function () { el('unlockBtn').disabled = false; });
+  }
+  el('unlockBtn').onclick = versuchEntsperren;
+  el('unlockCode').onclick = function () { el('lockBox').hidden = true; el('loginForm').hidden = false; };
+  var hiddenAt = 0;
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) { hiddenAt = Date.now(); return; }
+    if (S.card && lockId() && Date.now() - hiddenAt > 60000) { sperrbild(); versuchEntsperren(); }
+  });
+  function autoLogin() { el('loginForm').requestSubmit ? el('loginForm').requestSubmit() : el('loginForm').dispatchEvent(new Event('submit', { cancelable: true })); }
+
+  // Direkt anmelden, wenn Code und E-Mail gespeichert sind (mit Sperre erst nach Face ID)
+  if (gespeichert && (!Q.get('code') || Q.get('code') === gespeichert.code)) {
+    if (SPERRE) { sperrbild(); versuchEntsperren(); }
+    else autoLogin();
+  }
 })();
 </script>
 

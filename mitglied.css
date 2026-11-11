@@ -14,3 +14,13 @@
 .mg-c-d{color:#c9cbd0;margin-top:4px}
 .mg-alt{margin-top:18px}
 .mg-alt summary{cursor:pointer;color:var(--muted);padding:8px 0}
+.mg-lock{border:1px solid var(--blitz);background:rgba(239,185,46,.08);padding:26px;max-width:520px}
+.mg-link{background:none;border:0;padding:0;color:var(--blitz);text-decoration:underline;cursor:pointer;font:inherit}
+.mg-sec .ku-box{margin-top:14px}
+.mg-sec .ku-box b{display:block;margin-bottom:6px}
+.mg-sec .btn{margin-top:10px}
+.mg-sec ol{margin:8px 0 0 18px;padding:0;color:#c9cbd0;font-size:14px;line-height:1.6}
+.mg-form{max-width:520px}
+.mg-form input[readonly]{opacity:.65}
+.mg-zwei{display:grid;grid-template-columns:110px 1fr;gap:12px}
+.mg-note{color:var(--muted);margin-top:14px}

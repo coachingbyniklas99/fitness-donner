@@ -172,7 +172,8 @@ var API_BASE = window.FD_API_BASE || 'https://fitnessdonner-gutscheine.coaching-
     el('vTermine').innerHTML = '<li style="display:block"><div class="z" style="letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:var(--muted)">Dein Kartencode</div>'
       + '<div class="d" style="font-family:var(--display);font-size:34px;letter-spacing:.08em;color:var(--blitz);margin:6px 0 4px">' + esc(d.code) + '</div>'
       + '<div class="z">Den Code und deine E-Mail-Adresse brauchst du zum Buchen. Beides steht auch in deiner Best&auml;tigungsmail.</div>'
-      + '<div class="ku-act" style="margin-top:16px"><a class="btn btn-blitz" href="' + esc(link) + '">' + (DRAFT && DRAFT.d ? 'Gew&auml;hlten Kurs jetzt buchen' : 'Jetzt Kurse buchen') + '</a></div></li>';
+      + '<div class="ku-act" style="margin-top:16px"><a class="btn btn-blitz" href="' + esc(link) + '">' + (DRAFT && DRAFT.d ? 'Gew&auml;hlten Kurs jetzt buchen' : 'Jetzt Kurse buchen') + '</a></div>'
+      + '<div class="z" style="margin-top:14px"><b>Tipp:</b> Leg dir den Mitgliederbereich als App auf den Startbildschirm. Die Anleitung steht in deiner Mail und im Mitgliederbereich unter &bdquo;App &amp; Sicherheit&ldquo;. Dort kannst du auch Face&nbsp;ID und Mitteilungen einschalten.</div></li>';
     el('vInfo').innerHTML = [
       'Karte: ' + esc(d.label) + ' (' + esc(d.anzahl) + ' Einheiten)',
       'Preis: ' + eur(d.preis_cents) + (d.gutschein ? ' · davon Gutschein ' + esc(d.gutschein.code) + ' ' + eur(d.gutschein.cents) : '') + ' · bezahlt ' + eur(d.offen_cents),

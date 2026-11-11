@@ -43,12 +43,12 @@
     var anb = d.anbieterinnen.length > 1 ? '<div class="ad-chips ak-anb">' + d.anbieterinnen.map(function (a) {
       return '<button type="button" class="ad-chip' + (a.id === S.p ? ' ak-on' : '') + '" data-anb="' + esc(a.id) + '">' + esc(a.name) + '<span>' + (a.aktiv ? (a.zahlung_bereit ? 'aktiv' : 'Stripe fehlt') : 'vorbereitet, inaktiv') + '</span></button>';
     }).join('') + '</div>' : '';
-    var TITEL = { termine: 'Termine', usc: 'Urban Sports', erstattungen: 'Erstattungen', bestellungen: 'Bestellungen', karten: 'Kurskarten', einstellungen: 'Preise & Regeln', kurse: S.edit && S.edit.neu ? 'Neuer Kurs' : 'Kurs bearbeiten' };
+    var TITEL = { termine: 'Termine', usc: 'Urban Sports', erstattungen: 'Erstattungen', bestellungen: 'Bestellungen', karten: 'Kurskarten', mitteilung: 'Mitteilung an Mitglieder', einstellungen: 'Preise & Regeln', kurse: S.edit && S.edit.neu ? 'Neuer Kurs' : 'Kurs bearbeiten' };
     var kopf = S.view === 'home' ? '' : '<div class="ak-nav"><button type="button" class="ak-back" data-view="home">&lsaquo; Kurse</button><span class="ak-nav-t">' + esc(TITEL[S.view] || '') + (S.kurs && (S.view === 'termine' || S.view === 'bestellungen') ? ' &middot; ' + esc(kursTitel(S.kurs)) : '') + '</span></div>';
     box.innerHTML = anb + kopf + '<div id="akBody"></div>';
     on('[data-anb]', function (b) { S.p = b.getAttribute('data-anb'); S.data = null; S.view = 'home'; S.kurs = ''; S.edit = null; laden(); });
     on('[data-view]', gehe);
-    ({ home: vHome, termine: vTermine, usc: vUsc, erstattungen: vErstattungen, kurse: vKurse, bestellungen: vBestellungen, karten: vKarten, einstellungen: vEinstellungen })[S.view]();
+    ({ home: vHome, termine: vTermine, usc: vUsc, erstattungen: vErstattungen, kurse: vKurse, bestellungen: vBestellungen, karten: vKarten, mitteilung: vMitteilung, einstellungen: vEinstellungen })[S.view]();
   }
   function gehe(b) {
     S.view = b.getAttribute('data-view'); S.edit = null;
@@ -268,6 +268,7 @@
       }).join('') + '</div>' : '<div class="ad-empty"><b>Noch kein Kurs.</b><br>So legst du den ersten an: 1) &bdquo;+ Neuer Kurs&ldquo; tippen, 2) Wochentag, Uhrzeit und Pl&auml;tze eintragen, 3) &bdquo;aktiv&ldquo; setzen und speichern.</div>')
       + '<h3 class="hd-h">Weiteres</h3><div class="mh-group">'
       + zeile('karten', '&#127903;', 'Kurskarten', '5er- und 10er-Karten: Stand, Ausnahmen gutschreiben')
+      + zeile('mitteilung', '&#128276;', 'Mitteilung an Mitglieder', 'Kurs f&auml;llt aus, freie Pl&auml;tze, Specials aufs Handy')
       + zeile('bestellungen', '&#128269;', 'Alle Bestellungen', 'Suchen nach Name, E-Mail oder Code')
       + zeile('einstellungen', '&#9881;', 'Preise &amp; Regeln', 'Tageskarte, Karten und Fristen f&uuml;r Kurse')
       + (d.erstattungen.length ? '' : zeile('erstattungen', '&euro;', 'Erstattungen', 'Keine offenen &ndash; hier siehst du die erledigten'))
@@ -390,7 +391,9 @@
       var l = daten.filter(function (c) { return !f || (c.name + ' ' + c.email + ' ' + c.code).toLowerCase().indexOf(f) !== -1; });
       q('#akKl').innerHTML = l.length ? l.map(function (c) {
         return '<div class="ad-card"><div class="ad-card-top"><span class="ad-code">' + esc(c.code) + '</span><span class="ad-tagline">' + esc(c.label) + '</span></div>'
-          + '<div class="ad-who">' + esc(c.name) + '</div><div class="ad-meta">' + esc(c.email) + '</div>'
+          + '<div class="ad-who">' + esc(c.name) + '</div><div class="ad-meta">' + esc(c.email) + (c.telefon ? ' &middot; ' + esc(c.telefon) : '') + '</div>'
+          + (c.adresse ? '<div class="ad-meta">' + esc(c.adresse) + '</div>' : '')
+          + (c.profil_geaendert ? '<div class="ad-meta"><b>Daten ge&auml;ndert am ' + esc(hm(c.profil_geaendert)) + '</b></div>' : '')
           + '<div class="ad-meta"><b>' + c.frei + ' von ' + (c.anzahl + c.korrektur) + ' frei</b> · g&uuml;ltig bis ' + esc(c.bis.split('-').reverse().join('.')) + (c.korrektur ? ' · Korrektur ' + (c.korrektur > 0 ? '+' : '') + c.korrektur : '') + '</div>'
           + (c.buchungen.length ? '<div class="ad-meta">' + c.buchungen.map(function (b) {
               return esc(dk(b.datum)) + ' ' + esc(b.start) + ' ' + esc(b.kurs_titel) + ' (' + esc(KST[b.status] || b.status) + ')'
@@ -407,6 +410,46 @@
     }
     function aktion(b) { post('karte-aktion', b).then(function (d) { daten = d.karten; zeige(); A.note('Gespeichert.'); }).catch(function (e) { A.note(e.message, true); }); }
     A.api('kurse/karten?p=' + encodeURIComponent(S.p)).then(function (d) { daten = d.karten; zeige(); }).catch(function (e) { A.note(e.message, true); });
+  }
+
+  /* ---------- Mitteilung an Mitglieder (Push aufs Handy) ---------- */
+  function vMitteilung() {
+    var termine = S.data.termine.filter(function (t) { return !t.vorbei && !t.abgesagt; });
+    var opt = '<option value="">Ohne Termin-Link</option>' + termine.map(function (t) { return '<option value="' + esc(t.kurs + '|' + t.datum) + '">' + esc(kursTitel(t.kurs)) + ' &middot; ' + esc(dk(t.datum)) + ' ' + esc(t.start) + '</option>'; }).join('');
+    body('<h2>Mitteilung an Mitglieder</h2>'
+      + '<p class="ad-hint">Geht als Push-Nachricht aufs Handy der Mitglieder, die im Mitgliederbereich &bdquo;Mitteilungen einschalten&ldquo; getippt haben. Auf dem iPhone nur, wenn sie die App &uuml;ber den Home-Bildschirm nutzen.</p>'
+      + '<div class="ad-card" id="akPInfo"><div class="ad-meta">L&auml;dt &hellip;</div></div>'
+      + '<div class="ad-actions" style="margin:14px 0"><button type="button" class="ad-mini" data-vorl="ausfall">Vorlage: Kurs f&auml;llt aus</button><button type="button" class="ad-mini" data-vorl="frei">Vorlage: Pl&auml;tze frei</button></div>'
+      + '<div class="ad-field"><label for="akPT">Titel</label><input id="akPT" maxlength="60" placeholder="z. B. Plätze frei am Samstag"></div>'
+      + '<div class="ad-field"><label for="akPX">Text</label><textarea id="akPX" rows="3" maxlength="200" placeholder="Kurz und konkret, höchstens 200 Zeichen"></textarea></div>'
+      + '<div class="ad-field"><label for="akPK">Termin (Link in der Nachricht)</label><select id="akPK">' + opt + '</select></div>'
+      + '<div class="ad-field"><label for="akPZ">Empfänger</label><select id="akPZ"><option value="alle">Alle Mitglieder mit Mitteilungen</option><option value="gebucht">Nur Mitglieder, die diesen Termin gebucht haben</option></select></div>'
+      + '<button type="button" class="btn btn-blitz" id="akPS">Senden</button>'
+      + '<h3 class="hd-h" style="margin-top:26px">Zuletzt gesendet</h3><div id="akPLog"></div>');
+    function info() {
+      A.api('kurse/push-info', { body: { p: S.p } }).then(function (d) {
+        q('#akPInfo').innerHTML = '<div class="ad-meta"><b>' + d.mitglieder + ' Mitglied' + (d.mitglieder === 1 ? '' : 'er') + '</b> mit Mitteilungen &middot; ' + d.geraete + ' Ger&auml;t' + (d.geraete === 1 ? '' : 'e') + '</div>';
+        q('#akPLog').innerHTML = d.log.length ? d.log.map(function (l) { return '<div class="ad-card"><div class="ad-who">' + esc(l.titel) + '</div><div class="ad-meta">' + esc(l.text) + '</div><div class="ad-meta">' + esc(hm(l.at)) + ' &middot; ' + l.gesendet + ' von ' + l.geraete + ' Ger&auml;ten' + (l.termin ? ' &middot; ' + esc(l.termin) : '') + '</div></div>'; }).join('') : '<div class="ad-empty">Noch nichts gesendet.</div>';
+      }).catch(function (e) { A.note(e.message, true); });
+    }
+    info();
+    on('[data-vorl]', function (b) {
+      if (b.getAttribute('data-vorl') === 'ausfall') { q('#akPT').value = 'Kurs fällt aus'; q('#akPX').value = 'Der Kurs am … fällt leider aus. Deine Einheit bleibt auf deiner Karte.'; q('#akPZ').value = 'gebucht'; }
+      else { q('#akPT').value = 'Noch Plätze frei'; q('#akPX').value = 'Am … sind noch Plätze frei. Tipp im Mitgliederbereich auf den Kurs und buch dir deinen Platz.'; q('#akPZ').value = 'alle'; }
+    });
+    q('#akPS').onclick = function () {
+      var b = this;
+      if (!armed(b, 'Wirklich an alle senden?')) return;
+      var k = q('#akPK').value.split('|');
+      var body = { p: S.p, titel: q('#akPT').value, text: q('#akPX').value, ziel: q('#akPZ').value };
+      if (k[0]) { body.kurs = k[0]; body.datum = k[1]; }
+      b.disabled = true;
+      A.api('kurse/push-senden', { body: body }).then(function (d) {
+        b.disabled = false;
+        A.note(d.geraete ? 'Gesendet an ' + d.gesendet + ' von ' + d.geraete + ' Geräten.' : 'Niemand erreicht: Es hat noch kein Mitglied Mitteilungen eingeschaltet.');
+        info();
+      }).catch(function (e) { b.disabled = false; A.note(e.message, true); });
+    };
   }
 
   /* ---------- Preise & Regeln ---------- */
