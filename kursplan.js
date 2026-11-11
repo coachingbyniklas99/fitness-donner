@@ -74,7 +74,7 @@
     var b = String(k.beschreibung || '').trim(), kz = kurzText(k);
     var rest = b && b !== kz ? b : '';
     if (rest && !k.kurz && b.indexOf(kz) === 0) rest = b.slice(kz.length).replace(/^[:.!?\s]+/, '').trim();
-    var info = [k.minuten ? k.minuten + ' Minuten' : '', k.kapazitaet ? 'bis zu ' + k.kapazitaet + ' Teilnehmende' : '', k.adresse || ''].filter(Boolean).join(' · ');
+    var info = [k.minuten ? k.minuten + ' Minuten' : '', k.raum || '', k.kapazitaet ? 'bis zu ' + k.kapazitaet + ' Teilnehmende' : '', k.adresse || ''].filter(Boolean).join(' · ');
     return '<div class="kp-mehr">' + (rest ? '<p>' + esc(rest) + '</p>' : '') + (info ? '<p class="kp-info">' + esc(info) + '</p>' : '') + '</div>';
   }
 
@@ -138,7 +138,7 @@
             + '<div class="kp-name"><b>' + esc(k.titel) + '</b><span>' + esc(k.kategorie ? k.kategorie + ' · ' : '') + 'mit ' + esc(k.anbieterin) + '</span>'
             + (kurzText(k) ? '<p class="kp-kurz">' + esc(kurzText(k)) + '</p>' : '')
             + '<button type="button" class="kp-mehr-btn" data-kp-mehr="' + esc(k.id + '|' + t.datum) + '" aria-expanded="' + (S.offen === k.id + '|' + t.datum) + '">' + (S.offen === k.id + '|' + t.datum ? 'Weniger' : 'Mehr erfahren') + '</button></div>'
-            + '<div class="kp-ort"><b>' + esc(ortText(k)) + '</b></div>'
+            + '<div class="kp-ort"><b>' + esc(ortText(k)) + '</b>' + (k.raum ? '<span class="kp-raum">' + esc(k.raum) + '</span>' : '') + '</div>'
             + '<div class="kp-aktion">' + pill(t) + (t.abgesagt ? '' : '<button type="button" class="btn btn-blitz btn-sm" data-kp-buchen="' + esc(k.id + '|' + t.datum) + '">' + (opts.karte ? 'Mit Karte buchen' : 'Kurs buchen') + '</button>') + '</div>'
             + (S.offen === k.id + '|' + t.datum ? mehrBox(k) : '') + '</div>';
         }).join('') + '</div>';

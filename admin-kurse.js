@@ -164,7 +164,7 @@
       var morgen = new Date(Date.now() + 864e5).toISOString().slice(0, 10);
       var kurs = {
         id: 'v', anbieterin: 'Niklas Donner', anbieterin_id: 'niklas', titel: e.titel.value || 'Kursname', kategorie: e.kategorie.value, bild: e.bild.value.trim(), farbe: e.farbe.value,
-        ort: e.ort.value, adresse: e.adresse.value, minuten: min, kapazitaet: kap, kurz: e.kurz.value, beschreibung: e.beschreibung.value,
+        ort: e.ort.value, raum: e.raum.value, adresse: e.adresse.value, minuten: min, kapazitaet: kap, kurz: e.kurz.value, beschreibung: e.beschreibung.value,
         produkte: { tageskarte: { aktiv: true, label: 'Einzelticket', freischalt_tage: 2 }, karte5: { aktiv: true, label: '5er-Karte' }, karte10: { aktiv: true, label: '10er-Karte' } },
         termine: [{ datum: morgen, start: st, ende: minZuHm(st, min), extra: false, abgesagt: false, buchbar: true, frei: kap, tageskarte_offen: true, tageskarte_ab: morgen + 'T00:00:00Z' }]
       };
@@ -503,6 +503,7 @@
       + '<div class="ad-field"><label>Erster Termin ab</label><input type="date" name="start_datum" value="' + esc(k.start_datum) + '"></div>'
       + '<div class="ad-field"><label>Letzter Termin (leer = laufend)</label><input type="date" name="end_datum" value="' + esc(k.end_datum || '') + '"></div>'
       + '<div class="ad-field"><label>Ort</label><input name="ort" value="' + esc(k.ort) + '"></div>'
+      + '<div class="ad-field"><label>Raum im Studio</label><input name="raum" list="akRaeume" value="' + esc(k.raum || '') + '" maxlength="40" placeholder="z. B. Functional Area"><datalist id="akRaeume"><option value="Functional Area"><option value="Kursraum"></datalist></div>'
       + '<div class="ad-field"><label>Adresse</label><input name="adresse" value="' + esc(k.adresse || '') + '"></div>'
       + '<div class="ad-field"><label>Mindestteilnehmer (nur Info)</label><input type="number" name="min_teilnehmer" value="' + esc(k.min_teilnehmer || '') + '" min="1"></div>'
       + '<div class="ad-field"><label>Puffer fürs PT (Min.)</label><input type="number" name="puffer_min" value="' + esc(k.puffer_min || 0) + '" min="0" max="120"></div>'
@@ -548,7 +549,7 @@
         id: S.edit.neu ? undefined : S.edit.id, titel: e.titel.value, wochentag: Number(e.wochentag.value), start: e.start.value,
         minuten: Number(e.minuten.value), kapazitaet: Number(e.kapazitaet.value), start_datum: e.start_datum.value, end_datum: e.end_datum.value,
         ort: e.ort.value, adresse: e.adresse.value, min_teilnehmer: num(e.min_teilnehmer.value), puffer_min: num(e.puffer_min.value),
-        beschreibung: e.beschreibung.value, kurz: e.kurz.value, freischalt_tage: num(e.freischalt_tage.value),
+        beschreibung: e.beschreibung.value, kurz: e.kurz.value, raum: e.raum.value, freischalt_tage: num(e.freischalt_tage.value),
         kategorie: e.kategorie.value, farbe: e.farbe.value, bild: e.bild.value.trim(),
         usc_gemeinsam: e.usc_gemeinsam.value === '' ? null : e.usc_gemeinsam.value === 'true',
         preise: { tageskarte_cents: euro(e.tk.value), karte5_cents: euro(e.k5.value), karte10_cents: euro(e.k10.value) },
