@@ -40,7 +40,7 @@
 }
 </script>
 <link rel="stylesheet" href="style.css?v=38">
-<link rel="stylesheet" href="kursplan.css?v=1">
+<link rel="stylesheet" href="kursplan.css?v=2">
 </head>
 <body>
 <nav>
@@ -122,7 +122,7 @@
   <div class="wrap">
     <div class="eyebrow">Preise</div>
     <h2 style="margin-top:16px">Einzeln oder<br>als Karte.</h2>
-    <p class="hero-sub" style="margin-top:14px;max-width:640px">Mit einer Karte bist du an 5 oder 10 Terminen in Folge fest dabei &ndash; dein Platz ist an jedem Termin sicher. Einzeltickets gibt es f&uuml;r die Pl&auml;tze, die kurz vorher noch frei sind.</p>
+    <p class="hero-sub" style="margin-top:14px;max-width:640px">Mit einer Karte bist du an 5 oder 10 Terminen in Folge fest dabei &ndash; dein Platz ist an jedem Termin sicher. Karten haben Vorrang: Einzeltickets werden erst 2 Tage vor Kursbeginn freigeschaltet, falls noch Restpl&auml;tze da sind.</p>
     <div class="price-grid" id="kursPreise" style="margin-top:30px"></div>
     <p style="margin-top:22px;max-width:860px;color:#8b9099;font-size:13.5px;line-height:1.6">Alle Preise sind Endpreise; als Kleinunternehmer im Sinne von &sect;&nbsp;19 UStG berechne ich keine Umsatzsteuer. Gutscheine von Fitness Donner kannst du beim Kauf einl&ouml;sen.</p>
   </div>
@@ -193,11 +193,11 @@
       </details>
       <details>
         <summary>Karte oder Einzelticket &ndash; was ist der Unterschied?</summary>
-        <p>Mit einer 5er- oder 10er-Karte buchst du die n&auml;chsten 5 bzw. 10 Wochentermine eines Kurses ab deinem Wunschtermin &ndash; auch mitten in der laufenden Reihe. Welche Termine das genau sind, siehst du vor dem Kauf, und dein Platz ist an jedem davon sicher. Einzeltickets gibt es eine Woche vor einem Termin f&uuml;r die Pl&auml;tze, die dann noch frei sind.</p>
+        <p>Mit einer 5er- oder 10er-Karte buchst du die n&auml;chsten 5 bzw. 10 Wochentermine eines Kurses ab deinem Wunschtermin &ndash; auch mitten in der laufenden Reihe. Welche Termine das genau sind, siehst du vor dem Kauf, und dein Platz ist an jedem davon sicher. Karten haben Vorrang vor Einzeltickets: Einzeltickets werden erst 2 Tage vor Kursbeginn freigeschaltet, falls dann noch Restpl&auml;tze frei sind.</p>
       </details>
       <details>
         <summary>Was ist, wenn ich mal nicht kann?</summary>
-        <p>Verpasste Termine verfallen, nachholen geht leider nicht. &Uuml;ber den Link in deiner Best&auml;tigungsmail kannst du deinen Platz aber freigeben &ndash; dann kann jemand von der Warteliste nachr&uuml;cken.</p>
+        <p>Gib deinen Platz bitte bis 24&nbsp;Stunden vor Kursbeginn &uuml;ber den Link in deiner Best&auml;tigungsmail frei &ndash; dann kann jemand von der Warteliste nachr&uuml;cken. Sagst du k&uuml;rzer als 24&nbsp;Stunden vorher ab oder kommst nicht, verf&auml;llt der Platz. Nachholen geht dann leider nicht. In begr&uuml;ndeten F&auml;llen sind nach individueller Absprache Ausnahmen m&ouml;glich &ndash; schreib mir einfach.</p>
       </details>
       <details>
         <summary>Und wenn ein Kurs ausf&auml;llt?</summary>
@@ -244,7 +244,7 @@
 (function(){var n=document.getElementById('navLinks'),b=document.querySelector('.menu-btn');
 if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&!a.classList.contains('sub-toggle')){n.classList.remove('open');b.textContent='☰';}});}})();
 </script>
-<script src="kursplan.js?v=4"></script>
+<script src="kursplan.js?v=5"></script>
 <script>
 /* Kursplan und Kurspreise kommen live aus dem Buchungssystem.
    Ohne aktive Kurse zeigt der Plan die Tage mit dem Hinweis „Der Kursplan steht bald“. */
@@ -271,7 +271,7 @@ if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a
       html.push('<div class="price' + (a === 'karte10' ? ' featured' : '') + '">' + (a === 'karte10' ? '<span class="pop">Empfohlen &middot; bester Preis pro Termin</span>' : '')
         + '<h3>' + esc(p.label) + '</h3><div class="amount">' + eur(p.cents) + '</div>'
         + '<div class="per">' + (karte ? p.termine + ' feste Termine &middot; ' + eur(Math.round(p.cents / p.termine)) + ' pro Termin' : 'ein einzelner Termin') + '</div>'
-        + '<p class="desc">' + (karte ? 'Ab deinem Wunschtermin, auch mitten in der laufenden Reihe. ' + d.gueltig_monate + ' Monate g&uuml;ltig.' : 'Ab ' + p.freischalt_tage + ' Tagen vor dem Termin, solange Pl&auml;tze frei sind.') + '</p>'
+        + '<p class="desc">' + (karte ? 'Ab deinem Wunschtermin, auch mitten in der laufenden Reihe. ' + d.gueltig_monate + ' Monate g&uuml;ltig.' : 'Wird ' + p.freischalt_tage + (Number(p.freischalt_tage) === 1 ? ' Tag' : ' Tage') + ' vor Kursbeginn freigeschaltet, falls noch Restpl&auml;tze da sind.') + '</p>'
         + '<a class="btn ' + (a === 'karte10' ? 'btn-blitz' : 'btn-ghost') + '" href="kurs-buchen.html">Termin aussuchen</a></div>');
     });
     document.getElementById('kursPreise').innerHTML = html.join('');

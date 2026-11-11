@@ -35,6 +35,21 @@
     ['karte5', 'karte10'].forEach(function (a) { if (sd && sd[a] && sd[a].ok && k.produkte[a].aktiv) out.push(k.produkte[a].label); });
     return out;
   }
+  /** ISO-Zeitpunkt → Datum in Berlin (Freischaltung gilt ab 00:00 Uhr deutscher Zeit) */
+  function berlinTag(iso) {
+    try {
+      var p = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date(iso))
+        .reduce(function (a, x) { a[x.type] = x.value; return a; }, {});
+      return p.year + '-' + p.month + '-' + p.day;
+    } catch (e) { return String(iso).slice(0, 10); }
+  }
+  /** Einzelticket noch nicht freigeschaltet → ausgegrautes Schild */
+  function gesperrt(k, t) {
+    if (t.abgesagt || !t.buchbar || t.frei < 1 || t.tageskarte_offen || !k.produkte.tageskarte.aktiv || !t.tageskarte_ab) return '';
+    var d = berlinTag(t.tageskarte_ab), n = k.produkte.tageskarte.freischalt_tage;
+    return '<span class="zu" title="Tageskarten werden erst ' + n + (Number(n) === 1 ? ' Tag' : ' Tage') + ' vor Kursbeginn freigeschaltet, falls noch Restplätze da sind.">'
+      + esc(k.produkte.tageskarte.label) + ' ab ' + kurz(d) + '</span>';
+  }
   function pill(t) {
     if (t.abgesagt) return '<span class="kp-pill">Fällt aus</span>';
     if (t.frei < 1) return '<span class="kp-pill voll">Ausgebucht</span>';
@@ -97,7 +112,7 @@
           var k = x.k, t = x.t, tags = moeglich(k, t);
           return '<div class="kp-zeile' + (t.abgesagt ? ' aus' : '') + '">' + bild(k)
             + '<div class="kp-zeit-box"><div class="kp-zeit">' + esc(t.start) + ' – ' + esc(t.ende) + '</div>'
-            + (tags.length ? '<div class="kp-tags">' + tags.map(function (g) { return '<span>' + esc(g) + '</span>'; }).join('') + '</div>' : '') + '</div>'
+            + ((tags.length || gesperrt(k, t)) ? '<div class="kp-tags">' + tags.map(function (g) { return '<span>' + esc(g) + '</span>'; }).join('') + gesperrt(k, t) + '</div>' : '') + '</div>'
             + '<div class="kp-name"><b>' + esc(k.titel) + '</b><span>' + esc(k.kategorie ? k.kategorie + ' · ' : '') + 'mit ' + esc(k.anbieterin) + '</span></div>'
             + '<div class="kp-ort">Solingen-Ohligs<b>' + esc(k.ort) + '</b></div>'
             + '<div class="kp-aktion">' + pill(t) + (t.abgesagt ? '' : '<button type="button" class="btn btn-blitz btn-sm" data-kp-buchen="' + esc(k.id + '|' + t.datum) + '">Kurs buchen</button>') + '</div></div>';

@@ -79,11 +79,21 @@ var API_BASE = window.FD_API_BASE || 'https://fitnessdonner-gutscheine.coaching-
     if (t.frei <= 3) return '<span class="kp-pill knapp">Noch ' + t.frei + (t.frei === 1 ? ' Platz' : ' Plätze') + '</span>';
     return '<span class="kp-pill gut">' + t.frei + ' Plätze frei</span>';
   }
+  /** ISO-Zeitpunkt → Datum in Berlin (Freischaltung gilt ab 00:00 Uhr deutscher Zeit) */
+  function berlinTag(iso) {
+    try {
+      var p = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date(iso))
+        .reduce(function (a, x) { a[x.type] = x.value; return a; }, {});
+      return p.year + '-' + p.month + '-' + p.day;
+    } catch (e) { return String(iso).slice(0, 10); }
+  }
+  function tageTxt(n) { return n + (Number(n) === 1 ? ' Tag' : ' Tage'); }
   function karte(o) {
-    return '<div class="ku-ang' + (o.erstes ? ' erstes' : '') + (o.zu ? ' zu' : '') + (o.flag ? ' mit-flag' : '') + '">'
+    return '<div class="ku-ang' + (o.erstes ? ' erstes' : '') + (o.zu ? ' zu' : '') + (o.flag ? ' mit-flag' : '') + (o.hinweis ? ' mit-info' : '') + '"' + (o.hinweis ? ' tabindex="0" role="button" aria-expanded="false"' : '') + '>'
       + (o.flag ? '<span class="ku-flag">' + o.flag + '</span>' : '')
       + '<div><div class="ku-ang-name">' + o.name + '</div><div class="ku-ang-preis">' + eur(o.cents) + '<small>' + o.einheit + '</small></div><div class="ku-ang-text">' + o.text + '</div></div>'
-      + '<div class="ku-ang-aktion">' + (o.aktion || '') + '</div>' + (o.extra || '') + '</div>';
+      + '<div class="ku-ang-aktion">' + (o.aktion || '') + '</div>' + (o.extra || '')
+      + (o.hinweis ? '<div class="ku-ang-info" hidden>' + o.hinweis + '</div>' : '') + '</div>';
   }
   function kartenAngebot(art) {
     var k = S.kurs, t = S.termin, pr = k.produkte[art];
@@ -93,7 +103,8 @@ var API_BASE = window.FD_API_BASE || 'https://fitnessdonner-gutscheine.coaching-
     if (r && r.ok) {
       return karte({ name: pr.label + ' ab diesem Termin', cents: pr.cents, einheit: proT, erstes: art === 'karte10',
         flag: art === 'karte10' ? 'Empfohlen · bester Preis pro Termin' : '',
-        text: 'Du bist an <b>' + n + ' festen Terminen</b> dabei: ' + dk(r.termine[0]) + ' bis ' + dk(r.bis) + '<br>Dein Platz ist an jedem dieser Termine sicher. ' + S.data.gueltig_monate + ' Monate gültig.',
+        text: 'Du bist an <b>' + n + ' festen Terminen</b> dabei: ' + dk(r.termine[0]) + ' bis ' + dk(r.bis) + '<br>Dein Platz ist an jedem dieser Termine sicher. ' + S.data.gueltig_monate + ' Monate gültig.'
+          + '<span class="ku-vorrang"><b>Vorrang vor Tageskarten:</b> Kartenplätze sind für dich reserviert, noch bevor Tageskarten freigeschaltet werden.</span>',
         aktion: '<button type="button" class="btn ' + (art === 'karte10' ? 'btn-blitz' : 'btn-ghost') + '" data-art="' + art + '">' + esc(pr.label) + ' wählen</button>',
         extra: '<ol class="ku-ang-termine">' + r.termine.map(function (d) { return '<li>' + dk(d) + '</li>'; }).join('') + '</ol>' });
     }
@@ -111,9 +122,10 @@ var API_BASE = window.FD_API_BASE || 'https://fitnessdonner-gutscheine.coaching-
       o.text = 'Dieser Termin ist ausgebucht. Trag dich auf die Warteliste ein – wird ein Platz frei, bekommst du eine Mail und hast ' + S.data.warteliste_stunden + ' Stunden Zeit zum Buchen.';
       o.aktion = '<button type="button" class="btn btn-ghost" id="wlAuf">Auf die Warteliste</button>';
     } else if (!t.tageskarte_offen) {
-      var ab = t.tageskarte_ab.slice(0, 10);
+      var ab = berlinTag(t.tageskarte_ab);
       o.zu = true;
-      o.text = 'Einzeltickets gibt es <b>ab ' + dk(ab) + '</b> für die Plätze, die dann noch frei sind. Bis dahin haben Kartenkunden Vorrang.';
+      o.text = 'Noch nicht buchbar. Freischaltung <b>am ' + dk(ab) + '</b>, falls dann noch Plätze frei sind. Tippe hier für Details.';
+      o.hinweis = '<b>Tageskarten werden erst ' + tageTxt(k.produkte.tageskarte.freischalt_tage) + ' vor Kursbeginn freigeschaltet, falls noch Restplätze da sind.</b> Bis dahin haben Karten Vorrang.';
       o.aktion = '<button type="button" class="btn btn-ghost" disabled>Ab ' + dk(ab) + '</button>';
     } else {
       o.text = 'Nur dieser eine Termin.' + (t.frei <= 3 ? ' <b>Noch ' + t.frei + (t.frei === 1 ? ' Platz' : ' Plätze') + ' frei.</b>' : '');
@@ -130,11 +142,20 @@ var API_BASE = window.FD_API_BASE || 'https://fitnessdonner-gutscheine.coaching-
     el('angebote').innerHTML = kartenAngebot('karte10') + kartenAngebot('karte5') + einzelAngebot();
     var h = el('aHinweis');
     if (t.frei > 0 && !t.tageskarte_offen) {
-      h.innerHTML = '<b>Warum gerade nur Karten?</b> Alle Plätze stehen zuerst Kartenkunden offen. ' + k.produkte.tageskarte.freischalt_tage + ' Tage vor dem Termin werden die übrigen Plätze als Einzeltickets freigeschaltet.';
+      h.innerHTML = '<b>Warum gerade nur Karten?</b> Alle Plätze stehen zuerst Kartenkunden offen. Tageskarten werden erst ' + tageTxt(k.produkte.tageskarte.freischalt_tage) + ' vor Kursbeginn freigeschaltet, falls noch Restplätze da sind.';
       h.hidden = false;
     } else h.hidden = true;
     Array.prototype.forEach.call(el('angebote').querySelectorAll('[data-art]'), function (b) {
       b.onclick = function () { S.art = b.getAttribute('data-art'); S.angebot = ''; goStep(3); };
+    });
+    Array.prototype.forEach.call(el('angebote').querySelectorAll('.ku-ang.mit-info'), function (c) {
+      function umschalten() {
+        var i = c.querySelector('.ku-ang-info'), offen = i.hidden;
+        i.hidden = !offen; c.setAttribute('aria-expanded', offen ? 'true' : 'false'); c.classList.toggle('info-offen', offen);
+        groesse();
+      }
+      c.onclick = umschalten;
+      c.onkeydown = function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); umschalten(); } };
     });
     Array.prototype.forEach.call(el('angebote').querySelectorAll('[data-start]'), function (b) {
       b.onclick = function () { waehle(S.kurs.id, b.getAttribute('data-start')); renderAngebot(); window.scrollTo({ top: el('stepBar').offsetTop - 70, behavior: 'smooth' }); };

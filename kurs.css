@@ -93,6 +93,13 @@ body.ku-embed .wrap{padding:0 2px}
 .ku-ang{position:relative;border:1px solid var(--line);background:var(--bg);padding:20px;display:grid;grid-template-columns:1fr auto;gap:8px 20px;align-items:start}
 .ku-ang.erstes{border-color:var(--blitz);background:rgba(239,185,46,.08)}
 .ku-ang.zu{opacity:.62}
+.ku-ang.mit-info{cursor:pointer}
+.ku-ang.mit-info .btn{pointer-events:none}
+.ku-ang.mit-info:focus-visible{outline:2px solid var(--blitz);outline-offset:2px}
+.ku-ang-info{grid-column:1/-1;margin-top:10px;padding:12px 14px;border:1px solid var(--blitz);background:rgba(239,185,46,.08);color:var(--bone);font-size:14px;line-height:1.5}
+.ku-ang-info[hidden]{display:none}
+.ku-ang.zu.info-offen{opacity:1}
+.ku-vorrang{display:block;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);font-size:13.5px}
 .ku-ang.mit-flag .ku-ang-aktion{margin-top:22px}
 .ku-flag{position:absolute;top:-1px;right:-1px;background:var(--blitz);color:#15171C;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:6px 11px}
 .ku-ang-name{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
