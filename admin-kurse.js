@@ -314,6 +314,8 @@
         Array.prototype.forEach.call(f.querySelectorAll('.ak-k-karte'), function (n) { n.hidden = !k; });
         Array.prototype.forEach.call(f.querySelectorAll('.ak-k-person'), function (n) { n.hidden = k; });
         f.elements.name.required = !k;
+        f.elements.email.required = f.elements.art.value === 'tageskarte_bar' || f.elements.art.value === 'tageskarte_gratis';
+        var lb = f.querySelector('.ak-lbl-mail'); if (lb) lb.textContent = f.elements.email.required ? 'E-Mail (Pflicht)' : 'E-Mail (optional)';
       };
       f.elements.art.onchange = artW; artW();
       f.onsubmit = function (e) {
@@ -440,13 +442,13 @@
         + '<div class="ad-field"><label>Art</label><select name="art"><option value="tageskarte_bar">Tageskarte, bar bezahlt</option><option value="tageskarte_gratis">Tageskarte, kostenlos</option><option value="karte">Mit gekaufter Karte (5er/10er)</option><option value="manuell">Sonstiges (manuell)</option></select></div>'
         + '<div class="ad-field ak-k-karte" hidden><label>Karte</label><select name="karte">' + kartenOptionen(t.datum) + '</select></div>'
         + '<div class="ad-field ak-k-person"><label>Name</label><input name="name" required></div>'
-        + '<div class="ad-field ak-k-person"><label>E-Mail (optional)</label><input name="email" type="email"></div>'
-        + '<div class="ad-field ak-k-person"><label>Telefon</label><input name="phone"></div>'
+        + '<div class="ad-field ak-k-person"><label class="ak-lbl-mail">E-Mail (Pflicht)</label><input name="email" type="email"></div>'
+        + '<div class="ad-field ak-k-person"><label>Telefon (optional)</label><input name="phone"></div>'
         + '<div class="ad-field"><label>Notiz</label><input name="notiz" placeholder="z. B. Probestunde, 4er-Karte inklusive"></div></div>'
         + '<label class="ak-check"><input type="checkbox" name="mail"> Best&auml;tigung per Mail schicken</label>'
         + '<label class="ak-check"><input type="checkbox" name="ueber"> Auch wenn der Termin voll ist</label>'
         + '<button type="submit" class="btn btn-blitz">Eintragen</button>'
-        + '<p class="ad-hint" style="margin-top:12px">Tageskarte: z&auml;hlt als Einzelticket, es l&auml;uft keine Zahlung &uuml;ber Stripe, die E-Mail ist optional. Mit Karte: Name und E-Mail kommen von der Karte und eine Einheit wird abgezogen (Entfernen gibt sie zur&uuml;ck). Best&auml;tigung geht nur mit E-Mail raus.</p></form>';
+        + '<p class="ad-hint" style="margin-top:12px">Tageskarte: z&auml;hlt als Einzelticket, es l&auml;uft keine Zahlung &uuml;ber Stripe. E-Mail ist Pflicht, Telefon optional. Mit Karte: Name und E-Mail kommen von der Karte und eine Einheit wird abgezogen (Entfernen gibt sie zur&uuml;ck). Die Best&auml;tigung per Mail schickst du mit dem Haken mit.</p></form>';
     }
     if (offen === 'abs') {
       var andere = S.data.termine.filter(function (x) { return x.kurs === t.kurs && x.datum !== t.datum && !x.vorbei && !x.abgesagt; });
