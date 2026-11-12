@@ -267,6 +267,8 @@
     if (qu.tageskarte || qu.warteliste) teile.push('Tageskarte ' + ((qu.tageskarte || 0) + (qu.warteliste || 0)));
     if (qu.inklusiv) teile.push('Inklusiv ' + qu.inklusiv);
     if (qu.ersatz) teile.push('Ersatz ' + qu.ersatz);
+    if (qu.tageskarte_bar) teile.push('Tageskarte bar ' + qu.tageskarte_bar);
+    if (qu.tageskarte_gratis) teile.push('Tageskarte kostenlos ' + qu.tageskarte_gratis);
     if (qu.manuell) teile.push('Manuell ' + qu.manuell);
     if (b.usc) teile.push('USC ' + b.usc + (t.usc_gemeinsam ? '' : ' (extra)'));
     return teile.join(' · ');
@@ -301,7 +303,7 @@
       f.onsubmit = function (e) {
         e.preventDefault();
         var x = f.getAttribute('data-plusform').split('|');
-        post('teilnehmer', { kurs: x[0], datum: x[1], name: f.elements.name.value, email: f.elements.email.value, phone: f.elements.phone.value,
+        post('teilnehmer', { kurs: x[0], datum: x[1], art: f.elements.art.value, name: f.elements.name.value, email: f.elements.email.value, phone: f.elements.phone.value,
           notiz: f.elements.notiz.value, mail: f.elements.mail.checked, ueber_kapazitaet: f.elements.ueber.checked })
           .then(function () { A.note('Eingetragen.'); S.offen[x[0] + '|' + x[1]] = 'tn'; return laden(); })
           .catch(function (err) { A.note(err.message, true); });
@@ -373,14 +375,15 @@
     }
     if (offen === 'plus') {
       html += '<form class="ad-issue ak-form" data-plusform="' + esc(key) + '"><div class="ak-grid">'
+        + '<div class="ad-field"><label>Art</label><select name="art"><option value="tageskarte_bar">Tageskarte, bar bezahlt</option><option value="tageskarte_gratis">Tageskarte, kostenlos</option><option value="manuell">Sonstiges (manuell)</option></select></div>'
         + '<div class="ad-field"><label>Name</label><input name="name" required></div>'
         + '<div class="ad-field"><label>E-Mail (optional)</label><input name="email" type="email"></div>'
         + '<div class="ad-field"><label>Telefon</label><input name="phone"></div>'
-        + '<div class="ad-field"><label>Notiz</label><input name="notiz" placeholder="z. B. bar bezahlt, 4er-Karte inklusive"></div></div>'
+        + '<div class="ad-field"><label>Notiz</label><input name="notiz" placeholder="z. B. Probestunde, 4er-Karte inklusive"></div></div>'
         + '<label class="ak-check"><input type="checkbox" name="mail"> Best&auml;tigung per Mail schicken</label>'
         + '<label class="ak-check"><input type="checkbox" name="ueber"> Auch wenn der Termin voll ist</label>'
         + '<button type="submit" class="btn btn-blitz">Eintragen</button>'
-        + '<p class="ad-hint" style="margin-top:12px">F&uuml;r Barzahlung, Kulanz oder Probestunde. Es l&auml;uft keine Zahlung &uuml;ber Stripe.</p></form>';
+        + '<p class="ad-hint" style="margin-top:12px">Die Tageskarte z&auml;hlt als Einzelticket in der Belegung. Es l&auml;uft keine Zahlung &uuml;ber Stripe. E-Mail ist optional; nur mit E-Mail geht die Best&auml;tigung raus.</p></form>';
     }
     if (offen === 'abs') {
       var andere = S.data.termine.filter(function (x) { return x.kurs === t.kurs && x.datum !== t.datum && !x.vorbei && !x.abgesagt; });
