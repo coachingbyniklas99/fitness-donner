@@ -205,6 +205,7 @@
 
   /* ---------- Pause (Zeitraum, in dem ein Kurs ausfällt) ---------- */
   function pausenListe(k) {
+    var heute = new Date().toISOString().slice(0, 10);
     var gr = {}, out = [];
     (k.ausfall || []).forEach(function (a) {
       if (!a.pause || a.datum < heute) return;
@@ -224,6 +225,7 @@
         + ' <button type="button" class="ad-mini" data-pauf="' + esc(k.id) + '|' + esc(x.von) + '|' + esc(x.bis) + '">Aufheben</button></div>';
     });
     if (S.pause === k.id) {
+      var heute = new Date().toISOString().slice(0, 10);
       h += '<form class="ad-issue ak-form" data-pauseform="' + esc(k.id) + '"><p class="ad-hint">Alle Termine in diesem Zeitraum fallen aus (z.&nbsp;B. Ferien, Urlaub, Feiertage). Es geht keine Mail raus &ndash; gibt es dort schon Buchungen, sagst du diese Termine bitte einzeln ab.</p>'
         + '<div class="ak-grid"><div class="ad-field"><label>Von</label><input type="date" name="von" value="' + heute + '" required></div>'
         + '<div class="ad-field"><label>Bis (einschlie&szlig;lich)</label><input type="date" name="bis" required></div></div>'
