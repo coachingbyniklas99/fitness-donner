@@ -205,7 +205,6 @@
 
   /* ---------- Pause (Zeitraum, in dem ein Kurs ausfällt) ---------- */
   function pausenListe(k) {
-    var heute = new Date().toISOString().slice(0, 10);
     var gr = {}, out = [];
     (k.ausfall || []).forEach(function (a) {
       if (!a.pause || a.datum < heute) return;
@@ -225,7 +224,6 @@
         + ' <button type="button" class="ad-mini" data-pauf="' + esc(k.id) + '|' + esc(x.von) + '|' + esc(x.bis) + '">Aufheben</button></div>';
     });
     if (S.pause === k.id) {
-      var heute = new Date().toISOString().slice(0, 10);
       h += '<form class="ad-issue ak-form" data-pauseform="' + esc(k.id) + '"><p class="ad-hint">Alle Termine in diesem Zeitraum fallen aus (z.&nbsp;B. Ferien, Urlaub, Feiertage). Es geht keine Mail raus &ndash; gibt es dort schon Buchungen, sagst du diese Termine bitte einzeln ab.</p>'
         + '<div class="ak-grid"><div class="ad-field"><label>Von</label><input type="date" name="von" value="' + heute + '" required></div>'
         + '<div class="ad-field"><label>Bis (einschlie&szlig;lich)</label><input type="date" name="bis" required></div></div>'
@@ -278,13 +276,22 @@
     var d = S.data;
     if (!d.kurse.length) { body('<div class="ad-empty">Noch kein Kurs angelegt. <button type="button" class="ad-linkbtn" data-go="kurse">Kurs anlegen</button></div>'); on('[data-go]', function () { S.view = 'kurse'; S.edit = { neu: true }; render(); }); return; }
     var list = d.termine.filter(function (t) { return !t.vorbei && (!S.kurs || t.kurs === S.kurs); });
+    var kal = S.ans !== 'liste';
     var html = '<div class="ad-sec-head"><h2>Kurstermine</h2><button type="button" class="ad-refresh" id="akReload">Neu laden</button></div>'
+      + '<div class="ak-views"><button type="button" class="ak-view' + (kal ? ' on' : '') + '" data-ans="kal">Kalender</button><button type="button" class="ak-view' + (kal ? '' : ' on') + '" data-ans="liste">Liste</button></div>'
       + (d.blockiert_pt ? '<p class="ad-hint">Kurszeiten sind f&uuml;r dein Personal Training automatisch blockiert &ndash; online, in „Zeit blockieren“ und beim Verschieben.</p>' : '')
-      + (list.length ? '<div class="ad-list">' + list.map(terminKarte).join('') + '</div>' : '<div class="ad-empty">Keine kommenden Termine.</div>');
+      + (kal ? kalenderHtml(d) : (list.length ? '<div class="ad-list">' + list.map(terminKarte).join('') + '</div>' : '<div class="ad-empty">Keine kommenden Termine.</div>'));
     body(html);
     q('#akReload').onclick = function () { laden().then(function () { A.note('Aktualisiert.'); }); };
+    on('[data-ans]', function (b) { S.ans = b.getAttribute('data-ans'); vTermine(); });
+    on('[data-mon]', function (b) { S.monat = b.getAttribute('data-mon'); vTermine(); });
+    on('[data-tag]', function (b) { S.tag = b.getAttribute('data-tag'); vTermine(); var det = q('#akTag'); if (det && det.scrollIntoView) det.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
     on('[data-tn]', function (b) { var k = b.getAttribute('data-tn'); S.offen[k] = S.offen[k] === 'tn' ? '' : 'tn'; vTermine(); });
-    on('[data-plus]', function (b) { var k = b.getAttribute('data-plus'); S.offen[k] = S.offen[k] === 'plus' ? '' : 'plus'; vTermine(); });
+    on('[data-plus]', function (b) {
+      var k = b.getAttribute('data-plus'); S.offen[k] = S.offen[k] === 'plus' ? '' : 'plus';
+      if (S.offen[k] === 'plus' && !S.karten) { A.api('kurse/karten?p=' + encodeURIComponent(S.p)).then(function (r) { S.karten = r.karten || []; vTermine(); }).catch(function () { S.karten = []; }); }
+      vTermine();
+    });
     on('[data-abs]', function (b) { var k = b.getAttribute('data-abs'); S.offen[k] = S.offen[k] === 'abs' ? '' : 'abs'; vTermine(); });
     on('[data-rm]', function (b) {
       if (!armed(b, 'Wirklich entfernen?')) return;
@@ -300,12 +307,21 @@
         .catch(function (e) { A.note(e.message, true); });
     });
     Array.prototype.forEach.call(qa('form[data-plusform]'), function (f) {
+      var artW = function () {
+        var k = f.elements.art.value === 'karte';
+        Array.prototype.forEach.call(f.querySelectorAll('.ak-k-karte'), function (n) { n.hidden = !k; });
+        Array.prototype.forEach.call(f.querySelectorAll('.ak-k-person'), function (n) { n.hidden = k; });
+        f.elements.name.required = !k;
+      };
+      f.elements.art.onchange = artW; artW();
       f.onsubmit = function (e) {
         e.preventDefault();
         var x = f.getAttribute('data-plusform').split('|');
-        post('teilnehmer', { kurs: x[0], datum: x[1], art: f.elements.art.value, name: f.elements.name.value, email: f.elements.email.value, phone: f.elements.phone.value,
+        var istK = f.elements.art.value === 'karte';
+        if (istK && !f.elements.karte.value) { A.note('Bitte eine Karte ausw\u00e4hlen.', true); return; }
+        post('teilnehmer', { kurs: x[0], datum: x[1], art: f.elements.art.value, karte_code: istK ? f.elements.karte.value : '', name: f.elements.name.value, email: f.elements.email.value, phone: f.elements.phone.value,
           notiz: f.elements.notiz.value, mail: f.elements.mail.checked, ueber_kapazitaet: f.elements.ueber.checked })
-          .then(function () { A.note('Eingetragen.'); S.offen[x[0] + '|' + x[1]] = 'tn'; return laden(); })
+          .then(function (r) { A.note(istK ? 'Eingetragen. Auf der Karte sind noch ' + r.karte_frei + ' Einheiten frei.' : 'Eingetragen.'); if (istK) S.karten = null; S.offen[x[0] + '|' + x[1]] = 'tn'; return laden(); })
           .catch(function (err) { A.note(err.message, true); });
       };
     });
@@ -337,6 +353,50 @@
         });
       };
     });
+  }
+
+  function kartenOptionen(datum) {
+    if (!S.karten) return '<option value="">L&auml;dt …</option>';
+    var l = S.karten.filter(function (c) { return c.frei > 0 && (!c.bis || String(c.bis).slice(0, 10) >= datum); });
+    if (!l.length) return '<option value="">Keine Karte mit freien Einheiten</option>';
+    return '<option value="">Karte w&auml;hlen …</option>' + l.map(function (c) {
+      return '<option value="' + esc(c.code) + '">' + esc(c.name) + ' · ' + esc(c.code) + ' · ' + c.frei + ' frei</option>';
+    }).join('');
+  }
+
+  var MON = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+  function monatVerschieben(m, n) { var a = m.split('-'); var d = new Date(Date.UTC(+a[0], +a[1] - 1 + n, 1)); return d.getUTCFullYear() + '-' + ('0' + (d.getUTCMonth() + 1)).slice(-2); }
+
+  function kalenderHtml(d) {
+    var alle = d.termine.filter(function (t) { return !S.kurs || t.kurs === S.kurs; });
+    var kommend = alle.filter(function (t) { return !t.vorbei; });
+    var heuteB = new Date(Date.now() + 0).toLocaleDateString('sv-SE', { timeZone: 'Europe/Berlin' });
+    if (!S.monat) S.monat = (S.tag || (kommend[0] && kommend[0].datum) || heuteB).slice(0, 7);
+    if (!S.tag && kommend[0]) S.tag = kommend[0].datum;
+    var a = S.monat.split('-'), jahr = +a[0], mon = +a[1] - 1;
+    var erster = new Date(Date.UTC(jahr, mon, 1)), tage = new Date(Date.UTC(jahr, mon + 1, 0)).getUTCDate();
+    var vor = (erster.getUTCDay() + 6) % 7;
+    var proTag = {};
+    alle.forEach(function (t) { (proTag[t.datum] = proTag[t.datum] || []).push(t); });
+    var h = '<div class="ak-cal"><div class="ak-cal-head"><button type="button" class="ad-mini" data-mon="' + monatVerschieben(S.monat, -1) + '" aria-label="Vorheriger Monat">&larr;</button>'
+      + '<b>' + MON[mon] + ' ' + jahr + '</b><button type="button" class="ad-mini" data-mon="' + monatVerschieben(S.monat, 1) + '" aria-label="Nächster Monat">&rarr;</button></div>'
+      + '<div class="ak-cal-grid">' + ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].map(function (w) { return '<div class="ak-cal-w">' + w + '</div>'; }).join('');
+    for (var i = 0; i < vor; i++) h += '<div class="ak-cal-x"></div>';
+    for (var n = 1; n <= tage; n++) {
+      var iso = jahr + '-' + ('0' + (mon + 1)).slice(-2) + '-' + ('0' + n).slice(-2);
+      var ts = proTag[iso] || [];
+      var cls = 'ak-cal-d' + (ts.length ? ' has' : '') + (iso === S.tag ? ' sel' : '') + (iso === heuteB ? ' heute' : '') + (iso < heuteB ? ' alt' : '');
+      var inh = '<span class="ak-cal-n">' + n + '</span>' + ts.map(function (t) {
+        var b = t.belegung, voll = !t.abgesagt && b.frei < 1;
+        return '<span class="ak-cal-c' + (t.abgesagt ? ' aus' : voll ? ' voll' : '') + '">' + '<b>' + esc(t.start) + '</b>' + (t.abgesagt ? '<i>f\u00e4llt aus</i>' : '<i>' + (b.gebucht + b.reserviert + (t.usc_gemeinsam ? b.usc : 0)) + '/' + b.kap + '</i>') + '</span>';
+      }).join('');
+      h += ts.length ? '<button type="button" class="' + cls + '" data-tag="' + iso + '">' + inh + '</button>' : '<div class="' + cls + '">' + inh + '</div>';
+    }
+    h += '</div><p class="ad-hint" style="margin-top:10px">Tippe auf einen Tag mit Kurs. Die Zahl zeigt die belegten von den m&ouml;glichen Pl&auml;tzen.</p></div>';
+    var sel = (proTag[S.tag] || []);
+    h += '<div id="akTag" class="ak-tag">' + (sel.length ? '<div class="ak-tag-h">' + esc(WDL[new Date(S.tag + 'T12:00:00Z').getUTCDay()]) + ', ' + esc(S.tag.split('-').reverse().join('.')) + '</div><div class="ad-list">' + sel.map(terminKarte).join('') + '</div>'
+      : '<div class="ad-empty">Tag mit Kurs antippen, dann siehst du die Teilnehmenden und kannst Leute eintragen.</div>') + '</div>';
+    return h;
   }
 
   function terminKarte(t) {
@@ -375,15 +435,16 @@
     }
     if (offen === 'plus') {
       html += '<form class="ad-issue ak-form" data-plusform="' + esc(key) + '"><div class="ak-grid">'
-        + '<div class="ad-field"><label>Art</label><select name="art"><option value="tageskarte_bar">Tageskarte, bar bezahlt</option><option value="tageskarte_gratis">Tageskarte, kostenlos</option><option value="manuell">Sonstiges (manuell)</option></select></div>'
-        + '<div class="ad-field"><label>Name</label><input name="name" required></div>'
-        + '<div class="ad-field"><label>E-Mail (optional)</label><input name="email" type="email"></div>'
-        + '<div class="ad-field"><label>Telefon</label><input name="phone"></div>'
+        + '<div class="ad-field"><label>Art</label><select name="art"><option value="tageskarte_bar">Tageskarte, bar bezahlt</option><option value="tageskarte_gratis">Tageskarte, kostenlos</option><option value="karte">Mit gekaufter Karte (5er/10er)</option><option value="manuell">Sonstiges (manuell)</option></select></div>'
+        + '<div class="ad-field ak-k-karte" hidden><label>Karte</label><select name="karte">' + kartenOptionen(t.datum) + '</select></div>'
+        + '<div class="ad-field ak-k-person"><label>Name</label><input name="name" required></div>'
+        + '<div class="ad-field ak-k-person"><label>E-Mail (optional)</label><input name="email" type="email"></div>'
+        + '<div class="ad-field ak-k-person"><label>Telefon</label><input name="phone"></div>'
         + '<div class="ad-field"><label>Notiz</label><input name="notiz" placeholder="z. B. Probestunde, 4er-Karte inklusive"></div></div>'
         + '<label class="ak-check"><input type="checkbox" name="mail"> Best&auml;tigung per Mail schicken</label>'
         + '<label class="ak-check"><input type="checkbox" name="ueber"> Auch wenn der Termin voll ist</label>'
         + '<button type="submit" class="btn btn-blitz">Eintragen</button>'
-        + '<p class="ad-hint" style="margin-top:12px">Die Tageskarte z&auml;hlt als Einzelticket in der Belegung. Es l&auml;uft keine Zahlung &uuml;ber Stripe. E-Mail ist optional; nur mit E-Mail geht die Best&auml;tigung raus.</p></form>';
+        + '<p class="ad-hint" style="margin-top:12px">Tageskarte: z&auml;hlt als Einzelticket, es l&auml;uft keine Zahlung &uuml;ber Stripe, die E-Mail ist optional. Mit Karte: Name und E-Mail kommen von der Karte und eine Einheit wird abgezogen (Entfernen gibt sie zur&uuml;ck). Best&auml;tigung geht nur mit E-Mail raus.</p></form>';
     }
     if (offen === 'abs') {
       var andere = S.data.termine.filter(function (x) { return x.kurs === t.kurs && x.datum !== t.datum && !x.vorbei && !x.abgesagt; });

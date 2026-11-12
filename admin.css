@@ -455,3 +455,24 @@ details.pf-d>.pf-in{padding:0 14px 14px}
 .ak-vp{position:relative;width:100%;border:1px solid var(--line);overflow:hidden;background:#15171C}
 .ak-vpm{max-width:392px}
 .ak-vf{display:block;border:0;background:#15171C}
+
+/* Kalender (Kurse > Termine) */
+.ak-cal{margin:0 0 18px}
+.ak-cal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.ak-cal-head b{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:.04em;text-transform:uppercase}
+.ak-cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.ak-cal-w{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:center;padding:4px 0}
+.ak-cal-d{min-height:62px;border:1px solid var(--line);background:transparent;padding:5px 4px;display:flex;flex-direction:column;gap:3px;align-items:stretch;text-align:left;font-family:var(--body);color:var(--bone);border-radius:0}
+.ak-cal-d.alt{opacity:.5}
+.ak-cal-d.heute .ak-cal-n{color:var(--blitz)}
+.ak-cal-n{font-size:12px;font-weight:700;color:var(--muted)}
+.ak-cal-d.has{background:var(--panel);cursor:pointer;border-color:rgba(239,185,46,.35)}
+.ak-cal-d.has:hover{border-color:var(--blitz)}
+.ak-cal-d.sel{border-color:var(--blitz);box-shadow:0 0 0 1px var(--blitz);background:rgba(239,185,46,.08)}
+.ak-cal-c{font-size:11px;line-height:1.2;background:rgba(239,185,46,.14);color:var(--bone);padding:2px 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-cal-c.voll{background:rgba(143,212,154,.2)}
+.ak-cal-c.aus{background:rgba(255,138,122,.18);color:#ffb3a8;white-space:normal}
+.ak-tag{scroll-margin-top:70px}
+.ak-tag-h{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blitz);margin:6px 0 10px}
+.ak-cal-c b{font-weight:700}.ak-cal-c i{font-style:normal;margin-left:5px}
+@media(max-width:560px){.ak-cal-d{min-height:58px;padding:4px 2px}.ak-cal-c{font-size:10px;padding:1px 2px}.ak-cal-c b,.ak-cal-c i{display:block;margin:0}}
