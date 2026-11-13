@@ -167,6 +167,11 @@
 
   function rechnungZeile(k, p) {
     var r = k.rechnung;
+    if (!r && k.zahlstatus) {
+      var offenZ = k.zahlstatus === 'offen';
+      return '<div class="kc-rech"><span>' + (offenZ ? '<span class="st offen">Nicht bezahlt</span> &middot; ' + (k.rechnung_nr ? 'Rechnung <b>' + esc(k.rechnung_nr) + '</b> gestellt' : 'Rechnung folgt noch') : '<span class="st ok">Bezahlt</span>' + (k.rechnung_nr ? ' &middot; Rechnung <b>' + esc(k.rechnung_nr) + '</b>' : '')) + '</span>' +
+        '<span class="ad-actions" style="margin:0"><button type="button" class="ad-mini" data-zahlstatus="' + esc(k.code) + '">' + (offenZ ? 'Rechnung eintragen / bezahlt' : 'Zahlung ansehen') + '</button></span></div>';
+    }
     if (!r) return '<div class="kc-rech"><span style="color:var(--muted)">Keine Rechnung zu dieser Karte gespeichert.</span></div>';
     var ueber = r.status !== 'paid' && r.faellig && r.faellig < heute();
     var txt = r.status === 'paid' ? '<span class="st ok">Bezahlt</span>' : r.methode === 'lastschrift' ? '<span class="st laeuft">Lastschrift l&auml;uft</span>' : ueber ? '<span class="st offen">&Uuml;berf&auml;llig seit ' + esc(fd(r.faellig)) + '</span>' : '<span class="st laeuft">Offen bis ' + esc(fd(r.faellig)) + '</span>';
@@ -321,6 +326,9 @@
     };
     Array.prototype.forEach.call(box.querySelectorAll('[data-eintragen]'), function (b) {
       b.onclick = function () { if (window.FDTermine) window.FDTermine.eintragen({ code: b.getAttribute('data-eintragen'), name: p.name, email: p.email, phone: p.phone }, nachAktion); };
+    });
+    Array.prototype.forEach.call(box.querySelectorAll('[data-zahlstatus]'), function (b) {
+      b.onclick = function () { K().zahlstatus(b.getAttribute('data-zahlstatus'), nachAktion); };
     });
     Array.prototype.forEach.call(box.querySelectorAll('[data-paid]'), function (b) {
       b.onclick = function () { b.disabled = true; A.api('rechnung/bezahlt', { body: { id: b.getAttribute('data-paid') } }).then(function () { A.note('Als bezahlt markiert.'); nachAktion(); }).catch(function (e) { b.disabled = false; fail(e); }); };
