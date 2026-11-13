@@ -476,3 +476,19 @@ details.pf-d>.pf-in{padding:0 14px 14px}
 .ak-tag-h{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blitz);margin:6px 0 10px}
 .ak-cal-c b{font-weight:700}.ak-cal-c i{font-style:normal;margin-left:5px}
 @media(max-width:560px){.ak-cal-d{min-height:58px;padding:4px 2px}.ak-cal-c{font-size:10px;padding:1px 2px}.ak-cal-c b,.ak-cal-c i{display:block;margin:0}}
+
+/* Karte „Rechnung folgt“ + mehrere Termine auf einmal (Stand 13.11.2026) */
+.ch .unbez{font-size:11px;font-weight:700;letter-spacing:.03em;color:#F2958B}
+.tm-sec{margin:18px 0 6px}
+.tm-lab{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.tm-rows{display:grid;gap:10px;margin-bottom:10px}
+.tm-row{display:grid;grid-template-columns:22px minmax(0,1fr) 124px 34px;grid-template-areas:"nr date start del" ". min ort ort";gap:8px;align-items:center;border:1px solid var(--line);padding:10px;background:var(--bg)}
+.tm-row .tm-nr{grid-area:nr;font-weight:700;color:var(--muted);text-align:center}
+.tm-row .r-date{grid-area:date}.tm-row .r-start{grid-area:start}.tm-row .r-min{grid-area:min}.tm-row .r-ort{grid-area:ort}.tm-row .tm-del{grid-area:del}
+.tm-row input,.tm-row select{width:100%;min-width:0;background:var(--bg-2,#1B1E25);border:1px solid var(--line);color:var(--bone);font-family:var(--body);font-size:15px;padding:9px 6px;border-radius:0}
+.tm-del{background:transparent;border:1px solid var(--line);color:var(--muted);font-size:20px;line-height:1;height:38px;cursor:pointer}
+.tm-del:hover{color:var(--bone);border-color:var(--bone)}
+.tm-sum{font-size:13px;color:var(--muted);margin:8px 0 0}
+.tm-sum.bad{color:#ff8f7e}
+.tm-pending{border-left:3px solid var(--line);padding:8px 12px;margin:0 0 14px;background:var(--panel)}
+.tm-pending .tm-check{margin:0 0 8px}
