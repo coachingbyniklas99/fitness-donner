@@ -99,7 +99,13 @@
     }).catch(function (e) { if (e && e.message !== 'abgemeldet') A.note(e.message || 'Das hat nicht geklappt.', true); });
   }
 
-  /* ---------- Von Hand eintragen ---------- */
+  /* ---------- Von Hand eintragen: ein Termin oder mehrere auf einmal – der Kunde bekommt EINE Mail ---------- */
+  var HINWEIS_STANDARD = 'Für deine Rechnung fehlen mir noch ein paar Angaben (z. B. Rechnungsanschrift sowie Name bzw. Firma). Bitte schick sie mir kurz nach – einfach auf diese Mail antworten.';
+  function plusTage(iso, n) {
+    var p = String(iso).split('-'), d = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]) + n);
+    return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+  }
+
   function eintragen(vor, fertig) {
     vor = vor || {};
     laden().then(function (d) {
@@ -108,48 +114,135 @@
       var kopt = '<option value="">Karte wählen …</option>' + karten.map(function (c) {
         return '<option value="' + esc(c.code) + '"' + (c.code === vor.code ? ' selected' : '') + '>' + esc((c.name || c.email || '–') + ' · ' + c.label + ' · ' + c.left + ' von ' + c.total + ' frei · ' + c.code) + '</option>';
       }).join('');
-      var o = oeffnen('Termin eintragen',
+      var rows = [{ date: '', start: '12:00', minutes: 60, ort: 'Solingen' }];
+      var hinweisAngefasst = false;
+      var o = oeffnen('Termine eintragen',
         '<form id="tmForm" class="tm-form">' +
         '<div class="ad-field"><label for="tmArt">Bezahlung</label><select id="tmArt">' +
-        '<option value="karte"' + (mitKarte ? ' selected' : '') + '>Mit Karte (eine Einheit wird abgezogen)</option>' +
+        '<option value="karte"' + (mitKarte ? ' selected' : '') + '>Mit Karte (pro Termin eine Einheit)</option>' +
         '<option value="bar"' + (mitKarte ? '' : ' selected') + '>Ohne Karte (bar oder privat bezahlt)</option></select></div>' +
         '<div class="ad-field" id="tmKarteF"><label for="tmKarte">Karte</label><select id="tmKarte">' + kopt + '</select></div>' +
         '<div class="ad-field"><label for="tmName">Name</label><input type="text" id="tmName" autocomplete="off" value="' + esc(vor.name || '') + '"></div>' +
         '<div class="ad-field"><label for="tmEmail">E-Mail</label><input type="email" id="tmEmail" autocomplete="off" value="' + esc(vor.email || '') + '"></div>' +
         '<div class="ad-field"><label for="tmPhone">Telefon (optional)</label><input type="tel" id="tmPhone" autocomplete="off" value="' + esc(vor.phone || '') + '"></div>' +
-        '<div class="ad-field"><label for="tmDate">Tag</label><input type="date" id="tmDate" min="' + heute() + '" required></div>' +
-        '<div class="ad-field"><label for="tmStart">Beginn</label><input type="time" id="tmStart" step="300" required></div>' +
-        '<div class="ad-field"><label for="tmMin">Dauer</label><select id="tmMin">' + dauerOptionen(60) + '</select></div>' +
-        '<div class="ad-field"><label for="tmOrt">Ort</label><select id="tmOrt">' + ortOptionen(d.orte, 'Solingen') + '</select></div>' +
-        '<label class="tm-check"><input type="checkbox" id="tmMail" checked> Kunden per Mail bestätigen (mit Kalenderdatei)</label>' +
+        '<div class="tm-sec"><div class="tm-lab">Termine <span id="tmZahl"></span></div><div class="tm-rows" id="tmRows"></div>' +
+        '<button type="button" class="ad-mini" id="tmAdd">+ Weiteren Termin</button><div class="tm-sum" id="tmSum"></div></div>' +
+        '<label class="tm-check"><input type="checkbox" id="tmMail" checked> <span>Kunden <b>eine</b> Mail mit allen Terminen schicken (mit Kalenderdateien)</span></label>' +
+        '<div id="tmMailBox">' +
+        '<div class="tm-pending" id="tmPend" hidden><label class="tm-check"><input type="checkbox" id="tmPendOn" checked> <span id="tmPendT"></span></label>' +
+        '<button type="button" class="ad-mini" id="tmPendNow">Nur diese Termine jetzt per Mail senden</button></div>' +
+        '<div class="ad-field"><label for="tmHint">Hinweis in der Mail <span class="ad-meta" style="margin:0">optional</span></label>' +
+        '<textarea id="tmHint" rows="3" placeholder="z. B. Rechnungsangaben bitte nachreichen"></textarea></div>' +
+        '</div>' +
         '<div class="tm-msg" id="tmMsg"></div>' +
         '<div class="tm-actions"><button type="submit" class="btn btn-blitz" id="tmGo">Eintragen</button>' +
         '<button type="button" class="ad-danger" id="tmForce" hidden>Trotzdem eintragen</button></div>' +
-        '<p class="ad-hint">Der Termin kommt in den Google-Kalender und ist online nicht mehr buchbar.</p>' +
+        '<p class="ad-hint">Die Termine kommen in den Google-Kalender und sind online nicht mehr buchbar. Ohne Haken bei &bdquo;Mail&ldquo; warten sie, bis du das n&auml;chste Mal eine Mail an den Kunden schickst &ndash; dann gehen alle zusammen raus.</p>' +
         '</form>');
       var art = o.querySelector('#tmArt'), kf = o.querySelector('#tmKarteF'), ks = o.querySelector('#tmKarte');
-      function artWechsel() { kf.hidden = art.value !== 'karte'; }
-      art.onchange = artWechsel; artWechsel();
+      var mailEl = o.querySelector('#tmMail'), hintEl = o.querySelector('#tmHint');
+
+      function karte() { return art.value === 'karte' ? karten.filter(function (x) { return x.code === ks.value; })[0] : null; }
+
+      function summe() {
+        var c = karte(), s = o.querySelector('#tmSum'), n = rows.length;
+        o.querySelector('#tmZahl').textContent = '(' + n + ')';
+        if (c) {
+          var bad = n > c.left;
+          s.className = 'tm-sum' + (bad ? ' bad' : '');
+          s.textContent = n + (n === 1 ? ' Einheit wird' : ' Einheiten werden') + ' abgezogen – auf der Karte sind ' + c.left + ' von ' + c.total + ' frei' + (bad ? ' (zu wenig!)' : '') + '.';
+        } else { s.className = 'tm-sum'; s.textContent = ''; }
+        o.querySelector('#tmGo').textContent = n === 1 ? 'Termin eintragen' : n + ' Termine eintragen';
+      }
+
+      function rowsRender() {
+        var box = o.querySelector('#tmRows');
+        box.innerHTML = rows.map(function (r, i) {
+          return '<div class="tm-row" data-i="' + i + '"><span class="tm-nr">' + (i + 1) + '</span>' +
+            '<input type="date" class="r-date" min="' + heute() + '" value="' + esc(r.date) + '" aria-label="Tag ' + (i + 1) + '">' +
+            '<input type="time" class="r-start" step="300" value="' + esc(r.start) + '" aria-label="Beginn ' + (i + 1) + '">' +
+            '<select class="r-min" aria-label="Dauer ' + (i + 1) + '">' + dauerOptionen(r.minutes) + '</select>' +
+            '<select class="r-ort" aria-label="Ort ' + (i + 1) + '">' + ortOptionen(d.orte, r.ort) + '</select>' +
+            (rows.length > 1 ? '<button type="button" class="tm-del" data-del="' + i + '" aria-label="Termin ' + (i + 1) + ' entfernen">&times;</button>' : '<span></span>') + '</div>';
+        }).join('');
+        Array.prototype.forEach.call(box.querySelectorAll('.tm-row'), function (el) {
+          var i = Number(el.getAttribute('data-i'));
+          el.querySelector('.r-date').oninput = function () { rows[i].date = this.value; };
+          el.querySelector('.r-start').oninput = function () { rows[i].start = this.value; };
+          el.querySelector('.r-min').onchange = function () { rows[i].minutes = Number(this.value); };
+          el.querySelector('.r-ort').onchange = function () { rows[i].ort = this.value; };
+          var del = el.querySelector('.tm-del');
+          if (del) del.onclick = function () { rows.splice(i, 1); rowsRender(); };
+        });
+        summe();
+      }
+
+      /* Karte/Zahlstatus bestimmt: wartende Mails, Hinweistext */
+      function kartenInfo() {
+        var c = karte(), pend = o.querySelector('#tmPend');
+        if (c && c.mail_offen > 0) {
+          pend.hidden = false;
+          o.querySelector('#tmPendT').textContent = c.mail_offen + (c.mail_offen === 1 ? ' bisher nicht gemailten Termin' : ' bisher nicht gemailte Termine') + ' dieser Karte in dieselbe Mail aufnehmen';
+        } else pend.hidden = true;
+        if (!hinweisAngefasst) hintEl.value = c && c.zahlstatus === 'offen' ? HINWEIS_STANDARD : '';
+        summe();
+      }
+      function artWechsel() { kf.hidden = art.value !== 'karte'; kartenInfo(); }
+      art.onchange = artWechsel;
       ks.onchange = function () {
-        var c = karten.filter(function (x) { return x.code === ks.value; })[0];
-        if (!c) return;
-        if (!o.querySelector('#tmName').value) o.querySelector('#tmName').value = c.name || '';
-        if (!o.querySelector('#tmEmail').value) o.querySelector('#tmEmail').value = c.email || '';
+        var c = karte();
+        if (c) {
+          if (!o.querySelector('#tmName').value) o.querySelector('#tmName').value = c.name || '';
+          if (!o.querySelector('#tmEmail').value) o.querySelector('#tmEmail').value = c.email || '';
+        }
+        kartenInfo();
       };
+      hintEl.oninput = function () { hinweisAngefasst = true; };
+      mailEl.onchange = function () { o.querySelector('#tmMailBox').hidden = !mailEl.checked; };
+      o.querySelector('#tmAdd').onclick = function () {
+        var l = rows[rows.length - 1];
+        rows.push({ date: l.date ? plusTage(l.date, 7) : '', start: l.start, minutes: l.minutes, ort: l.ort });
+        rowsRender();
+      };
+
+      function meldung(text, schlecht) { var m = o.querySelector('#tmMsg'); m.className = 'tm-msg' + (schlecht ? ' bad' : ''); m.textContent = text; }
+
+      o.querySelector('#tmPendNow').onclick = function () {
+        var b = this, mail = String(o.querySelector('#tmEmail').value || (karte() || {}).email || '').trim();
+        if (!mail) { meldung('Bitte eine E-Mail-Adresse angeben.', true); return; }
+        b.disabled = true;
+        A.api('termin/mail-senden', { body: { email: mail, hinweis: hintEl.value } }).then(function (r) {
+          info = null; schliessen(); A.note('Eine Mail mit ' + r.count + (r.count === 1 ? ' Termin' : ' Terminen') + ' ist raus.');
+          if (fertig) fertig(r);
+        }).catch(function (e) { b.disabled = false; if (e && e.message === 'abgemeldet') return; meldung((e && e.message) || 'Das hat nicht geklappt.', true); });
+      };
+
       function los(force) {
         var mk = art.value === 'karte';
-        if (mk && !ks.value) { var m = o.querySelector('#tmMsg'); m.className = 'tm-msg bad'; m.textContent = 'Bitte eine Karte wählen oder „Ohne Karte“ einstellen.'; return; }
-        absenden('termin/eintragen', {
+        if (mk && !ks.value) { meldung('Bitte eine Karte wählen oder „Ohne Karte“ einstellen.', true); return; }
+        for (var i = 0; i < rows.length; i++) {
+          if (!rows[i].date || !rows[i].start) { meldung('Bitte bei Termin ' + (i + 1) + ' Tag und Uhrzeit angeben.', true); return; }
+        }
+        var c = karte();
+        if (c && rows.length > c.left) { meldung('Auf der Karte ' + (c.left === 1 ? 'ist nur noch 1 Einheit' : 'sind nur noch ' + c.left + ' Einheiten') + ' frei.', true); return; }
+        var mail = mailEl.checked, pendEl = o.querySelector('#tmPend');
+        absenden('termin/eintragen-mehrere', {
           art: mk ? 'karte' : 'bar', code: mk ? ks.value : '', name: o.querySelector('#tmName').value, email: o.querySelector('#tmEmail').value,
-          phone: o.querySelector('#tmPhone').value, date: o.querySelector('#tmDate').value, start: o.querySelector('#tmStart').value,
-          minutes: Number(o.querySelector('#tmMin').value), ort: o.querySelector('#tmOrt').value, mail: o.querySelector('#tmMail').checked, force: force === true
+          phone: o.querySelector('#tmPhone').value,
+          termine: rows.map(function (r) { return { date: r.date, start: r.start, minutes: Number(r.minutes), ort: r.ort }; }),
+          mail: mail, hinweis: mail ? hintEl.value : '', mitOffenen: pendEl.hidden ? true : o.querySelector('#tmPendOn').checked, force: force === true
         }, force === true ? o.querySelector('#tmForce') : o.querySelector('#tmGo'), function (r) {
           info = null;   // Karten-Stand hat sich geändert
-          return 'Eingetragen: ' + fd(r.date) + ', ' + r.start + ' Uhr.' + (r.karte ? ' Auf der Karte sind noch ' + r.karte.left + ' von ' + r.karte.total + ' frei.' : '') + kalenderText(r) + (r.mail ? ' Der Kunde hat eine Bestätigung bekommen.' : '');
+          return (r.count === 1 ? 'Eingetragen: ' : r.count + ' Termine eingetragen: ') + r.termine.map(function (x) { return fd(x.date) + ' ' + x.start; }).join(', ') + '.' +
+            (r.karte ? ' Auf der Karte sind noch ' + r.karte.left + ' von ' + r.karte.total + ' frei.' : '') + kalenderText(r) +
+            (r.mail ? ' Der Kunde hat EINE Mail mit ' + (r.mail_anzahl > 1 ? 'allen ' + r.mail_anzahl + ' Terminen' : 'dem Termin') + ' bekommen.'
+              : mail ? ' Achtung: Die Mail ging nicht raus – sie steht aus (Termine unter „Termin eintragen“ später mailen).' : ' Keine Mail verschickt – die Termine warten auf die nächste Mail.');
         }, fertig);
       }
       o.querySelector('#tmForm').onsubmit = function (e) { e.preventDefault(); los(false); };
       o.querySelector('#tmForce').onclick = function () { los(true); };
+      rowsRender();
+      artWechsel();
     }).catch(function (e) { if (e && e.message !== 'abgemeldet') A.note(e.message || 'Das hat nicht geklappt.', true); });
   }
 
