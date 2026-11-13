@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-title" content="FD Verwaltung">
 <meta name="theme-color" content="#15171C">
 <link rel="stylesheet" href="style.css?v=23">
-<link rel="stylesheet" href="admin.css?v=19">
+<link rel="stylesheet" href="admin.css?v=20">
 </head>
 <body class="ad-body">
 
@@ -504,6 +504,9 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
       todo.push('<button type="button" class="mh-row" data-neuekarte="' + esc(b._k.email || b.email) + '|' + esc(b._k.name || b.name) + '"><span class="mh-ico">&#127915;</span><span class="mh-txt"><b>Letzte Einheit: ' + esc(b.name) + ' &middot; ' + esc(dshort(b.date)) + '</b><small>Die Karte ist danach aufgebraucht &ndash; neue Karte ausstellen?</small></span><span class="hd-chev">&rsaquo;</span></button>');
     });
     if (rechOffen) todo.push('<button type="button" class="mh-row" data-todo="rechnungen"><span class="mh-ico">&euro;</span><span class="mh-txt"><b>' + rechOffen + (rechOffen === 1 ? ' Rechnung' : ' Rechnungen') + ' offen</b><small>Noch nicht bezahlt &ndash; prüfen und als bezahlt markieren</small></span><span class="hd-chev">&rsaquo;</span></button>');
+    (window.FDKarte ? window.FDKarte.alle() : []).filter(function (c) { return c.kind === 'karte' && c.zahlstatus === 'offen' && c.status !== 'cancelled'; }).slice(0, 4).forEach(function (c) {
+      todo.push('<button type="button" class="mh-row" data-zahlstatus="' + esc(c.code) + '"><span class="mh-ico">&euro;</span><span class="mh-txt"><b>' + esc(c.name || c.email) + ': ' + esc(c.label) + ' nicht bezahlt</b><small>' + (c.rechnung ? 'Rechnung ' + esc(c.rechnung) + ' gestellt &ndash; Zahlung abwarten, dann abhaken' : 'Rechnung fehlt noch &ndash; schreiben und Nummer eintragen') + '</small></span><span class="hd-chev">&rsaquo;</span></button>');
+    });
     if (pend) todo.push('<button type="button" class="mh-row" data-todo="reserviert"><span class="mh-ico">&#9203;</span><span class="mh-txt"><b>' + pend + (pend === 1 ? ' Termin' : ' Termine') + ' in Zahlung</b><small>Gerade reserviert &ndash; werden nach sp&auml;testens 40 Minuten von selbst frei</small></span><span class="hd-chev">&rsaquo;</span></button>');
     el('heuteTodo').innerHTML = todo.length ? '<div class="mh-group">' + todo.join('') + '</div>'
       : '<div class="ad-empty">Alles erledigt. &#10003;</div>';
@@ -515,6 +518,9 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
 
     wireRows(el('heuteList')); wireRows(el('heuteNext'));
     Array.prototype.forEach.call(el('heuteTodo').querySelectorAll('[data-todo]'), function (r) { r.onclick = function () { go(r.getAttribute('data-todo')); }; });
+    Array.prototype.forEach.call(el('heuteTodo').querySelectorAll('[data-zahlstatus]'), function (r) {
+      r.onclick = function () { if (window.FDKarte) window.FDKarte.zahlstatus(r.getAttribute('data-zahlstatus'), function () { load(); }); };
+    });
     Array.prototype.forEach.call(el('heuteTodo').querySelectorAll('[data-neuekarte]'), function (r) {
       r.onclick = function () { var p = r.getAttribute('data-neuekarte').split('|'); window.FD_ADMIN.neueKarte({ email: p[0], name: p[1] }); };
     });
@@ -766,12 +772,16 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
             ? '<div class="ad-meta"><b>' + c.done + ' absolviert</b> &middot; ' + c.upcoming + ' kommend gebucht &middot; ' + c.left + ' frei'
               + (c.manual > 0 ? ' &middot; ' + c.manual + ' von Hand abgezogen' : '') + '</div>'
             : '')
+          + (c.kind === 'karte' && c.zahlstatus
+            ? '<div class="ad-meta"><span class="st ' + (c.zahlstatus === 'offen' ? 'offen' : 'ok') + '">' + (c.zahlstatus === 'offen' ? 'Nicht bezahlt' : 'Bezahlt') + '</span>'
+              + (c.rechnung ? ' &middot; Rechnung ' + esc(c.rechnung) : (c.zahlstatus === 'offen' ? ' &middot; Rechnung folgt' : '')) + '</div>' : '')
           + '<div class="ad-meta">' + esc(c.email || '') + (c.status !== 'active' ? ' &middot; ' + esc(c.status) : '') + '</div>'
           + '<div class="ad-actions">'
           + (c.kind === 'karte'
             ? '<button type="button" class="ad-mini" data-code="' + esc(c.code) + '" data-aktion="einheit_zurueck">+1 Einheit</button>'
               + '<button type="button" class="ad-mini" data-code="' + esc(c.code) + '" data-aktion="einheit_abziehen">−1 Einheit</button>'
             : '')
+          + (c.kind === 'karte' && c.zahlstatus ? '<button type="button" class="ad-mini" data-zahl="' + esc(c.code) + '">Zahlung</button>' : '')
           + (c.kind === 'karte' && c.status === 'active' && c.left > 0
             ? '<button type="button" class="ad-mini" data-eintragen="' + esc(c.code) + '">Termin eintragen</button>' : '')
           + '<button type="button" class="ad-mini" data-code="' + esc(c.code) + '" data-aktion="verlaengern">Verlängern</button>'
@@ -780,6 +790,9 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
           + '</div></div>';
       }).join('') : '<div class="ad-empty">Nichts gefunden.</div>';
 
+      Array.prototype.forEach.call(el('codes').querySelectorAll('[data-zahl]'), function (b) {
+        b.onclick = function () { if (window.FDKarte) window.FDKarte.zahlstatus(b.getAttribute('data-zahl'), function () { loadCodes(el('codeSearch').value); load(); }); };
+      });
       Array.prototype.forEach.call(el('codes').querySelectorAll('[data-eintragen]'), function (b) {
         b.onclick = function () {
           if (window.FDTermine) window.FDTermine.eintragen({ code: b.getAttribute('data-eintragen') }, function () { load(); loadCodes(el('codeSearch').value); });
@@ -894,10 +907,10 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
 </script>
 <script src="admin-kurse.js?v=17"></script>
 <script src="admin-wiedervorlage.js?v=3"></script>
-<script src="admin-termine.js?v=1"></script>
+<script src="admin-termine.js?v=2"></script>
 <script src="qr.js?v=1"></script>
-<script src="admin-karte.js?v=4"></script>
-<script src="admin-kunden.js?v=7"></script>
+<script src="admin-karte.js?v=5"></script>
+<script src="admin-kunden.js?v=8"></script>
 <script src="admin-push.js?v=3"></script>
 </body>
 </html>
