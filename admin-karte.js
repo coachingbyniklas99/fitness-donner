@@ -56,7 +56,7 @@
       rank[b.card_code] = (rank[b.card_code] || 0) + 1;
       var nr = (c.done || 0) + (c.manual > 0 ? c.manual : 0) + rank[b.card_code];
       var bookedAfter = Math.max(0, (c.upcoming || 0) - rank[b.card_code]);
-      b._k = { nr: nr, total: c.total, done: (c.done || 0) + (c.manual > 0 ? c.manual : 0), last: nr >= c.total, code: c.code, name: c.name, email: c.email, booked: bookedAfter, left: c.left };
+      b._k = { offen: c.zahlstatus === 'offen', nr: nr, total: c.total, done: (c.done || 0) + (c.manual > 0 ? c.manual : 0), last: nr >= c.total, code: c.code, name: c.name, email: c.email, booked: bookedAfter, left: c.left };
     });
     return list;
   }
@@ -66,6 +66,7 @@
       var k = b._k;
       return '<span class="ch ' + (k.last ? 'ch-letzte' : 'ch-karte') + '"><span class="ch-top"><b>Karte &middot; Nr. ' + k.nr + ' von ' + k.total + '</b>' +
         '<small>' + (k.done === 1 ? '1 absolviert' : k.done + ' absolviert') + (k.last ? ' &middot; letzte Einheit' : '') + '</small></span>' +
+        (k.offen ? '<span class="unbez">nicht bezahlt</span>' : '') +
         dotRow(k.total, k.done, true, k.booked) + '</span>';
     }
     if (b.card_code) return '<span class="ch ch-karte"><span class="ch-top"><b>Karte</b><small>' + esc(b.card_code) + '</small></span></span>';
@@ -106,14 +107,15 @@
     qr: { ic: '&#128241;', t: 'Vor Ort bezahlen (QR)', d: 'Der Kunde scannt den QR-Code und zahlt sofort per Apple Pay, Karte oder Lastschrift.' },
     lastschrift: { ic: '&#127974;', t: 'Lastschrift', d: 'Der Betrag wird in den nächsten Tagen eingezogen.' },
     ueberweisung: { ic: '&#128228;', t: 'Überweisung auf Rechnung', d: 'Der Kunde überweist bis zum Fälligkeitsdatum.' },
-    bar: { ic: '&#128182;', t: 'Schon bezahlt (bar / privat)', d: 'Rechnung wird als bezahlt ausgestellt, nichts weiter offen.' }
+    bar: { ic: '&#128182;', t: 'Schon bezahlt (bar / privat)', d: 'Rechnung wird als bezahlt ausgestellt, nichts weiter offen.' },
+    offen: { ic: '&#9203;', t: 'Rechnung folgt später', d: 'Keine Zahlung, keine Rechnung, keine Mail jetzt. Die Karte steht auf „nicht bezahlt“, bis du sie abhakst.' }
   };
-  var ZAHL_KURZ = { qr: 'Vor Ort (QR)', lastschrift: 'Lastschrift', ueberweisung: 'Überweisung', bar: 'Bar / bezahlt' };
+  var ZAHL_KURZ = { qr: 'Vor Ort (QR)', lastschrift: 'Lastschrift', ueberweisung: 'Überweisung', bar: 'Bar / bezahlt', offen: 'Rechnung folgt' };
 
   /* ---------- Neue Karte ausstellen ---------- */
   function ausstellen(v, fertig) {
     v = v || {};
-    var F = { name: v.name || '', email: v.email || '', card: '', zahlart: '', faellig: '', gueltig: '', preis: '', mail: true, zustimmung: false, besch: '', hinweis: '', zhd: '', opt: null };
+    var F = { name: v.name || '', email: v.email || '', card: '', zahlart: '', faellig: '', gueltig: '', preis: '', mail: true, zustimmung: false, besch: '', hinweis: '', zhd: '', notiz: '', opt: null };
     var o = fenster('Neue Karte ausstellen', '<div class="ad-empty">L&auml;dt &hellip;</div>');
     var busy = false;
 
@@ -136,6 +138,12 @@
     }
     function schritte() {
       var d = F.opt, k = d.karten[F.card] || {}, mandatFehlt = F.zahlart === 'lastschrift' && !d.mandat, sm = summe();
+      if (F.zahlart === 'offen') {
+        return ['Karte mit Code wird angelegt (' + esc(k.label || '') + ', gültig bis ' + esc(fd(F.gueltig)) + ', Wert ' + eur(sm) + ').',
+          'Status: <b>nicht bezahlt</b>. Es wird keine Rechnung erstellt und <b>keine Mail</b> verschickt.',
+          'Danach trägst du die Termine ein &ndash; alle auf einmal, der Kunde bekommt <b>eine</b> Mail mit allen Terminen und dem Hinweis auf die fehlenden Rechnungsangaben.',
+          'Sobald du die Rechnung geschrieben hast, trägst du die Nummer ein und markierst die Karte als bezahlt.'];
+      }
       var l = ['Karte mit Code wird angelegt (' + esc(k.label || '') + ', gültig bis ' + esc(fd(F.gueltig)) + ').',
         F.zahlart === 'bar' ? 'Rechnung über ' + eur(sm) + ' wird erstellt und gleich als bezahlt markiert.' : 'Rechnung über ' + eur(sm) + ' wird erstellt (wie deine bisherigen Rechnungen).'];
       if (F.zahlart === 'qr') {
@@ -152,12 +160,12 @@
       var ol = o.querySelector('.kt-steps ol'); if (ol && F.opt) ol.innerHTML = schritte().map(function (x) { return '<li>' + x + '</li>'; }).join('');
     }
     function zeigen() {
-      var d = F.opt, k = d.karten[F.card] || {}, mandatFehlt = F.zahlart === 'lastschrift' && !d.mandat;
+      var d = F.opt, k = d.karten[F.card] || {}, mandatFehlt = F.zahlart === 'lastschrift' && !d.mandat, off = F.zahlart === 'offen';
       var kartenHtml = Object.keys(d.karten).map(function (key) {
         var c = d.karten[key];
         return '<button type="button" class="kt-o' + (key === F.card ? ' on' : '') + '" data-card="' + esc(key) + '"><b>' + esc(c.label) + '</b><span class="pr">' + eur(c.unitCents * c.sessions) + '</span><span>' + c.sessions + ' Einheiten &middot; ' + eur(c.unitCents) + ' pro Einheit</span></button>';
       }).join('');
-      var zahlHtml = ['qr', 'lastschrift', 'ueberweisung', 'bar'].map(function (z) {
+      var zahlHtml = ['qr', 'lastschrift', 'ueberweisung', 'bar', 'offen'].map(function (z) {
         return '<button type="button" class="kt-o' + (z === F.zahlart ? ' on' : '') + '" data-zahl="' + z + '"><span class="ic">' + ZAHL[z].ic + '</span><div><b>' + ZAHL[z].t + '</b><span>' + ZAHL[z].d + '</span></div>' +
           (z === d.zahlart ? '<em>' + (d.zahlart_hinweis ? 'zuletzt' : 'Standard') + '</em>' : '') + '</button>';
       }).join('');
@@ -171,8 +179,12 @@
         '<div class="kt-sec"><span class="kt-lab">Wie bezahlt der Kunde?</span><div class="kt-pay">' + zahlHtml + '</div>' +
         (d.zahlart_hinweis ? '<div class="ad-meta" style="margin-top:8px">' + esc(d.zahlart_hinweis) + '</div>' : '') +
         (mandatFehlt ? '<div class="kt-warn">F&uuml;r diesen Kunden ist kein SEPA-Mandat gespeichert, deshalb kann ich nicht einfach abbuchen. Beim Klick schicke ich ihm stattdessen die Rechnung mit Zahlungslink (dort w&auml;hlt er Lastschrift oder &Uuml;berweisung). Tipp: Im Kundenprofil kannst du ein Mandat anfordern (Knopf &bdquo;Mandat anfordern&ldquo;). Neue Online-K&auml;ufe mit Lastschrift speichern es k&uuml;nftig automatisch.</div>' : '') + '</div>' +
-        (F.zahlart !== 'bar' && F.zahlart !== 'qr' ? '<div class="kt-sec" id="ktFaellig"' + (F.zahlart === 'lastschrift' && !mandatFehlt ? ' hidden' : '') + '><div class="ad-field" style="margin:0"><label for="ktFael">Zahlung f&auml;llig am</label><input type="date" id="ktFael" min="' + plusDays(0) + '" value="' + esc(F.faellig) + '"></div></div>' : '') +
-        '<details class="pf-d" style="margin-bottom:14px"><summary>Rechnung anpassen <span class="ad-meta" style="margin:0">optional</span></summary><div class="pf-in">' +
+        (F.zahlart !== 'bar' && F.zahlart !== 'qr' && F.zahlart !== 'offen' ? '<div class="kt-sec" id="ktFaellig"' + (F.zahlart === 'lastschrift' && !mandatFehlt ? ' hidden' : '') + '><div class="ad-field" style="margin:0"><label for="ktFael">Zahlung f&auml;llig am</label><input type="date" id="ktFael" min="' + plusDays(0) + '" value="' + esc(F.faellig) + '"></div></div>' : '') +
+        (off ? '<div class="kt-sec"><div class="kt-two">' +
+          '<div class="ad-field"><label for="ktPreis">Preis pro Einheit (&euro;) <span class="ad-meta" style="margin:0">optional</span></label><input type="number" id="ktPreis" min="0" step="0.01" placeholder="' + ((k.unitCents || 0) / 100) + '" value="' + esc(F.preis) + '"></div>' +
+          '<div class="ad-field"><label for="ktBis">Gültig bis</label><input type="date" id="ktBis" value="' + esc(F.gueltig) + '"></div></div>' +
+          '<div class="ad-field"><label for="ktNotiz">Notiz (nur für dich)</label><input type="text" id="ktNotiz" placeholder="z. B. Rechnung nach Absprache, Preis noch offen" value="' + esc(F.notiz) + '"></div>' +
+          '<p class="ad-hint" style="margin:0">Der Kunde bekommt jetzt keine Mail. Die Mail mit allen Terminen (und dem Hinweis auf die Rechnungsangaben) schickst du beim Eintragen der Termine.</p></div>' : '<details class="pf-d" style="margin-bottom:14px"><summary>Rechnung anpassen <span class="ad-meta" style="margin:0">optional</span></summary><div class="pf-in">' +
         '<div class="kt-two"><div class="ad-field"><label for="ktPreis">Preis pro Einheit (&euro;)</label><input type="number" id="ktPreis" min="0" step="0.01" placeholder="' + ((k.unitCents || 0) / 100) + '" value="' + esc(F.preis) + '"></div>' +
         '<div class="ad-field"><label for="ktBis">Gültig bis</label><input type="date" id="ktBis" value="' + esc(F.gueltig) + '"></div></div>' +
         '<div class="ad-field"><label for="ktZhd">z. Hd. (Name auf der Rechnung)</label><input type="text" id="ktZhd" value="' + esc(F.zhd) + '"></div>' +
@@ -181,10 +193,10 @@
         '<label class="ak-check"><input type="checkbox" id="ktZust"' + (F.zustimmung ? ' checked' : '') + '> Der Kunde hat ausdr&uuml;cklich zugestimmt, dass das Training schon vor Ablauf der 14 Tage beginnt (z.&nbsp;B. per WhatsApp)</label>' +
         '</div></details>' +
         '<label class="tm-check" style="margin-top:0"><input type="checkbox" id="ktMailOn"' + (F.mail ? ' checked' : '') + '> Kunden per Mail informieren</label>' +
-        '<details class="pf-d" id="ktPrevBox"><summary>So sieht die Mail aus</summary><div class="pf-in"><div id="ktPrev" class="ad-meta">Wird beim &Ouml;ffnen geladen &hellip;</div></div></details>' +
+        '<details class="pf-d" id="ktPrevBox"><summary>So sieht die Mail aus</summary><div class="pf-in"><div id="ktPrev" class="ad-meta">Wird beim &Ouml;ffnen geladen &hellip;</div></div></details>') +
         '<div class="kt-steps"><h4>Das passiert beim Klick</h4><ol>' + schritte().map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ol></div>' +
         '<div class="tm-msg" id="ktMsg"></div>' +
-        '<div class="kt-sticky"><button type="button" class="btn btn-blitz" id="ktGo"' + (!F.email || !F.name ? ' disabled' : '') + '>' + (F.zahlart === 'qr' ? 'Karte ausstellen &amp; QR-Code zeigen' : mandatFehlt ? 'Karte ausstellen &amp; Rechnung mit Zahlungslink senden' : F.mail ? 'Karte ausstellen &amp; Rechnung senden' : 'Karte ausstellen (ohne Mail)') + '</button></div>';
+        '<div class="kt-sticky"><button type="button" class="btn btn-blitz" id="ktGo"' + (!F.email || !F.name ? ' disabled' : '') + '>' + (off ? 'Karte anlegen (Rechnung folgt)' : F.zahlart === 'qr' ? 'Karte ausstellen &amp; QR-Code zeigen' : mandatFehlt ? 'Karte ausstellen &amp; Rechnung mit Zahlungslink senden' : F.mail ? 'Karte ausstellen &amp; Rechnung senden' : 'Karte ausstellen (ohne Mail)') + '</button></div>';
       o.querySelector('.tm-box').innerHTML = '<div class="tm-head"><h2>Neue Karte ausstellen</h2><button type="button" class="ad-undo" id="ktZu">Schlie&szlig;en</button></div>' + body;
       verdrahten();
     }
@@ -198,6 +210,7 @@
       if (q('ktBis') !== null) F.gueltig = q('ktBis');
       if (q('ktZhd') !== null) F.zhd = q('ktZhd');
       if (q('ktBesch') !== null) F.besch = q('ktBesch');
+      if (q('ktNotiz') !== null) F.notiz = q('ktNotiz');
       if (q('ktHinw') !== null) F.hinweis = q('ktHinw');
       var m = o.querySelector('#ktMailOn'); if (m) F.mail = m.checked;
       var z = o.querySelector('#ktZust'); if (z) F.zustimmung = z.checked;
@@ -206,6 +219,7 @@
       var b = { name: F.name, email: F.email, card: F.card, zahlart: F.zahlart, faellig: F.zahlart === 'bar' || F.zahlart === 'qr' ? '' : F.faellig, gueltig_bis: F.gueltig, mail: F.mail,
         zustimmung: F.zustimmung, zhd: F.zhd, beschreibung: F.besch, hinweis: F.hinweis };
       if (F.preis !== '' && !isNaN(Number(F.preis))) b.einheitspreis = Number(F.preis);
+      if (F.zahlart === 'offen') { b.mail = false; b.notiz = F.notiz; }
       if (extra) for (var k in extra) b[k] = extra[k];
       return b;
     }
@@ -214,7 +228,7 @@
       o.querySelector('#ktZu').onclick = zu;
       Array.prototype.forEach.call(o.querySelectorAll('[data-card]'), function (b) { b.onclick = function () { lesen(); F.card = b.getAttribute('data-card'); zeigen(); }; });
       Array.prototype.forEach.call(o.querySelectorAll('[data-zahl]'), function (b) { b.onclick = function () { lesen(); F.zahlart = b.getAttribute('data-zahl'); zeigen(); }; });
-      ['ktName', 'ktMail', 'ktPreis', 'ktBis', 'ktFael', 'ktZhd', 'ktBesch', 'ktHinw'].forEach(function (id) {
+      ['ktName', 'ktMail', 'ktPreis', 'ktBis', 'ktFael', 'ktZhd', 'ktBesch', 'ktHinw', 'ktNotiz'].forEach(function (id) {
         var e = o.querySelector('#' + id); if (e) e.oninput = function () { lesen(); schritteAktualisieren(); var go = o.querySelector('#ktGo'); if (go) go.disabled = !F.email || !F.name; };
       });
       Array.prototype.forEach.call(o.querySelectorAll('#ktMailOn,#ktZust'), function (e) { e.onchange = function () { lesen(); zeigen(); }; });
@@ -235,7 +249,7 @@
           }).catch(function () {});
         }, 250);
       });
-      var pb = o.querySelector('#ktPrevBox');
+      var pb = o.querySelector('#ktPrevBox') || {};
       pb.ontoggle = function () {
         if (!pb.open) return;
         lesen();
@@ -269,10 +283,10 @@
         '<div class="code">' + esc(r.code) + '</div><div class="ad-meta">' + esc(r.label || '') + ' &middot; ' + eur(r.cents || 0) + '</div></div>' +
         '<div class="kt-steps" style="margin-top:18px"><h4>Erledigt</h4><ol>' +
         '<li>Karte angelegt, g&uuml;ltig bis ' + esc(fd(r.gueltig_bis)) + '.</li>' +
-        '<li>Rechnung ' + esc(r.rechnung && r.rechnung.nummer || '') + ' erstellt' + (r.rechnung && r.rechnung.status === 'paid' ? ' (bezahlt)' : '') + '.</li>' +
+        (r.rechnung ? '<li>Rechnung ' + esc(r.rechnung.nummer || '') + ' erstellt' + (r.rechnung.status === 'paid' ? ' (bezahlt)' : '') + '.</li>' : '<li>Noch keine Rechnung &ndash; Status: <b>nicht bezahlt</b>.</li>') +
         (r.zahlung_text ? '<li>' + esc(r.zahlung_text) + '</li>' : '') +
-        '<li>' + (r.mail ? 'Mail an ' + esc(F.email) + ' ist raus.' : 'Keine Mail verschickt.') + '</li></ol></div>' +
-        '<div class="tm-actions" style="margin-top:6px"><button type="button" class="btn btn-blitz" id="ktTermin">Ersten Termin eintragen</button>' +
+        '<li>' + (r.mail ? 'Mail an ' + esc(F.email) + ' ist raus.' : r.zahlstatus === 'offen' ? 'Noch keine Mail an den Kunden &ndash; die geht mit den Terminen raus (eine Mail für alle).' : 'Keine Mail verschickt.') + '</li></ol></div>' +
+        '<div class="tm-actions" style="margin-top:6px"><button type="button" class="btn btn-blitz" id="ktTermin">' + (r.zahlstatus === 'offen' ? 'Termine eintragen' : 'Ersten Termin eintragen') + '</button>' +
         (r.rechnung && r.rechnung.url ? '<a class="ad-mini" target="_blank" rel="noopener" href="' + esc(r.rechnung.url) + '">Rechnung ansehen</a>' : '') +
         '<button type="button" class="ad-mini" id="ktFertig">Fertig</button></div>';
       o.querySelector('.tm-box').innerHTML = '<div class="tm-head"><h2>&nbsp;</h2><button type="button" class="ad-undo" id="ktZu">Schlie&szlig;en</button></div>' + inner;
@@ -369,6 +383,39 @@
     }
 
     optionen().then(zeigen).catch(function (e) { zu(); fail(e); });
+  }
+
+
+  /* ---------- Zahlstatus einer Karte (nicht bezahlt / bezahlt, Rechnungsnummer nachtragen) ---------- */
+  function zahlstatus(code, fertig) {
+    var c = S.byCode[code];
+    if (!c) { laden(true).then(function () { if (S.byCode[code]) zahlstatus(code, fertig); else A.note('Karte nicht gefunden.', true); }).catch(fail); return; }
+    var offen = c.zahlstatus !== 'bezahlt';
+    var o = fenster('Zahlung der Karte',
+      '<div class="ad-meta">' + esc(c.name || c.email || '') + ' &middot; ' + esc(c.label) + ' &middot; ' + esc(c.code) + '</div>' +
+      '<div class="kt-sec"><span class="st ' + (offen ? 'offen' : 'ok') + '" style="font-size:15px;font-weight:700">' + (offen ? 'Nicht bezahlt' : 'Bezahlt') + '</span>' +
+      (offen && !c.rechnung ? '<div class="ad-meta" style="margin-top:6px">Die Rechnung ist noch nicht geschrieben oder die Nummer noch nicht eingetragen.</div>' : '') + '</div>' +
+      '<div class="kt-two"><div class="ad-field"><label for="zsRe">Rechnungsnummer</label><input type="text" id="zsRe" value="' + esc(c.rechnung || '') + '" placeholder="z. B. 7SI1DKP3-0075" autocomplete="off"></div>' +
+      '<div class="ad-field"><label for="zsPreis">Preis pro Einheit (&euro;)</label><input type="number" id="zsPreis" min="0" step="0.01" value="' + ((c.unit_cents || 0) / 100) + '"></div></div>' +
+      '<p class="ad-hint" style="margin-top:0">Der Preis ist nur Information f&uuml;r dich (Wert der Karte). Die Rechnung selbst schreibst du wie bisher.</p>' +
+      '<div class="tm-msg" id="zsMsg"></div>' +
+      '<div class="tm-actions"><button type="button" class="ad-mini" id="zsSave">Nummer/Preis speichern</button>' +
+      (offen ? '<button type="button" class="btn btn-blitz" id="zsPaid">Als bezahlt markieren</button>' : '<button type="button" class="ad-mini" id="zsOpen">Zur&uuml;ck auf &bdquo;nicht bezahlt&ldquo;</button>') + '</div>');
+    function senden(status, knopf) {
+      var body = { code: code, rechnung: o.querySelector('#zsRe').value };
+      var preis = Number(o.querySelector('#zsPreis').value);
+      if (preis > 0 && Math.round(preis * 100) !== (c.unit_cents || 0)) body.einheitspreis = preis;
+      if (status) body.status = status;
+      var msg = o.querySelector('#zsMsg'); msg.className = 'tm-msg'; msg.textContent = '';
+      knopf.disabled = true;
+      A.api('karte/zahlstatus', { body: body }).then(function () {
+        zu(); A.note(status === 'bezahlt' ? 'Als bezahlt markiert.' : status === 'offen' ? 'Steht wieder auf „nicht bezahlt“.' : 'Gespeichert.');
+        laden(true).catch(function () {}); fertig && fertig(); document.dispatchEvent(new CustomEvent('fd:neu'));
+      }).catch(function (e) { knopf.disabled = false; if (e && e.message === 'abgemeldet') return; msg.className = 'tm-msg bad'; msg.textContent = (e && e.message) || 'Das hat nicht geklappt.'; });
+    }
+    o.querySelector('#zsSave').onclick = function () { senden('', this); };
+    var p1 = o.querySelector('#zsPaid'); if (p1) p1.onclick = function () { senden('bezahlt', this); };
+    var p2 = o.querySelector('#zsOpen'); if (p2) p2.onclick = function () { senden('offen', this); };
   }
 
   /* ---------- Zahlart ändern ---------- */
@@ -474,7 +521,7 @@
     info: function (code) { return S.byCode[code] || null; },
     karten: function (email) { return S.byEmail[String(email || '').toLowerCase()] || []; },
     alle: function () { return S.codes || []; },
-    ausstellen: ausstellen, zahlartWaehlen: zahlartWaehlen, mandatAnfordern: mandatAnfordern, zahlText: function (z) { return ZAHL_KURZ[z] || ''; },
+    ausstellen: ausstellen, zahlstatus: zahlstatus, zahlartWaehlen: zahlartWaehlen, mandatAnfordern: mandatAnfordern, zahlText: function (z) { return ZAHL_KURZ[z] || ''; },
     rechnungen: rechnungenRender, vorlage: vorlageRender
   };
 })();
