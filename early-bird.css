@@ -1,4 +1,4 @@
-/* Early-Bird-Seite (nur per Link aus dem WhatsApp-Kanal). Prefix eb- */
+/* Early-Bird-Seite (öffentlich, einmaliges Angebot). Prefix eb- */
 .eb-alle{font-size:13px;font-weight:600;letter-spacing:.06em;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:2px}
 .eb-alle:hover{color:var(--blitz)}
 nav .nav-inner{justify-content:space-between}
@@ -84,3 +84,5 @@ nav .nav-inner{justify-content:space-between}
   .eb-termine .d{font-size:26px}
   .eb-info{padding:48px 0 64px}
 }
+
+.eb-einmal{margin-top:18px;max-width:480px;padding:12px 14px;border-left:3px solid var(--blitz);background:rgba(239,185,46,.1);font-size:14.5px;line-height:1.5;color:var(--bone)}

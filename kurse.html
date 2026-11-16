@@ -42,6 +42,7 @@
 <link rel="stylesheet" href="style.css?v=38">
 <link rel="stylesheet" href="kursplan.css?v=5">
 <link rel="stylesheet" href="kurse-seite.css?v=1">
+<link rel="stylesheet" href="early-bird-teaser.css?v=1">
 </head>
 <body>
 <nav>
@@ -117,6 +118,26 @@
     <a class="btn btn-blitz btn-sm" href="https://whatsapp.com/channel/0029Vb9Sacj9xVJgW1Vm7O2Z" target="_blank" rel="noopener">Kanal beitreten</a>
   </div>
 </div>
+
+<section class="ebt-sec" id="earlybird" aria-labelledby="ebtH" hidden>
+  <div class="wrap">
+    <a class="ebt" href="early-bird.html">
+      <img class="ebt-bg" id="ebtBg" src="hyrox-skierg.webp" width="900" height="677" alt="" loading="lazy">
+      <div class="ebt-main">
+        <div class="eyebrow" id="ebtEye">Einmaliges Angebot</div>
+        <h2 id="ebtH">3 Termine.<br><em>2 bezahlen.</em></h2>
+        <p id="ebtTxt"></p>
+        <ul class="ebt-termine" id="ebtTermine"></ul>
+      </div>
+      <div class="ebt-side">
+        <div class="ebt-preis"><span class="ebt-alt" id="ebtAlt"></span><span class="ebt-neu" id="ebtNeu"></span></div>
+        <div class="ebt-frist" id="ebtFrist"></div>
+        <span class="btn btn-blitz">Early-Bird sichern &rarr;</span>
+        <small id="ebtNach"></small>
+      </div>
+    </a>
+  </div>
+</section>
 
 <section id="kursplan">
   <div class="wrap">
@@ -269,6 +290,7 @@
 (function(){var n=document.getElementById('navLinks'),b=document.querySelector('.menu-btn');
 if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a&&!a.classList.contains('sub-toggle')){n.classList.remove('open');b.textContent='☰';}});}})();
 </script>
+<script src="early-bird-teaser.js?v=1"></script>
 <script src="kursplan.js?v=8"></script>
 <script>
 /* Kursplan und Kurspreise kommen live aus dem Buchungssystem.

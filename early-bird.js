@@ -1,4 +1,4 @@
-/* Early-Bird-Seite: Angebot und freie Plätze live aus dem Buchungssystem, Buchung über den normalen Kurs-Checkout. */
+/* Early-Bird-Seite (öffentlich, einmaliges Angebot bis zum Stichtag): Angebot und freie Plätze live aus dem Buchungssystem, Buchung über den normalen Kurs-Checkout. */
 (function () {
   var API = window.FD_API_BASE || 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.dev';
   var P = 'niklas';
@@ -10,6 +10,7 @@
   var WTL = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
   function dd(iso) { return new Date(iso + 'T12:00:00Z'); }
   function lang(iso) { var d = dd(iso); return WTL[d.getUTCDay()] + ', ' + d.getUTCDate() + '.' + (d.getUTCMonth() + 1) + '.'; }
+  function kurz(iso) { var d = dd(iso); return d.getUTCDate() + '.' + (d.getUTCMonth() + 1) + '.'; }
   function store(fn) { try { return fn(window.sessionStorage); } catch (e) { return null; } }
   function rid() { var a = new Uint8Array(12); (window.crypto || window.msCrypto).getRandomValues(a); return Array.prototype.map.call(a, function (b) { return ('0' + b.toString(16)).slice(-2); }).join(''); }
   var HOLD = store(function (s) { var h = s.getItem('fd_eb_hold'); if (!h) { h = rid(); s.setItem('fd_eb_hold', h); } return h; }) || rid();
@@ -36,6 +37,12 @@
     $('ebFacts').innerHTML = '<li><b>' + eur(d.cents) + '</b> statt ' + eur(d.regulaer_cents) + '</li><li>Höchstens <b>' + k.kapazitaet + ' Plätze</b> pro Termin</li>' + (d.bis ? '<li>Angebot bis <b>' + esc(lang(d.bis)) + '</b></li>' : '');
     $('ebFacts').hidden = false;
 
+    var einmal = $('ebEinmal');
+    if (d.bis && d.offen) {
+      $('ebEye').textContent = 'Einmaliges Angebot · nur bis ' + kurz(d.bis);
+      einmal.textContent = 'Einmalig und nur bis ' + lang(d.bis) + ' Danach zahlst du für diese ' + n + ' Termine wieder ' + eur(d.regulaer_cents) + '.';
+      einmal.hidden = false;
+    }
     if (!d.offen) return aus('Early-Bird beendet', 'Das Angebot ist leider vorbei. Die einzelnen Termine und Karten findest du auf der Kursseite.');
     if (!d.buchbar) return aus(d.voll ? 'Ausgebucht' : 'Gerade nicht buchbar', d.voll ? 'Das Early-Bird-Paket ist leider ausgebucht. Auf der Kursseite siehst du, ob für einzelne Termine noch etwas frei ist.' : 'Das Paket lässt sich im Moment nicht buchen. Schau gern auf der Kursseite vorbei.');
 

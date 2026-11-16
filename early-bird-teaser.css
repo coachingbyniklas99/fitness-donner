@@ -1,0 +1,29 @@
+/* Early-Bird-Hinweise (Kurse-Seite: Karte ebt-, ). Einmaliges Angebot, bleibt versteckt wenn nicht aktiv. */
+/* Early-Bird-Karte (einmaliges Angebot, live; bleibt versteckt wenn nicht aktiv) */
+.ebt-sec{padding:36px 0 0}
+.ebt{position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px 44px;align-items:center;padding:32px 36px;background:var(--panel);border:1px solid rgba(239,185,46,.45);border-left:5px solid var(--blitz);overflow:hidden;color:inherit;text-decoration:none}
+.ebt::before{content:"";position:absolute;right:-90px;top:-90px;width:300px;height:300px;border-radius:50%;background:radial-gradient(closest-side,rgba(239,185,46,.18),transparent);pointer-events:none}
+.ebt-main,.ebt-side{position:relative}
+.ebt h2{font-size:clamp(36px,5vw,60px);line-height:.98;margin:14px 0 12px}
+.ebt h2 em{font-style:normal;color:var(--blitz)}
+.ebt-main p{color:#d6d8dc;font-size:16px;line-height:1.5;max-width:520px;margin:0}
+.ebt-main p b{color:var(--bone)}
+.ebt-termine{list-style:none;display:flex;flex-wrap:wrap;gap:8px 10px;margin:16px 0 0;padding:0}
+.ebt-termine li{border:1px solid var(--line);background:var(--panel-2);padding:7px 11px;font-size:13.5px;color:var(--muted)}
+.ebt-termine li b{color:var(--bone)}
+.ebt-termine li i{font-style:normal;font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#15171C;background:#8fd49a;padding:2px 6px;margin-left:4px}
+.ebt-side{display:flex;flex-direction:column;align-items:stretch;gap:12px;text-align:center;min-width:230px}
+.ebt-preis{display:flex;align-items:baseline;justify-content:center;gap:12px}
+.ebt-alt{font-size:20px;color:var(--muted);text-decoration:line-through;text-decoration-thickness:2px}
+.ebt-neu{font-family:var(--display);font-size:60px;line-height:1;color:var(--blitz)}
+.ebt-frist{align-self:center;font-size:12.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#15171C;background:var(--blitz);padding:5px 11px}
+.ebt-side small{font-size:12.5px;color:var(--muted);line-height:1.45}
+.ebt:hover .btn{filter:brightness(1.08)}
+@media(max-width:760px){
+  .ebt{grid-template-columns:1fr;padding:26px 20px;gap:22px}
+  .ebt-side{min-width:0}
+}
+.ebt-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:28% 30%;z-index:-2;filter:saturate(.9)}
+.ebt::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(28,31,38,.97) 0%,rgba(28,31,38,.9) 38%,rgba(28,31,38,.6) 70%,rgba(28,31,38,.82) 100%)}
+.ebt::before{z-index:-1}
+
