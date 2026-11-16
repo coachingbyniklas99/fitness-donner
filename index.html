@@ -430,6 +430,21 @@
   .js-st .st-card .oh-media img{opacity:1;animation:none!important}
   .js-st .st-wipe,.js-st .st-go{display:none!important}
 }
+/* Studio-Karte: mehrere Fotos zum Weiterwischen, erstes Bild kommt mit dem "Startschuss" */
+.st-track{position:absolute;inset:0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.st-track::-webkit-scrollbar{display:none}
+.st-card .oh-media .st-track img{position:static;flex:0 0 100%;width:100%;height:100%;object-fit:cover;scroll-snap-align:start}
+.st-card:hover .oh-media .st-track img{transform:none}
+.st-ctl{position:absolute;z-index:5;right:16px;bottom:16px;display:flex;align-items:center;gap:8px;padding:6px;background:rgba(21,23,28,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(236,233,226,.18)}
+.st-b{display:flex;align-items:center;justify-content:center;width:40px;height:40px;color:var(--bone);cursor:pointer;transition:.2s}
+.st-b:hover,.st-b:focus-visible{background:var(--blitz);color:#15171C;outline:none}
+.st-b svg{width:18px;height:18px}
+.st-n{min-width:48px;text-align:center;font-size:13px;font-weight:600;letter-spacing:.08em;color:var(--bone)}
+.js-st .st-card .st-ctl{opacity:0;transition:opacity .6s ease 1.7s}
+.js-st .st-card.in .st-ctl{opacity:1}
+.js-st .st-card.in .st-track img:not(:first-child){animation:none}
+@media(max-width:900px){.st-ctl{right:10px;bottom:10px}.st-b{width:36px;height:36px}}
+@media(prefers-reduced-motion:reduce){.js-st .st-card .st-ctl{opacity:1;transition:none}}
 /* Untere Leiste erst ab "Personal Training" einblenden, bei der Schluss-Box wieder ausblenden */
 @media(max-width:900px){
   .mbar{transition:transform .45s cubic-bezier(.2,.7,.2,1),opacity .3s ease}
@@ -556,9 +571,23 @@
 
     <a class="ort-haupt st-card" href="studio.html">
       <div class="oh-media">
+        <div class="st-track" id="stTrack" tabindex="0" aria-label="Bilder vom Forged Studio">
         <img src="newforge-sprint.webp" alt="Sprintbahn mit Kunstrasen im Forged Studio, Solingen-Ohligs" width="1600" height="1000">
+        <img src="newforge-studio.webp" alt="Trainingsfläche mit Hantelbereich im Forged Studio, Solingen-Ohligs" loading="lazy">
+        <img src="studio-halle.webp" alt="Laufbänder, Kraftgeräte und freie Fläche im Forged Studio in Solingen-Ohligs" loading="lazy">
+        <img src="studio-racks.webp" alt="Racks mit Kabelzug, Kettlebells und Langhantel im Forged Studio" loading="lazy">
+        <img src="newforge-rack.webp" alt="Racks und Spiegelwand im Forged Studio" loading="lazy">
+        <img src="newforge-kursraum.webp" alt="Separater Kursraum mit Spiegelwand im Forged Studio" loading="lazy">
+        <img src="studio-boxsack.webp" alt="Boxsack, Sprossenwand und Gymnastikbälle im Trainingsraum des Forged Studios" loading="lazy">
+        <img src="newforge-power.webp" alt="Rudergeräte vor der Wandmalerei im Forged Studio" loading="lazy">
+        </div>
         <span class="st-wipe" aria-hidden="true"></span>
         <span class="st-go" aria-hidden="true">Forged Studio</span>
+        <div class="st-ctl" aria-hidden="false">
+          <span class="st-b" id="stPrev" role="button" tabindex="0" aria-label="Vorheriges Bild"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></span>
+          <span class="st-n" id="stCount" aria-live="polite">1 / 8</span>
+          <span class="st-b" id="stNext" role="button" tabindex="0" aria-label="Nächstes Bild"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span>
+        </div>
       </div>
       <div class="oh-body">
         <span class="oh-tag rv" style="--d:.15s">Forged Studio &middot; Solingen-Ohligs</span>
@@ -993,6 +1022,20 @@ if(n&&b){n.addEventListener('click',function(e){var a=e.target.closest('a');if(a
   fq.parentNode.parentNode.parentNode.classList.add('fq-on');
   var items=[].slice.call(fq.querySelectorAll('.fq-i'));
   items.forEach(function(it){var b=it.querySelector('.fq-q');b.addEventListener('click',function(){var was=it.classList.contains('on');items.forEach(function(o){o.classList.remove('on');o.querySelector('.fq-q').setAttribute('aria-expanded','false');});if(!was){it.classList.add('on');b.setAttribute('aria-expanded','true');}});});
+})();
+</script>
+<script>
+/* Studio-Karte: Fotos weiterwischen / mit Pfeilen blättern (Klick auf die Pfeile öffnet die Studio-Seite nicht) */
+(function(){
+  var t=document.getElementById('stTrack'); if(!t) return;
+  var cnt=document.getElementById('stCount'), n=t.querySelectorAll('img').length;
+  function go(d,e){ if(e){e.preventDefault();e.stopPropagation();} t.scrollBy({left:d*t.clientWidth,behavior:'smooth'}); }
+  function key(d){return function(e){ if(e.key==='Enter'||e.key===' ') go(d,e); };}
+  var p=document.getElementById('stPrev'), x=document.getElementById('stNext');
+  p.addEventListener('click',function(e){go(-1,e);}); x.addEventListener('click',function(e){go(1,e);});
+  p.addEventListener('keydown',key(-1)); x.addEventListener('keydown',key(1));
+  t.addEventListener('keydown',function(e){ if(e.key==='ArrowRight') go(1,e); if(e.key==='ArrowLeft') go(-1,e); });
+  t.addEventListener('scroll',function(){ var k=Math.round(t.scrollLeft/t.clientWidth)+1; cnt.textContent=Math.min(Math.max(k,1),n)+' / '+n; },{passive:true});
 })();
 </script>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "d721903bce9e4bb1b2e31002e9c3d559"}'></script><!-- End Cloudflare Web Analytics -->
