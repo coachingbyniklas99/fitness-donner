@@ -5141,7 +5141,7 @@ async function kursEarlybirdInfo(url, env) {
 const KURS_PRAEMIEN = {
   'nf-cowork': {
     titel: 'New Forge Coworking',
-    label: 'Prämie New Forge Coworking (kostenlos)',
+    label: 'Gratis-Training New Forge Coworking',
     kurs: 'kq9fx3n8',
     termine: ['2026-12-02', '2026-12-09', '2026-12-16'],
     bis: '2026-12-16',
@@ -5169,7 +5169,7 @@ async function kursPraemieInfo(url, env) {
   const p = kursProviderAus(url.searchParams.get('p'));
   if (!p) return kursFehler('Unbekannte Anbieterin.', 404);
   const pr = kursPraemieAus(url.searchParams.get('c'));
-  if (!pr) return kursFehler('Dieser Prämien-Link ist nicht gültig.', 404);
+  if (!pr) return kursFehler('Dieser Link ist nicht gültig.', 404);
   const kurs = await kursFind(env, p.id, pr.kurs);
   if (!kurs || !kurs.aktiv) return json({ offen: false, titel: pr.titel });
   const now = Date.now();
@@ -5198,9 +5198,9 @@ async function kursPraemieBuchen(request, env) {
   const p = kursProviderAus(body.p);
   if (!p) return kursFehler('Unbekannte Anbieterin.', 404);
   const pr = kursPraemieAus(body.c);
-  if (!pr) return kursFehler('Dieser Prämien-Link ist nicht gültig.', 404);
+  if (!pr) return kursFehler('Dieser Link ist nicht gültig.', 404);
   const now = Date.now();
-  if (pr.bis && kursHeute(now) > pr.bis) return kursFehler('Diese Prämie ist leider abgelaufen.', 410);
+  if (pr.bis && kursHeute(now) > pr.bis) return kursFehler('Dieses Angebot ist leider abgelaufen.', 410);
   const datum = String(body.datum || '');
   if (pr.termine.indexOf(datum) === -1) return kursFehler('Bitte wähle einen der angebotenen Termine.');
   const name = clean(body.name, 80);
@@ -5218,12 +5218,12 @@ async function kursPraemieBuchen(request, env) {
     id: randomToken(16), token: randomToken(24), provider: p.id, art: 'manuell', label: pr.label,
     kurs: kurs.id, kurs_titel: kurs.titel, termine: [datum], preis_cents: 0, gutschein: null, offen_cents: 0,
     status: 'bestaetigt', kunde: { name, email, phone: clean(body.phone, 40) }, created: jetzt, bezahlt_at: jetzt,
-    gueltig_bis: datum, widerruf_ausgeschlossen: true, notiz: 'Prämie ' + pr.titel, erstattungen: [], praemie: pr.code,
+    gueltig_bis: datum, widerruf_ausgeschlossen: true, notiz: 'Gratis-Training ' + pr.titel, erstattungen: [], praemie: pr.code,
   };
   const key = K.praemie(p.id, pr.code, email);
   let fehler = '';
   await kursMitSperre(env, p.id, 'praemie-' + pr.code, async () => {
-    if (await env.VOUCHERS.get(key)) { fehler = 'Mit dieser E-Mail-Adresse wurde die Prämie schon eingelöst.'; return; }
+    if (await env.VOUCHERS.get(key)) { fehler = 'Mit dieser E-Mail-Adresse wurde das Gratis-Training schon eingelöst.'; return; }
     await kursMitSperre(env, p.id, kurs.id, async () => {
       const doc = await kursGetTermin(env, p.id, kurs.id, datum);
       const st = kursTerminStatus(t, doc, kurs, eff, s.buchungsschluss_min, now);
@@ -5242,7 +5242,7 @@ async function kursPraemieBuchen(request, env) {
   await kursPutBestellung(env, p.id, o);
   await kursKundeMerken(env, p.id, o.kunde, o.id);
   try { await kursMailBestaetigung(env, p, kurs, o); } catch (err) { console.error('Prämie: Bestätigung', err); }
-  try { await kursMailInhaber(env, p, kurs, o, 'Prämie eingelöst'); } catch (err) { console.error('Prämie: Inhaber-Mail', err); }
+  try { await kursMailInhaber(env, p, kurs, o, 'Gratis-Training gebucht'); } catch (err) { console.error('Prämie: Inhaber-Mail', err); }
   return json({ ok: true, datum, start: t.start, ende: t.ende, kurs: kurs.titel, link: kursLink(p, o) });
 }
 

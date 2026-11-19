@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#15171C">
+<title>1 Training geschenkt | Fitness Donner</title>
+<meta name="description" content="Für Mitglieder des New Forge Coworking: ein kostenloses Training bei Pulse &amp; Power im Forged Studio.">
+<link rel="stylesheet" href="style.css?v=38">
+<link rel="stylesheet" href="early-bird.css?v=3">
+<link rel="stylesheet" href="praemie.css?v=1">
+</head>
+<body>
+<nav>
+  <div class="wrap nav-inner">
+    <a href="index.html" aria-label="Fitness Donner - Startseite"><svg width="140" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
+  <text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text>
+  <polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"/>
+</svg></a>
+    <a class="eb-alle" href="kurse.html">Alle Kurse ansehen &rarr;</a>
+  </div>
+</nav>
+
+<main>
+<header class="eb-hero">
+  <img class="eb-bg" id="prBg" src="newforge-kursraum.webp" width="1600" height="1000" alt="" fetchpriority="high">
+  <div class="wrap eb-in">
+    <div class="eb-text">
+      <div class="eyebrow" id="prEye">Exklusiv für New Forge Coworking</div>
+      <h1>1 Training.<br><em>Geschenkt.</em></h1>
+      <p class="hero-sub" id="prSub">Ein kostenloses Training im Forged Studio.</p>
+      <ul class="eb-facts" id="prFacts" hidden></ul>
+    </div>
+
+    <div class="eb-card" id="prCard" aria-live="polite">
+      <div class="eb-lade" id="prLade">Die Termine werden geladen &hellip;</div>
+
+      <div id="prAus" hidden>
+        <div class="eb-aus-t" id="prAusT"></div>
+        <p id="prAusP"></p>
+        <a class="btn btn-blitz" href="kurse.html">Alle Kurse ansehen</a>
+      </div>
+
+      <div id="prOk" hidden>
+        <div class="pr-ok-t">Du bist dabei!</div>
+        <p id="prOkP"></p>
+        <a class="btn btn-blitz" id="prOkLink" href="#">Meine Kursbuchung</a>
+        <p class="eb-klein">Die Best&auml;tigung mit Kalenderdatei ist unterwegs in dein Postfach. Schau notfalls im Spam-Ordner nach.</p>
+      </div>
+
+      <div id="prAn" hidden>
+        <div class="eb-kopf">
+          <div class="eb-preis">
+            <span class="eb-alt" id="prAlt"></span>
+            <span class="eb-neu">0 &euro;</span>
+          </div>
+          <div class="eb-spar">Gratis</div>
+        </div>
+        <div class="eb-kurs">
+          <b id="prTitel"></b>
+          <span id="prMeta"></span>
+        </div>
+        <p class="pr-wahl">W&auml;hl deinen Termin:</p>
+        <div class="pr-termine" id="prTermine" role="radiogroup" aria-label="Termin"></div>
+        <form id="prForm" novalidate>
+          <div class="eb-row">
+            <div class="eb-field"><label for="prName">Name <span>*</span></label><input type="text" id="prName" autocomplete="name" required></div>
+            <div class="eb-field"><label for="prMail">E-Mail <span>*</span></label><input type="email" id="prMail" autocomplete="email" required></div>
+          </div>
+          <div class="eb-field"><label for="prTel">Telefon <em>(optional)</em></label><input type="tel" id="prTel" autocomplete="tel"><small>Falls ein Termin kurzfristig ausf&auml;llt.</small></div>
+          <input type="text" id="prWeb" name="website" tabindex="-1" autocomplete="off" class="pr-hp" aria-hidden="true">
+          <div class="eb-err" id="prErr" hidden></div>
+          <button type="submit" class="btn btn-blitz eb-btn" id="prBtn">Kostenlos anmelden</button>
+          <p class="eb-klein">Ohne Bezahlung, ohne Abo. Ein kostenloses Training pro Person. Es gelten die <a href="buchungsbedingungen.html" target="_blank" rel="noopener">Buchungsbedingungen</a> und der <a href="datenschutz.html" target="_blank" rel="noopener">Datenschutz</a>.</p>
+        </form>
+        <div class="pr-wa">Lieber per WhatsApp? <a id="prWa" href="https://wa.me/491776311404" target="_blank" rel="noopener">Schick mir Name, E-Mail und Wunschtermin</a> an 0177&nbsp;6311404.</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="eb-info">
+  <div class="wrap">
+    <div class="eb-steps">
+      <div class="eb-step"><span>1</span><h3>Termin w&auml;hlen</h3><p>Such dir einen der Termine aus und trag Name und E-Mail ein. Dein Platz ist sofort reserviert.</p></div>
+      <div class="eb-step"><span>2</span><h3>Mail mit Kalenderdatei</h3><p>Du bekommst gleich eine Best&auml;tigung mit dem Termin zum Antippen in deinen Kalender.</p></div>
+      <div class="eb-step"><span>3</span><h3>Losgehen</h3><p>Komm in bequemer Kleidung, mit Wasser und Handtuch. Einsteiger sind genauso willkommen wie Ge&uuml;bte.</p></div>
+    </div>
+    <div class="eb-gut">
+      <h2>Gut zu wissen</h2>
+      <ul>
+        <li><b>Ein Training geschenkt.</b> Normalerweise kostet ein Training <span class="pr-preis-txt">18 &euro;</span>. F&uuml;r dich ist es kostenlos, einmal pro Person.</li>
+        <li><b>Du kannst doch nicht?</b> &Uuml;ber &bdquo;Meine Kursbuchung&ldquo; in der Best&auml;tigungsmail gibst du deinen Platz frei, damit jemand anderes nachr&uuml;cken kann.</li>
+        <li><b>Kleine Gruppe.</b> H&ouml;chstens 12 Pl&auml;tze pro Termin. Ist ein Termin voll, steht es hier.</li>
+        <li><b>Lust auf mehr?</b> Alle weiteren Termine, Einzeltickets und Karten findest du auf der <a href="kurse.html">Kursseite</a>.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</main>
+<footer>
+  <div class="wrap foot">
+    <svg width="120" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  <text x="150" y="30" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="16" letter-spacing="10" fill="#ECE9E2">FITNESS</text>
+  <text x="150" y="84" text-anchor="middle" font-family="Anton" font-size="58" letter-spacing="2" fill="#ECE9E2">DONNER</text>
+  <polyline points="60,99 150,99 168,93 186,105 204,95 240,99" fill="none" stroke="#EFB92E" stroke-width="6"/>
+</svg>
+    <div class="legal">
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
+      <a href="buchungsbedingungen.html">Buchungsbedingungen</a>
+      <a href="gutschein-bedingungen.html">Gutscheinbedingungen</a>
+      <a href="karriere.html">Trainer:in gesucht</a>
+      <a href="widerruf.html" class="legal-widerruf" style="color:var(--blitz);font-weight:600">Vertrag widerrufen</a>
+    </div>
+    <div>&copy; 2026 Fitness Donner &middot; Solingen, Haan, K&ouml;ln &amp; Neuss</div>
+  </div>
+</footer>
+<script>window.FD_PRAEMIE_CODE = 'nf-cowork';</script>
+<script src="praemie.js?v=2"></script>
+</body>
+</html>
