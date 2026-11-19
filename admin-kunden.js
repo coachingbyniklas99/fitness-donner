@@ -71,15 +71,16 @@
     if (f === 'karte') return !!c;
     if (f === 'fast') return !!c && ((c.upcoming || 0) + Math.max(0, c.total - (c.done || 0) - (c.manual > 0 ? c.manual : 0) - (c.upcoming || 0))) <= 1;
     if (f === 'offen') return (k.offen || 0) > 0;
-    if (f === 'ohne') return !c && !k.kommend;
+    if (f === 'aktiv') return !!k.kommend;
+    if (f === 'inaktiv') return !k.kommend;
     return true;
   }
 
   function renderListe() {
     var d = S.liste || { kunden: [], total: 0 };
-    var l = zeilen(d), cnt = { alle: l.length, karte: 0, fast: 0, offen: 0, ohne: 0 };
-    l.forEach(function (k) { var f = S.filter; ['karte', 'fast', 'offen', 'ohne'].forEach(function (x) { S.filter = x; if (passt(k)) cnt[x]++; }); S.filter = f; });
-    var FILT = [['alle', 'Alle'], ['karte', 'Mit Karte'], ['fast', 'Karte fast leer'], ['offen', 'Rechnung offen'], ['ohne', 'Ohne Termin']];
+    var l = zeilen(d), cnt = { alle: l.length, aktiv: 0, inaktiv: 0, karte: 0, fast: 0, offen: 0 };
+    l.forEach(function (k) { var f = S.filter; ['aktiv', 'inaktiv', 'karte', 'fast', 'offen'].forEach(function (x) { S.filter = x; if (passt(k)) cnt[x]++; }); S.filter = f; });
+    var FILT = [['alle', 'Alle'], ['aktiv', 'Aktiv'], ['inaktiv', 'Inaktiv'], ['karte', 'Mit Karte'], ['fast', 'Karte fast leer'], ['offen', 'Rechnung offen']];
     var sicht = l.filter(passt).sort(function (a, b) {
       if (!!a.kommend !== !!b.kommend) return a.kommend ? -1 : 1;
       if (a.kommend && b.kommend && a.kommend !== b.kommend) return a.kommend < b.kommend ? -1 : 1;
@@ -94,7 +95,7 @@
     } else {
       html += '<div class="ad-list">' + sicht.map(function (k) {
         var c = k._c;
-        var info = k.kommend ? 'Nächster Termin: <b style="color:var(--bone)">' + esc(tagName(k.kommend)) + '</b>' : 'Kein Termin geplant';
+        var info = k.kommend ? '<b style="color:#7FD28A">Aktiv</b> &middot; Nächster Termin: <b style="color:var(--bone)">' + esc(tagName(k.kommend)) + '</b>' + (k.kurs_kommend && k.kurs_kommend === k.kommend ? ' (Kurs)' : '') : '<b style="color:#9AA0AB">Inaktiv</b> &middot; Kein Termin geplant';
         return '<button type="button" class="kd-item" data-email="' + esc(k.email) + '"><span class="kd-av">' + initial(k.name || k.email) + '</span>' +
           '<span class="kd-who"><b>' + esc(k.name || k.email) + '</b><span>' + info + '</span>' +
           (c ? kartenZeile(c) : (k.termine ? '<span class="ch ch-einzel"><span class="ch-top"><b>Einzelstunden</b><small>' + n(k.termine, 'Termin', 'Termine') + '</small></span></span>' : '')) +
@@ -270,13 +271,25 @@
         '<iframe class="kd-frame" id="kdFrame" sandbox="" title="Mail"></iframe></div>';
     }
 
+    /* Einzelstunden ohne Karte, die auf eine Karte mit freien Einheiten laufen könnten */
+    var anK = null;
+    (function () {
+      var kt = karten.filter(function (k) { return k.status === 'active' && ((k.frei || 0) + (k.manuell || 0)) > 0; })[0];
+      if (!kt) return;
+      var offen = p.termine.filter(function (t) { return t.status === 'confirmed' && !t.card_code && !t.voucher_code && /Hand|bar|privat/i.test(t.paid || '') && !/probe/i.test(t.label || ''); })
+        .sort(function (a, b) { return (a.date + a.start).localeCompare(b.date + b.start); });
+      offen = offen.slice(0, (kt.frei || 0) + Math.min(kt.manuell || 0, offen.length));
+      if (offen.length) anK = { karte: kt, termine: offen };
+    })();
+    var anKHtml = anK ? '<div class="kc-nudge"><span>' + n(anK.termine.length, 'Einzelstunde läuft', 'Einzelstunden laufen') + ' noch ohne Karte (' + esc(anK.termine.map(function (t) { return wd(t.date); }).join(', ')) + '). Auf die Karte ' + esc(anK.karte.code) + ' hängen? Es geht keine Mail raus.</span><button type="button" class="ad-mini" id="kdAnKarte">An Karte hängen</button></div>' : '';
+
     var tel = String(p.phone || '').replace(/[^+\d]/g, '');
     var wa = tel ? 'https://wa.me/' + tel.replace(/^\+/, '').replace(/^00/, '').replace(/^0/, '49') : '';
     var zahl = p.zahlart ? K().zahlText(p.zahlart) : '';
 
     box.innerHTML =
       '<button type="button" class="ad-refresh" id="kdZurueck">&lsaquo; Alle Kunden</button>' +
-      '<div class="pf-head"><div class="pf-top"><span class="kd-av">' + initial(p.name || p.email) + '</span><div><div class="pf-name">' + esc(p.name || p.email) + '</div><div class="pf-sub">' + esc(p.email) + '</div></div></div>' +
+      '<div class="pf-head"><div class="pf-top"><span class="kd-av">' + initial(p.name || p.email) + '</span><div><div class="pf-name">' + esc(p.name || p.email) + '</div><div class="pf-sub">' + esc(p.email) + ' &middot; <b style="color:' + (p.aktiv ? '#7FD28A' : '#9AA0AB') + '">' + (p.aktiv ? 'Aktiv' : 'Inaktiv') + '</b></div></div></div>' +
       '<div class="pf-contact"><a class="pf-c" ' + (tel ? 'href="tel:' + esc(tel) + '"' : 'aria-disabled="true"') + '><b>&#9742;</b>Anrufen</a>' +
       '<a class="pf-c" ' + (wa ? 'href="' + esc(wa) + '" target="_blank" rel="noopener"' : 'aria-disabled="true"') + '><b>&#128172;</b>WhatsApp</a>' +
       '<a class="pf-c" href="mailto:' + esc(p.email) + '"><b>&#9993;</b>E-Mail</a></div>' +
@@ -287,6 +300,7 @@
       '<div class="pf-h">Karte' + (aktiv.length > 1 ? 'n' : '') + '</div>' +
       (aktiv.length ? aktiv.map(function (k) { return karteHtml(k, p); }).join('') : '<div class="ad-empty">Keine aktive Karte. Mit „Neue Karte ausstellen“ legst du in einem Schritt Karte, Rechnung und Mail an.</div>') +
       (frueher.length ? '<details class="pf-d"><summary>Frühere Karten <span class="kd-count">' + frueher.length + '</span></summary><div class="pf-in">' + frueher.map(function (k) { return karteHtml(k, p); }).join('') + '</div></details>' : '') +
+      anKHtml +
       (gutscheine.length ? '<div class="pf-h">Gutscheine <span class="kd-count">' + gutscheine.length + '</span></div>' + gutHtml : '') +
 
       '<div class="pf-h">Kommende Termine <span class="kd-count">' + kommend.length + '</span></div>' +
@@ -319,6 +333,14 @@
     Array.prototype.forEach.call(box.querySelectorAll('[data-neuekarte]'), function (b) { b.onclick = neueKarte; });
     var md = document.getElementById('kdMandat'); if (md) md.onclick = function () { K().mandatAnfordern(p, nachAktion); };
     document.getElementById('kdZahl').onclick = function () { K().zahlartWaehlen(p, nachAktion); };
+    var akb = document.getElementById('kdAnKarte');
+    if (akb && anK) akb.onclick = function () {
+      if (!akb.getAttribute('data-sicher')) { akb.setAttribute('data-sicher', '1'); akb.textContent = 'Wirklich an die Karte hängen?'; return; }
+      akb.disabled = true;
+      A.api('termin/an-karte', { body: { code: anK.karte.code, ids: anK.termine.map(function (t) { return t.id; }), manuell_verrechnen: anK.karte.manuell || 0 } })
+        .then(function (r) { A.note('Erledigt: ' + n(r.angehaengt, 'Termin hängt', 'Termine hängen') + ' jetzt an der Karte. Keine Mail an den Kunden.'); nachAktion(); })
+        .catch(function (e) { akb.disabled = false; fail(e); });
+    };
     document.getElementById('kdNeuTermin').onclick = function () {
       if (!window.FDTermine) return;
       var kt = karten.filter(function (k) { return k.status === 'active' && k.frei > 0; })[0];
