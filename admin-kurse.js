@@ -318,6 +318,30 @@
         var lb = f.querySelector('.ak-lbl-mail'); if (lb) lb.textContent = f.elements.email.required ? 'E-Mail (Pflicht)' : 'E-Mail (optional)';
       };
       f.elements.art.onchange = artW; artW();
+      /* Kunde aus der Kundenliste wählen statt alles neu zu tippen */
+      var ks = f.elements.kdsuche, kr = f.querySelector('.ak-kdres'), kt = null;
+      if (ks && kr) {
+        ks.oninput = function () {
+          clearTimeout(kt);
+          var q = ks.value.trim();
+          if (q.length < 2) { kr.innerHTML = ''; return; }
+          kt = setTimeout(function () {
+            A.api('kunden/liste?q=' + encodeURIComponent(q)).then(function (d) {
+              var l = (d.kunden || []).slice(0, 6);
+              kr.innerHTML = l.map(function (k, i) {
+                return '<button type="button" class="ad-mini" style="margin:6px 6px 0 0" data-i="' + i + '">' + esc(k.name || k.email) + (k.aktiv ? '' : ' · inaktiv') + '</button>';
+              }).join('') || '<span class="ad-meta">Niemand gefunden – unten eintragen, der Kunde wird automatisch angelegt.</span>';
+              Array.prototype.forEach.call(kr.querySelectorAll('button'), function (b) {
+                b.onclick = function () {
+                  var k = l[Number(b.getAttribute('data-i'))];
+                  f.elements.name.value = k.name || ''; f.elements.email.value = k.email || ''; f.elements.phone.value = k.phone || '';
+                  ks.value = ''; kr.innerHTML = '<span class="ad-meta">Übernommen: ' + esc(k.name || k.email) + '</span>';
+                };
+              });
+            }).catch(function () {});
+          }, 250);
+        };
+      }
       f.onsubmit = function (e) {
         e.preventDefault();
         var x = f.getAttribute('data-plusform').split('|');
@@ -441,6 +465,7 @@
       html += '<form class="ad-issue ak-form" data-plusform="' + esc(key) + '"><div class="ak-grid">'
         + '<div class="ad-field"><label>Art</label><select name="art"><option value="tageskarte_bar">Tageskarte, bar bezahlt</option><option value="tageskarte_gratis">Tageskarte, kostenlos</option><option value="karte">Mit gekaufter Karte (5er/10er)</option><option value="manuell">Sonstiges (manuell)</option></select></div>'
         + '<div class="ad-field ak-k-karte" hidden><label>Karte</label><select name="karte">' + kartenOptionen(t.datum) + '</select></div>'
+        + '<div class="ad-field ak-k-person" style="grid-column:1/-1"><label>Kunde suchen (optional)</label><input name="kdsuche" placeholder="Name oder E-Mail tippen – Name, E-Mail und Telefon werden übernommen" autocomplete="off"><div class="ak-kdres"></div></div>'
         + '<div class="ad-field ak-k-person"><label>Name</label><input name="name" required></div>'
         + '<div class="ad-field ak-k-person"><label class="ak-lbl-mail">E-Mail (Pflicht)</label><input name="email" type="email"></div>'
         + '<div class="ad-field ak-k-person"><label>Telefon (optional)</label><input name="phone"></div>'
