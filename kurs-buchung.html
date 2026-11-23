@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="termin.css?v=9">
 
 <link rel="stylesheet" href="kurs.css?v=3">
+<script src="consent.js?v=1" defer></script>
 </head>
 <body>
 <nav>
@@ -163,6 +164,7 @@ var API_BASE = window.FD_API_BASE || 'https://fitnessdonner-gutscheine.coaching-
         setTimeout(laden, 2000); return;
       }
       if (r.s !== 200 || r.d.status !== 'confirmed') { fail(r.d.error || 'Diese Buchung habe ich nicht gefunden.'); return; }
+      if (Q.get('session_id') && window.fdConversion) window.fdConversion('kurs', { cents: r.d.offen_cents }, r.d.o);
       if (Q.get('session_id')) history.replaceState(null, '', 'kurs-buchung.html?p=' + encodeURIComponent(P) + '&o=' + r.d.o + '&t=' + r.d.t);
       if (r.d.flex) zeigenKarte(r.d); else zeigen(r.d);
     }).catch(function () { fail('Keine Verbindung. Bitte lade die Seite neu.'); });

@@ -26,6 +26,7 @@
 .voucher.xm-nik .v-msg,.voucher.xm-xmas .v-msg{border-left-color:#F5D061}
 }
 </style>
+<script src="consent.js?v=1" defer></script>
 </head>
 <body>
 <nav class="no-print">
@@ -161,6 +162,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
   function show(v) {
     loading.hidden = true;
     document.getElementById('vValue').textContent = v.amount_formatted;
+    if (sessionId && window.fdConversion) window.fdConversion('gutschein', v.amount_formatted, v.code);
     if (v.design === 'nik' || v.design === 'xmas') {
       var vc = document.querySelector('#voucherBox .voucher');
       vc.classList.add(v.design === 'nik' ? 'xm-nik' : 'xm-xmas');

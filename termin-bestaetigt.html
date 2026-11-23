@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="gutschein.css?v=2">
 <link rel="stylesheet" href="termin.css?v=9">
 <link rel="stylesheet" href="kanal-kachel.css?v=1">
+<script src="consent.js?v=1" defer></script>
 </head>
 <body>
 <nav>
@@ -168,6 +169,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     document.getElementById('cWhere').textContent = b.place + ', ' + b.city;
     document.getElementById('cName').textContent = b.name;
     document.getElementById('cPaid').textContent = b.paid_formatted;
+    if (sessionId && window.fdConversion) window.fdConversion('termin', b.paid_formatted, b.id || sessionId);
     if (b.voucher_code) {
       document.getElementById('cVoucher').textContent = b.voucher_code + ' \u00b7 ' + b.voucher_formatted;
       document.getElementById('cVoucherRow').hidden = false;
