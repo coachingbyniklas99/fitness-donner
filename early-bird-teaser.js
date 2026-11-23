@@ -25,13 +25,25 @@
     var bisLang = bis ? WTL[bis.getUTCDay()] + ', ' + bisKurz : '';
     if (band) {
       // Startseite: gelbe Leiste ganz oben zeigt solange das Angebot läuft den Early-Bird statt des Kanal-Hinweises
-      var a = band.querySelector('a');
-      var ico = a.querySelector('.wa-ico'); if (ico) ico.style.display = 'none';
-      a.href = 'early-bird.html'; a.removeAttribute('target'); a.removeAttribute('rel');
-      a.querySelector('b').textContent = bisKurz ? 'Nur bis ' + bisKurz : 'Einmalig';
-      a.querySelector('.nb-long').innerHTML = 'Early-Bird: 3 Termine, 2 bezahlen \u2013 ' + eur(d.cents) + ' statt ' + eur(d.regulaer_cents) + ', danach wieder normale Preise';
-      a.querySelector('.nb-short').innerHTML = 'Early-Bird: 3 Termine, 2 bezahlen \u2013 ' + eur(d.cents);
-      a.querySelector('.newsbar-go').innerHTML = 'Ansehen &rarr;';
+      var msg = {
+        href: 'early-bird.html', ext: false,
+        tag: bisKurz ? 'Nur bis ' + bisKurz : 'Einmalig',
+        long: 'Early-Bird: 3 Termine, 2 bezahlen \u2013 ' + eur(d.cents) + ' statt ' + eur(d.regulaer_cents) + ', danach wieder normale Preise',
+        short: 'Early-Bird: 3 Termine, 2 bezahlen \u2013 ' + eur(d.cents),
+        go: 'Ansehen &rarr;'
+      };
+      if (window.FD_barAdd) {
+        // Weihnachtszeit: xmas.js wechselt zwischen Gutschein-Hinweis und Early-Bird ab
+        window.FD_barAdd(msg);
+      } else {
+        var a = band.querySelector('a');
+        var ico = a.querySelector('.wa-ico'); if (ico) ico.style.display = 'none';
+        a.href = msg.href; a.removeAttribute('target'); a.removeAttribute('rel');
+        a.querySelector('b').textContent = msg.tag;
+        a.querySelector('.nb-long').innerHTML = msg.long;
+        a.querySelector('.nb-short').innerHTML = msg.short;
+        a.querySelector('.newsbar-go').innerHTML = msg.go;
+      }
     }
     if (!sec) return;
     if (k.bild) $('ebtBg').src = k.bild;
