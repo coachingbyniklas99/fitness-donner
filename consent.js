@@ -64,15 +64,14 @@
 
   /* ---- Banner ---- */
   var CSS = ''
-    + '#fdcb{position:fixed;left:16px;right:16px;bottom:16px;z-index:9999;max-width:560px;margin:0 auto;background:#1C1F26;color:#ECE9E2;'
-    + 'border:1px solid rgba(236,233,226,.14);border-top:3px solid #EFB92E;box-shadow:0 18px 50px rgba(0,0,0,.55);padding:20px 22px 18px;'
-    + "font-family:'Archivo',Helvetica,Arial,sans-serif;font-size:15px;line-height:1.55}"
-    + '#fdcb h2{font-family:"Anton",Impact,sans-serif;font-weight:400;font-size:22px;letter-spacing:.02em;margin:0 0 8px;text-transform:uppercase}'
-    + '#fdcb p{margin:0 0 14px;color:#C9CBD0}#fdcb a{color:#ECE9E2;text-decoration:underline}'
-    + '#fdcb .fdcb-b{display:flex;gap:10px}#fdcb button{flex:1;min-height:46px;cursor:pointer;font:inherit;font-weight:700;font-size:15px;'
-    + 'background:#ECE9E2;color:#15171C;border:2px solid #ECE9E2;padding:10px 14px}'
+    + '#fdcb{position:fixed;left:16px;right:16px;bottom:16px;z-index:9999;max-width:760px;margin:0 auto;background:#1C1F26;color:#ECE9E2;'
+    + 'border:1px solid rgba(236,233,226,.14);border-left:3px solid #EFB92E;box-shadow:0 14px 40px rgba(0,0,0,.5);padding:14px 16px;'
+    + "display:flex;align-items:center;gap:16px;font-family:'Archivo',Helvetica,Arial,sans-serif;font-size:14px;line-height:1.45}"
+    + '#fdcb p{margin:0;flex:1;color:#C9CBD0}#fdcb a{color:#ECE9E2;text-decoration:underline}'
+    + '#fdcb .fdcb-b{display:flex;gap:8px;flex:none}#fdcb button{min-height:40px;min-width:118px;cursor:pointer;font:inherit;font-weight:700;'
+    + 'background:#ECE9E2;color:#15171C;border:2px solid #ECE9E2;padding:8px 14px}'
     + '#fdcb button:hover{background:#EFB92E;border-color:#EFB92E}#fdcb button:focus-visible{outline:3px solid #EFB92E;outline-offset:2px}'
-    + '@media(max-width:480px){#fdcb{left:10px;right:10px;bottom:10px;padding:18px 16px 16px}#fdcb h2{font-size:20px}}';
+    + '@media(max-width:600px){#fdcb{left:10px;right:10px;bottom:10px;flex-direction:column;align-items:stretch;gap:12px}#fdcb button{flex:1;min-width:0}}';
 
   function banner() {
     if (!GADS_ID || document.getElementById('fdcb')) return;
@@ -80,11 +79,8 @@
       var st = document.createElement('style'); st.id = 'fdcb-css'; st.textContent = CSS; document.head.appendChild(st);
     }
     var d = document.createElement('div');
-    d.id = 'fdcb'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-live', 'polite'); d.setAttribute('aria-labelledby', 'fdcb-t');
-    d.innerHTML = '<h2 id="fdcb-t">Kurz zu Cookies</h2>'
-      + '<p>Darf ich Cookies von Google Ads setzen? Damit sehe ich, ob meine Werbung bei Google wirkt. '
-      + 'Ohne deine Zustimmung wird nichts gespeichert und nichts übertragen. Ändern kannst du das jederzeit unter „Cookie-Einstellungen“ unten auf der Seite. '
-      + 'Mehr in der <a href="datenschutz.html#cookies">Datenschutzerklärung</a>.</p>'
+    d.id = 'fdcb'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-live', 'polite'); d.setAttribute('aria-label', 'Cookie-Hinweis');
+    d.innerHTML = '<p>Ich nutze Cookies von Google Ads, um zu sehen, ob meine Werbung wirkt. <a href="datenschutz.html#cookies">Mehr erfahren</a></p>'
       + '<div class="fdcb-b"><button type="button" data-w="nein">Ablehnen</button><button type="button" data-w="ja">Akzeptieren</button></div>';
     d.addEventListener('click', function (e) {
       var b = e.target.closest('button[data-w]'); if (!b) return;
