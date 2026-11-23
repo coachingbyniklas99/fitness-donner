@@ -11,7 +11,7 @@
     gutschein: '16BfCKzd9L0dEPX284A_',             // Gutschein gekauft
     termin: '16BfCKzd9L0dEPX284A_',                // Probetraining / Einzeltermin gebucht und bezahlt
     karte: '16BfCKzd9L0dEPX284A_',                 // PT-Karte gekauft
-    kurs: ''                   // Kurs gebucht
+    kurs: '16BfCKzd9L0dEPX284A_'                    // Kurs gebucht
   };
   var KEY = 'fd_consent', MAX_AGE_DAYS = 365;
 
