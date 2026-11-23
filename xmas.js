@@ -8,11 +8,19 @@
   try { heute = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()); }
   catch (e) { return; }
   if (heute > BIS) return;
-  window.FD_XMAS = true;
-  document.documentElement.classList.add('fdx');
-
+  /* Die Gutscheinseiten haben ihr eigenes Festtagsdesign (gutschein-xmas.js) */
   var seite = (location.pathname.split('/').pop() || 'index.html');
   var istGutschein = /^gutschein/.test(seite);
+  if (istGutschein) return;
+  window.FD_XMAS = true;
+  document.documentElement.classList.add('fdx');
+  /* Farbe wie auf der Gutscheinseite: rot bis Nikolaus (6.12. 18 Uhr), danach gruen */
+  try {
+    var jetzt = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Berlin' }));
+    var mo = jetzt.getMonth(), da = jetzt.getDate(), hh = jetzt.getHours();
+    var rot = (mo === 10) || (mo === 11 && (da < 6 || (da === 6 && hh < 18)));
+    if (!rot) document.documentElement.classList.add('fdx-gr');
+  } catch (e) {}
   var msgs = [{
     href: 'gutschein-weihnachten.html', tag: 'Weihnachten',
     long: 'Weihnachtsgeschenk gesucht? Gutschein für Personal Training &amp; Kurse – digital, sofort im Postfach',
@@ -50,7 +58,6 @@
   };
 
   function init() {
-    if (istGutschein) return;
     band = document.getElementById('earlybirdBar') || document.querySelector('.newsbar');
     if (!band && seite === 'kurse.html') {
       var n = document.querySelector('nav');
