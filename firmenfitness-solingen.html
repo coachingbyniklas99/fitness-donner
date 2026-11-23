@@ -144,7 +144,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="style.css?v=39">
+<link rel="stylesheet" href="style.css?v=40">
 <link rel="stylesheet" href="b2b.css?v=1">
 <script src="consent.js?v=2" defer></script>
 </head>
@@ -161,13 +161,15 @@
       <div class="has-sub">
         <a href="#" class="sub-toggle" onclick="event.preventDefault();this.parentElement.classList.toggle('sub-open')">Personal Training</a>
         <div class="sub">
-          <div class="sub-group">Vor Ort</div>
-          <a href="index.html">Solingen<span class="loc">Forged Studio Ohligs</span></a>
-          <a href="personal-training-haan.html">Haan<span class="loc">1:1-Training nahe Ohligs</span></a>
-          <a href="draussen.html">Drau&szlig;en in Solingen<span class="loc">Korkenziehertrasse, M&uuml;ngsten, Ittertal</span></a>
-          <a href="personal-training-koeln.html">K&ouml;ln<span class="loc">Iron&amp;Soul Zollstock</span></a>
-          <a href="personal-training-neuss.html">Neuss<span class="loc">Iron&amp;Soul R&ouml;merstra&szlig;e</span></a>
-          <div class="sub-group">Ortsunabh&auml;ngig</div>
+          <a href="index.html">Solingen</a>
+          <a href="personal-training-haan.html">Haan</a>
+          <div class="sub-more">
+            <button type="button" class="sub-more-btn" aria-expanded="false" onclick="var w=this.parentElement,o=w.classList.toggle('more-open');this.setAttribute('aria-expanded',o)">Weitere Standorte anzeigen</button>
+            <div class="sub-more-list">
+              <a href="personal-training-koeln.html">K&ouml;ln<span class="loc">Iron&amp;Soul Zollstock</span></a>
+              <a href="personal-training-neuss.html">Neuss<span class="loc">Iron&amp;Soul R&ouml;merstra&szlig;e</span></a>
+            </div>
+          </div>
           <a href="online.html">Online-Coaching<span class="loc">von &uuml;berall</span></a>
         </div>
       </div>

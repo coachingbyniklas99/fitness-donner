@@ -728,3 +728,16 @@ section.sct p{text-shadow:0 1px 14px rgba(8,9,12,.65)}
 @media(min-width:901px) and (max-width:1240px){.nav-links{gap:20px}}
 @media(min-width:1060px) and (max-width:1240px){.nav-links>a,.nav-links>.has-sub>a,.nav-cta{white-space:nowrap}}
 @media(min-width:901px) and (max-width:1059px){.nav-inner{gap:10px}.nav-links{gap:12px;font-size:12.5px}.nav-links>a,.nav-links>.has-sub>a,.nav-cta{white-space:nowrap}.nav-cta{padding:12px 13px;font-size:11px;letter-spacing:.08em}.nav-logo img,.logo img{height:34px;width:auto}}
+
+/* Menue: nur Solingen + Haan sichtbar, Koeln/Neuss hinter "Weitere Standorte anzeigen" */
+.sub .sub-more-btn{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;background:none;border:0;
+  color:var(--muted);font-family:var(--body);font-size:13px;font-weight:600;text-align:left;padding:10px 20px;cursor:pointer}
+.sub .sub-more-btn::after{content:"+";font-size:17px;line-height:1;color:var(--blitz)}
+.sub .sub-more-btn:hover{color:var(--bone)}
+.sub .more-open>.sub-more-btn::after{content:"\2212"}
+.sub .sub-more-list{display:none}
+.sub .more-open>.sub-more-list{display:block}
+@media(max-width:900px){
+  .nav-links .sub .sub-more-btn{font-size:15px;padding:12px 0;border-bottom:1px solid var(--line);color:var(--blitz)}
+  .nav-links .sub .sub-more-list a{padding-left:14px}
+}
