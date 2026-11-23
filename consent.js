@@ -6,11 +6,11 @@
   'use strict';
 
   /* ---- Konfiguration: Google-Ads-Tag und Conversion-Labels ---- */
-  var GADS_ID = '';            // z. B. 'AW-123456789' – solange leer, ist alles aus und es erscheint kein Banner
-  var LABELS = {               // Conversion-Labels aus Google Ads (Teil nach dem Schrägstrich)
-    gutschein: '',             // Gutschein gekauft
-    termin: '',                // Probetraining / Einzeltermin gebucht und bezahlt
-    karte: '',                 // PT-Karte gekauft
+  var GADS_ID = 'AW-16913333109';            // z. B. 'AW-123456789' – solange leer, ist alles aus und es erscheint kein Banner
+  var LABELS = {               // Conversion-Label „Kauf Website (Gutschein, Termin, Karte, Kurs)“ – für alle Kaufarten dasselbe
+    gutschein: '16BfCKzd9L0dEPX284A_',             // Gutschein gekauft
+    termin: '16BfCKzd9L0dEPX284A_',                // Probetraining / Einzeltermin gebucht und bezahlt
+    karte: '16BfCKzd9L0dEPX284A_',                 // PT-Karte gekauft
     kurs: ''                   // Kurs gebucht
   };
   var KEY = 'fd_consent', MAX_AGE_DAYS = 365;
