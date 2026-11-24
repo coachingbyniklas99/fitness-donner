@@ -8,7 +8,7 @@
   var box = document.getElementById('kundenApp');
   if (!box) return;
 
-  var S = { draft: {}, einw: {}, bilder: {}, busy: false, timer: null };
+  var S = { draft: {}, einw: {}, bilder: {}, ans: {}, offen: {}, busy: false, timer: null };
 
   var css = document.createElement('style');
   css.textContent =
@@ -38,7 +38,16 @@
     '.ib-two{display:grid;grid-template-columns:1fr 1fr;gap:12px}' +
     '@media(max-width:560px){.ib-two{grid-template-columns:1fr}.ib-ph{grid-template-columns:1fr}.ib-row .ib-ki{margin-left:0;width:100%}}' +
     '.ib-src a{color:inherit;text-decoration:underline;word-break:break-word}' +
-    '.ib-fine{font-size:13px;color:var(--muted,#9AA0AB);line-height:1.45;margin:10px 0 0}';
+    '.ib-fine{font-size:13px;color:var(--muted,#9AA0AB);line-height:1.45;margin:10px 0 0}' +
+    '.ib-q{margin:0 0 12px}' +
+    '.ib-q p{margin:0 0 6px}' +
+    '.ib-q textarea{min-height:64px;padding:9px 12px;font-size:15px}' +
+    '.ib-prev{margin:0 0 10px;padding:8px 12px;border-left:3px solid rgba(127,210,138,.5);background:rgba(255,255,255,.03);border-radius:0 8px 8px 0}' +
+    '.ib-prev b{display:block;font-weight:600;margin-bottom:2px}' +
+    '.ib-act{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0 0}' +
+    '.ib-act .btn{padding:9px 14px;font-size:14px}' +
+    '.ib-more{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:2px}' +
+    '.ib-more .ib-hint{font-size:14px;color:rgba(255,196,87,.95)}';
   document.head.appendChild(css);
 
   function esc(x) { return A.esc(x); }
@@ -105,7 +114,7 @@
       '</div>' +
       '<div class="ad-meta" id="ibStatus">' + statusText(d, c) + '</div>' +
       (bilder.length ? '<p class="ib-fine">Screenshots werden nur für die Auswertung gesendet und nicht gespeichert. Auf Screenshots stehen oft Namen &ndash; schneide sie vorher zu.</p>' : '') +
-      '<div id="ibErg">' + (hatErg ? ergebnis(d) : '') + '</div>' +
+      '<div id="ibErg">' + (hatErg ? ergebnis(d, c) : '') + '</div>' +
       (d.notiz || hatErg ? '<div class="ib-row" style="margin-top:14px">' +
         (hatErg ? '<button type="button" class="ad-mini" id="ibKopie">Auswertung kopieren</button><button type="button" class="ad-mini" id="ibNurErg">Auswertung löschen</button>' : '') +
         '<button type="button" class="ad-mini ak-red" id="ibAlles">Infobox leeren &hellip;</button></div>' : '') +
@@ -115,6 +124,7 @@
     ta.oninput = function () { S.draft[c.email] = ta.value; };
     $(el, '#ibEinw').onchange = function (e) { S.einw[c.email] = e.target.checked; };
     thumbs(el);
+    bindErgebnis(el);
 
     $(el, '#ibFile').onchange = function (e) {
       var files = Array.prototype.slice.call(e.target.files || [], 0, 4 - (S.bilder[c.email] || []).length);
@@ -201,13 +211,13 @@
     var c = el._ctx, ki = $(el, '#ibKi'), st = $(el, '#ibStatus'), t0 = Date.now();
     S.busy = true; ki.disabled = true; ki.removeAttribute('data-sicher');
     $(el, '#ibSave').disabled = true;
-    function tick() { var s = Math.round((Date.now() - t0) / 1000); ki.textContent = 'Recherchiert … ' + s + ' s'; st.textContent = 'Die KI sucht Studien und Leitlinien. Das dauert meist ein bis zwei Minuten. Bitte diese Seite offen lassen.'; }
+    function tick() { var s = Math.round((Date.now() - t0) / 1000); ki.textContent = 'Recherchiert … ' + s + ' s'; Array.prototype.forEach.call(el.querySelectorAll('.ib-ansKi'), function (b) { b.disabled = true; b.textContent = 'Recherchiert … ' + s + ' s'; }); Array.prototype.forEach.call(el.querySelectorAll('.ib-ansSave'), function (b) { b.disabled = true; }); st.textContent = 'Die KI sucht Studien und Leitlinien. Das dauert meist ein bis zwei Minuten. Bitte diese Seite offen lassen.'; }
     tick(); S.timer = setInterval(tick, 1000);
     A.api('infobox/auswerten', {
-      body: { email: c.email, name: c.name, notiz: text, einwilligung: $(el, '#ibEinw').checked, bilder: S.bilder[c.email] || [] }
+      body: { email: c.email, name: c.name, notiz: text, einwilligung: $(el, '#ibEinw').checked, bilder: S.bilder[c.email] || [], antworten: antwortenSammeln(el) }
     }).then(function (r) {
       if (r && r.error) throw new Error(r.error);
-      c.data = r.box; delete S.draft[c.email]; S.bilder[c.email] = [];
+      c.data = r.box; delete S.draft[c.email]; delete S.ans[c.email]; S.bilder[c.email] = [];
     }).catch(function (e) {
       S.draft[c.email] = text; fail(e);
     }).then(function () {
@@ -222,18 +232,105 @@
   function sec(titel, inner, cls) { return inner ? '<div class="ib-sec' + (cls ? ' ' + cls : '') + '"><h4>' + titel + '</h4>' + inner + '</div>' : ''; }
   function phasen(l, a, b) { return (l || []).map(function (x) { return '<div class="ib-ph"><b>' + esc(x[a]) + '</b><span>' + esc(x[b]) + '</span></div>'; }).join(''); }
 
-  function ergebnis(d) {
+  /* ----- Rückfragen mit Antwortfeld ----- */
+  function gespeicherteAntwort(d, q) {
+    var l = (d && d.antworten) || [];
+    for (var i = 0; i < l.length; i++) if (l[i].frage === q) return l[i].antwort || '';
+    return '';
+  }
+  function antwortWert(c, q) {
+    var dr = S.ans[c.email];
+    return dr && dr[q] != null ? dr[q] : gespeicherteAntwort(c.data, q);
+  }
+  function fragenHtml(list, c) {
+    var h = '';
+    (list || []).forEach(function (q) {
+      if (!q || c.fragen.indexOf(q) >= 0) return;
+      c.fragen.push(q);
+      var i = c.fragen.length - 1;
+      h += '<div class="ib-q"><p><b>' + esc(q) + '</b></p><textarea class="ib-ans" data-i="' + i + '" maxlength="1500" placeholder="Deine Antwort (ohne Namen) &hellip;">' + esc(antwortWert(c, q)) + '</textarea></div>';
+    });
+    return h;
+  }
+  function aktionen() {
+    return '<div class="ib-act"><button type="button" class="ad-mini ib-ansSave">Antworten speichern</button>' +
+      '<button type="button" class="btn btn-blitz ib-ansKi">Speichern &amp; Analyse aktualisieren</button></div>' +
+      '<p class="ib-fine">Die Analyse wird mit deinen Antworten neu erstellt. Das dauert ein bis zwei Minuten.</p>';
+  }
+  function frueherHtml(d, c) {
+    var l = ((d && d.antworten) || []).filter(function (a) { return c.fragen.indexOf(a.frage) < 0; });
+    if (!l.length) return '';
+    return '<p style="margin-top:12px"><b>Bereits beantwortet (fließt in die Analyse ein)</b></p>' +
+      l.map(function (a) { return '<div class="ib-prev"><b>' + esc(a.frage) + '</b>' + esc(a.antwort) + '</div>'; }).join('');
+  }
+  function antwortenSammeln(el) {
+    var c = el._ctx, out = [];
+    if (!c.fragen) return out;
+    Array.prototype.forEach.call(el.querySelectorAll('textarea.ib-ans'), function (t) {
+      var q = c.fragen[Number(t.getAttribute('data-i'))];
+      if (q) out.push({ frage: q, antwort: t.value });
+    });
+    return out;
+  }
+  function bindErgebnis(el) {
+    var c = el._ctx;
+    Array.prototype.forEach.call(el.querySelectorAll('textarea.ib-ans'), function (t) {
+      t.oninput = function () {
+        var q = c.fragen[Number(t.getAttribute('data-i'))];
+        (S.ans[c.email] = S.ans[c.email] || {})[q] = t.value;
+        var offen = c.fragen.filter(function (x) { return !String(antwortWert(c, x)).trim(); }).length;
+        var h = $(el, '#ibOffen'); if (h) h.textContent = offen ? offen + (offen === 1 ? ' Rückfrage offen' : ' Rückfragen offen') : '';
+      };
+    });
+    var tg = $(el, '#ibToggle');
+    if (tg) tg.onclick = function () {
+      var v = $(el, '#ibVoll'), auf = v.hasAttribute('hidden');
+      if (auf) v.removeAttribute('hidden'); else v.setAttribute('hidden', '');
+      S.offen[c.email] = auf;
+      tg.innerHTML = auf ? 'Analyse einklappen &#9652;' : 'Komplette Analyse anzeigen &#9662;';
+    };
+    Array.prototype.forEach.call(el.querySelectorAll('.ib-ansSave'), function (b) {
+      b.onclick = function () {
+        if (S.busy) return;
+        b.disabled = true;
+        A.api('infobox/antworten', { body: { email: c.email, antworten: antwortenSammeln(el) } })
+          .then(function (r) { c.data = r.box; delete S.ans[c.email]; A.note('Antworten gespeichert.'); zeichnen(el); })
+          .catch(function (e) { b.disabled = false; fail(e); });
+      };
+    });
+    Array.prototype.forEach.call(el.querySelectorAll('.ib-ansKi'), function (b) {
+      b.onclick = function () {
+        if (S.busy || !c.ki) return;
+        var ta = $(el, '#ibText');
+        if (ta.value.trim().length < 10 && !(S.bilder[c.email] || []).length) { A.note('Bitte erst Notizen eintragen.', true); return; }
+        S.offen[c.email] = true;
+        auswerten(el, ta.value);
+      };
+    });
+  }
+
+  function ergebnis(d, c) {
     var r = d.auswertung;
     if (!r) return '';
     if (r.roh) {
       return '<div class="ib-res">' + sec('Auswertung (ohne feste Gliederung)', '<p style="white-space:pre-wrap">' + esc(r.roh) + '</p>') + hinweis(d) + '</div>';
     }
+    c.fragen = [];
     var sa = r.sachverhalt || {}, he = r.heilung || {}, wi = r.widerspruch || {}, st = r.studienlage || {}, tr = r.training || {};
     var ev = st.evidenz ? '<span class="ib-ev">Studienlage: ' + esc(st.evidenz) + '</span>' : '';
+    // alle Rückfragen vorab einsammeln, damit die Zahl offener Fragen schon im eingeklappten Zustand stimmt
+    var alleFragen = [].concat(wi.rueckfragen || [], r.offene_fragen || []).filter(function (q, i, a) { return q && a.indexOf(q) === i; });
+    var offen = alleFragen.filter(function (q) { return !String(antwortWert({ email: c.email, data: d }, q)).trim(); }).length;
+    var auf = !!S.offen[c.email];
+
     var h = '<div class="ib-res">';
     h += sec('Das Wichtigste', p(r.kurzfassung), 'ib-top');
+    h += '<div class="ib-more"><button type="button" class="ad-mini" id="ibToggle">' + (auf ? 'Analyse einklappen &#9652;' : 'Komplette Analyse anzeigen &#9662;') + '</button>' +
+      '<span class="ib-hint" id="ibOffen">' + (offen ? offen + (offen === 1 ? ' Rückfrage offen' : ' Rückfragen offen') : '') + '</span></div>';
+    h += '<div id="ibVoll" class="ib-res"' + (auf ? '' : ' hidden') + '>';
     if (wi.vorhanden || wi.beschreibung) {
-      h += sec('Widerspruch zwischen den Angaben', p(wi.beschreibung) + p(wi.einordnung) + (wi.rueckfragen && wi.rueckfragen.length ? '<p><b>Rückfragen an die Ärztin / den Arzt:</b></p>' + ul(wi.rueckfragen) : ''), 'ib-warn');
+      var wf = fragenHtml(wi.rueckfragen, c);
+      h += sec('Widerspruch zwischen den Angaben', p(wi.beschreibung) + p(wi.einordnung) + (wf ? '<p><b>Rückfragen an die Ärztin / den Arzt:</b></p>' + wf + aktionen() : ''), 'ib-warn');
     }
     h += sec('Was ist das, was wurde gemacht?', p(sa.was_ist_das) + (sa.was_wurde_gemacht ? '<p><b>Konkret:</b> ' + esc(sa.was_wurde_gemacht) + '</p>' : '') + (sa.unklar ? '<p><b>Unklar:</b> ' + esc(sa.unklar) + '</p>' : ''));
     h += sec('Heilungsverlauf', (he.dauer ? '<p><b>Dauer:</b> ' + esc(he.dauer) + '</p>' : '') + (he.stand_heute ? '<p><b>Stand heute:</b> ' + esc(he.stand_heute) + '</p>' : '') + phasen(he.phasen, 'zeitraum', 'inhalt') + (he.einflussfaktoren ? '<p><b>Einfluss:</b> ' + esc(he.einflussfaktoren) + '</p>' : ''));
@@ -241,8 +338,11 @@
     var gehtMeiden = ((tr.geht_jetzt || []).length || (tr.vorerst_meiden || []).length)
       ? '<div class="ib-two"><div><p><b>Geht jetzt</b></p>' + ul(tr.geht_jetzt) + '</div><div><p><b>Vorerst meiden</b></p>' + ul(tr.vorerst_meiden) + '</div></div>' : '';
     h += sec('Training: Einstieg', p(tr.grundsatz) + gehtMeiden + ((tr.progression || []).length ? '<p style="margin-top:12px"><b>Schrittweise steigern</b></p>' + phasen(tr.progression, 'phase', 'inhalt') : '') + ((tr.warnzeichen || []).length ? '<p style="margin-top:12px"><b>Training stoppen und ärztlich abklären bei:</b></p>' + ul(tr.warnzeichen) : ''));
-    h += sec('Beim Kunden noch erfragen', ul(r.offene_fragen));
+    var of = fragenHtml(r.offene_fragen, c);
+    var frueher = frueherHtml(d, c);
+    h += sec('Beim Kunden noch erfragen', of + frueher + (of ? aktionen() : ''));
     h += sec('Quellen', (r.quellen || []).length ? '<ul class="ib-src">' + r.quellen.filter(function (q) { return /^https?:\/\//.test(q.url); }).map(function (q) { return '<li><a href="' + esc(q.url) + '" target="_blank" rel="noopener noreferrer">' + esc(q.titel || q.url) + '</a></li>'; }).join('') + '</ul>' : '');
+    h += '</div>';
     return h + hinweis(d) + '</div>';
   }
   function hinweis(d) {
