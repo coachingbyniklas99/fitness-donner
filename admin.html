@@ -305,6 +305,8 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
   }
 
   // Für den Reiter Kurse (admin-kurse.js): dieselbe Anmeldung, dieselben Helfer
+  /* Kunden ohne E-Mail haben intern einen Schlüssel „k-…@kunde.invalid“, der nie angezeigt wird */
+  function shownMail(e) { return /@kunde\.invalid$/i.test(String(e || '')) ? '' : String(e || ''); }
   window.FD_ADMIN = { api: api, note: note, esc: esc, eur: eur };
 
   /* ---------- Anmeldung ---------- */
@@ -579,7 +581,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
       + (window.FDKarte ? window.FDKarte.chip(b) : '')
       + (art ? '<div class="ad-meta" style="margin-top:8px">' + esc(art) + '</div>' : '')
       + (b.phone ? '<a class="ad-link" href="tel:' + esc(b.phone.replace(/\s/g, '')) + '">' + esc(b.phone) + '</a>' : '')
-      + '<a class="ad-link" href="mailto:' + esc(b.email) + '">' + esc(b.email) + '</a>'
+      + (shownMail(b.email) ? '<a class="ad-link" href="mailto:' + esc(b.email) + '">' + esc(b.email) + '</a>' : '')
       + (b.note ? '<div class="ad-note">' + esc(b.note) + '</div>' : '')
       + '<div class="tm-actions" style="margin-top:20px"><button type="button" class="btn btn-blitz" id="shMove">Verschieben</button>'
       + '<button type="button" class="ad-mini ak-red" id="shCancel">Absagen &hellip;</button></div>'
@@ -713,7 +715,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
 
     el('reserved').innerHTML = list.map(function (b) {
       return '<div class="ad-card ad-card-sm"><div><b>' + esc(dshort(b.date)) + ' &middot; ' + esc(b.start) + '–' + esc(b.end) + '</b><br>'
-        + '<span class="ad-meta">' + esc(b.name) + ' &middot; ' + esc(b.email)
+        + '<span class="ad-meta">' + esc(b.name) + (shownMail(b.email) ? ' &middot; ' + esc(b.email) : '')
         + (b.created ? ' &middot; seit ' + esc(hhmm(b.created)) + ' Uhr' : '') + '</span></div>'
         + '<button type="button" class="ad-undo" data-release="' + esc(b.date + '|' + b.slot_id) + '">Freigeben</button></div>';
     }).join('') || '<div class="ad-empty">Gerade nichts reserviert.</div>';
@@ -776,7 +778,7 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
           + (c.kind === 'karte' && c.zahlstatus
             ? '<div class="ad-meta"><span class="st ' + (c.zahlstatus === 'offen' ? 'offen' : 'ok') + '">' + (c.zahlstatus === 'offen' ? 'Nicht bezahlt' : 'Bezahlt') + '</span>'
               + (c.rechnung ? ' &middot; Rechnung ' + esc(c.rechnung) : (c.zahlstatus === 'offen' ? ' &middot; Rechnung folgt' : '')) + '</div>' : '')
-          + '<div class="ad-meta">' + esc(c.email || '') + (c.status !== 'active' ? ' &middot; ' + esc(c.status) : '') + '</div>'
+          + '<div class="ad-meta">' + esc(shownMail(c.email)) + (c.status !== 'active' ? ' &middot; ' + esc(c.status) : '') + '</div>'
           + '<div class="ad-actions">'
           + (c.kind === 'karte'
             ? '<button type="button" class="ad-mini" data-code="' + esc(c.code) + '" data-aktion="einheit_zurueck">+1 Einheit</button>'
@@ -908,10 +910,11 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
 </script>
 <script src="admin-kurse.js?v=18"></script>
 <script src="admin-wiedervorlage.js?v=3"></script>
-<script src="admin-termine.js?v=3"></script>
+<script src="admin-termine.js?v=4"></script>
 <script src="qr.js?v=1"></script>
-<script src="admin-karte.js?v=5"></script>
-<script src="admin-kunden.js?v=10"></script>
+<script src="admin-karte.js?v=6"></script>
+<script src="admin-kunden.js?v=11"></script>
+<script src="admin-kunde2.js?v=1"></script>
 <script src="admin-infobox.js?v=2"></script>
 <script src="admin-push.js?v=3"></script>
 </body>

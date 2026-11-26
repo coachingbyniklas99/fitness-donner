@@ -112,6 +112,7 @@
   function eintragen(vor, fertig) {
     vor = vor || {};
     var neukunde = vor.neukunde === true;
+    var intern = vor.intern === true;   /* Kunde ohne eigene E-Mail: interner Schlüssel in vor.email, Feld bleibt leer und gesperrt */
     laden().then(function (d) {
       var karten = d.cards.slice();
       var mitKarte = neukunde ? false : (vor.code ? true : karten.length > 0 && vor.art !== 'bar');
@@ -135,7 +136,7 @@
         '<option value="ja">Ja, schon bezahlt (bar oder privat)</option></select>' +
         '<div class="ad-sub" id="tmPayHint">Nichts wird berechnet, keine Gutschrift. Der Kunde bekommt nur die Terminbestätigung, du vermerkst „noch nicht bezahlt“ intern.</div></div>' +
         '<div class="ad-field"><label for="tmName">Name</label><input type="text" id="tmName" autocomplete="off" value="' + esc(vor.name || '') + '"></div>' +
-        '<div class="ad-field"><label for="tmEmail">E-Mail</label><input type="email" id="tmEmail" autocomplete="off" value="' + esc(vor.email || '') + '"></div>' +
+        '<div class="ad-field"><label for="tmEmail">E-Mail</label><input type="email" id="tmEmail" autocomplete="off"' + (intern ? ' disabled placeholder="Kunde ohne E-Mail-Adresse"' : '') + ' value="' + (intern ? '' : esc(vor.email || '')) + '"></div>' +
         '<div class="ad-field"><label for="tmPhone">Telefon (optional)</label><input type="tel" id="tmPhone" autocomplete="off" value="' + esc(vor.phone || '') + '"></div>' +
         '<div class="tm-sec"><div class="tm-lab"><span id="tmTermLab">Termine</span> <span id="tmZahl"></span></div><div class="tm-rows" id="tmRows"></div>' +
         '<button type="button" class="ad-mini" id="tmAdd">+ Weiteren Termin</button><div class="tm-sum" id="tmSum"></div></div>' +
@@ -154,6 +155,7 @@
       var art = o.querySelector('#tmArt'), kf = o.querySelector('#tmKarteF'), ks = o.querySelector('#tmKarte');
       var typ = o.querySelector('#tmTyp'), typF = o.querySelector('#tmTypF'), payF = o.querySelector('#tmPayF'), pay = o.querySelector('#tmPay');
       var mailEl = o.querySelector('#tmMail'), hintEl = o.querySelector('#tmHint');
+      function emailWert() { return intern ? String(vor.email || '') : String(o.querySelector('#tmEmail').value || '').trim(); }
 
       function karte() { return art.value === 'karte' ? karten.filter(function (x) { return x.code === ks.value; })[0] : null; }
       function istProbe() { return art.value === 'bar' && typ.value === 'probe'; }
@@ -243,7 +245,7 @@
         var c = karte();
         if (c) {
           if (!o.querySelector('#tmName').value) o.querySelector('#tmName').value = c.name || '';
-          if (!o.querySelector('#tmEmail').value) o.querySelector('#tmEmail').value = c.email || '';
+          if (!intern && !o.querySelector('#tmEmail').value) o.querySelector('#tmEmail').value = c.email || '';
         }
         kartenInfo();
       };
@@ -258,7 +260,7 @@
       function meldung(text, schlecht) { var m = o.querySelector('#tmMsg'); m.className = 'tm-msg' + (schlecht ? ' bad' : ''); m.textContent = text; }
 
       o.querySelector('#tmPendNow').onclick = function () {
-        var b = this, mail = String(o.querySelector('#tmEmail').value || (karte() || {}).email || '').trim();
+        var b = this, mail = String(emailWert() || (karte() || {}).email || '').trim();
         if (!mail) { meldung('Bitte eine E-Mail-Adresse angeben.', true); return; }
         b.disabled = true;
         A.api('termin/mail-senden', { body: { email: mail, hinweis: hintEl.value } }).then(function (r) {
@@ -269,7 +271,7 @@
 
       /* Probetraining speichern: eigener Weg im Worker (probe/eintragen) */
       function losProbe(force) {
-        var name = String(o.querySelector('#tmName').value || '').trim(), mail = String(o.querySelector('#tmEmail').value || '').trim();
+        var name = String(o.querySelector('#tmName').value || '').trim(), mail = emailWert();
         if (!name) { meldung('Bitte einen Namen angeben.', true); return; }
         if (!mail) { meldung('Bitte eine E-Mail-Adresse angeben.', true); return; }
         if (!pay.value) { meldung('Bitte wählen, ob das Probetraining schon bezahlt wurde.', true); return; }
@@ -300,7 +302,7 @@
         if (c && rows.length > c.left) { meldung('Auf der Karte ' + (c.left === 1 ? 'ist nur noch 1 Einheit' : 'sind nur noch ' + c.left + ' Einheiten') + ' frei.', true); return; }
         var mail = mailEl.checked, pendEl = o.querySelector('#tmPend');
         absenden('termin/eintragen-mehrere', {
-          art: mk ? 'karte' : 'bar', code: mk ? ks.value : '', name: o.querySelector('#tmName').value, email: o.querySelector('#tmEmail').value,
+          art: mk ? 'karte' : 'bar', code: mk ? ks.value : '', name: o.querySelector('#tmName').value, email: emailWert(),
           phone: o.querySelector('#tmPhone').value,
           termine: rows.map(function (r) { return { date: r.date, start: r.start, minutes: Number(r.minutes), ort: r.ort }; }),
           mail: mail, hinweis: mail ? hintEl.value : '', mitOffenen: pendEl.hidden ? true : o.querySelector('#tmPendOn').checked, force: force === true
@@ -315,8 +317,19 @@
       o.querySelector('#tmForm').onsubmit = function (e) { e.preventDefault(); los(false); };
       o.querySelector('#tmForce').onclick = function () { los(true); };
       if (neukunde) { art.value = 'bar'; typ.value = 'probe'; }
+      function internMail() {   /* Kunde ohne eigene Adresse: Mail nur, wenn es ein Ziel gibt (Zahler / nachgetragene Adresse) */
+        if (!intern) return;
+        if (vor.mailOk !== true) {
+          mailEl.checked = false; mailEl.disabled = true; o.querySelector('#tmMailBox').hidden = true;
+          o.querySelector('#tmMailT').innerHTML = 'Keine Mail: Dieser Kunde hat keine E-Mail-Adresse und keinen Zahler mit Adresse.';
+        } else {
+          o.querySelector('#tmMailT').innerHTML = 'Terminbestätigung per Mail an den <b>Zahler</b> bzw. die hinterlegte Adresse schicken';
+        }
+      }
       rowsRender();
       artWechsel();
+      internMail();
+      art.addEventListener('change', internMail); typ.addEventListener('change', internMail);
     }).catch(function (e) { if (e && e.message !== 'abgemeldet') A.note(e.message || 'Das hat nicht geklappt.', true); });
   }
 

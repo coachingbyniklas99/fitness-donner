@@ -23,6 +23,8 @@
       S.byCode[c.code] = c;
       var e = String(c.email || '').toLowerCase();
       (S.byEmail[e] = S.byEmail[e] || []).push(c);
+      var pe = String(c.person || '').toLowerCase();   /* Karte läuft auf eine andere Person als den Käufer (z. B. Kind) */
+      if (pe && pe !== e) (S.byEmail[pe] = S.byEmail[pe] || []).push(c);
     });
   }
   function laden(neu) {
@@ -115,7 +117,7 @@
   /* ---------- Neue Karte ausstellen ---------- */
   function ausstellen(v, fertig) {
     v = v || {};
-    var F = { name: v.name || '', email: v.email || '', card: '', zahlart: '', faellig: '', gueltig: '', preis: '', mail: true, zustimmung: false, besch: '', hinweis: '', zhd: '', notiz: '', opt: null };
+    var F = { person: v.person || '', person_name: v.person_name || '', name: v.name || '', email: v.email || '', card: '', zahlart: '', faellig: '', gueltig: '', preis: '', mail: true, zustimmung: false, besch: '', hinweis: '', zhd: '', notiz: '', opt: null };
     var o = fenster('Neue Karte ausstellen', '<div class="ad-empty">L&auml;dt &hellip;</div>');
     var busy = false;
 
@@ -174,7 +176,8 @@
         '<div class="kt-sec"><label class="kt-lab" for="ktName">Kunde</label>' +
         '<div class="kt-two"><div class="ad-field" style="margin:0 0 10px"><input type="text" id="ktName" placeholder="Name" autocomplete="off" value="' + esc(F.name) + '"></div>' +
         '<div class="ad-field" style="margin:0 0 10px"><input type="email" id="ktMail" placeholder="E-Mail" autocomplete="off" value="' + esc(F.email) + '"></div></div>' +
-        '<div id="ktSug"></div></div>' +
+        '<div id="ktSug"></div>' +
+        (F.person ? '<div class="kc-nudge" style="margin-top:0"><span>Die Karte l&auml;uft auf <b>' + esc(F.person_name || 'die trainierte Person') + '</b>. Rechnung und Mails gehen an den Zahler (<b>' + esc(F.name) + '</b>).</span></div>' : '') + '</div>' +
         '<div class="kt-sec"><span class="kt-lab">Welche Karte?</span><div class="kt-opts two">' + kartenHtml + '</div></div>' +
         '<div class="kt-sec"><span class="kt-lab">Wie bezahlt der Kunde?</span><div class="kt-pay">' + zahlHtml + '</div>' +
         (d.zahlart_hinweis ? '<div class="ad-meta" style="margin-top:8px">' + esc(d.zahlart_hinweis) + '</div>' : '') +
@@ -218,6 +221,7 @@
     function bodyFor(extra) {
       var b = { name: F.name, email: F.email, card: F.card, zahlart: F.zahlart, faellig: F.zahlart === 'bar' || F.zahlart === 'qr' ? '' : F.faellig, gueltig_bis: F.gueltig, mail: F.mail,
         zustimmung: F.zustimmung, zhd: F.zhd, beschreibung: F.besch, hinweis: F.hinweis };
+      if (F.person) { b.person = F.person; b.person_name = F.person_name; }
       if (F.preis !== '' && !isNaN(Number(F.preis))) b.einheitspreis = Number(F.preis);
       if (F.zahlart === 'offen') { b.mail = false; b.notiz = F.notiz; }
       if (extra) for (var k in extra) b[k] = extra[k];
@@ -242,9 +246,10 @@
         if (q.length < 2 || v.email) { sug.innerHTML = ''; return; }
         t = setTimeout(function () {
           A.api('kunden/liste?q=' + encodeURIComponent(q)).then(function (d) {
+            d.kunden = d.kunden.filter(function (k) { return !k.intern; });   /* Kunden ohne E-Mail haben keine Rechnungsadresse */
             sug.innerHTML = d.kunden.slice(0, 5).length ? '<div class="kt-sug">' + d.kunden.slice(0, 5).map(function (k, i) { return '<button type="button" data-i="' + i + '">' + esc(k.name || k.email) + '<small>' + esc(k.email) + '</small></button>'; }).join('') + '</div>' : '';
             Array.prototype.forEach.call(sug.querySelectorAll('[data-i]'), function (b) {
-              b.onclick = function () { var k = d.kunden[Number(b.getAttribute('data-i'))]; F.name = k.name || ''; F.email = k.email; F.zhd = F.name; F.zahlart = ''; F.faellig = ''; optionen().then(zeigen).catch(fail); };
+              b.onclick = function () { var k = d.kunden[Number(b.getAttribute('data-i'))]; F.person = ''; F.person_name = ''; F.name = k.name || ''; F.email = k.email; F.zhd = F.name; F.zahlart = ''; F.faellig = ''; optionen().then(zeigen).catch(fail); };
             });
           }).catch(function () {});
         }, 250);

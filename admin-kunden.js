@@ -27,7 +27,8 @@
 
   window.FDKunden = {
     open: function () { var l = K() ? K().laden().catch(function () {}) : Promise.resolve(); if (!S.liste) laden(); else l.then(render); },
-    oeffnen: function (email) { return profilLaden(email); }
+    oeffnen: function (email) { return profilLaden(email); },
+    zurueck: function () { S.profil = null; S.mail = null; laden(); window.scrollTo(0, 0); }
   };
   document.addEventListener('fd:karten', function () { if (box.offsetParent !== null) render(); });
   document.addEventListener('fd:neu', function () { if (S.profil) profilLaden(S.profil.email); else laden(); });
@@ -96,8 +97,8 @@
       html += '<div class="ad-list">' + sicht.map(function (k) {
         var c = k._c;
         var info = k.kommend ? '<b style="color:#7FD28A">Aktiv</b> &middot; Nächster Termin: <b style="color:var(--bone)">' + esc(tagName(k.kommend)) + '</b>' + (k.kurs_kommend && k.kurs_kommend === k.kommend ? ' (Kurs)' : '') : '<b style="color:#9AA0AB">Inaktiv</b> &middot; Kein Termin geplant';
-        return '<button type="button" class="kd-item" data-email="' + esc(k.email) + '"><span class="kd-av">' + initial(k.name || k.email) + '</span>' +
-          '<span class="kd-who"><b>' + esc(k.name || k.email) + '</b><span>' + info + '</span>' +
+        return '<button type="button" class="kd-item" data-email="' + esc(k.email) + '"><span class="kd-av">' + initial(k.name || (k.intern ? '?' : k.email)) + '</span>' +
+          '<span class="kd-who"><b>' + esc(k.name || (k.intern ? 'Ohne Namen' : k.email)) + '</b><span>' + info + '</span>' +
           (c ? kartenZeile(c) : (k.termine ? '<span class="ch ch-einzel"><span class="ch-top"><b>Einzelstunden</b><small>' + n(k.termine, 'Termin', 'Termine') + '</small></span></span>' : '')) +
           ((k.offen || 0) > 0 ? '<span><span class="kd-badge offen">Rechnung offen</span></span>' : '') + '</span></button>';
       }).join('') + '</div>' +
@@ -289,13 +290,15 @@
 
     box.innerHTML =
       '<button type="button" class="ad-refresh" id="kdZurueck">&lsaquo; Alle Kunden</button>' +
-      '<div class="pf-head"><div class="pf-top"><span class="kd-av">' + initial(p.name || p.email) + '</span><div><div class="pf-name">' + esc(p.name || p.email) + '</div><div class="pf-sub">' + esc(p.email) + ' &middot; <b style="color:' + (p.aktiv ? '#7FD28A' : '#9AA0AB') + '">' + (p.aktiv ? 'Aktiv' : 'Inaktiv') + '</b></div></div></div>' +
+      '<div class="pf-head"><div class="pf-top"><span class="kd-av">' + initial(p.name || p.email) + '</span><div><div class="pf-name">' + esc(p.name || (p.intern ? 'Ohne Namen' : p.email)) + '</div><div class="pf-sub">' + (p.intern ? (p.kontakt_email ? esc(p.kontakt_email) : 'keine E-Mail') : esc(p.email)) + ' &middot; <b style="color:' + (p.aktiv ? '#7FD28A' : '#9AA0AB') + '">' + (p.aktiv ? 'Aktiv' : 'Inaktiv') + '</b></div></div></div>' +
       '<div class="pf-contact"><a class="pf-c" ' + (tel ? 'href="tel:' + esc(tel) + '"' : 'aria-disabled="true"') + '><b>&#9742;</b>Anrufen</a>' +
       '<a class="pf-c" ' + (wa ? 'href="' + esc(wa) + '" target="_blank" rel="noopener"' : 'aria-disabled="true"') + '><b>&#128172;</b>WhatsApp</a>' +
-      '<a class="pf-c" href="mailto:' + esc(p.email) + '"><b>&#9993;</b>E-Mail</a></div>' +
+      '<a class="pf-c" ' + (p.kontakt_email ? 'href="mailto:' + esc(p.kontakt_email) + '"' : 'aria-disabled="true"') + '><b>&#9993;</b>E-Mail</a></div>' +
       '<button type="button" class="pf-zahl" id="kdZahl"><span>Zahlt per</span><div style="flex:1;margin-left:8px;font-weight:600">' + (zahl ? esc(zahl) : '<span>noch nicht festgelegt</span>') + '</div><em>' + (zahl ? 'Ändern' : 'Festlegen') + '</em></button>' +
       (p.zahlart === 'lastschrift' || p.mandat === false ? '<div class="pf-mandat ' + (p.mandat ? 'ok' : 'fehlt') + '">' + (p.mandat ? '<span>&#10003; Lastschrift-Mandat gespeichert</span>' : '<span>Kein Lastschrift-Mandat gespeichert</span><button type="button" class="ad-mini" id="kdMandat">Mandat anfordern</button>') + '</div>' : '') +
-      '<div class="pf-cta"><button type="button" class="btn btn-blitz" id="kdNeueKarte">+ Neue Karte ausstellen</button><button type="button" class="btn btn-ghost" id="kdNeuTermin">+ Termin eintragen</button></div></div>' +
+      '<div class="pf-cta"><button type="button" class="btn btn-blitz" id="kdNeueKarte">+ Neue Karte ausstellen</button><button type="button" class="btn btn-ghost" id="kdNeuTermin">+ Termin eintragen</button></div>' +
+      '<div class="ad-actions" style="margin-top:10px"><button type="button" class="ad-mini" id="kdKarteLink">Karte per Zahlungslink verkaufen (Apple Pay)</button></div></div>' +
+      (window.FDKunde2 ? window.FDKunde2.vorschlaegeHtml(p) : '') +
 
       '<div class="pf-h">Karte' + (aktiv.length > 1 ? 'n' : '') + '</div>' +
       (aktiv.length ? aktiv.map(function (k) { return karteHtml(k, p); }).join('') : '<div class="ad-empty">Keine aktive Karte. Mit „Neue Karte ausstellen“ legst du in einem Schritt Karte, Rechnung und Mail an.</div>') +
@@ -305,6 +308,7 @@
 
       '<div class="pf-h">Kommende Termine <span class="kd-count">' + kommend.length + '</span></div>' +
       (kommend.length ? '<div class="ad-list">' + kommend.map(terminKarte).join('') + '</div>' : '<div class="ad-empty">Keine kommenden Termine.</div>') +
+      (window.FDKunde2 ? window.FDKunde2.angabenHtml(p) : '') +
       '<div class="pf-h">Weitere Angaben</div>' +
       (vergangen.length ? '<details class="pf-d"><summary>Vergangene Termine <span class="kd-count">' + vergangen.length + '</span></summary><div class="pf-in"><div class="ad-list">' + vergangen.map(terminKarte).join('') + '</div></div></details>' : '') +
       (p.kurse.length ? '<details class="pf-d"><summary>Kurse <span class="kd-count">' + p.kurse.length + '</span></summary><div class="pf-in">' + kurseHtml + '</div></details>' : '') +
@@ -328,7 +332,15 @@
         if (t && A.absagen) A.absagen({ date: t.date, slot_id: t.slot_id, start: t.start, end: t.end, name: p.name || p.email, card_code: t.card_code, voucher_code: t.voucher_code }, nachAktion);
       };
     });
-    function neueKarte() { K().ausstellen({ name: p.name, email: p.email }, function () { }); }
+    function neueKarte() {
+      if (!p.intern) { K().ausstellen({ name: p.name, email: p.email }, function () { }); return; }
+      /* Kunde ohne eigene Adresse: Rechnung an den Zahler (Karte läuft auf die Person) oder an die nachgetragene Adresse, sonst nur per Zahlungslink */
+      if (p.kontakt_email) K().ausstellen({ name: p.name, email: p.kontakt_email }, function () { });
+      else if (p.zahler && p.zahler.email) K().ausstellen({ name: p.zahler.name || p.zahler.email, email: p.zahler.email, person: p.email, person_name: p.name }, function () { });
+      else if (window.FDKunde2) window.FDKunde2.karteLink(p, nachAktion);
+    }
+    var kl = document.getElementById('kdKarteLink'); if (kl) kl.onclick = function () { if (window.FDKunde2) window.FDKunde2.karteLink(p, nachAktion); };
+    if (window.FDKunde2) window.FDKunde2.binden(box, p, nachAktion, profilLaden);
     document.getElementById('kdNeueKarte').onclick = neueKarte;
     Array.prototype.forEach.call(box.querySelectorAll('[data-neuekarte]'), function (b) { b.onclick = neueKarte; });
     var md = document.getElementById('kdMandat'); if (md) md.onclick = function () { K().mandatAnfordern(p, nachAktion); };
@@ -358,11 +370,11 @@
         tm = setTimeout(function () {
           A.api('kunden/liste?q=' + encodeURIComponent(q)).then(function (d) {
             var l = (d.kunden || []).filter(function (x) { return x.email !== p.email; }).slice(0, 6);
-            res.innerHTML = l.length ? l.map(function (x, i) { return '<button type="button" class="ad-mini kc-mpick" data-i="' + i + '" style="display:block;width:100%;text-align:left;margin-bottom:6px">' + esc(x.name || x.email) + ' &middot; ' + esc(x.email) + '</button>'; }).join('') : '<p class="ad-hint">Niemand gefunden.</p>';
+            res.innerHTML = l.length ? l.map(function (x, i) { return '<button type="button" class="ad-mini kc-mpick" data-i="' + i + '" style="display:block;width:100%;text-align:left;margin-bottom:6px">' + esc(x.name || x.email) + (x.intern ? '' : ' &middot; ' + esc(x.email)) + '</button>'; }).join('') : '<p class="ad-hint">Niemand gefunden.</p>';
             Array.prototype.forEach.call(res.querySelectorAll('.kc-mpick'), function (b) {
               b.onclick = function () {
                 var x = l[Number(b.getAttribute('data-i'))];
-                if (!b.getAttribute('data-sicher')) { b.setAttribute('data-sicher', '1'); b.textContent = 'Wirklich ' + (x.name || x.email) + ' (' + x.email + ') hier zusammenführen?'; return; }
+                if (!b.getAttribute('data-sicher')) { b.setAttribute('data-sicher', '1'); b.textContent = 'Wirklich ' + (x.name || x.email) + (x.intern ? '' : ' (' + x.email + ')') + ' hier zusammenführen?'; return; }
                 b.disabled = true;
                 A.api('kunden/zusammenfuehren', { body: { von: x.email, nach: p.email } })
                   .then(function () { A.note('Zusammengeführt. Alles von ' + x.email + ' steht jetzt in diesem Profil.'); nachAktion(); })
@@ -384,10 +396,10 @@
     document.getElementById('kdNeuTermin').onclick = function () {
       if (!window.FDTermine) return;
       var kt = karten.filter(function (k) { return k.status === 'active' && k.frei > 0; })[0];
-      window.FDTermine.eintragen({ code: kt ? kt.code : '', art: kt ? 'karte' : 'bar', name: p.name, email: p.email, phone: p.phone }, nachAktion);
+      window.FDTermine.eintragen({ code: kt ? kt.code : '', art: kt ? 'karte' : 'bar', name: p.name, email: p.email, phone: p.phone, intern: !!p.intern, mailOk: !!(p.kontakt_email || (p.zahler && p.zahler.email)) }, nachAktion);
     };
     Array.prototype.forEach.call(box.querySelectorAll('[data-eintragen]'), function (b) {
-      b.onclick = function () { if (window.FDTermine) window.FDTermine.eintragen({ code: b.getAttribute('data-eintragen'), name: p.name, email: p.email, phone: p.phone }, nachAktion); };
+      b.onclick = function () { if (window.FDTermine) window.FDTermine.eintragen({ code: b.getAttribute('data-eintragen'), name: p.name, email: p.email, phone: p.phone, intern: !!p.intern, mailOk: !!(p.kontakt_email || (p.zahler && p.zahler.email)) }, nachAktion); };
     });
     Array.prototype.forEach.call(box.querySelectorAll('[data-zahlstatus]'), function (b) {
       b.onclick = function () { K().zahlstatus(b.getAttribute('data-zahlstatus'), nachAktion); };
