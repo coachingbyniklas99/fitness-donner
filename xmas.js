@@ -24,8 +24,8 @@
   /* Bis Nikolaus beide Anlaesse, danach nur noch Weihnachten */
   var nikPhase = !document.documentElement.classList.contains('fdx-gr');
   var msgs = [nikPhase ? {
-    href: 'gutschein.html', tag: 'Nikolaus &amp; Weihnachten',
-    long: 'Geschenk zu Nikolaus oder Weihnachten? Gutschein für Personal Training &amp; Kurse – digital, sofort im Postfach',
+    href: 'gutschein.html', tag: 'Geschenkidee',
+    long: 'Zu Nikolaus oder Weihnachten: Gutschein für Personal Training &amp; Kurse – digital, sofort im Postfach',
     short: 'Nikolaus &amp; Weihnachten: Gutschein verschenken', go: 'Gutschein ansehen &rarr;'
   } : {
     href: 'gutschein-weihnachten.html', tag: 'Weihnachten',
