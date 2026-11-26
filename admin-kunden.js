@@ -290,12 +290,12 @@
 
     box.innerHTML =
       '<button type="button" class="ad-refresh" id="kdZurueck">&lsaquo; Alle Kunden</button>' +
-      '<div class="pf-head"><div class="pf-top"><span class="kd-av">' + initial(p.name || p.email) + '</span><div><div class="pf-name">' + esc(p.name || (p.intern ? 'Ohne Namen' : p.email)) + '</div><div class="pf-sub">' + (p.intern ? (p.kontakt_email ? esc(p.kontakt_email) : 'keine E-Mail') : esc(p.email)) + ' &middot; <b style="color:' + (p.aktiv ? '#7FD28A' : '#9AA0AB') + '">' + (p.aktiv ? 'Aktiv' : 'Inaktiv') + '</b></div></div></div>' +
+      '<div class="pf-head" data-key="' + esc(p.email) + '"><div class="pf-top"><span class="kd-av">' + initial(p.name || p.email) + '</span><div><div class="pf-name">' + esc(p.name || (p.intern ? 'Ohne Namen' : p.email)) + '</div><div class="pf-sub">' + (p.intern ? (p.kontakt_email ? esc(p.kontakt_email) : 'keine E-Mail') : esc(p.email)) + ' &middot; <b style="color:' + (p.aktiv ? '#7FD28A' : '#9AA0AB') + '">' + (p.aktiv ? 'Aktiv' : 'Inaktiv') + '</b></div></div></div>' +
       '<div class="pf-contact"><a class="pf-c" ' + (tel ? 'href="tel:' + esc(tel) + '"' : 'aria-disabled="true"') + '><b>&#9742;</b>Anrufen</a>' +
       '<a class="pf-c" ' + (wa ? 'href="' + esc(wa) + '" target="_blank" rel="noopener"' : 'aria-disabled="true"') + '><b>&#128172;</b>WhatsApp</a>' +
       '<a class="pf-c" ' + (p.kontakt_email ? 'href="mailto:' + esc(p.kontakt_email) + '"' : 'aria-disabled="true"') + '><b>&#9993;</b>E-Mail</a></div>' +
       '<button type="button" class="pf-zahl" id="kdZahl"><span>Zahlt per</span><div style="flex:1;margin-left:8px;font-weight:600">' + (zahl ? esc(zahl) : '<span>noch nicht festgelegt</span>') + '</div><em>' + (zahl ? 'Ändern' : 'Festlegen') + '</em></button>' +
-      (p.zahlart === 'lastschrift' || p.mandat === false ? '<div class="pf-mandat ' + (p.mandat ? 'ok' : 'fehlt') + '">' + (p.mandat ? '<span>&#10003; Lastschrift-Mandat gespeichert</span>' : '<span>Kein Lastschrift-Mandat gespeichert</span><button type="button" class="ad-mini" id="kdMandat">Mandat anfordern</button>') + '</div>' : '') +
+      (!p.intern && (p.zahlart === 'lastschrift' || p.mandat === false) ? '<div class="pf-mandat ' + (p.mandat ? 'ok' : 'fehlt') + '">' + (p.mandat ? '<span>&#10003; Lastschrift-Mandat gespeichert</span>' : '<span>Kein Lastschrift-Mandat gespeichert</span><button type="button" class="ad-mini" id="kdMandat">Mandat anfordern</button>') + '</div>' : '') +
       '<div class="pf-cta"><button type="button" class="btn btn-blitz" id="kdNeueKarte">+ Neue Karte ausstellen</button><button type="button" class="btn btn-ghost" id="kdNeuTermin">+ Termin eintragen</button></div>' +
       '<div class="ad-actions" style="margin-top:10px"><button type="button" class="ad-mini" id="kdKarteLink">Karte per Zahlungslink verkaufen (Apple Pay)</button></div></div>' +
       (window.FDKunde2 ? window.FDKunde2.vorschlaegeHtml(p) : '') +

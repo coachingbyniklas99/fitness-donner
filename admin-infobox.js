@@ -64,7 +64,8 @@
     var head = box.querySelector('.pf-head');
     if (!head || box.querySelector('#ibBox')) return;
     var sub = head.querySelector('.pf-sub');
-    var m = sub && /[^\s·]+@[^\s·]+/.exec(sub.textContent || '');
+    var key = head.getAttribute('data-key');   /* Kunden ohne E-Mail: Schlüssel steht nicht im Text */
+    var m = key ? [key] : (sub && /[^\s·]+@[^\s·]+/.exec(sub.textContent || ''));
     if (!m) return;
     var nm = head.querySelector('.pf-name');
     var el = document.createElement('div');
