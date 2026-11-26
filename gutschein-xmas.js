@@ -114,11 +114,28 @@
         '<path d="M70 58 C52 38 32 28 20 34 M80 58 C98 38 118 28 130 34" fill="none" stroke="#B8902B" stroke-width="1.4" opacity=".7"/>' +
         '<rect x="62" y="48" width="26" height="22" rx="6" fill="url(#xmG)" stroke="#B8902B" stroke-width="1.5"/></svg>';
       card.appendChild(rb);
-      /* Foto im Gutschein: Studiowand, laeuft nach unten in die Kartenfarbe aus */
+      /* Fotos im Gutschein: drei Studiobilder wechseln sich ab (wie im Spot).
+         Foto oben gut erkennbar, leicht warm getoent, unten laeuft es in die Kartenfarbe aus. */
       var cimg = card.querySelector('.gs-v-bg');
       if (cimg) {
         cimg.dataset.orig = cimg.getAttribute('src');
-        cimg.src = window.XM_CARD || 'newforge-rack.webp';
+        var fotos = window.XM_CARDS || ['newforge-kursraum.webp', 'newforge-power.webp', 'studio-halle.webp'];
+        cimg.src = fotos[0];
+        cimg.classList.add('xm-sl', 'on');
+        var slides = [cimg];
+        for (var fi = 1; fi < fotos.length; fi++) {
+          var s2 = document.createElement('img');
+          s2.className = 'gs-v-bg xm-sl'; s2.alt = ''; s2.decoding = 'async'; s2.loading = 'lazy'; s2.src = fotos[fi];
+          cimg.parentNode.insertBefore(s2, cimg.nextSibling);
+          slides.push(s2);
+        }
+        if (!reduce && slides.length > 1) {
+          var si = 0;
+          setInterval(function () {
+            if (document.hidden || card.classList.contains('xm-plain')) return;
+            slides[si].classList.remove('on'); si = (si + 1) % slides.length; slides[si].classList.add('on');
+          }, 3200);
+        }
       }
     }
 
@@ -142,22 +159,43 @@
       }
     }
 
-    /* Auswahl: Gutschein im Nikolaus-Design (nur bis 6.12. 18 Uhr), im Weihnachts-Design oder ohne Saison-Design */
+    /* Auswahl in zwei Schritten:
+       Anlass  = Nikolaus (nur bis 6.12. 18 Uhr) | Weihnachten | ohne Festdesign  -> bestimmt den Schriftzug
+       Farbe   = Rot | Gruen                                                  -> bestimmt die Farben
+       Vorauswahl: Nikolaus rot, Weihnachten gruen. Hat jemand die Farbe selbst gewaehlt, bleibt sie beim Anlasswechsel. */
     var occ = document.getElementById('gsOcc');
     var cur = NIK ? 'nik' : 'xmas';
-    var imgOf = function (k) { return k === 'std' ? null : (window.XM_CARD || 'newforge-rack.webp'); };
+    var farbe = cur === 'nik' ? 'rot' : 'gruen', farbeFest = false;
+    var slideImgs = function () { return card ? card.querySelectorAll('.gs-v-bg') : []; };
     function setDesign(k) {
       cur = k;
+      if (!farbeFest && k !== 'std') farbe = k === 'nik' ? 'rot' : 'gruen';
+      paint();
+    }
+    function paint() {
       if (!card) return;
-      card.classList.toggle('xm-plain', k === 'std');
-      card.classList.toggle('xm-v-nik', k === 'nik');
-      card.classList.toggle('xm-v-xmas', k === 'xmas');
+      var std = cur === 'std';
+      card.classList.toggle('xm-plain', std);
+      card.classList.toggle('xm-v-nik', !std && farbe === 'rot');
+      card.classList.toggle('xm-v-xmas', !std && farbe === 'gruen');
       var rt = card.querySelector('.xm-rt');
-      if (rt) rt.innerHTML = (k === 'nik' ? 'Frohen Nikolaus' : 'Frohe Weihnachten') + ' &middot; Fitness Donner';
-      var ci = card.querySelector('.gs-v-bg');
-      if (ci && ci.dataset.orig) ci.src = (k === 'std') ? ci.dataset.orig : imgOf(k);
+      if (rt) rt.innerHTML = (cur === 'nik' ? 'Frohen Nikolaus' : 'Frohe Weihnachten') + ' &middot; Fitness Donner';
+      var top = card.querySelector('.gs-v-top span');
+      if (top) top.textContent = std ? 'Geschenkgutschein' : (cur === 'nik' ? 'Frohen Nikolaus' : 'Frohe Weihnachten');
+      var ims = slideImgs();
+      if (ims[0] && ims[0].dataset.orig) {
+        if (std) { ims[0].dataset.fest = ims[0].dataset.fest || ims[0].getAttribute('src'); ims[0].src = ims[0].dataset.orig; }
+        else if (ims[0].dataset.fest) { ims[0].src = ims[0].dataset.fest; }
+        card.classList.toggle('xm-std-img', std);
+      }
+      var fw = document.getElementById('xmFarbe');
+      if (fw) {
+        fw.hidden = std;
+        fw.querySelectorAll('.gs-opt').forEach(function (x) { x.classList.toggle('on', x.dataset.f === farbe); });
+      }
     }
     window.fdDesign = function () { return cur === 'std' ? '' : cur; };
+    window.fdFarbe = function () { return cur === 'std' ? '' : farbe; };
     /* Bastelkarte: Klappkarte zum Selbstausdrucken, nur im Fest-Design und nur bei "An mich" (Feld liegt im Käufer-Bereich) */
     (function () {
       var ex = document.getElementById('gsBuyerExtra'); if (!ex) return;
@@ -171,14 +209,18 @@
     if (occ && card) {
       var dw = document.createElement('div'); dw.className = 'xm-design';
       var opts = '';
-      if (nikPhase) opts += '<button type="button" class="gs-opt' + (cur === 'nik' ? ' on' : '') + '" data-d="nik"><b>Nikolaus-Design</b><span>Mit Schleife und Schnee</span></button>';
-      opts += '<button type="button" class="gs-opt' + (cur === 'xmas' ? ' on' : '') + '" data-d="xmas"><b>Weihnachts-Design</b><span>Mit Schleife und Schnee</span></button>';
-      opts += '<button type="button" class="gs-opt" data-d="std"><b>Standard</b><span>Das klassische Fitness-Donner-Design</span></button>';
-      dw.innerHTML = '<span class="gs-lab">Design des Gutscheins</span><div class="gs-opts' + (nikPhase ? ' xm-three' : '') + '" id="xmDesign">' + opts + '</div>';
+      if (nikPhase) opts += '<button type="button" class="gs-opt' + (cur === 'nik' ? ' on' : '') + '" data-d="nik"><b>Zu Nikolaus</b><span>&bdquo;Frohen Nikolaus&ldquo; auf dem Gutschein</span></button>';
+      opts += '<button type="button" class="gs-opt' + (cur === 'xmas' ? ' on' : '') + '" data-d="xmas"><b>Zu Weihnachten</b><span>&bdquo;Frohe Weihnachten&ldquo; auf dem Gutschein</span></button>';
+      opts += '<button type="button" class="gs-opt" data-d="std"><b>Ohne Festdesign</b><span>Das klassische Fitness-Donner-Design</span></button>';
+      var fopts = '<button type="button" class="gs-opt xm-sw" data-f="rot"><i style="background:#8C1822"></i><b>Rot</b></button>' +
+        '<button type="button" class="gs-opt xm-sw" data-f="gruen"><i style="background:#1B4D38"></i><b>Gr&uuml;n</b></button>';
+      dw.innerHTML = '<span class="gs-lab">Design des Gutscheins</span><div class="gs-opts' + (nikPhase ? ' xm-three' : '') + '" id="xmDesign">' + opts + '</div>' +
+        '<div id="xmFarbe" class="xm-farbe"><span class="gs-lab">Farbe des Gutscheins</span><div class="gs-opts">' + fopts + '</div></div>';
       occ.parentNode.insertBefore(dw, occ.nextSibling);
       dw.addEventListener('click', function (e) {
         var b = e.target.closest('button'); if (!b) return;
-        dw.querySelectorAll('.gs-opt').forEach(function (x) { x.classList.toggle('on', x === b); });
+        if (b.dataset.f) { farbe = b.dataset.f; farbeFest = true; paint(); return; }
+        dw.querySelectorAll('#xmDesign .gs-opt').forEach(function (x) { x.classList.toggle('on', x === b); });
         setDesign(b.dataset.d); if (window.fdSyncBastel) window.fdSyncBastel();
       });
       setDesign(cur);

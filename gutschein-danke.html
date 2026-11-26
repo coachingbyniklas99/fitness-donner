@@ -165,7 +165,8 @@ var API_BASE = 'https://fitnessdonner-gutscheine.coaching-by-niklas99.workers.de
     if (sessionId && window.fdConversion) window.fdConversion('gutschein', v.amount_formatted, v.code);
     if (v.design === 'nik' || v.design === 'xmas') {
       var vc = document.querySelector('#voucherBox .voucher');
-      vc.classList.add(v.design === 'nik' ? 'xm-nik' : 'xm-xmas');
+      var rot = v.farbe === 'rot' || (v.farbe !== 'gruen' && v.design === 'nik');   /* Farbe getrennt vom Anlass */
+      vc.classList.add(rot ? 'xm-nik' : 'xm-xmas');
       var vk = vc.querySelector('.v-kind');
       if (vk) vk.textContent = (v.design === 'nik' ? 'Frohen Nikolaus' : 'Frohe Weihnachten') + ' \u00b7 Geschenkgutschein';
     }

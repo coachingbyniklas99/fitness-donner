@@ -136,8 +136,6 @@ html.xmas .gs-v.xm-plain>.xm-ribbon:not(.xa):not(.xb):not(.xc){display:none}
 .xm-design .gs-opts{grid-template-columns:repeat(2,minmax(0,1fr))}
 .xm-design .gs-opts.xm-three{grid-template-columns:repeat(3,minmax(0,1fr))}
 @media(max-width:620px){.xm-design .gs-opts.xm-three{grid-template-columns:1fr}}
-.xm-design .gs-opt[data-d="nik"].on{background:linear-gradient(135deg,#7E1A22,rgba(21,23,28,.4))}
-.xm-design .gs-opt[data-d="xmas"].on{background:linear-gradient(135deg,#17402F,rgba(21,23,28,.4))}
 html.xmas .gs-v.xm-v-nik{--x-acc:#7E1A22;--x-acc-d:#4A0F15}
 html.xmas .gs-v.xm-v-xmas{--x-acc:var(--x-green);--x-acc-d:var(--x-green-d)}
 
@@ -360,3 +358,30 @@ html.xm-now *,html.xm-now *::before,html.xm-now *::after{transition:none!importa
 @media(prefers-reduced-motion:reduce){
   html.xmas *,html.xmas *::before,html.xmas *::after{transition:none!important}
 }
+
+/* ---------- Anlass und Farbe getrennt, wechselnde Studiofotos (26.11.2026) ---------- */
+/* Mittelweg: Foto gut erkennbar mit leichter warmer Toenung, die Kartenfarbe liegt nur unten hinter dem Text */
+html.xmas .gs-v:not(.xm-plain) .gs-v-bg{
+  height:72%;object-position:50% 45%;opacity:1;filter:brightness(.9) contrast(1.05) saturate(.85);
+  -webkit-mask-image:linear-gradient(180deg,#000 0,#000 46%,transparent 100%);mask-image:linear-gradient(180deg,#000 0,#000 46%,transparent 100%)
+}
+html.xmas .gs-v:not(.xm-plain) .gs-v-shade{
+  height:72%;opacity:1;
+  background:linear-gradient(180deg,rgba(14,16,20,.58) 0,rgba(14,16,20,0) 30%),
+    linear-gradient(180deg,color-mix(in srgb,var(--x-acc) 20%,transparent) 0,color-mix(in srgb,var(--x-acc) 20%,transparent) 50%,color-mix(in srgb,var(--x-acc) 85%,transparent) 100%)
+}
+html.xmas .gs-v:not(.xm-plain) h3{text-shadow:0 2px 16px rgba(0,0,0,.55)}
+html.xmas .gs-v .xm-sl{transition:opacity 1.1s ease}
+html.xmas .gs-v:not(.xm-plain) .xm-sl:not(.on){opacity:0}
+html.xmas .gs-v.xm-plain .xm-sl{display:none}
+html.xmas .gs-v.xm-plain .xm-sl:first-of-type{display:block}
+@media (prefers-reduced-motion:reduce){html.xmas .gs-v .xm-sl{transition:none}}
+
+/* Farbwahl */
+.xm-farbe{margin-top:16px}
+.xm-farbe[hidden]{display:none}
+.xm-farbe .gs-opts{grid-template-columns:repeat(2,minmax(0,1fr))}
+.xm-farbe .xm-sw{display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:12px;min-height:0;padding-top:14px;padding-bottom:14px}
+.xm-farbe .xm-sw i{flex:none;width:26px;height:26px;border:2px solid #F5D061;box-shadow:inset 0 0 0 2px rgba(0,0,0,.25)}
+html.xmas .gs-cfg .xm-farbe .xm-sw[data-f="rot"].on{background:linear-gradient(135deg,#7E1A22,rgba(21,23,28,.4))}
+html.xmas .gs-cfg .xm-farbe .xm-sw[data-f="gruen"].on{background:linear-gradient(135deg,#17402F,rgba(21,23,28,.4))}

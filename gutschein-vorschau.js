@@ -64,6 +64,8 @@
     var buyer = first($('buyerName') && $('buyerName').value);
     var p = new URLSearchParams();
     p.set('demo', design);
+    var f = window.fdFarbe ? window.fdFarbe() : '';
+    if (design !== 'std' && (f === 'rot' || f === 'gruen')) p.set('farbe', f);
     p.set('embed', '1');
     if (/\d/.test(amt)) p.set('amt', amt);
     var to = ($('recipientName') && $('recipientName').value || '').trim();
