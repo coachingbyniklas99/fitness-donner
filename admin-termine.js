@@ -1,5 +1,7 @@
 /* Verwaltung: Termin verschieben und von Hand eintragen (Dialog). Nutzt window.FD_ADMIN aus admin.html.
-   Gerechnet und gespeichert wird im Worker (/api/admin/termin/…); hier ist nur die Oberfläche. */
+   Gerechnet und gespeichert wird im Worker (/api/admin/termin/…); hier ist nur die Oberfläche.
+   Neu (v3): „Ohne Karte“ kann ein Probetraining sein (bezahlt / noch nicht bezahlt – intern, mit Terminbestätigung),
+   dazu „Neuer Kunde“ (Kachel auf Heute, Knopf im Reiter Kunden) = Probetraining für eine neue Person. */
 (function () {
   var A = window.FD_ADMIN;
   if (!A) return;
@@ -59,7 +61,7 @@
       if (e && e.message === 'abgemeldet') return;
       msg.className = 'tm-msg bad';
       msg.textContent = (e && e.message) || 'Das hat nicht geklappt.';
-      if (e && /belegt|gesperrt/.test(e.message || '')) {
+      if (e && /belegt|gesperrt|schon ein Probetraining/.test(e.message || '')) {
         var b = document.getElementById('tmForce');
         if (b) b.hidden = false;
       }
@@ -106,28 +108,38 @@
     return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
   }
 
+  /* vor: { code, art, name, email, phone }  – neukunde:true = Probetraining für eine neue Person (ohne Karte, ohne Auswahl) */
   function eintragen(vor, fertig) {
     vor = vor || {};
+    var neukunde = vor.neukunde === true;
     laden().then(function (d) {
       var karten = d.cards.slice();
-      var mitKarte = vor.code ? true : karten.length > 0 && vor.art !== 'bar';
+      var mitKarte = neukunde ? false : (vor.code ? true : karten.length > 0 && vor.art !== 'bar');
       var kopt = '<option value="">Karte wählen …</option>' + karten.map(function (c) {
         return '<option value="' + esc(c.code) + '"' + (c.code === vor.code ? ' selected' : '') + '>' + esc((c.name || c.email || '–') + ' · ' + c.label + ' · ' + c.left + ' von ' + c.total + ' frei · ' + c.code) + '</option>';
       }).join('');
       var rows = [{ date: '', start: '12:00', minutes: 60, ort: 'Solingen' }];
       var hinweisAngefasst = false;
-      var o = oeffnen('Termine eintragen',
+      var o = oeffnen(neukunde ? 'Neuer Kunde' : 'Termine eintragen',
         '<form id="tmForm" class="tm-form">' +
-        '<div class="ad-field"><label for="tmArt">Bezahlung</label><select id="tmArt">' +
+        (neukunde ? '<p class="ad-hint" style="margin:0 0 14px">Der Kunde wird mit seinem ersten Termin angelegt: ein Probetraining. Er erscheint danach im Reiter &bdquo;Kunden&ldquo;.</p>' : '') +
+        '<div class="ad-field" id="tmArtF"' + (neukunde ? ' hidden' : '') + '><label for="tmArt">Bezahlung</label><select id="tmArt">' +
         '<option value="karte"' + (mitKarte ? ' selected' : '') + '>Mit Karte (pro Termin eine Einheit)</option>' +
         '<option value="bar"' + (mitKarte ? '' : ' selected') + '>Ohne Karte (bar oder privat bezahlt)</option></select></div>' +
         '<div class="ad-field" id="tmKarteF"><label for="tmKarte">Karte</label><select id="tmKarte">' + kopt + '</select></div>' +
+        '<div class="ad-field" id="tmTypF"' + (neukunde ? ' hidden' : '') + '><label for="tmTyp">Art des Termins</label><select id="tmTyp">' +
+        '<option value="training"' + (vor.typ === 'probe' ? '' : ' selected') + '>Personal Training</option>' +
+        '<option value="probe"' + (vor.typ === 'probe' ? ' selected' : '') + '>Probetraining</option></select></div>' +
+        '<div class="ad-field" id="tmPayF" hidden><label for="tmPay">Probetraining bezahlt?</label><select id="tmPay">' +
+        '<option value="nein" selected>Nein, noch nicht bezahlt (nur intern vermerkt)</option>' +
+        '<option value="ja">Ja, schon bezahlt (bar oder privat)</option></select>' +
+        '<div class="ad-sub" id="tmPayHint">Nichts wird berechnet, keine Gutschrift. Der Kunde bekommt nur die Terminbestätigung, du vermerkst „noch nicht bezahlt“ intern.</div></div>' +
         '<div class="ad-field"><label for="tmName">Name</label><input type="text" id="tmName" autocomplete="off" value="' + esc(vor.name || '') + '"></div>' +
         '<div class="ad-field"><label for="tmEmail">E-Mail</label><input type="email" id="tmEmail" autocomplete="off" value="' + esc(vor.email || '') + '"></div>' +
         '<div class="ad-field"><label for="tmPhone">Telefon (optional)</label><input type="tel" id="tmPhone" autocomplete="off" value="' + esc(vor.phone || '') + '"></div>' +
-        '<div class="tm-sec"><div class="tm-lab">Termine <span id="tmZahl"></span></div><div class="tm-rows" id="tmRows"></div>' +
+        '<div class="tm-sec"><div class="tm-lab"><span id="tmTermLab">Termine</span> <span id="tmZahl"></span></div><div class="tm-rows" id="tmRows"></div>' +
         '<button type="button" class="ad-mini" id="tmAdd">+ Weiteren Termin</button><div class="tm-sum" id="tmSum"></div></div>' +
-        '<label class="tm-check"><input type="checkbox" id="tmMail" checked> <span>Kunden <b>eine</b> Mail mit allen Terminen schicken (mit Kalenderdateien)</span></label>' +
+        '<label class="tm-check"><input type="checkbox" id="tmMail" checked> <span id="tmMailT">Kunden <b>eine</b> Mail mit allen Terminen schicken (mit Kalenderdateien)</span></label>' +
         '<div id="tmMailBox">' +
         '<div class="tm-pending" id="tmPend" hidden><label class="tm-check"><input type="checkbox" id="tmPendOn" checked> <span id="tmPendT"></span></label>' +
         '<button type="button" class="ad-mini" id="tmPendNow">Nur diese Termine jetzt per Mail senden</button></div>' +
@@ -137,22 +149,26 @@
         '<div class="tm-msg" id="tmMsg"></div>' +
         '<div class="tm-actions"><button type="submit" class="btn btn-blitz" id="tmGo">Eintragen</button>' +
         '<button type="button" class="ad-danger" id="tmForce" hidden>Trotzdem eintragen</button></div>' +
-        '<p class="ad-hint">Die Termine kommen in den Google-Kalender und sind online nicht mehr buchbar. Ohne Haken bei &bdquo;Mail&ldquo; warten sie, bis du das n&auml;chste Mal eine Mail an den Kunden schickst &ndash; dann gehen alle zusammen raus.</p>' +
+        '<p class="ad-hint" id="tmFoot"></p>' +
         '</form>');
       var art = o.querySelector('#tmArt'), kf = o.querySelector('#tmKarteF'), ks = o.querySelector('#tmKarte');
+      var typ = o.querySelector('#tmTyp'), typF = o.querySelector('#tmTypF'), payF = o.querySelector('#tmPayF'), pay = o.querySelector('#tmPay');
       var mailEl = o.querySelector('#tmMail'), hintEl = o.querySelector('#tmHint');
 
       function karte() { return art.value === 'karte' ? karten.filter(function (x) { return x.code === ks.value; })[0] : null; }
+      function istProbe() { return art.value === 'bar' && typ.value === 'probe'; }
 
       function summe() {
         var c = karte(), s = o.querySelector('#tmSum'), n = rows.length;
-        o.querySelector('#tmZahl').textContent = '(' + n + ')';
+        o.querySelector('#tmZahl').textContent = istProbe() ? '' : '(' + n + ')';
         if (c) {
           var bad = n > c.left;
           s.className = 'tm-sum' + (bad ? ' bad' : '');
           s.textContent = n + (n === 1 ? ' Einheit wird' : ' Einheiten werden') + ' abgezogen – auf der Karte sind ' + c.left + ' von ' + c.total + ' frei' + (bad ? ' (zu wenig!)' : '') + '.';
         } else { s.className = 'tm-sum'; s.textContent = ''; }
-        o.querySelector('#tmGo').textContent = n === 1 ? 'Termin eintragen' : n + ' Termine eintragen';
+        o.querySelector('#tmGo').textContent = neukunde ? 'Kunde anlegen und Probetraining eintragen'
+          : istProbe() ? 'Probetraining eintragen'
+          : n === 1 ? 'Termin eintragen' : n + ' Termine eintragen';
       }
 
       function rowsRender() {
@@ -187,8 +203,42 @@
         if (!hinweisAngefasst) hintEl.value = c && c.zahlstatus === 'offen' ? HINWEIS_STANDARD : '';
         summe();
       }
-      function artWechsel() { kf.hidden = art.value !== 'karte'; kartenInfo(); }
+
+      /* Probetraining: ein Termin, eigener Hinweistext, keine gesammelten Mails */
+      function probeInfo() {
+        var p = istProbe();
+        payF.hidden = !p;
+        o.querySelector('#tmAdd').hidden = p;
+        o.querySelector('#tmTermLab').textContent = p ? 'Termin' : 'Termine';
+        o.querySelector('#tmMailT').innerHTML = p ? 'Kunden eine <b>Terminbestätigung</b> per Mail schicken (mit Kalenderdatei)'
+          : 'Kunden <b>eine</b> Mail mit allen Terminen schicken (mit Kalenderdateien)';
+        o.querySelector('#tmFoot').innerHTML = p
+          ? 'Das Probetraining kommt in den Google-Kalender und ist online nicht mehr buchbar. Noch nicht bezahlt: nur ein interner Vermerk, in der Mail steht nichts zur Zahlung. Schon bezahlt: Der Kunde bekommt wie bei der Online-Buchung eine Gutschrift, die auf sein erstes Training angerechnet wird (Code steht in der Mail).'
+          : 'Die Termine kommen in den Google-Kalender und sind online nicht mehr buchbar. Ohne Haken bei &bdquo;Mail&ldquo; warten sie, bis du das n&auml;chste Mal eine Mail an den Kunden schickst &ndash; dann gehen alle zusammen raus.';
+        if (p) {
+          if (rows.length > 1) { rows = rows.slice(0, 1); rowsRender(); }
+          o.querySelector('#tmPend').hidden = true;
+          if (!hinweisAngefasst) hintEl.value = '';
+          hintEl.placeholder = 'z. B. Bitte Sportkleidung und ein Handtuch mitbringen';
+        } else {
+          hintEl.placeholder = 'z. B. Rechnungsangaben bitte nachreichen';
+          kartenInfo();
+        }
+        summe();
+      }
+
+      function artWechsel() {
+        kf.hidden = art.value !== 'karte';
+        typF.hidden = neukunde || art.value !== 'bar';
+        probeInfo();
+        if (!istProbe()) kartenInfo();
+      }
       art.onchange = artWechsel;
+      typ.onchange = function () { hinweisAngefasst = false; probeInfo(); if (!istProbe()) kartenInfo(); };
+      pay.onchange = function () {
+        o.querySelector('#tmPayHint').textContent = pay.value === 'ja' ? 'Der Kunde bekommt eine Gutschrift über den Preis des Probetrainings (wird auf das nächste Training angerechnet, Code steht in der Mail).'
+          : 'Nichts wird berechnet, keine Gutschrift. Der Kunde bekommt nur die Terminbestätigung, du vermerkst „noch nicht bezahlt“ intern.';
+      };
       ks.onchange = function () {
         var c = karte();
         if (c) {
@@ -217,7 +267,30 @@
         }).catch(function (e) { b.disabled = false; if (e && e.message === 'abgemeldet') return; meldung((e && e.message) || 'Das hat nicht geklappt.', true); });
       };
 
+      /* Probetraining speichern: eigener Weg im Worker (probe/eintragen) */
+      function losProbe(force) {
+        var name = String(o.querySelector('#tmName').value || '').trim(), mail = String(o.querySelector('#tmEmail').value || '').trim();
+        if (!name) { meldung('Bitte einen Namen angeben.', true); return; }
+        if (!mail) { meldung('Bitte eine E-Mail-Adresse angeben.', true); return; }
+        if (!pay.value) { meldung('Bitte wählen, ob das Probetraining schon bezahlt wurde.', true); return; }
+        var r0 = rows[0];
+        if (!r0.date || !r0.start) { meldung('Bitte Tag und Uhrzeit angeben.', true); return; }
+        var bezahlt = pay.value === 'ja', mitMail = mailEl.checked;
+        absenden('probe/eintragen', {
+          name: name, email: mail, phone: o.querySelector('#tmPhone').value,
+          date: r0.date, start: r0.start, minutes: Number(r0.minutes), ort: r0.ort,
+          bezahlt: bezahlt, mail: mitMail, hinweis: mitMail ? hintEl.value : '', force: force === true
+        }, force === true ? o.querySelector('#tmForce') : o.querySelector('#tmGo'), function (r) {
+          info = null;
+          return (neukunde ? 'Kunde angelegt, Probetraining eingetragen: ' : 'Probetraining eingetragen: ') + fd(r.date) + ' ' + r.start + ' Uhr. ' +
+            (bezahlt ? 'Bezahlt.' + (r.credit ? ' Gutschrift ' + A.eur(r.credit.amount) + ' (Code ' + r.credit.code + ') ist angelegt.' : r.credit_fehler ? ' Achtung: Die Gutschrift konnte nicht angelegt werden.' : '') : 'Noch nicht bezahlt (intern vermerkt).') +
+            kalenderText(r) +
+            (r.mail ? ' Der Kunde hat die Terminbestätigung bekommen.' : mitMail ? ' Achtung: Die Mail ging nicht raus.' : ' Keine Mail verschickt.');
+        }, fertig);
+      }
+
       function los(force) {
+        if (istProbe()) { losProbe(force); return; }
         var mk = art.value === 'karte';
         if (mk && !ks.value) { meldung('Bitte eine Karte wählen oder „Ohne Karte“ einstellen.', true); return; }
         for (var i = 0; i < rows.length; i++) {
@@ -241,10 +314,47 @@
       }
       o.querySelector('#tmForm').onsubmit = function (e) { e.preventDefault(); los(false); };
       o.querySelector('#tmForce').onclick = function () { los(true); };
+      if (neukunde) { art.value = 'bar'; typ.value = 'probe'; }
       rowsRender();
       artWechsel();
     }).catch(function (e) { if (e && e.message !== 'abgemeldet') A.note(e.message || 'Das hat nicht geklappt.', true); });
   }
 
-  window.FDTermine = { verschieben: verschieben, eintragen: eintragen };
+  /* ---------- Neuer Kunde (Probetraining für eine neue Person) ---------- */
+  function neukunde(fertig) {
+    var lastMsg = '';
+    eintragen({ neukunde: true }, function (r) {
+      var b = document.getElementById('refresh'), m = document.getElementById('msg');
+      if (m) lastMsg = m.textContent;
+      if (b) b.click();                         // Kalender und „Heute“ neu laden
+      if (window.FDKunden && document.querySelector('[data-panel="kunden"]:not([hidden])')) window.FDKunden.open();
+      if (lastMsg) setTimeout(function () { A.note(lastMsg); }, 1800);   // „Aktualisiert.“ soll die Meldung nicht überdecken
+      if (fertig) fertig(r);
+    });
+  }
+
+  /* Einstiege: Kachel auf „Heute“ und Knopf im Reiter „Kunden“ (admin.html bleibt unverändert) */
+  function einhaengen() {
+    var q = document.querySelector('[data-panel="heute"] .hd-quick');
+    if (q && !document.getElementById('tileNeukunde')) {
+      var t = document.createElement('button');
+      t.type = 'button'; t.className = 'hd-tile'; t.id = 'tileNeukunde';
+      t.innerHTML = '<b>+</b><span>Neuer Kunde</span>';
+      t.onclick = function () { neukunde(); };
+      q.appendChild(t);
+      q.style.gridTemplateColumns = 'repeat(2,1fr)';
+    }
+    var ka = document.getElementById('kundenApp');
+    if (ka && ka.parentNode && !document.getElementById('kundenNeu')) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'btn btn-blitz'; b.id = 'kundenNeu';
+      b.style.cssText = 'width:100%;margin-bottom:14px';
+      b.textContent = '+ Neuer Kunde mit Probetraining';
+      b.onclick = function () { neukunde(); };
+      ka.parentNode.insertBefore(b, ka);
+    }
+  }
+  einhaengen();
+
+  window.FDTermine = { verschieben: verschieben, eintragen: eintragen, neukunde: neukunde };
 })();
